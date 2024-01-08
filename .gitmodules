@@ -1,3 +1,4 @@
-[submodule "src/main/java/frc/thunder"]
+[submodule "thunder"]
 	path = src/main/java/frc/thunder
 	url = https://www.github.com/frc-862/thunder.git
+    branch = main
