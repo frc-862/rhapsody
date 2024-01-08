@@ -4,21 +4,19 @@ jobs:
     Build:
         runs-on: ubuntu-latest
         steps:
-        - name: Action Status
-          run: echo "Gradle Build Rhapsody"
-        # - name: Checkout and initialize Thunder
-        #   uses: actions/checkout@v3
-        #   with:
-        #     submodules: 'true'
-        # - name: Init JDK
-        #   uses: actions/setup-java@v3
-        #   with:
-        #     distribution: 'zulu'
-        #     java-version: '17'
-        # - name: Set Execution Permissions
-        #   run: chmod +x ./gradlew
-        # - name: Gradle build Rhapsody
-        #   run: ./gradlew build
+        - name: Checkout and initialize Thunder
+          uses: actions/checkout@v3
+          with:
+            submodules: 'true'
+        - name: Init JDK
+          uses: actions/setup-java@v3
+          with:
+            distribution: 'zulu'
+            java-version: '17'
+        - name: Set Execution Permissions
+          run: chmod +x ./gradlew
+        - name: Gradle build Rhapsody
+          run: ./gradlew build
         # ENV may not be needed when using thunder, will test later
         #   env:
         #     USERNAME: ${{ github.actor }}
