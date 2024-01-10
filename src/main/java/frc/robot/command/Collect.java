@@ -5,7 +5,7 @@
 package frc.robot.command;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystem.Collector;
+import frc.robot.subsystems.Collector;
 
 public class Collect extends Command {
 
