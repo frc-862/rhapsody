@@ -48,8 +48,11 @@ public class Constants {
         	private static final int kBackRightSteerMotorId = 6;
         	private static final int kBackRightEncoderId = 32;
 
-			public static final int PigeonId = 23;
+			public static final int PigeonId = 23;            
+            public static final int COLLECTOR_MOTOR = 9;
         }
+
+        public static final int COLLECTOR_ENTRY_BEAMBREAK = 1;
     }
 
     public static class ControllerConstants {
