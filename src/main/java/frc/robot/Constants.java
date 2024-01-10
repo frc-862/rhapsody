@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-mport com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
@@ -172,9 +172,5 @@ public class Constants {
         public static final double KD = 0;
         public static final double KS = 0;
         public static final double KV = 0;
-    }
-
-    public class ControllerConstants {
-        public static final int COPILOT_CONTROLLER_PORT = 0;
     }
 }

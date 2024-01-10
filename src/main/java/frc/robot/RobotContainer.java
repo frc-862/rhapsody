@@ -2,10 +2,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.ControllerConstants;
-
 import frc.robot.command.Shoot;
-import frc.robot.subsystem.Shooter;
+import frc.robot.subsystems.Shooter;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,13 +18,10 @@ import frc.thunder.LightningContainer;
 
 
 public class RobotContainer extends LightningContainer {
-    XboxController coPilot = new XboxController(ControllerConstants.COPILOT_CONTROLLER_PORT);
-
-    
-    
-
     /* Setting up bindings for necessary control of the swerve drive platform */
-    XboxController driver = new XboxController(ControllerConstants.DriverControllerPort); // My joystick
+    XboxController driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
+    XboxController coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
+
     Swerve drivetrain = TunerConstants.DriveTrain; // My drivetrain
     Shooter shooter =  new Shooter();
 

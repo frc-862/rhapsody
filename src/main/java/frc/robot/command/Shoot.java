@@ -6,7 +6,7 @@ package frc.robot.command;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystem.Shooter;
+import frc.robot.subsystems.Shooter;
 
 public class Shoot extends Command {
 Shooter shooter = new Shooter();
