@@ -43,8 +43,7 @@ import frc.thunder.LightningContainer;
 		drivetrain.registerTelemetry(logger::telemeterize);
     }
 	
-
-    
+    @Override
     protected void configureDefaultCommands() {
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 		  drivetrain.applyRequest(() -> drive.withVelocityX(
