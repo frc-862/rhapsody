@@ -6,8 +6,9 @@ import frc.robot.command.Shoot;
 import frc.robot.subsystem.Shooter;
 import frc.thunder.LightningContainer;
 
+
 public class RobotContainer extends LightningContainer {
-    XboxController coPilot = new XboxController(Constants.ControllerConstants.COPILOT_CONTROLLER_PORT);
+    XboxController coPilot = new XboxController(ControllerConstants.COPILOT_CONTROLLER_PORT);
 
     Shooter shooter =  new Shooter();
     @Override

@@ -24,15 +24,15 @@ public class Constants {
         }
     }
 
-    public class VisionConstants  {
+    public class VisionConstants {
          //This is a magic number from gridlock, may need to be changed or removed entirely
             public static final double PROCESS_LATENCY = 0.0472; // TODO test
             public static final Translation2d FIELD_LIMIT = new Translation2d(Units.feetToMeters(54.0), Units.feetToMeters(26.0));
             public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
     }
     
-    public class ShooterConstants{
-        public static final double SHOOTER_SPEED = 0.5; // magic number :D
+    public class ShooterConstants {
+        public static final double SHOOTER_SPEED = 0;
         public static final boolean MOTOR_1_INVERT = false;
         public static final boolean MOTOR_2_INVERT = false;
         public static final int SUPPLY_CURRENT_LIMIT = 0;
@@ -41,8 +41,11 @@ public class Constants {
         public static final double KP = 0;
         public static final double KI = 0;
         public static final double KD = 0;
+        public static final double KS = 0;
+        public static final double KV = 0;
     }
-    public class ControllerConstants{
+
+    public class ControllerConstants {
         public static final int COPILOT_CONTROLLER_PORT = 0;
     }
 }
