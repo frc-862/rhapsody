@@ -35,7 +35,11 @@ import frc.thunder.LightningContainer;
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
 		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
 		new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.zeroGyro())); // TODO create function to reset Heading
-        new Trigger(driver::getRightBumper).whileTrue(new Collect(collector));
+
+        // Run collector in/out
+        new Trigger(driver::getLeftBumper).whileTrue(new Collect(collector, () -> -1d));
+        new Trigger(driver::getRightBumper).whileTrue(new Collect(collector, () -> 1d));
+        
 		drivetrain.registerTelemetry(logger::telemeterize);
     }
 	
@@ -56,7 +60,7 @@ import frc.thunder.LightningContainer;
             } else {
                 collector.stop();
             }
-        }, collector)); // TODO teach not to do this
+        }, collector)); // TODO teach not to do this (was temp for teaching rookies)
 	}
 
     @Override

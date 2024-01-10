@@ -4,6 +4,8 @@
 
 package frc.robot.command;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Collector;
 
@@ -11,16 +13,18 @@ public class Collect extends Command {
 
   // Declares collector
   private Collector collector;
+  private DoubleSupplier powerSupplier;
 
-  public Collect(Collector collector) {
+  public Collect(Collector collector, DoubleSupplier powerSupplier) {
     // Sets collector from parameter
     this.collector = collector;
+    this.powerSupplier = powerSupplier;
     addRequirements(collector);
   }
 
   @Override
   public void initialize() {
-    collector.setPower(1d);
+    collector.setPower(powerSupplier.getAsDouble());
   }
 
   @Override
