@@ -53,6 +53,10 @@ public class Constants {
 
 			public static final int PigeonId = 23;            
             public static final int COLLECTOR_MOTOR = 9;
+            public static final int SHOOTING_MOTOR_1 = 0;
+            public static final int SHOOTING_MOTOR_2 = 0;
+            public static final int SHOOTER_ANGLE_MOTOR = 0;
+
         }
 
         public static final int COLLECTOR_ENTRY_BEAMBREAK = 1;
@@ -161,17 +165,25 @@ public class Constants {
     }
     
     public class ShooterConstants {
-        public static final double SHOOTER_SPEED = 0;
-        public static final boolean MOTOR_1_INVERT = false;
-        public static final boolean MOTOR_2_INVERT = false;
-        public static final int SUPPLY_CURRENT_LIMIT = 0;
-        public static final int STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
-        public static final double KP = 0;
-        public static final double KI = 0;
-        public static final double KD = 0;
-        public static final double KS = 0;
-        public static final double KV = 0;
+        public static final boolean SHOOTING_MOTOR_1_INVERT = false;
+        public static final boolean SHOOTING_MOTOR_2_INVERT = false;
+        public static final int SHOOTING_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
+        public static final int SHOOTING_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final NeutralModeValue SHOOTING_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final double SHOOTING_MOTOR_KP = 0;
+        public static final double SHOOTING_MOTOR_KI = 0;
+        public static final double SHOOTING_MOTOR_KD = 0;
+        public static final double SHOOTING_MOTOR_KS = 0;
+        public static final double SHOOTING_MOTOR_KV = 0;
+
+        public static final boolean ANGLE_MOTOR_INVERT = false;
+        public static final int ANGLE_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
+        public static final int ANGLE_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final NeutralModeValue ANGLE_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final double ANGLE_MOTOR_KP = 0;
+        public static final double ANGLE_MOTOR_KI = 0;
+        public static final double ANGLE_MOTOR_KD = 0;
+
         public static final double SHOOTER_RPM_TOLERANCE = 0;
         public static final double SHOOTER_ANGLE_TOLERANCE = 0;
         // Distance in meters, angle in degrees
