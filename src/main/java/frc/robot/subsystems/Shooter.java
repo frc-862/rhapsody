@@ -22,7 +22,7 @@ public class Shooter extends SubsystemBase {
   
   public Shooter() {
     shooterMotor1 = FalconConfig.createMotor(CAN.SHOOTER_MOTOR_1, getName(), ShooterConstants.MOTOR_1_INVERT, ShooterConstants.SUPPLY_CURRENT_LIMIT, ShooterConstants.STATOR_CURRENT_LIMIT, ShooterConstants.NEUTRAL_MODE, ShooterConstants.KP, ShooterConstants.KI, ShooterConstants.KD, ShooterConstants.KS, ShooterConstants.KV);
-    shooterMotor2 = FalconConfig.createMotor(CAN.SHOOTER_MOTOR_1, getName(), ShooterConstants.MOTOR_2_INVERT, ShooterConstants.SUPPLY_CURRENT_LIMIT, ShooterConstants.STATOR_CURRENT_LIMIT, ShooterConstants.NEUTRAL_MODE, ShooterConstants.KP, ShooterConstants.KI, ShooterConstants.KD, ShooterConstants.KS, ShooterConstants.KV);
+    shooterMotor2 = FalconConfig.createMotor(CAN.SHOOTER_MOTOR_2, getName(), ShooterConstants.MOTOR_2_INVERT, ShooterConstants.SUPPLY_CURRENT_LIMIT, ShooterConstants.STATOR_CURRENT_LIMIT, ShooterConstants.NEUTRAL_MODE, ShooterConstants.KP, ShooterConstants.KI, ShooterConstants.KD, ShooterConstants.KS, ShooterConstants.KV);
   }
   public void setRPM(double rpm){
     shooterMotor1.setControl(rpmTarget.withVelocity(rpm).withFeedForward(0.5));

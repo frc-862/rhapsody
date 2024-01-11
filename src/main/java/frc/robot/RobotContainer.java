@@ -20,31 +20,20 @@ import frc.robot.Constants.drivetrainConstants;
 import frc.robot.command.Shoot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.LightningContainer;
-        
-    public class RobotContainer extends LightningContainer {
-        /* Setting up bindings for necessary control of the swerve drive platform */
-        XboxController driver = new XboxController(ControllerConstants.DriverControllerPort); // My joystick
-
 
 public class RobotContainer extends LightningContainer {
-    /* Setting up bindings for necessary control of the swerve drive platform */
-    XboxController driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
-    XboxController coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
+  /* Setting up bindings for necessary control of the swerve drive platform */
+  XboxController driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
+  XboxController coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
 
-    Swerve drivetrain = TunerConstants.DriveTrain; // My drivetrain
-    Shooter shooter =  new Shooter();
+  Swerve drivetrain = TunerConstants.DriveTrain; // My drivetrain
+  Shooter shooter =  new Shooter();
 
 	SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric(); //TODO I want field-centric driving in open loop   WE NEED TO FIGURE OUT WHAT Change beacuse with open loop is gone
-  	SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  	SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  	Telemetry logger = new Telemetry(drivetrainConstants.MaxSpeed);
-        Swerve drivetrain = TunerConstants.DriveTrain; // My drivetrain
-        Collector collector = new Collector();
-	
-        SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric(); //TODO I want field-centric driving in open loop   WE NEED TO FIGURE OUT WHAT Change beacuse with open loop is gone
-  	    SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  	    SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  	    Telemetry logger = new Telemetry(drivetrainConstants.MaxSpeed);
+  SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  Telemetry logger = new Telemetry(drivetrainConstants.MaxSpeed);
+  Collector collector = new Collector();
 
 	
 	@Override
