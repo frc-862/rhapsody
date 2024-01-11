@@ -15,6 +15,8 @@ import frc.thunder.config.FalconConfig;
 public class Shooter extends SubsystemBase {
   TalonFX shooterMotor1;
   TalonFX shooterMotor2;
+  TalonFX angleMotor;
+  ShooterTargeting shooterTargeting = new ShooterTargeting();
   
   final VelocityVoltage rpmTarget = new VelocityVoltage(0).withSlot(0);
   
@@ -26,6 +28,15 @@ public class Shooter extends SubsystemBase {
     shooterMotor1.setControl(rpmTarget.withVelocity(rpm).withFeedForward(0.5));
     shooterMotor2.setControl(rpmTarget.withVelocity(rpm).withFeedForward(0.5));
   }
+
+  public double getFlywheelRPM() {
+    return 0; //TODO make work
+  }
+
+  public double getFlywheelAngle() {
+    return 0; //TODO make work
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

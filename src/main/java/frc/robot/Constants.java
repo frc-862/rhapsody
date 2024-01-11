@@ -4,16 +4,18 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.subsystems.Swerve;
+import frc.thunder.math.InterpolationMap;
 
 /** Add your docs here. */
 public class Constants {
@@ -172,5 +174,11 @@ public class Constants {
         public static final double KD = 0;
         public static final double KS = 0;
         public static final double KV = 0;
+        public static final double SHOOTER_RPM_TOLERANCE = 0;
+        public static final double SHOOTER_ANGLE_TOLERANCE = 0;
+        // Distance in meters, angle in degrees
+        public static final InterpolationMap SHOOTER_DISTANCE_ANGLE_MAP = new InterpolationMap();
+        // Distance in meters, speed in RPM
+        public static final InterpolationMap SHOOTER_DISTANCE_SPEED_MAP = new InterpolationMap();
     }
 }
