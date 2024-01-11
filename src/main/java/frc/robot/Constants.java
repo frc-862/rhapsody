@@ -30,8 +30,8 @@ public class Constants {
         public class CAN {
             // Front Left
             private static final int kFrontLeftDriveMotorId = 1;
-        	private static final int kFrontLeftSteerMotorId = 2;
-        	private static final int kFrontLeftEncoderId = 31;
+                private static final int kFrontLeftSteerMotorId = 2;
+                private static final int kFrontLeftEncoderId = 31;
 
 			// Front Right
         	private static final int kFrontRightDriveMotorId = 3;
@@ -48,8 +48,11 @@ public class Constants {
         	private static final int kBackRightSteerMotorId = 6;
         	private static final int kBackRightEncoderId = 32;
 
-			public static final int PigeonId = 23;            
+			public static final int PigeonId = 23;    
+                        
+                        public static final int COLLECTOR_MOTOR = 9; // TODO: this is a random id, this will not work
                 }
+        public static final int COLLECTOR_ENTRY_BEAMBREAK = 1;
     }
 
     public static class ControllerConstants {
@@ -152,10 +155,5 @@ public class Constants {
             public static final double PROCESS_LATENCY = 0.0472; // TODO test
             public static final Translation2d FIELD_LIMIT = new Translation2d(Units.feetToMeters(54.0), Units.feetToMeters(26.0));
             public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
-    }
-
-    public class CollectorConstants {
-        public static final int COLLECTOR_MOTOR = 9;
-        public static final int COLLECTOR_ENTRY_BEAMBREAK = 1;
     }
 }

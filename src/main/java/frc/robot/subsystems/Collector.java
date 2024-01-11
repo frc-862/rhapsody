@@ -7,7 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.CollectorConstants;;
+import frc.robot.Constants.RobotMap;
 
 public class Collector extends SubsystemBase {
 
@@ -17,8 +17,8 @@ public class Collector extends SubsystemBase {
 
   public Collector() {
     // Initialize collector hardware
-    collectorMotor = new TalonFX(CollectorConstants.COLLECTOR_MOTOR);
-    collectorEntryBeamBreak = new DigitalInput(CollectorConstants.COLLECTOR_ENTRY_BEAMBREAK);
+    collectorMotor = new TalonFX(RobotMap.CAN.COLLECTOR_MOTOR);
+    collectorEntryBeamBreak = new DigitalInput(RobotMap.COLLECTOR_ENTRY_BEAMBREAK);
   }
 
   @Override
