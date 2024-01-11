@@ -25,6 +25,8 @@ public class AngleTowardTags extends Command {
   private Limelight[] limelights;
 
   public Pose2d targetPoseRobotSpace;
+  Rotation2d targetHeading;
+  Translation2d targetPosition;
 
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
@@ -50,8 +52,8 @@ public class AngleTowardTags extends Command {
         break;
       }
     }
-    Rotation2d targetHeading = targetPoseRobotSpace.getRotation();
-    Translation2d targetPosition = targetPoseRobotSpace.getTranslation();
+    targetHeading = targetPoseRobotSpace.getRotation();
+    targetPosition = targetPoseRobotSpace.getTranslation();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -74,15 +76,14 @@ public class AngleTowardTags extends Command {
       targetPoseRobotSpace.getRotation().getDegrees()
     });
 
-    Rotation2d targetHeading = targetPoseRobotSpace.getRotation();
-    Translation2d targetPosition = targetPoseRobotSpace.getTranslation();
+    targetHeading = targetPoseRobotSpace.getRotation();
+    targetPosition = targetPoseRobotSpace.getTranslation();
 
     targetHeadingPub.set(targetHeading.getDegrees());
 
     targetTranslationPub.set(new double[] {
       targetPosition.getX(),
-      targetPosition.getY(),
-      targetPosition.getRotation().getDegrees()
+      targetPosition.getY()
     }); 
 
   }
