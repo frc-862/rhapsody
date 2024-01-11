@@ -5,11 +5,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.FlywheelConstants;
 
 public class ShooterTargeting extends SubsystemBase {
-  /** Creates a new ShooterTargeting. */
-  Shooter shooter = new Shooter();
+  Flywheel shooter = new Flywheel();
   double targetFlywheelRPM;
   double targetFlywheelAngle;
   double distanceFromTarget;
@@ -26,7 +25,7 @@ public class ShooterTargeting extends SubsystemBase {
   }
 
   public boolean readyToFire() {
-    if (Math.abs(shooter.getFlywheelRPM() - targetFlywheelRPM) < ShooterConstants.SHOOTER_RPM_TOLERANCE && Math.abs(shooter.getFlywheelAngle() - targetFlywheelAngle) < ShooterConstants.SHOOTER_ANGLE_TOLERANCE) {
+    if (Math.abs(shooter.getFlywheelRPM() - targetFlywheelRPM) < FlywheelConstants.FLYWHEEL_RPM_TOLERANCE) {
       return true;
     } else {
       return false;
@@ -34,11 +33,11 @@ public class ShooterTargeting extends SubsystemBase {
   }
 
   public double clacShooterRPM() {
-    return ShooterConstants.SHOOTER_DISTANCE_SPEED_MAP.get(distanceFromTarget);
+    return FlywheelConstants.SHOOTER_DISTANCE_SPEED_MAP.get(distanceFromTarget);
   }
 
   public double clacShooterAngel() {
-    return ShooterConstants.SHOOTER_DISTANCE_ANGLE_MAP.get(distanceFromTarget);
+    return FlywheelConstants.SHOOTER_DISTANCE_ANGLE_MAP.get(distanceFromTarget);
   }
 
   public double getDistanceFromTarget() {

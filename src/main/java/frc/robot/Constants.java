@@ -53,8 +53,8 @@ public class Constants {
 
 			public static final int PigeonId = 23;            
             public static final int COLLECTOR_MOTOR = 9;
-            public static final int SHOOTING_MOTOR_1 = 0;
-            public static final int SHOOTING_MOTOR_2 = 0;
+            public static final int FLYWHEEL_MOTOR_1 = 0;
+            public static final int FLYWHEEL_MOTOR_2 = 0;
             public static final int SHOOTER_ANGLE_MOTOR = 0;
 
         }
@@ -164,31 +164,36 @@ public class Constants {
             public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
     }
     
-    public class ShooterConstants {
-        public static final boolean SHOOTING_MOTOR_1_INVERT = false;
-        public static final boolean SHOOTING_MOTOR_2_INVERT = false;
-        public static final int SHOOTING_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int SHOOTING_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue SHOOTING_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
-        public static final double SHOOTING_MOTOR_KP = 0;
-        public static final double SHOOTING_MOTOR_KI = 0;
-        public static final double SHOOTING_MOTOR_KD = 0;
-        public static final double SHOOTING_MOTOR_KS = 0;
-        public static final double SHOOTING_MOTOR_KV = 0;
+    public class FlywheelConstants {
+        public static final boolean FLYWHEEL_MOTOR_1_INVERT = false;
+        public static final boolean FLYWHEEL_MOTOR_2_INVERT = false;
+        public static final int FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
+        public static final int FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final double FLYWHEEL_MOTOR_KP = 0;
+        public static final double FLYWHEEL_MOTOR_KI = 0;
+        public static final double FLYWHEEL_MOTOR_KD = 0;
+        public static final double FLYWHEEL_MOTOR_KS = 0;
+        public static final double FLYWHEEL_MOTOR_KV = 0;
 
-        public static final boolean ANGLE_MOTOR_INVERT = false;
-        public static final int ANGLE_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int ANGLE_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue ANGLE_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
-        public static final double ANGLE_MOTOR_KP = 0;
-        public static final double ANGLE_MOTOR_KI = 0;
-        public static final double ANGLE_MOTOR_KD = 0;
-
-        public static final double SHOOTER_RPM_TOLERANCE = 0;
-        public static final double SHOOTER_ANGLE_TOLERANCE = 0;
+        public static final double FLYWHEEL_RPM_TOLERANCE = 0;
         // Distance in meters, angle in degrees
         public static final InterpolationMap SHOOTER_DISTANCE_ANGLE_MAP = new InterpolationMap();
         // Distance in meters, speed in RPM
         public static final InterpolationMap SHOOTER_DISTANCE_SPEED_MAP = new InterpolationMap();
+    }
+
+    public class PivotConstants {
+        public static final boolean PIVOT_MOTOR_INVERT = false;
+        public static final int PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
+        public static final int PIVOT_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final NeutralModeValue PIVOT_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final double PIVOT_MOTOR_KP = 0;
+        public static final double PIVOT_MOTOR_KI = 0;
+        public static final double PIVOT_MOTOR_KD = 0;        
+        public static final double PIVOT_MOTOR_KS = 0;
+        public static final double PIVOT_MOTOR_KV = 0;
+        public static final double PIVOT_TOLERANCE = 0;
+
     }
 }
