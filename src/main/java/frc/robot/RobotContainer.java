@@ -53,13 +53,7 @@ import frc.thunder.LightningContainer;
 		  ));
 
         // Get collector entry beam break state, then run collector if object is present
-        collector.setDefaultCommand(new RunCommand(() -> {
-            if (!collector.getEntryBeamBreakState()) {
-                collector.setPower(1d);
-            } else {
-                collector.stop();
-            }
-        }, collector)); // TODO teach not to do this (was temp for teaching rookies)
+        collector.setDefaultCommand(new RunCollectorOnBeamBreak(collector));
 	}
 
     @Override
