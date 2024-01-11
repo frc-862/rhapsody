@@ -11,16 +11,27 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.networktables.DoubleArrayPublisher;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.vision.Limelight;
 
-public class AngleTowardTags extends CommandBase {
+public class AngleTowardTags extends Command {
 
   private Swerve drivetrain;
   private Limelight[] limelights;
 
   public Pose2d targetPoseRobotSpace;
+
+  NetworkTableInstance inst = NetworkTableInstance.getDefault();
+
+  NetworkTable table = inst.getTable("AngleTags");
+  DoubleArrayPublisher targetPub = table.getDoubleArrayTopic("targetPoseBotSpace").publish();
+  DoublePublisher targetHeadingPub = table.getDoubleTopic("targetHeading").publish();
+  DoubleArrayPublisher targetTranslationPub = table.getDoubleArrayTopic("targetTranslation").publish();
 
   /** Creates a new AngleTowardTags. */
   public AngleTowardTags(Swerve drivetrain) {
@@ -39,19 +50,16 @@ public class AngleTowardTags extends CommandBase {
         break;
       }
     }
+    Rotation2d targetHeading = targetPoseRobotSpace.getRotation();
+    Translation2d targetPosition = targetPoseRobotSpace.getTranslation();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Rotation2d targetHeading = targetPoseRobotSpace.getRotation();
-    Translation2d targetPosition = targetPoseRobotSpace.getTranslation();
-
     SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     point.withModuleDirection(targetHeading);
     drivetrain.applyRequest(() -> point);
-
-
 
     for (Limelight limelight : Limelight.filterLimelights(limelights)) {
       if (limelight.hasTarget()) {
@@ -59,7 +67,24 @@ public class AngleTowardTags extends CommandBase {
         break;
       }
     }
-    
+
+    targetPub.set(new double[] {
+      targetPoseRobotSpace.getX(),
+      targetPoseRobotSpace.getY(),
+      targetPoseRobotSpace.getRotation().getDegrees()
+    });
+
+    Rotation2d targetHeading = targetPoseRobotSpace.getRotation();
+    Translation2d targetPosition = targetPoseRobotSpace.getTranslation();
+
+    targetHeadingPub.set(targetHeading.getDegrees());
+
+    targetTranslationPub.set(new double[] {
+      targetPosition.getX(),
+      targetPosition.getY(),
+      targetPosition.getRotation().getDegrees()
+    }); 
+
   }
 
   // Called once the command ends or is interrupted.
