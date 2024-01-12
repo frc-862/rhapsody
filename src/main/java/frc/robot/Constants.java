@@ -53,9 +53,9 @@ public class Constants {
 
 			public static final int PigeonId = 23;            
             public static final int COLLECTOR_MOTOR = 9;
-            public static final int FLYWHEEL_MOTOR_1 = 0;
-            public static final int FLYWHEEL_MOTOR_2 = 0;
-            public static final int SHOOTER_ANGLE_MOTOR = 0;
+            public static final int FLYWHEEL_MOTOR_1 = 0; //TODO Get real
+            public static final int FLYWHEEL_MOTOR_2 = 0; //TODO Get real
+            public static final int SHOOTER_ANGLE_MOTOR = 0; //TODO Get real
 
         }
 
