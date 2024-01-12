@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.drivetrainConstants;
-import frc.robot.command.Shoot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.LightningContainer;
 

@@ -10,8 +10,10 @@ import frc.thunder.config.FalconConfig;
 
 public class Pivot extends SubsystemBase {
     private TalonFX angleMotor;
-    
-    final PositionVoltage angleTarget = new PositionVoltage(0).withSlot(0);
+    private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
+
+    //TODO: find initial target angle
+    private double targetAngle = 0;
 
     public Pivot() {
         angleMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_1, getName(), PivotConstants.PIVOT_MOTOR_INVERT, PivotConstants.PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT, PivotConstants.PIVOT_MOTOR_STATOR_CURRENT_LIMIT, PivotConstants.PIVOT_MOTOR_NEUTRAL_MODE, PivotConstants.PIVOT_MOTOR_KP, PivotConstants.PIVOT_MOTOR_KI, PivotConstants.PIVOT_MOTOR_KD, PivotConstants.PIVOT_MOTOR_KS, PivotConstants.PIVOT_MOTOR_KV);
@@ -22,7 +24,8 @@ public class Pivot extends SubsystemBase {
      * @param angle Angle of the pivot
      */
     public void setAngle(double angle) {
-        angleMotor.setControl(angleTarget.withPosition(angle));
+        targetAngle = angle;
+        angleMotor.setControl(anglePID.withPosition(angle));
     }
 
     /**
@@ -30,5 +33,12 @@ public class Pivot extends SubsystemBase {
      */
     public double getAngle() {
         return angleMotor.getPosition().getValue();
+    }
+
+    /**
+     * @return Whether or not the pivot is on target, within PivotConstants.ANGLE_TOLERANCE
+     */
+    public boolean onTarget() {
+        return Math.abs(getAngle() - targetAngle) < PivotConstants.ANGLE_TOLERANCE;
     }
 }
