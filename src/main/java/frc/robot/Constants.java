@@ -10,10 +10,13 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.subsystems.Swerve;
+import frc.thunder.math.InterpolationMap;
 
 /** Add your docs here. */
 public class Constants {
@@ -48,11 +51,15 @@ public class Constants {
         	private static final int kBackRightDriveMotorId = 5;
         	private static final int kBackRightSteerMotorId = 6;
         	private static final int kBackRightEncoderId = 32;
+                
+			public static final int PigeonId = 23;            
+            public static final int COLLECTOR_MOTOR = 9;
+            public static final int FLYWHEEL_MOTOR_1 = 0; //TODO Get real
+            public static final int FLYWHEEL_MOTOR_2 = 0; //TODO Get real
+            public static final int SHOOTER_ANGLE_MOTOR = 0; //TODO Get real
 
-			public static final int PigeonId = 23;    
-                        
-                        public static final int COLLECTOR_MOTOR = 9; // TODO: this is a random id, this will not work
-                }
+        }
+
         public static final int COLLECTOR_ENTRY_BEAMBREAK = 1;
     }
 
@@ -163,5 +170,59 @@ public class Constants {
         public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0;
         public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
+    }
+}
+    
+    public class FlywheelConstants {
+        public static final boolean FLYWHEEL_MOTOR_1_INVERT = false;
+        public static final boolean FLYWHEEL_MOTOR_2_INVERT = false;
+        public static final int FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
+        public static final int FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final double FLYWHEEL_MOTOR_KP = 0;
+        public static final double FLYWHEEL_MOTOR_KI = 0;
+        public static final double FLYWHEEL_MOTOR_KD = 0;
+        public static final double FLYWHEEL_MOTOR_KS = 0;
+        public static final double FLYWHEEL_MOTOR_KV = 0;
+
+        public static final double RPM_TOLERANCE = 0;
+    }
+
+    public class PivotConstants {
+        public static final boolean PIVOT_MOTOR_INVERT = false;
+        public static final int PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
+        public static final int PIVOT_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final NeutralModeValue PIVOT_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final double PIVOT_MOTOR_KP = 0;
+        public static final double PIVOT_MOTOR_KI = 0;
+        public static final double PIVOT_MOTOR_KD = 0;        
+        public static final double PIVOT_MOTOR_KS = 0;
+        public static final double PIVOT_MOTOR_KV = 0;
+
+        public static final double ANGLE_TOLERANCE = 0;
+
+    }
+
+    public class ShooterConstants {
+        public static final double BASE_RPM = 0;
+        public static final double STOW_ANGLE = 0;
+
+
+        public enum SHOOTER_STATES {
+            STOW,
+            PRIME,
+            AIM,
+            SHOOT
+        }
+        
+        // Distance in meters, angle in degrees
+        public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {{
+            put(0d, 0d);
+        }};
+
+        // Distance in meters, speed in RPM
+        public static final InterpolationMap SPEED_MAP = new InterpolationMap() {{
+            put(0d, 0d);
+        }};
     }
 }
