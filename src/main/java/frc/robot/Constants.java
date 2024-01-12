@@ -176,11 +176,7 @@ public class Constants {
         public static final double FLYWHEEL_MOTOR_KS = 0;
         public static final double FLYWHEEL_MOTOR_KV = 0;
 
-        public static final double FLYWHEEL_RPM_TOLERANCE = 0;
-        // Distance in meters, angle in degrees
-        public static final InterpolationMap SHOOTER_DISTANCE_ANGLE_MAP = new InterpolationMap();
-        // Distance in meters, speed in RPM
-        public static final InterpolationMap SHOOTER_DISTANCE_SPEED_MAP = new InterpolationMap();
+        public static final double RPM_TOLERANCE = 0;
     }
 
     public class PivotConstants {
@@ -193,7 +189,31 @@ public class Constants {
         public static final double PIVOT_MOTOR_KD = 0;        
         public static final double PIVOT_MOTOR_KS = 0;
         public static final double PIVOT_MOTOR_KV = 0;
-        public static final double PIVOT_TOLERANCE = 0;
 
+        public static final double ANGLE_TOLERANCE = 0;
+
+    }
+
+    public class ShooterConstants {
+        public static final double BASE_RPM = 0;
+        public static final double STOW_ANGLE = 0;
+
+
+        public enum SHOOTER_STATES {
+            STOW,
+            PRIME,
+            AIM,
+            SHOOT
+        }
+        
+        // Distance in meters, angle in degrees
+        public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {{
+            put(0d, 0d);
+        }};
+
+        // Distance in meters, speed in RPM
+        public static final InterpolationMap SPEED_MAP = new InterpolationMap() {{
+            put(0d, 0d);
+        }};
     }
 }
