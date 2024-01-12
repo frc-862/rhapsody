@@ -9,6 +9,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
@@ -155,5 +156,12 @@ public class Constants {
             public static final double PROCESS_LATENCY = 0.0472; // TODO test
             public static final Translation2d FIELD_LIMIT = new Translation2d(Units.feetToMeters(54.0), Units.feetToMeters(26.0));
             public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
+    }
+
+    public class CollectorConstants {
+        public static final boolean COLLECTOR_MOTOR_INVERTED = false;
+        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
     }
 }
