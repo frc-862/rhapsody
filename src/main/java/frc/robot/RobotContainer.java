@@ -29,8 +29,6 @@ public class RobotContainer extends LightningContainer {
     XboxController coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
 
     Swerve drivetrain = TunerConstants.DriveTrain; // My drivetrain
-    Flywheel flywheel = new Flywheel();
-    Pivot pivot = new Pivot();
 
 	SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric(); //TODO I want field-centric driving in open loop     WE NEED TO FIGURE OUT WHAT Change beacuse with open loop is gone
     SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
