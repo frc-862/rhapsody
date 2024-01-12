@@ -57,15 +57,6 @@ public class RobotContainer extends LightningContainer {
                     .withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), 0.1) * drivetrainConstants.MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), 0.1) * drivetrainConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
                 ));
-
-                // Get collector entry beam break state, then run collector if object is present
-                collector.setDefaultCommand(new RunCommand(() -> {
-                        if (!collector.getEntryBeamBreakState()) {
-                                collector.setPower(1d);
-                        } else {
-                                collector.stop();
-                        }
-                }, collector)); // TODO teach not to do this (was temp for teaching rookies)
 	}
 
         @Override

@@ -5,9 +5,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.RobotMap;
+import frc.robot.Constants.RobotMap.CAN;
+import frc.robot.Constants.CollectorConstants;
+import frc.thunder.config.FalconConfig;
 
 public class Collector extends SubsystemBase {
 
@@ -17,8 +21,8 @@ public class Collector extends SubsystemBase {
 
   public Collector() {
     // Initialize collector hardware
-    collectorMotor = new TalonFX(Constants.RobotMap.CAN.COLLECTOR_MOTOR);
-    collectorEntryBeamBreak = new DigitalInput(Constants.RobotMap.COLLECTOR_ENTRY_BEAMBREAK);
+    collectorMotor = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR, getName(), CollectorConstants.COLLECTOR_MOTOR_INVERTED, CollectorConstants.COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT, CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT, CollectorConstants.COLLECTOR_MOTOR_NEUTRAL_MODE);
+    collectorEntryBeamBreak = new DigitalInput(RobotMap.COLLECTOR_ENTRY_BEAMBREAK);
   }
 
   @Override

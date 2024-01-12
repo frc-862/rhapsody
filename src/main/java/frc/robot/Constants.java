@@ -10,7 +10,6 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
@@ -33,8 +32,8 @@ public class Constants {
         public class CAN {
             // Front Left
             private static final int kFrontLeftDriveMotorId = 1;
-        	private static final int kFrontLeftSteerMotorId = 2;
-        	private static final int kFrontLeftEncoderId = 31;
+                private static final int kFrontLeftSteerMotorId = 2;
+                private static final int kFrontLeftEncoderId = 31;
 
 			// Front Right
         	private static final int kFrontRightDriveMotorId = 3;
@@ -50,7 +49,7 @@ public class Constants {
         	private static final int kBackRightDriveMotorId = 5;
         	private static final int kBackRightSteerMotorId = 6;
         	private static final int kBackRightEncoderId = 32;
-
+                
 			public static final int PigeonId = 23;            
             public static final int COLLECTOR_MOTOR = 9;
             public static final int FLYWHEEL_MOTOR_1 = 0; //TODO Get real
@@ -163,6 +162,14 @@ public class Constants {
             public static final Translation2d FIELD_LIMIT = new Translation2d(Units.feetToMeters(54.0), Units.feetToMeters(26.0));
             public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
     }
+
+    public class CollectorConstants {
+        public static final boolean COLLECTOR_MOTOR_INVERTED = false;
+        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
+    }
+
     
     public class FlywheelConstants {
         public static final boolean FLYWHEEL_MOTOR_1_INVERT = false;
