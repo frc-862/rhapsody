@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+  "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+  "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+  <suppress checks="NewlineAtEndOfFile"/>
+  <suppress checks="WhitespaceAround"/>
+  <suppress checks="WhitespaceAfter"/>
+  <suppress checks="JavadocVariable"/>
+  <suppress checks="ParenPad"/>
+  <suppress checks="LineLength"/>
+  <suppress checks="MissingJavadocMethod"/>
+  <suppress checks="JavadocPackage"/>
+  <suppress checks="AvoidStarImport"/>
+  <suppress checks="ConstantName"/>
+  <suppress checks="DesignForExtension"/>
+  <suppress checks="JavadocStyle"/>
+  <suppress checks="UnusedImports"/>
+  <suppress checks="HiddenField"/>
+  <suppress checks="ParameterName"/>
+  <suppress checks="TypeName"/>
+  <suppress checks="VisibilityModifier"/> <!-- May delete this one later -->
+  <suppress checks="MemberName"/> <!-- May delete this one later -->
+</suppressions>
+        

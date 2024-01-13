@@ -1,0 +1,33 @@
+name: Code Linter
+on: [pull_request]
+jobs:
+    Build:
+        runs-on: ubuntu-latest
+        name: Code Linter
+        permissions:
+            contents: read
+            packages: read
+            statuses: write
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+            - name: Java Code Linter
+              uses: super-linter/super-linter/slim@v5.7.2
+              env:
+                DEFAULT_BRANCH: main
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                LINTER_RULES_PATH: '.github/'
+                JAVA_FILE_NAME: 'sun_checks.xml'
+                VALIDATE_BASH: false
+                VALIDATE_BASH_EXEC: false
+                VALIDATE_GITLEAKS: false
+                VALIDATE_GOOGLE_JAVA_FORMAT: false
+                VALIDATE_GROOVY: false
+                VALIDATE_JSCPD: false
+                VALIDATE_JSON: false
+                VALIDATE_MARKDOWN: false
+                VALIDATE_NATURAL_LANGUAGE: false
+                VALIDATE_XML: false
+                VALIDATE_YAML: false
