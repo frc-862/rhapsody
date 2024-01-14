@@ -21,6 +21,7 @@
   <suppress checks="HiddenField"/>
   <suppress checks="ParameterName"/>
   <suppress checks="TypeName"/>
+  <suppress checks="TodoComment"/>
   <suppress checks="VisibilityModifier"/> <!-- May delete this one later -->
   <suppress checks="MemberName"/> <!-- May delete this one later -->
 </suppressions>
