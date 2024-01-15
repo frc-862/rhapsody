@@ -160,7 +160,9 @@
     <!-- Checks for blocks. You know, those {}'s         -->
     <!-- See https://checkstyle.org/checks/blocks/index.html -->
     <module name="AvoidNestedBlocks"/>
-    <module name="EmptyBlock"/>
+    <module name="EmptyBlock">
+      <property name="severity" value="warning"/>
+    </module>
     <module name="LeftCurly"/>
     <module name="NeedBraces"/>
     <module name="RightCurly"/>
@@ -175,7 +177,9 @@
     <module name="MagicNumber">
       <property name="severity" value="warning"/>
     </module>
-    <module name="MissingSwitchDefault"/>
+    <module name="MissingSwitchDefault">
+      <property name="severity" value="warning"/>
+    </module>
     <module name="MultipleVariableDeclarations"/>
     <module name="SimplifyBooleanExpression"/>
     <module name="SimplifyBooleanReturn"/>

@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -51,15 +47,17 @@ public class Constants {
         	private static final int kBackRightEncoderId = 32;
                 
 			public static final int PigeonId = 23;            
-            public static final int COLLECTOR_MOTOR = 9;
+            public static final int COLLECTOR_MOTOR_FRONT = 9;
+            public static final int COLLECTOR_MOTOR_BACK = 10;
             public static final int FLYWHEEL_MOTOR_1 = 0; //TODO Get real
             public static final int FLYWHEEL_MOTOR_2 = 0; //TODO Get real
             public static final int SHOOTER_ANGLE_MOTOR = 0; //TODO Get real
 
         }
 
-        public static final int COLLECTOR_ENTRY_BEAMBREAK = 1;
-    }
+        public static final int COLLECTOR_ENTRY_BEAMBREAK_FRONT = 1;
+        public static final int COLLECTOR_ENTRY_BEAMBREAK_BACK = 2;
+    } 
 
     public static class ControllerConstants {
 		public static final int DriverControllerPort = 0;
@@ -164,10 +162,15 @@ public class Constants {
     }
 
     public class CollectorConstants {
-        public static final boolean COLLECTOR_MOTOR_INVERTED = false;
-        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
+        public static final boolean COLLECTOR_MOTOR_INVERTED_FRONT = false;
+        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_FRONT = 0; // TODO: make sure they are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_FRONT = 0;
+        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_FRONT = NeutralModeValue.Coast;
+
+        public static final boolean COLLECTOR_MOTOR_INVERTED_BACK = false;
+        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_BACK = 0; // TODO: make sure they are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_BACK = 0;
+        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_BACK = NeutralModeValue.Coast;
     }
 
     
