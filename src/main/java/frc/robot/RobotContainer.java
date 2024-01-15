@@ -1,18 +1,16 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.MathUtil;
-
 
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
@@ -50,7 +48,7 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureButtonBindings() {
-		NamedCommands.registerCommand("CollectIN", new Collect(collector, () -> 1d));
+		NamedCommands.registerCommand("CollectIN", new Collect(() -> 1d, collector));
 
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 
@@ -60,10 +58,6 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.zeroGyro())); // TODO create function to reset Heading
 	}
 
-        @Override
-        protected Command configureAutonomousCommands() {
-			return autoChooser.getSelected();
-		}
 	@Override
 	protected void configureDefaultCommands() {
 		drivetrain.registerTelemetry(logger::telemeterize);
@@ -81,7 +75,9 @@ public class RobotContainer extends LightningContainer {
 	}
 
 	@Override
-	protected void configureAutonomousCommands() {}
+	protected Command configureAutonomousCommands() {
+		return autoChooser.getSelected();
+	}
 
 	@Override
 	protected void releaseDefaultCommands() {}
