@@ -34,7 +34,7 @@ public class Constants {
 			// Front Right
         	private static final int kFrontRightDriveMotorId = 3;
         	private static final int kFrontRightSteerMotorId = 4;
-        	private static final int kFrontRightEncoderId = 33;
+        	private static final int kFrontRightEncoderId = 32;
 
 			// Back Left
 			private static final int kBackLeftDriveMotorId = 7;
@@ -44,8 +44,8 @@ public class Constants {
 			// Back Right
         	private static final int kBackRightDriveMotorId = 5;
         	private static final int kBackRightSteerMotorId = 6;
-        	private static final int kBackRightEncoderId = 32;
-                
+        	private static final int kBackRightEncoderId = 33;
+
 			public static final int PigeonId = 23;            
             public static final int COLLECTOR_MOTOR_FRONT = 9;
             public static final int COLLECTOR_MOTOR_BACK = 10;
