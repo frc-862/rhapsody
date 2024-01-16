@@ -13,7 +13,9 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Collision;
 import frc.robot.command.Collect;
+import frc.robot.command.CollisionDetection;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.DrivetrAinConstants;
@@ -30,6 +32,8 @@ public class RobotContainer extends LightningContainer {
 	// Flywheel flywheel = new Flywheel();
 	// Pivot pivot = new Pivot();
 	// Shooter shooter = new Shooter(pivot, flywheel);
+
+	Collision collision;
 
 
 	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
@@ -59,6 +63,8 @@ public class RobotContainer extends LightningContainer {
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		// logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
+
+		collision = new Collision();
 	}
 
 	@Override
@@ -78,6 +84,8 @@ public class RobotContainer extends LightningContainer {
 						.withVelocityY(-driver.getLeftX() * DrivetrAinConstants.MaxSpeed) // Drive left with negative X (left)
 						.withRotationalRate(-driver.getRightX() * DrivetrAinConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
 				));
+
+		collision.setDefaultCommand(new CollisionDetection(drivetrain, collision));
 
 		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
 		// - coPilot.getLeftTriggerAxis()), collector));
