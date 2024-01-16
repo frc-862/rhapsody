@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -15,8 +16,9 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.command.Collect;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.DrivetrAinConstants;
 import frc.robot.Constants.TunerConstants;
-import frc.robot.Constants.drivetrainConstants;
+import frc.robot.Constants.DrivetrAinConstants;
 
 import frc.thunder.LightningContainer;
 
@@ -31,17 +33,45 @@ public class RobotContainer extends LightningContainer {
 	// Pivot pivot = new Pivot();
 	// Shooter shooter = new Shooter(pivot, flywheel);
 
-	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT Change beacuse with open loop is gone
-	SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric(); 
-	SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-	SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-	Telemetry logger = new Telemetry(drivetrainConstants.MaxSpeed);
+	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
+	// Change beacuse with open loop is gone
+	SwerveRequest.FieldCentric drive;
+	SwerveRequest.FieldCentric slow;
+	SwerveRequest.SwerveDriveBrake brake;
+	SwerveRequest.PointWheelsAt point;
+	Telemetry logger;
+
+	@Override
+	protected void initializeSubsystems() {
+		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
+		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
+
+		drivetrain = TunerConstants.DriveTrain; // My drivetrain
+		// collector = new Collector();
+		// flywheel = new Flywheel();
+		// pivot = new Pivot();
+		// shooter = new Shooter(pivot, flywheel);
+
+		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+
+		brake = new SwerveRequest.SwerveDriveBrake();
+		point = new SwerveRequest.PointWheelsAt();
+		logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
+	}
 
 	@Override
 	protected void configureButtonBindings() {
+		new Trigger(driver::getLeftBumper).onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
 		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
 		new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.zeroGyro())); // TODO create function to reset Heading
+		new Trigger(driver::getRightBumper).whileTrue(
+			drivetrain.applyRequest(() -> slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
+				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT) // Drive counterclockwise with negative X (left)
+			));
 	}
 
 	@Override
@@ -49,15 +79,13 @@ public class RobotContainer extends LightningContainer {
 		drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-				drivetrain.applyRequest(() -> drive
-						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), 0.1)
-								* drivetrainConstants.MaxSpeed) // Drive forward with negative Y (forward)
-						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), 0.1)
-								* drivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), 0.1)
-								* drivetrainConstants.MaxAngularRate))); // Drive counterclockwise with negative X (left)
+				drivetrain.applyRequest(() -> drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive left with negative X (left)
+						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
+				));
 
-		collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector));
+		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
+		// - coPilot.getLeftTriggerAxis()), collector));
 	}
 
 	@Override
