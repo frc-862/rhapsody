@@ -55,13 +55,10 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
 
         configurePathPlanner();
-
-        zeroGyro();
-
     }
-    public Swerve(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
-        this(driveTrainConstants, 250, modules);
-    }
+    // public Swerve(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
+    //     this(driveTrainConstants, 250, modules);
+    // }
 
     public Limelight[] getTrustedLimelights(){
         return Limelight.filterLimelights(limelights);
@@ -85,6 +82,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         }
 
         LightningShuffleboard.setDouble("Swerve", "yaw", m_yawGetter.getValueAsDouble());
+
+        // System.out.println()
     }
 
     private void configurePathPlanner() {
@@ -110,9 +109,4 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
     }
-
-    public void zeroGyro() {
-        m_pigeon2.setYaw(0);
-    }
-
 }
