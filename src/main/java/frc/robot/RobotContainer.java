@@ -1,12 +1,12 @@
 package frc.robot;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
@@ -16,65 +16,95 @@ import frc.robot.subsystems.Collector;
 import frc.robot.command.Collect;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.TunerConstants;
-import frc.robot.Constants.drivetrainConstants;
+import frc.robot.Constants.DrivetrAinConstants;
 
 import frc.thunder.LightningContainer;
 
 public class RobotContainer extends LightningContainer {
 	/* Setting up bindings for necessary control of the swerve drive platform */
-	XboxController driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
-	XboxController coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
+	XboxController driver;
+	XboxController coPilot;
 
-	Swerve drivetrain = TunerConstants.DriveTrain; // My drivetrain
-	Collector collector = new Collector();
+	private Swerve drivetrain;
+	// Collector collector = new Collector();
 	// Flywheel flywheel = new Flywheel();
 	// Pivot pivot = new Pivot();
 	// Shooter shooter = new Shooter(pivot, flywheel);
 
-	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT Change beacuse with open loop is gone
-	SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric(); 
-	SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-	SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-	Telemetry logger = new Telemetry(drivetrainConstants.MaxSpeed);
+
+	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
+	// Change beacuse with open loop is gone
+	SwerveRequest.FieldCentric drive;
+	SwerveRequest.SwerveDriveBrake brake;
+	SwerveRequest.PointWheelsAt point;
+	// Telemetry logger;
+
+	@Override
+	protected void initializeSubsystems() {
+		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
+		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
+
+		drivetrain = TunerConstants.getDrivetrain(); // My drivetrain
+		// collector = new Collector();
+		// flywheel = new Flywheel();
+		// pivot = new Pivot();
+		// shooter = new Shooter(pivot, flywheel);
+
+		// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
+		// Change beacuse with open loop is gone
+		drive = new SwerveRequest.FieldCentric().withDeadband(DrivetrAinConstants.MaxSpeed * 0.1)
+				.withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * 0.1) // Add a 10% deadband
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric driving in open loop
+
+		brake = new SwerveRequest.SwerveDriveBrake();
+		point = new SwerveRequest.PointWheelsAt();
+		// logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
+	}
 
 	@Override
 	protected void configureButtonBindings() {
+		new Trigger(driver::getLeftBumper).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
-		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
-		new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.zeroGyro())); // TODO create function to reset Heading
+		new Trigger(driver::getBButton).whileTrue(drivetrain
+				.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
 	}
 
 	@Override
 	protected void configureDefaultCommands() {
-		drivetrain.registerTelemetry(logger::telemeterize);
+		// drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-				drivetrain.applyRequest(() -> drive
-						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), 0.1)
-								* drivetrainConstants.MaxSpeed) // Drive forward with negative Y (forward)
-						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), 0.1)
-								* drivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), 0.1)
-								* drivetrainConstants.MaxAngularRate))); // Drive counterclockwise with negative X (left)
+				drivetrain.applyRequest(() -> drive.withVelocityX(-driver.getLeftY() * DrivetrAinConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+						.withVelocityY(-driver.getLeftX() * DrivetrAinConstants.MaxSpeed) // Drive left with negative X (left)
+						.withRotationalRate(-driver.getRightX() * DrivetrAinConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+				));
 
-		collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector));
+		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
+		// - coPilot.getLeftTriggerAxis()), collector));
 	}
 
 	@Override
-	protected void configureAutonomousCommands() {}
+	protected void configureAutonomousCommands() {
+
+	}
 
 	@Override
-	protected void releaseDefaultCommands() {}
+	protected void releaseDefaultCommands() {
+	}
 
 	@Override
-	protected void initializeDashboardCommands() {}
+	protected void initializeDashboardCommands() {
+	}
 
 	@Override
-	protected void configureFaultCodes() {}
+	protected void configureFaultCodes() {
+	}
 
 	@Override
-	protected void configureFaultMonitors() {}
+	protected void configureFaultMonitors() {
+	}
 
 	@Override
-	protected void configureSystemTests() {}
+	protected void configureSystemTests() {
+	}
 }
