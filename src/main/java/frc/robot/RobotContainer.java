@@ -4,10 +4,10 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
@@ -24,11 +24,11 @@ import frc.thunder.LightningContainer;
 
 public class RobotContainer extends LightningContainer {
 	/* Setting up bindings for necessary control of the swerve drive platform */
-	XboxController driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
-	XboxController coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
+	XboxController driver;
+	XboxController coPilot;
 
-	Swerve drivetrain = TunerConstants.DriveTrain; // My drivetrain
-	Collector collector = new Collector();
+	private Swerve drivetrain;
+	// Collector collector = new Collector();
 	// Flywheel flywheel = new Flywheel();
 	// Pivot pivot = new Pivot();
 	// Shooter shooter = new Shooter(pivot, flywheel);
@@ -66,7 +66,6 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
 		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
-		new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.zeroGyro())); // TODO create function to reset Heading
 		new Trigger(driver::getRightBumper).whileTrue(
 			drivetrain.applyRequest(() -> slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
 				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
@@ -76,7 +75,7 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureDefaultCommands() {
-		drivetrain.registerTelemetry(logger::telemeterize);
+		// drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 				drivetrain.applyRequest(() -> drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
@@ -89,20 +88,27 @@ public class RobotContainer extends LightningContainer {
 	}
 
 	@Override
-	protected void configureAutonomousCommands() {}
+	protected void configureAutonomousCommands() {
+
+	}
 
 	@Override
-	protected void releaseDefaultCommands() {}
+	protected void releaseDefaultCommands() {
+	}
 
 	@Override
-	protected void initializeDashboardCommands() {}
+	protected void initializeDashboardCommands() {
+	}
 
 	@Override
-	protected void configureFaultCodes() {}
+	protected void configureFaultCodes() {
+	}
 
 	@Override
-	protected void configureFaultMonitors() {}
+	protected void configureFaultMonitors() {
+	}
 
 	@Override
-	protected void configureSystemTests() {}
+	protected void configureSystemTests() {
+	}
 }
