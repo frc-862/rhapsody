@@ -23,7 +23,6 @@ import frc.robot.Constants.DrivetrAinConstants;
 import frc.thunder.LightningContainer;
 
 public class RobotContainer extends LightningContainer {
-	/* Setting up bindings for necessary control of the swerve drive platform */
 	XboxController driver;
 	XboxController coPilot;
 
@@ -33,8 +32,6 @@ public class RobotContainer extends LightningContainer {
 	// Pivot pivot = new Pivot();
 	// Shooter shooter = new Shooter(pivot, flywheel);
 
-	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
-	// Change beacuse with open loop is gone
 	SwerveRequest.FieldCentric drive;
 	SwerveRequest.FieldCentric slow;
 	SwerveRequest.SwerveDriveBrake brake;
@@ -82,9 +79,6 @@ public class RobotContainer extends LightningContainer {
 						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive left with negative X (left)
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
-
-		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
-		// - coPilot.getLeftTriggerAxis()), collector));
 	}
 
 	@Override
