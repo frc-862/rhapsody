@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
@@ -32,9 +31,10 @@ public class RobotContainer extends LightningContainer {
 	// Pivot pivot = new Pivot();
 	// Shooter shooter = new Shooter(pivot, flywheel);
 
+
 	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
 	// Change beacuse with open loop is gone
-	SwerveRequest.RobotCentric drive;
+	SwerveRequest.FieldCentric drive;
 	SwerveRequest.SwerveDriveBrake brake;
 	SwerveRequest.PointWheelsAt point;
 	// Telemetry logger;
@@ -52,12 +52,7 @@ public class RobotContainer extends LightningContainer {
 
 		// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
 		// Change beacuse with open loop is gone
-		// drive = new SwerveRequest.FieldCentric().withDeadband(DrivetrAinConstants.MaxSpeed * 0.1)
-		// 		.withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * 0.1) // Add a 10% deadband
-		// 		.withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric driving in open loop
-
-		
-		drive = new SwerveRequest.RobotCentric().withDeadband(DrivetrAinConstants.MaxSpeed * 0.1)
+		drive = new SwerveRequest.FieldCentric().withDeadband(DrivetrAinConstants.MaxSpeed * 0.1)
 				.withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * 0.1) // Add a 10% deadband
 				.withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric driving in open loop
 
@@ -68,9 +63,7 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureButtonBindings() {
-		// joystick.leftBumper().onTrue(drivetrain.runOnce(() ->
-		// drivetrain.seedFieldRelative()));
-
+		new Trigger(driver::getLeftBumper).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
 		new Trigger(driver::getBButton).whileTrue(drivetrain
 				.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
