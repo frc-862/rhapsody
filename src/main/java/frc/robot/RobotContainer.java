@@ -24,6 +24,7 @@ import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.DrivetrAinConstants;
 
 import frc.thunder.LightningContainer;
+import frc.thunder.auto.Autonomous;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class RobotContainer extends LightningContainer {
@@ -37,7 +38,7 @@ public class RobotContainer extends LightningContainer {
 	// Pivot pivot = new Pivot();
 	// Shooter shooter = new Shooter(pivot, flywheel);
 
-
+	private SendableChooser<Command> autoChooser;
 	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
 	// Change beacuse with open loop is gone
 	SwerveRequest.FieldCentric drive;
@@ -55,6 +56,7 @@ public class RobotContainer extends LightningContainer {
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel);
+		autoChooser = AutoBuilder.buildAutoChooser();
 
 		// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
 		// Change beacuse with open loop is gone
@@ -73,8 +75,7 @@ public class RobotContainer extends LightningContainer {
 	protected void configureButtonBindings() {
 		new Trigger(driver::getLeftBumper).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
-		new Trigger(driver::getBButton).whileTrue(drivetrain
-				.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
+		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
 	}
 
 	@Override
