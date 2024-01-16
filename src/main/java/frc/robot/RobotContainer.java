@@ -2,10 +2,15 @@ package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.MathUtil;
 
@@ -21,6 +26,7 @@ import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.DrivetrAinConstants;
 
 import frc.thunder.LightningContainer;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class RobotContainer extends LightningContainer {
 	XboxController driver;
@@ -32,6 +38,9 @@ public class RobotContainer extends LightningContainer {
 	// Pivot pivot = new Pivot();
 	// Shooter shooter = new Shooter(pivot, flywheel);
 
+	private SendableChooser<Command> autoChooser;
+	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
+	// Change beacuse with open loop is gone
 	SwerveRequest.FieldCentric drive;
 	SwerveRequest.FieldCentric slow;
 	SwerveRequest.SwerveDriveBrake brake;
@@ -40,10 +49,15 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeSubsystems() {
+		
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
-
+		
 		drivetrain = TunerConstants.DriveTrain; // My drivetrain
+		
+		autoChooser = AutoBuilder.buildAutoChooser();
+		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
+		
 		// collector = new Collector();
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
@@ -72,7 +86,7 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureDefaultCommands() {
-		// drivetrain.registerTelemetry(logger::telemeterize);
+		drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 				drivetrain.applyRequest(() -> drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
@@ -82,8 +96,8 @@ public class RobotContainer extends LightningContainer {
 	}
 
 	@Override
-	protected void configureAutonomousCommands() {
-
+	protected Command getAutonomousCommand(){
+		return autoChooser.getSelected();
 	}
 
 	@Override
