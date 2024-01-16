@@ -25,7 +25,6 @@ import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.DrivetrAinConstants;
 
 import frc.thunder.LightningContainer;
-import frc.thunder.auto.Autonomous;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class RobotContainer extends LightningContainer {
@@ -50,10 +49,15 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeSubsystems() {
+		
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
-
+		
 		drivetrain = TunerConstants.DriveTrain; // My drivetrain
+		
+		autoChooser = AutoBuilder.buildAutoChooser();
+		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
+		
 		// collector = new Collector();
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
@@ -73,7 +77,6 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
 		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
-		new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.zeroGyro())); // TODO create function to reset Heading
 		new Trigger(driver::getRightBumper).whileTrue(
 			drivetrain.applyRequest(() -> slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
 				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
@@ -83,7 +86,7 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureDefaultCommands() {
-		// drivetrain.registerTelemetry(logger::telemeterize);
+		drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 				drivetrain.applyRequest(() -> drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
@@ -96,7 +99,7 @@ public class RobotContainer extends LightningContainer {
 	}
 
 	@Override
-	protected Command configureAutonomousCommands() {
+	protected Command getAutonomousCommand(){
 		return autoChooser.getSelected();
 	}
 
