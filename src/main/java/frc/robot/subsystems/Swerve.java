@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
+import frc.robot.Constants.AutonomousConstants;
+import frc.robot.Constants.DrivetrAinConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.RobotMap.CAN;
@@ -92,13 +94,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             this::seedFieldRelative,  // Consumer for seeding pose against auto
             this::getCurrentRobotChassisSpeeds,
             (speeds)->this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
-            new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                                            new PIDConstants(10, 0, 0),
-                                            1,
-                                            1,
-                                            new ReplanningConfig(),
-                                            0.004),
-                                            () -> false,//TODO set this up for field fliping Currently a dirty fix
+            new HolonomicPathFollowerConfig(
+                AutonomousConstants.TRANSLATION_PID,
+                AutonomousConstants.ROTATION_PID,
+                AutonomousConstants.MAX_MODULE_VELOCITY,
+                AutonomousConstants.DRIVE_BASE_RADIUS,
+                new ReplanningConfig(),
+                AutonomousConstants.CONTROL_LOOP_PERIOD),
+                () -> false,//TODO set this up for field fliping Currently a dirty fix
             this); // Subsystem for requirements
     }
 
