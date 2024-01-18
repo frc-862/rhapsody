@@ -7,6 +7,7 @@ package frc.robot.command;
 import frc.robot.subsystems.Collision;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.robot.Constants.VisionConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
@@ -16,7 +17,6 @@ public class CollisionDetection extends Command {
   public Collision collision;
   private double pitchAngle;
   private double rollAngle;
-  private double deadZone;
   private boolean offBalance;
   /** Creates a new CollisionDetection. */
   public CollisionDetection(Swerve drivetrain, Collision collision) {
@@ -34,12 +34,12 @@ public class CollisionDetection extends Command {
     // initializes roll, pitch, and dead zone
     pitchAngle = drivetrain.getPigeon2().getPitch().getValueAsDouble();
     rollAngle = drivetrain.getPigeon2().getRoll().getValueAsDouble();
-    deadZone = 2d; // dead zone for how far our robot can tip in degrees
-
+   
+      
     // creates a new element for the shuffleboard
-    LightningShuffleboard.setBool("Swerve", "off balance", offBalance);
-    LightningShuffleboard.setDouble("Swerve", "pitch", pitchAngle);
-    LightningShuffleboard.setDouble("Swerve", "roll", rollAngle);
+    LightningShuffleboard.setBoolSupplier("Swerve", "off balance", () -> offBalance);
+    LightningShuffleboard.setDoubleSupplier("Swerve", "pitch", () -> drivetrain.getPigeon2().getPitch().getValueAsDouble());
+    LightningShuffleboard.setDoubleSupplier("Swerve", "roll", () -> drivetrain.getPigeon2().getRoll().getValueAsDouble());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,11 +49,12 @@ public class CollisionDetection extends Command {
     pitchAngle = drivetrain.getPigeon2().getPitch().getValueAsDouble();
     rollAngle = drivetrain.getPigeon2().getRoll().getValueAsDouble();
     // checks if our roll or pitch are larger than the dead zone
-    if(Math.abs(pitchAngle) > deadZone || Math.abs(rollAngle) > deadZone){
+    if(Math.abs(pitchAngle) > VisionConstants.COLLISION_DEADZONE || Math.abs(rollAngle) > VisionConstants.COLLISION_DEADZONE){
       offBalance = true;
     } else{
       offBalance = false;
     }
+  
   }
 
   // Called once the command ends or is interrupted.
