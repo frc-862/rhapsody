@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2,
-      "y": 2
+      "x": 0.0,
+      "y": 0.0
     },
     "rotation": 0
   },
@@ -14,12 +14,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Path1"
+            "pathName": "1MeterLeft"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "1Meter",
   "choreoAuto": false
 }
