@@ -6,8 +6,10 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
@@ -238,6 +240,11 @@ public class Constants {
 
         public static final double ANGLE_TOLERANCE = 0;
 
+    }
+
+    public class AutonomousConstants {
+        public static final Pose2d targetPose = new Pose2d(new Translation2d(1, 0), new Rotation2d(Units.degreesToRadians(0d)));
+        public static final PathConstraints pathConstraints = new PathConstraints(1.0, 0.5, 1.0, 0.5); //TODO get constants
     }
 
     public class ShooterConstants {

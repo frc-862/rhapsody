@@ -20,6 +20,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.command.Collect;
+import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrAinConstants;
 import frc.robot.Constants.TunerConstants;
@@ -47,6 +48,8 @@ public class RobotContainer extends LightningContainer {
 	SwerveRequest.PointWheelsAt point;
 	Telemetry logger;
 
+	Command pathfindingCommand;
+
 	@Override
 	protected void initializeSubsystems() {
 		
@@ -69,6 +72,13 @@ public class RobotContainer extends LightningContainer {
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
+
+		pathfindingCommand = AutoBuilder.pathfindToPose(
+        AutonomousConstants.targetPose,
+        AutonomousConstants.pathConstraints,
+        0.0, // Goal end velocity in meters/sec
+        0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+);
 	}
 
 	@Override
@@ -82,6 +92,8 @@ public class RobotContainer extends LightningContainer {
 				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT) // Drive counterclockwise with negative X (left)
 			));
+
+		new Trigger(driver::getXButton).whileTrue(pathfindingCommand);
 	}
 
 	@Override
