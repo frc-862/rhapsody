@@ -60,8 +60,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     //     this(driveTrainConstants, 250, modules);
     // }
 
-    public Limelight[] getTrustedLimelights(){
-        return Limelight.filterLimelights(limelights);
+    public Limelight[] getLimelights(){
+        return limelights;
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
