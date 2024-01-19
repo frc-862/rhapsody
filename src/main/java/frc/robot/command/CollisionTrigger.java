@@ -2,7 +2,6 @@ package frc.robot.command;
 
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj.event.EventLoop;
 import frc.robot.subsystems.Collision;
 import frc.robot.Constants.VisionConstants;
 
@@ -17,8 +16,8 @@ public class CollisionTrigger extends Trigger {
     @Override
     // our boolean for our custom trigger
     public boolean getAsBoolean() {
-        // checks if our magnitude is greater than our deadzone
-        return collision.getMagnitude() > VisionConstants.COLLISION_DEADZONE;
+        // checks if the absolute value of our pitch or roll is greater than our deadzone
+        return Math.abs(collision.getPitch()) > VisionConstants.COLLISION_DEADZONE || Math.abs(collision.getRoll()) > VisionConstants.COLLISION_DEADZONE;
     }
     
 }
