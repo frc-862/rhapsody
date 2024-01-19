@@ -197,6 +197,7 @@ public class Constants {
         public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
                 Units.feetToMeters(5));
         public static final double COLLISION_DEADZONE = 2d;
+        public static final double ALIGNMENT_TOLERANCE = 4d; //TODO: make this an actual value
     }
 
     public class CollectorConstants {

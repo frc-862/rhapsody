@@ -20,6 +20,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Collision;
+import frc.robot.command.PointAtTag;
 import frc.robot.command.Collect;
 import frc.robot.command.CollisionTrigger;
 import frc.robot.Constants.ControllerConstants;
@@ -60,7 +61,7 @@ public class RobotContainer extends LightningContainer {
 		
 		drivetrain = TunerConstants.DriveTrain; // My drivetrain
 		
-		autoChooser = AutoBuilder.buildAutoChooser();
+		autoChooser = AutoBuilder.buildAutoChooser();	
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 		
 		// collector = new Collector();
@@ -91,6 +92,7 @@ public class RobotContainer extends LightningContainer {
 			));
 
 		new CollisionTrigger(driver::getYButton, collision).whileTrue(drivetrain.applyRequest(() -> brake));
+		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain));
 	}
 
 	@Override
