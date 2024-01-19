@@ -21,7 +21,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Collision;
 import frc.robot.command.Collect;
-import frc.robot.command.CollisionDetection;
+import frc.robot.command.CollisionTrigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrAinConstants;
 import frc.robot.Constants.TunerConstants;
@@ -75,7 +75,7 @@ public class RobotContainer extends LightningContainer {
 		point = new SwerveRequest.PointWheelsAt();
 		// logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
 
-		collision = new Collision();
+		collision = new Collision(drivetrain);
 	}
 
 	@Override
@@ -89,19 +89,19 @@ public class RobotContainer extends LightningContainer {
 				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT) // Drive counterclockwise with negative X (left)
 			));
+
+		new CollisionTrigger(driver::getYButton, collision).whileTrue(drivetrain.applyRequest(() -> brake));
 	}
 
 	@Override
 	protected void configureDefaultCommands() {
-		drivetrain.registerTelemetry(logger::telemeterize);
+		// drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 				drivetrain.applyRequest(() -> drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
 						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive left with negative X (left)
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
-
-		collision.setDefaultCommand(new CollisionDetection(drivetrain, collision));
 
 		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
 		// - coPilot.getLeftTriggerAxis()), collector));
