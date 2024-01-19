@@ -5,6 +5,7 @@
 package frc.robot.command;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,52 +17,55 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DrivetrAinConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
+import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
 import frc.thunder.vision.Limelight;
 
-public class AngleTowardTags extends Command {
+public class PointAtTag extends Command {
 
   private Swerve drivetrain;
   private Limelight[] limelights;
+  double targetHeading;
+  double pidOutput;
 
-  public Pose2d targetPoseRobotSpace;
-  Rotation2d targetHeading;
-  Translation2d targetPosition;
+  PIDController headingController = new PIDController(0.1, 0, 0);
 
-  /** Creates a new AngleTowardTags. */
-  public AngleTowardTags(Swerve drivetrain) {
+  /** Creates a new PointAtTag
+   . */
+  public PointAtTag(Swerve drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
-    this.limelights = drivetrain.getTrustedLimelights();
+    this.limelights = drivetrain.getLimelights();
+
     addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    for (Limelight limelight : Limelight.filterLimelights(limelights)) {
-      if (limelight.hasTarget()) {
-        targetPoseRobotSpace = limelight.getTargetPoseRobotSpace().toPose2d();
-        break;
-      }
-    }
-    targetHeading = targetPoseRobotSpace.getRotation();
-    targetPosition = targetPoseRobotSpace.getTranslation();
+    headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-    point.withModuleDirection(targetHeading);
-    drivetrain.applyRequest(() -> point);
 
-    for (Limelight limelight : Limelight.filterLimelights(limelights)) {
-      if (limelight.hasTarget()) {
-        targetPoseRobotSpace = limelight.getTargetPoseRobotSpace().toPose2d();
-        break;
-      }
+    for (Limelight limelight : Limelight.filterLimelights(limelights)){
+      targetHeading = limelight.getTargetX(); 
     }
+
+    LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
+    
+    headingController.setP(LightningShuffleboard.getDouble("PointAtTag", "P", 0.1));
+    headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 0));
+
+    pidOutput = headingController.calculate(0, targetHeading);
+    LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
+    SwerveRequest.RobotCentric pointAtTag = new SwerveRequest.RobotCentric();
+    drivetrain.setControl(pointAtTag.withRotationalRate(-pidOutput));
 
   }
 
