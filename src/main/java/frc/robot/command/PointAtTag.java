@@ -25,7 +25,7 @@ public class PointAtTag extends Command {
 	/**
 	 * Creates a new PointAtTag.
 	 * @param drivetrain to request movement 
-	 * @param limelights to get vision data
+	 * @param useLimelights to get if we want to use vision data or not
 	 */
 	public PointAtTag(Swerve drivetrain, boolean useLimelights) {
 		this.drivetrain = drivetrain;
