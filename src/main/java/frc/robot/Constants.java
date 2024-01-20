@@ -8,6 +8,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackTy
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
@@ -72,6 +73,16 @@ public class Constants {
 
         public static final double DEADBAND = 0.1;
 	}
+
+    public static class AutonomousConstants {
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 0, 0);  //TODO: Tune
+        public static final PIDConstants ROTATION_PID = new PIDConstants(10, 0, 0);     //TODO: Tune
+
+        public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(17.3); //f/s to m/s
+        public static final double DRIVE_BASE_RADIUS = Units.feetToMeters(19.09); //TODO check
+
+        public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
+    }
 
     public static class TunerConstants {
         // Both sets of gains need to be tuned to your individual robot.
