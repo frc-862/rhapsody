@@ -36,7 +36,6 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 import frc.thunder.util.Pose4d;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -58,7 +57,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         this.limelights = new Limelight[] {new Limelight("limelight-front", "10.8.62.11"),
                 new Limelight("limelight-back", "10.8.62.12")};
-
 
         configurePathPlanner();
     }

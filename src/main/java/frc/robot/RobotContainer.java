@@ -55,7 +55,7 @@ public class RobotContainer extends LightningContainer {
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
 		
-		drivetrain = TunerConstants.DriveTrain; // My drivetrain
+		drivetrain = TunerConstants.getDrivetrain(); // My drivetrain
 		
 		autoChooser = AutoBuilder.buildAutoChooser();	
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
@@ -88,6 +88,8 @@ public class RobotContainer extends LightningContainer {
 		
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain));
 
+			));
+		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, false));
 	}
 
 	@Override
