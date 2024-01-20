@@ -78,7 +78,7 @@ public class Constants {
         public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 0, 0);  //TODO: Tune
         public static final PIDConstants ROTATION_PID = new PIDConstants(10, 0, 0);     //TODO: Tune
 
-        public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16.5); // TODO check
+        public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(17.3); //f/s to m/s
         public static final double DRIVE_BASE_RADIUS = Units.feetToMeters(19.09); //TODO check
 
         public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
