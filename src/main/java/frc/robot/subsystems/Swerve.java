@@ -25,7 +25,6 @@ import frc.thunder.util.Pose4d;
 import frc.thunder.vision.Limelight;
 import frc.thunder.util.Pose4d;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
