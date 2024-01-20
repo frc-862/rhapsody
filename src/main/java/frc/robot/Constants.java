@@ -28,8 +28,7 @@ public class Constants {
 
     public class DrivetrAinConstants { //TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center
-                                                                                         // of robot to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
         TunerConstants.kSpeedAt12VoltsMps / // free speed
                 Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2)) // circumference of circle with radius of wheelbase
@@ -235,16 +234,14 @@ public class Constants {
                 kBackRightEncoderOffsetRh, Units.inchesToMeters(kBackRightXPosInchesRh),
                 Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
 
-        public static final Swerve DriveTrainMercury = new Swerve(DrivetrainConstants, 250, FrontLeft,
-                FrontRight, BackLeft, BackRight);
-        public static final Swerve DriveTrainRhapsody = new Swerve(DrivetrainConstants, 250, FrontLeftRh,
-                FrontRightRh, BackLeftRh, BackRightRh);
         
         public static final Swerve getDrivetrain() {
             if(Constants.isMercury()) {
-                return DriveTrainMercury;
+                System.out.println("IS MERCURY");
+                return new Swerve(DrivetrainConstants, 250, FrontLeft, FrontRight, BackLeft, BackRight);
             } else {
-                return DriveTrainRhapsody;
+                System.out.println("IS RHAPSODY");
+                return new Swerve(DrivetrainConstants, 250, FrontLeftRh, FrontRightRh, BackLeftRh, BackRightRh);
             }
         }
     }
