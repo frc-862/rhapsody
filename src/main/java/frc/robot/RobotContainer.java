@@ -19,6 +19,7 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
+import frc.robot.command.PointAtTag;
 import frc.robot.command.Collect;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrAinConstants;
@@ -55,7 +56,7 @@ public class RobotContainer extends LightningContainer {
 		
 		drivetrain = TunerConstants.DriveTrain; // My drivetrain
 		
-		autoChooser = AutoBuilder.buildAutoChooser();
+		autoChooser = AutoBuilder.buildAutoChooser();	
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 		
 		// collector = new Collector();
@@ -82,6 +83,7 @@ public class RobotContainer extends LightningContainer {
 				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT) // Drive counterclockwise with negative X (left)
 			));
+		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain));
 	}
 
 	@Override
