@@ -14,15 +14,14 @@ public class Collision extends SubsystemBase {
   private Swerve drivetrain;
   public double pitch;
   public double roll;
-  /** Creates a new CollisionDetection. */
 
   public Collision(Swerve drivetrain) {
     this.drivetrain = drivetrain;
-    // initiallizes pitch and roll
+    // initiallizes pitch and roll (so we don't print null values)
     pitch = drivetrain.getPigeon2().getPitch().getValueAsDouble();
     roll = drivetrain.getPigeon2().getRoll().getValueAsDouble();
 
-    // displays whether the robot is off balence
+    // displays whether the robot is off balance
     LightningShuffleboard.setBoolSupplier("Collision", "offBalance", () -> (Math.abs(pitch) > VisionConstants.COLLISION_DEADZONE || Math.abs(roll) > VisionConstants.COLLISION_DEADZONE));
   }
 
