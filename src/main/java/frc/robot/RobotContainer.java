@@ -22,7 +22,6 @@ import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Collision;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Collect;
-import frc.robot.command.CollisionTrigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrAinConstants;
 import frc.robot.Constants.TunerConstants;
@@ -89,7 +88,7 @@ public class RobotContainer extends LightningContainer {
 				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT) // Drive counterclockwise with negative X (left)
 			));
-		new CollisionTrigger(driver::getYButton, collision).whileTrue(drivetrain.applyRequest(() -> brake));
+
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain));
 	}
 
