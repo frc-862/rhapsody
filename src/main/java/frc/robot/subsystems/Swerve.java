@@ -143,6 +143,5 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public void setSlowMode(boolean slow) {
         slowMode = slow;
-        System.out.println("SETTING SLOW MODE");
     }
 }
