@@ -19,6 +19,7 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Collision;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Collect;
 import frc.robot.command.CollisionTrigger;
@@ -35,6 +36,7 @@ public class RobotContainer extends LightningContainer {
 	XboxController coPilot;
 
 	private Swerve drivetrain;
+	private Collision collision;
 	// Collector collector = new Collector();
 	// Flywheel flywheel = new Flywheel();
 	// Pivot pivot = new Pivot();
@@ -73,6 +75,7 @@ public class RobotContainer extends LightningContainer {
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		// logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
+		collision = new Collision(drivetrain);
 	}
 
 	@Override
@@ -86,7 +89,7 @@ public class RobotContainer extends LightningContainer {
 				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT) // Drive counterclockwise with negative X (left)
 			));
-		new CollisionTrigger(driver::getYButton, drivetrain).whileTrue(drivetrain.applyRequest(() -> brake));
+		new CollisionTrigger(driver::getYButton, collision).whileTrue(drivetrain.applyRequest(() -> brake));
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain));
 	}
 
