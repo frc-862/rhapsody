@@ -6,9 +6,9 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.util.PIDConstants;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
@@ -255,6 +255,11 @@ public class Constants {
     public class ShooterConstants {
         public static final double BASE_RPM = 0;
         public static final double STOW_ANGLE = 0;
+        
+        public static final int FAR_WING_X = 0;
+        public static final int FAR_WING_Y = 0;
+        public static final int CLOSE_WING_X = 0;
+        public static final int CLOSE_WING_Y = 0;
 
         public enum SHOOTER_STATES {
             STOW,

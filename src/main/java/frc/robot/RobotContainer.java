@@ -34,10 +34,10 @@ public class RobotContainer extends LightningContainer {
 	XboxController coPilot;
 
 	private Swerve drivetrain;
-	// Collector collector = new Collector();
-	// Flywheel flywheel = new Flywheel();
-	// Pivot pivot = new Pivot();
-	// Shooter shooter = new Shooter(pivot, flywheel);
+	// Collector collector;
+	// Flywheel flywheel;
+	// Pivot pivot;
+	// Shooter shooter;
 
 	private SendableChooser<Command> autoChooser;
 	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
@@ -62,7 +62,7 @@ public class RobotContainer extends LightningContainer {
 		// collector = new Collector();
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
-		// shooter = new Shooter(pivot, flywheel);
+		// shooter = new Shooter(pivot, flywheel, drivetrain, coPilot);
 
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop

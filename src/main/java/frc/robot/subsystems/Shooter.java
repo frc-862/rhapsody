@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
@@ -7,6 +8,8 @@ import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
 public class Shooter extends SubsystemBase {
     private Pivot pivot;
     private Flywheel flywheel;
+    private XboxController copilot;
+
     //TODO: add collector/indexer
 
     //TODO: find initial target angle
@@ -14,13 +17,32 @@ public class Shooter extends SubsystemBase {
 
     private SHOOTER_STATES state = SHOOTER_STATES.STOW;
 
-    public Shooter(Pivot pivot, Flywheel flywheel) {
+    private Swerve drivetrain;
+
+    public Shooter(Pivot pivot, Flywheel flywheel, Swerve drivetrain, XboxController copilot) {
         this.pivot = pivot;
         this.flywheel = flywheel;
+        this.drivetrain = drivetrain;
+        this.copilot = copilot;
     }
   
     @Override
     public void periodic() {
+        var xPose = drivetrain.getPose().get().getX(); 
+        var yPose = drivetrain.getPose().get().getX(); 
+
+        if (yPose > ShooterConstants.CLOSE_WING_Y && yPose < ShooterConstants.FAR_WING_Y && 
+        xPose > ShooterConstants.CLOSE_WING_X && xPose < ShooterConstants.FAR_WING_X) {
+            if (copilot.getAButton()) { 
+                state = SHOOTER_STATES.SHOOT;
+            } else {
+                state = SHOOTER_STATES.PRIME;
+            }
+        } else {
+            state = SHOOTER_STATES.STOW;
+        }
+
+
         //TODO: IMPLEMENT VISION/ODO
         currentDistance = 0;
         switch (state) {
