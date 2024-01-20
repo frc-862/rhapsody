@@ -60,9 +60,7 @@ public class PointAtTag extends Command {
 	@Override
 	public void execute() {
 
-		for (Limelight limelight : Limelight.filterLimelights(limelights)) {
-			targetHeading = limelight.getTargetX();
-		}
+		targetHeading = limelight.getTargetX();
 
 		LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
 
