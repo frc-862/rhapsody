@@ -84,6 +84,7 @@ public class RobotContainer extends LightningContainer {
 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT) // Drive counterclockwise with negative X (left)
 			));
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain));
+		new Trigger(driver::getYButton).whileTrue(new PointAtTag(drivetrain, drivetrain.getLimelights()));
 	}
 
 	@Override

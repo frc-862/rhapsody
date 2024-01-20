@@ -12,20 +12,33 @@ import frc.thunder.vision.Limelight;
 public class PointAtTag extends Command {
 
 	private Swerve drivetrain;
-	private Limelight[] limelights;
+	private Limelight[] limelights = new Limelight[0];
 	private double targetHeading;
+	private double lockedOnHeading;
 	private double pidOutput;
 	private SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
-	PIDController headingController = new PIDController(0.1, 0, 0); // TODO make constant and tune
+	private boolean useLimelights;
+
+	PIDController headingController = VisionConstants.HEADING_CONTROLLER;
 
 	/**
 	 * Creates a new PointAtTag.
 	 * @param drivetrain to request movement 
 	 */
-	public PointAtTag(Swerve drivetrain) {
+	public PointAtTag(Swerve drivetrain, Limelight[] limelights) {
 		this.drivetrain = drivetrain;
-		this.limelights = drivetrain.getLimelights();
+		this.limelights = limelights;
+
+		useLimelights = true;
+
+		addRequirements(drivetrain);
+	}
+
+	public PointAtTag(Swerve drivetrain){
+		this.drivetrain = drivetrain;
+
+		useLimelights = false;
 
 		addRequirements(drivetrain);
 	}
@@ -40,19 +53,29 @@ public class PointAtTag extends Command {
 	@Override
 	public void execute() {
 
-		for (Limelight limelight : Limelight.filterLimelights(limelights)) {
-			targetHeading = limelight.getTargetX();
+		if (!useLimelights) {
+			lockedOnHeading = LightningShuffleboard.getDouble("PointAtTag", "LockOnHeading", 0);
+			LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
+			targetHeading = lockedOnHeading - drivetrain.getPigeon2().getAngle();
+
+
+			SwerveRequest.FieldCentric pointAtTag = new SwerveRequest.FieldCentric();
+			pidOutput = headingController.calculate(0, targetHeading);
+			drivetrain.setControl(pointAtTag.withRotationalRate(-pidOutput));
+
+		} else {
+			for (Limelight limelight : Limelight.filterLimelights(limelights)) {
+				targetHeading = limelight.getTargetX();
+			}
+
+			SwerveRequest.RobotCentric pointAtTag = new SwerveRequest.RobotCentric();
+			pidOutput = headingController.calculate(0, targetHeading);
+			drivetrain.setControl(pointAtTag.withRotationalRate(-pidOutput));
+
 		}
 
 		LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
-
-		headingController.setP(LightningShuffleboard.getDouble("PointAtTag", "P", 0.1));
-		headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 0));
-
-		pidOutput = headingController.calculate(0, targetHeading);
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
-		SwerveRequest.RobotCentric pointAtTag = new SwerveRequest.RobotCentric();
-		drivetrain.setControl(pointAtTag.withRotationalRate(-pidOutput));
 
 	}
 
