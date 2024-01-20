@@ -1,7 +1,5 @@
 package frc.robot.command;
 
-import java.util.Arrays;
-
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
@@ -30,6 +28,7 @@ public class PointAtTag extends Command {
 	PIDController headingController = new PIDController(0.1, 0, 0); // TODO make constant and tune
 	private XboxController driver;
 	private FieldCentric drive;
+	private FieldCentric slow;
 
 	/**
 	 * Creates a new PointAtTag.
@@ -44,7 +43,7 @@ public class PointAtTag extends Command {
 			}
 		}
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
-
+		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 		addRequirements(drivetrain);
 	}
 
@@ -69,11 +68,19 @@ public class PointAtTag extends Command {
 
 		pidOutput = headingController.calculate(0, targetHeading);
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
-		SwerveRequest.RobotCentric pointAtTag = new SwerveRequest.RobotCentric();
-		drivetrain.setControl(pointAtTag.withRotationalRate(-pidOutput));
-		// drivetrain.applyRequest(() -> drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-		//   .withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive left with negative X (left)
-		//   .withRotationalRate(-pidOutput)); // Drive counterclockwise with negative X (left)
+		// SwerveRequest.RobotCentric pointAtTag = new SwerveRequest.RobotCentric();
+		// drivetrain.setControl(pointAtTag.withRotationalRate(-pidOutput));
+		if (driver.getRightBumper()) {
+			drivetrain.setControl(slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
+				.withRotationalRate(-pidOutput) // Drive counterclockwise with negative X (left)
+			);
+		} else {
+			drivetrain.setControl(drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+		  .withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive left with negative X (left)
+		  .withRotationalRate(-pidOutput) // Rotate toward the desired direction
+		  ); // Drive counterclockwise with negative X (left)
+		}
 
 	}
 
