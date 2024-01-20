@@ -83,8 +83,7 @@ public class RobotContainer extends LightningContainer {
 				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT) // Drive counterclockwise with negative X (left)
 			));
-		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain));
-		new Trigger(driver::getYButton).whileTrue(new PointAtTag(drivetrain, drivetrain.getLimelights()));
+		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, false));
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import frc.thunder.vision.Limelight;
 public class PointAtTag extends Command {
 
 	private Swerve drivetrain;
-	private Limelight[] limelights = new Limelight[0];
+	private Limelight[] limelights;
 	private double targetHeading;
 	private double lockedOnHeading;
 	private double pidOutput;
@@ -27,19 +27,10 @@ public class PointAtTag extends Command {
 	 * @param drivetrain to request movement 
 	 * @param limelights to get vision data
 	 */
-	public PointAtTag(Swerve drivetrain, Limelight[] limelights) {
+	public PointAtTag(Swerve drivetrain, boolean useLimelights) {
 		this.drivetrain = drivetrain;
-		this.limelights = limelights;
-
-		useLimelights = true;
-
-		addRequirements(drivetrain);
-	}
-
-	public PointAtTag(Swerve drivetrain){
-		this.drivetrain = drivetrain;
-
-		useLimelights = false;
+		this.useLimelights = useLimelights;
+		limelights = drivetrain.getLimelights();
 
 		addRequirements(drivetrain);
 	}
