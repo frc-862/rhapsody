@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -49,8 +50,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         this.limelights = new Limelight[] {
-            new Limelight("limelight-back", "10.8.62.11"),
-            new Limelight("limelight-front", "10.8.62.12")
+            new Limelight("limelight-front", "10.8.62.11"),
+            new Limelight("limelight-back", "10.8.62.12")
         };
 
 
