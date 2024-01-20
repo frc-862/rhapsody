@@ -256,6 +256,7 @@ public class Constants {
                 Units.feetToMeters(26.0));
         public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
                 Units.feetToMeters(5));
+        public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 4d; //TODO: make this an actual value
         public static final PIDController HEADING_CONTROLLER = new PIDController(0.05, 0, 0);
     }

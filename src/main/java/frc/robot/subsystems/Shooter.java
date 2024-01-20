@@ -51,7 +51,7 @@ public class Shooter extends SubsystemBase {
                 break;
         }
     }
-
+    // soo
     public SHOOTER_STATES getState() {
         return state;
 
