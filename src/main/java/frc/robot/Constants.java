@@ -36,10 +36,10 @@ public class Constants {
                 Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2)) // circumference of circle with radius of wheelbase
         );
         //TODO: TUNE
-		public static final double ROT_MULT = 0.05;
+		public static final double ROT_MULT = 0.015; //TODO Tune for Driver
         
-        public static final double SLOW_ROT_MULT = 0.012;
-        public static final double SLOW_SPEED_MULT = 0.4;
+        public static final double SLOW_ROT_MULT = 0.007; //TODO Tune for Driver
+        public static final double SLOW_SPEED_MULT = 0.4; //TODO Tune for Driver
     }
 
     public class RobotMap {
