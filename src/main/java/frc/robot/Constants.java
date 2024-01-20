@@ -168,19 +168,19 @@ public class Constants {
                 .withSteerMotorInverted(kSteerMotorReversed);
 
         // OFFSETS Rhapsody
-        private static final double kFrontLeftEncoderOffsetRh = -0.23876953125;
+        private static final double kFrontLeftEncoderOffsetRh = 0.0439453125;
         private static final double kFrontLeftXPosInchesRh = 13.5;
         private static final double kFrontLeftYPosInchesRh = 13.5;
 
-        private static final double kFrontRightEncoderOffsetRh = 0.391845703125;
+        private static final double kFrontRightEncoderOffsetRh = 0.288818359375;
         private static final double kFrontRightXPosInchesRh = 13.5;
         private static final double kFrontRightYPosInchesRh = -13.5;
 
-        private static final double kBackLeftEncoderOffsetRh = 0.13916015625;
+        private static final double kBackLeftEncoderOffsetRh = 0.2197265625;
         private static final double kBackLeftXPosInchesRh = -13.5;
         private static final double kBackLeftYPosInchesRh = 13.5;
 
-        private static final double kBackRightEncoderOffsetRh = -0.23388671875;
+        private static final double kBackRightEncoderOffsetRh = 0.0009765625;
         private static final double kBackRightXPosInchesRh = -13.5;
         private static final double kBackRightYPosInchesRh = -13.5;
 
@@ -219,21 +219,21 @@ public class Constants {
                 kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches),
                 Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 
-                private static final SwerveModuleConstants FrontLeftRh = ConstantCreator.createModuleConstants(
-                    CAN.kFrontLeftSteerMotorId, CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
-                    kFrontLeftEncoderOffsetRh, Units.inchesToMeters(kFrontLeftXPosInchesRh),
-                    Units.inchesToMeters(kFrontLeftYPosInchesRh), kInvertLeftSide);
-            private static final SwerveModuleConstants FrontRightRh = ConstantCreator.createModuleConstants(
-                    CAN.kFrontRightSteerMotorId, CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
-                    kFrontRightEncoderOffsetRh, Units.inchesToMeters(kFrontRightXPosInchesRh),
-                    Units.inchesToMeters(kFrontRightYPosInchesRh), kInvertRightSide);
-            private static final SwerveModuleConstants BackLeftRh = ConstantCreator.createModuleConstants(
-                    CAN.kBackLeftSteerMotorId, CAN.kBackLeftDriveMotorId, CAN.kBackLeftEncoderId, kBackLeftEncoderOffset,
-                    Units.inchesToMeters(kBackLeftXPosInchesRh), Units.inchesToMeters(kBackLeftYPosInchesRh), kInvertLeftSide);
-            private static final SwerveModuleConstants BackRightRh = ConstantCreator.createModuleConstants(
-                    CAN.kBackRightSteerMotorId, CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
-                    kBackRightEncoderOffsetRh, Units.inchesToMeters(kBackRightXPosInchesRh),
-                    Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
+        private static final SwerveModuleConstants FrontLeftRh = ConstantCreator.createModuleConstants(
+                CAN.kFrontLeftSteerMotorId, CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
+                kFrontLeftEncoderOffsetRh, Units.inchesToMeters(kFrontLeftXPosInchesRh),
+                Units.inchesToMeters(kFrontLeftYPosInchesRh), kInvertLeftSide);
+        private static final SwerveModuleConstants FrontRightRh = ConstantCreator.createModuleConstants(
+                CAN.kFrontRightSteerMotorId, CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
+                kFrontRightEncoderOffsetRh, Units.inchesToMeters(kFrontRightXPosInchesRh),
+                Units.inchesToMeters(kFrontRightYPosInchesRh), kInvertRightSide);
+        private static final SwerveModuleConstants BackLeftRh = ConstantCreator.createModuleConstants(
+                CAN.kBackLeftSteerMotorId, CAN.kBackLeftDriveMotorId, CAN.kBackLeftEncoderId, kBackLeftEncoderOffsetRh,
+                Units.inchesToMeters(kBackLeftXPosInchesRh), Units.inchesToMeters(kBackLeftYPosInchesRh), kInvertLeftSide);
+        private static final SwerveModuleConstants BackRightRh = ConstantCreator.createModuleConstants(
+                CAN.kBackRightSteerMotorId, CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
+                kBackRightEncoderOffsetRh, Units.inchesToMeters(kBackRightXPosInchesRh),
+                Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
 
         public static final Swerve DriveTrainMercury = new Swerve(DrivetrainConstants, 250, FrontLeft,
                 FrontRight, BackLeft, BackRight);
