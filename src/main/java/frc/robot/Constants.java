@@ -28,9 +28,9 @@ public class Constants {
                 Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2)) // circumference of circle with radius of wheelbase
         );
         //TODO: TUNE
-		public static final double ROT_MULT = 0.012;
+		public static final double ROT_MULT = 0.05;
         
-        public static final double SLOW_ROT_MULT = 0.12;
+        public static final double SLOW_ROT_MULT = 0.012;
         public static final double SLOW_SPEED_MULT = 0.4;
     }
 
@@ -114,7 +114,7 @@ public class Constants {
 
         // Theoretical free speed (m/s) at 12v applied output;
         // This needs to be tuned to your individual robot
-        public static final double kSpeedAt12VoltsMps = 4.3;
+        public static final double kSpeedAt12VoltsMps = 5.21;
 
         // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
         // This may need to be tuned to your individual robot
@@ -161,19 +161,19 @@ public class Constants {
                 .withSteerMotorInverted(kSteerMotorReversed);
 
         // OFFSETS
-        private static final double kFrontLeftEncoderOffset = -0.224365234375;
+        private static final double kFrontLeftEncoderOffset = -0.23876953125;
         private static final double kFrontLeftXPosInches = 13.5;
         private static final double kFrontLeftYPosInches = 13.5;
 
-        private static final double kFrontRightEncoderOffset = 0.37744140625;
+        private static final double kFrontRightEncoderOffset = 0.391845703125;
         private static final double kFrontRightXPosInches = 13.5;
         private static final double kFrontRightYPosInches = -13.5;
 
-        private static final double kBackLeftEncoderOffset = 0.142578125;
+        private static final double kBackLeftEncoderOffset = 0.13916015625;
         private static final double kBackLeftXPosInches = -13.5;
         private static final double kBackLeftYPosInches = 13.5;
 
-        private static final double kBackRightEncoderOffset = -0.23095703125;
+        private static final double kBackRightEncoderOffset = -0.23388671875;
         private static final double kBackRightXPosInches = -13.5;
         private static final double kBackRightYPosInches = -13.5;
 
