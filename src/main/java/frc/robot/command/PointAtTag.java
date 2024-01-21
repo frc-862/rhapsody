@@ -21,6 +21,7 @@ public class PointAtTag extends Command {
 	private Swerve drivetrain;
 	private Limelight limelight;
 	private int limelightId = 0;
+	private Limelight[] limelights;
 	private double targetHeading;
 	private double lockedOnHeading;
 	private double pidOutput;
@@ -30,6 +31,7 @@ public class PointAtTag extends Command {
 	private FieldCentric drive;
 	private FieldCentric slow;
 	private boolean useLimelights;
+	
 
 	PIDController headingController = VisionConstants.HEADING_CONTROLLER;
 
@@ -38,24 +40,25 @@ public class PointAtTag extends Command {
 	 * @param drivetrain to request movement 
 	 * @param useLimelights to get if we want to use vision data or not
 	 */
-	public PointAtTag(Swerve drivetrain, XboxController driver, String limelight_name) {
+	public PointAtTag(Swerve drivetrain, XboxController driver, String limelight_name, boolean useLimelights) {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
-		for (var l : drivetrain.getLimelights()) {
+		this.useLimelights = useLimelights;
+
+		//TODO Figure out which of these is the right one to use 
+		for (var l : drivetrain.getLimelights()) { // THIS WAS ON THIS BRANCH
 			if (l.getName().equals(limelight_name)) {
 				limelight = l;
 			}
 		}
+		limelights = drivetrain.getLimelights(); // THIS IS THE OTHER ONE FROM MAIN
+
+		
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-		
-	public PointAtTag(Swerve drivetrain, boolean useLimelights) {
-		this.drivetrain = drivetrain;
-		this.useLimelights = useLimelights;
-		limelights = drivetrain.getLimelights();
-
-		addRequirements(drivetrain);
 	}
+	
+		
 
 	// Called when the command is initially scheduled.
 	@Override
