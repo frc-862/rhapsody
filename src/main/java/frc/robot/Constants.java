@@ -87,6 +87,7 @@ public class Constants {
 	}
 
     public static class AutonomousConstants {
+        // For autobuilder
         public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 0, 0);  //TODO: Tune
         public static final PIDConstants ROTATION_PID = new PIDConstants(10, 0, 0);     //TODO: Tune
 
@@ -94,6 +95,12 @@ public class Constants {
         public static final double DRIVE_BASE_RADIUS = Units.feetToMeters(19.09); //TODO check
 
         public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
+
+        //For Pathfinding
+        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(1, 0), new Rotation2d(Units.degreesToRadians(0d)));
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(1.0, 0.5, 1.0, 0.5); //TODO get constants
+        public static final double GOAL_END_VELOCITY = 0; // Goal end velocity in meters/sec
+        public static final double ROTATION_DELAY_DISTACE = 0d; // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
     }
 
     public static class TunerConstants {
@@ -303,11 +310,6 @@ public class Constants {
 
         public static final double ANGLE_TOLERANCE = 0;
 
-    }
-
-    public class AutonomousConstants {
-        public static final Pose2d targetPose = new Pose2d(new Translation2d(1, 0), new Rotation2d(Units.degreesToRadians(0d)));
-        public static final PathConstraints pathConstraints = new PathConstraints(1.0, 0.5, 1.0, 0.5); //TODO get constants
     }
 
     public class ShooterConstants {
