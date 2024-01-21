@@ -22,17 +22,21 @@ public class PointAtTag extends Command {
 	private Limelight limelight;
 	private int limelightId = 0;
 	private double targetHeading;
+	private double lockedOnHeading;
 	private double pidOutput;
 	private SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
-	PIDController headingController = new PIDController(0.1, 0, 0); // TODO make constant and tune
 	private XboxController driver;
 	private FieldCentric drive;
 	private FieldCentric slow;
+	private boolean useLimelights;
+
+	PIDController headingController = VisionConstants.HEADING_CONTROLLER;
 
 	/**
 	 * Creates a new PointAtTag.
 	 * @param drivetrain to request movement 
+	 * @param useLimelights to get if we want to use vision data or not
 	 */
 	public PointAtTag(Swerve drivetrain, XboxController driver, String limelight_name) {
 		this.drivetrain = drivetrain;
@@ -44,6 +48,12 @@ public class PointAtTag extends Command {
 		}
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+		
+	public PointAtTag(Swerve drivetrain, boolean useLimelights) {
+		this.drivetrain = drivetrain;
+		this.useLimelights = useLimelights;
+		limelights = drivetrain.getLimelights();
+
 		addRequirements(drivetrain);
 	}
 
@@ -58,15 +68,28 @@ public class PointAtTag extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
+		if (!useLimelights) {
+			lockedOnHeading = LightningShuffleboard.getDouble("PointAtTag", "LockOnHeading", 0);
+			LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
+			targetHeading = lockedOnHeading - drivetrain.getPigeon2().getAngle();
 
-		targetHeading = limelight.getTargetX();
+
+			SwerveRequest.FieldCentric pointAtTag = new SwerveRequest.FieldCentric();
+			pidOutput = headingController.calculate(0, targetHeading);
+			drivetrain.setControl(pointAtTag.withRotationalRate(-pidOutput));
+
+		} else {
+			for (Limelight limelight : Limelight.filterLimelights(limelights)) {
+				targetHeading = limelight.getTargetX();
+			}
+
+			SwerveRequest.RobotCentric pointAtTag = new SwerveRequest.RobotCentric();
+			pidOutput = headingController.calculate(0, targetHeading);
+			drivetrain.setControl(pointAtTag.withRotationalRate(-pidOutput));
+
+		}
 
 		LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
-
-		headingController.setP(LightningShuffleboard.getDouble("PointAtTag", "P", 0.1));
-		headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 0));
-
-		pidOutput = headingController.calculate(0, targetHeading);
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
 		// SwerveRequest.RobotCentric pointAtTag = new SwerveRequest.RobotCentric();
 		// drivetrain.setControl(pointAtTag.withRotationalRate(-pidOutput));

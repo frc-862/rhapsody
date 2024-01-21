@@ -23,7 +23,7 @@ public class Pivot extends SubsystemBase {
      * Sets the angle of the pivot
      * @param angle Angle of the pivot
      */
-    public void setAngle(double angle) {
+    public void setTargetAngle(double angle) {
         targetAngle = angle;
         angleMotor.setControl(anglePID.withPosition(angle));
     }
