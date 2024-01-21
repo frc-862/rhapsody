@@ -36,35 +36,36 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 import frc.thunder.util.Pose4d;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 /**
- * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
- * so it can be used in command-based projects easily.
+ * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
+ * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
-    private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
+    private final SwerveRequest.ApplyChassisSpeeds autoRequest =
+            new SwerveRequest.ApplyChassisSpeeds();
     private Limelight[] limelights;
+    private boolean slowMode = false;
 
-    public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
+
+    public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
+            SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
-        this.limelights = new Limelight[] {
-            new Limelight("limelight-front", "10.8.62.11"),
-            new Limelight("limelight-back", "10.8.62.12")
-        };
-
+        this.limelights = new Limelight[] {new Limelight("limelight-front", "10.8.62.11"),
+                new Limelight("limelight-back", "10.8.62.12")};
 
         configurePathPlanner();
     }
-    // public Swerve(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
-    //     this(driveTrainConstants, 250, modules);
+    // public Swerve(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants...
+    // modules) {
+    // this(driveTrainConstants, 250, modules);
     // }
 
-    public Limelight[] getLimelights(){
+    public Limelight[] getLimelights() {
         return limelights;
     }
 
@@ -74,7 +75,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void simulationPeriodic() {
-        /* Assume  */
+        /* Assume */
         updateSimState(0.02, 12);
     }
 
@@ -82,29 +83,31 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void periodic() {
         for (Limelight limelight : Limelight.filterLimelights(limelights)) {
             Pose4d pose = limelight.getAlliancePose();
-            addVisionMeasurement(pose.toPose2d(), Timer.getFPGATimestamp() - Units.millisecondsToSeconds(pose.getLatency()) - VisionConstants.PROCESS_LATENCY);
+            addVisionMeasurement(pose.toPose2d(),
+                    Timer.getFPGATimestamp() - Units.millisecondsToSeconds(pose.getLatency())
+                            - VisionConstants.PROCESS_LATENCY);
         }
 
         LightningShuffleboard.setDouble("Swerve", "yaw", m_yawGetter.getValueAsDouble());
+        LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
 
         // System.out.println()
     }
 
     private void configurePathPlanner() {
-        AutoBuilder.configureHolonomic(
-            ()->this.getState().Pose, // Supplier of current robot pose
-            this::seedFieldRelative,  // Consumer for seeding pose against auto
-            this::getCurrentRobotChassisSpeeds,
-            (speeds)->this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
-            new HolonomicPathFollowerConfig(
-                AutonomousConstants.TRANSLATION_PID,
-                AutonomousConstants.ROTATION_PID,
-                AutonomousConstants.MAX_MODULE_VELOCITY,
-                AutonomousConstants.DRIVE_BASE_RADIUS,
-                new ReplanningConfig(),
-                AutonomousConstants.CONTROL_LOOP_PERIOD),
+        AutoBuilder.configureHolonomic(() -> this.getState().Pose, // Supplier of current robot pose
+                this::seedFieldRelative, // Consumer for seeding pose against auto
+                this::getCurrentRobotChassisSpeeds,
+                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of
+                                                                             // ChassisSpeeds to
+                                                                             // drive the robot
+                new HolonomicPathFollowerConfig(AutonomousConstants.TRANSLATION_PID,
+                        AutonomousConstants.ROTATION_PID, AutonomousConstants.MAX_MODULE_VELOCITY,
+                        AutonomousConstants.DRIVE_BASE_RADIUS, new ReplanningConfig(),
+                        AutonomousConstants.CONTROL_LOOP_PERIOD),
                 () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // Boolean supplier that controls when the path will be mirrored for the red
+                    // alliance
                     // This will flip the path being followed to the red side of the field.
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
@@ -113,8 +116,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                         return alliance.get() == DriverStation.Alliance.Red;
                     }
                     return false;
-                },
-            this); // Subsystem for requirements
+                }, this); // Subsystem for requirements
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
@@ -123,5 +125,23 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
+    }
+
+    /**
+     * gets if slow mode is enabled
+     * 
+     * @return if the robot is driving in slow mode
+     */
+    public boolean inSlowMode() {
+        return slowMode;
+    }
+
+    /**
+     * Set slow mode t/f
+     * 
+     * @param slow boolean if we are in slow mode
+     */
+    public void setSlowMode(boolean slow) {
+        slowMode = slow;
     }
 }

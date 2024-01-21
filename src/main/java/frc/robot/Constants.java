@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
@@ -9,6 +11,8 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.util.PIDConstants;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
@@ -17,19 +21,25 @@ import frc.thunder.math.InterpolationMap;
 
 /** Add your docs here. */
 public class Constants {
+
+    public static final Path MERCURY_PATH = Paths.get("/home/lvuser/mercury");
+
+    public static final boolean isMercury() {
+        return MERCURY_PATH.toFile().exists();
+    }
+
     public class DrivetrAinConstants { //TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center
-                                                                                         // of robot to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
         TunerConstants.kSpeedAt12VoltsMps / // free speed
                 Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2)) // circumference of circle with radius of wheelbase
         );
         //TODO: TUNE
-		public static final double ROT_MULT = 0.05;
+		public static final double ROT_MULT = 0.015; //TODO Tune for Driver
         
-        public static final double SLOW_ROT_MULT = 0.012;
-        public static final double SLOW_SPEED_MULT = 0.4;
+        public static final double SLOW_ROT_MULT = 0.007; //TODO Tune for Driver
+        public static final double SLOW_SPEED_MULT = 0.4; //TODO Tune for Driver
     }
 
     public class RobotMap {
@@ -158,7 +168,24 @@ public class Constants {
                 .withCouplingGearRatio(kCoupleRatio)
                 .withSteerMotorInverted(kSteerMotorReversed);
 
-        // OFFSETS
+        // OFFSETS Rhapsody
+        private static final double kFrontLeftEncoderOffsetRh = 0.0439453125;
+        private static final double kFrontLeftXPosInchesRh = 13.5;
+        private static final double kFrontLeftYPosInchesRh = 13.5;
+
+        private static final double kFrontRightEncoderOffsetRh = 0.288818359375;
+        private static final double kFrontRightXPosInchesRh = 13.5;
+        private static final double kFrontRightYPosInchesRh = -13.5;
+
+        private static final double kBackLeftEncoderOffsetRh = 0.2197265625;
+        private static final double kBackLeftXPosInchesRh = -13.5;
+        private static final double kBackLeftYPosInchesRh = 13.5;
+
+        private static final double kBackRightEncoderOffsetRh = 0.0009765625;
+        private static final double kBackRightXPosInchesRh = -13.5;
+        private static final double kBackRightYPosInchesRh = -13.5;
+
+        // OFFSETS Mercury
         private static final double kFrontLeftEncoderOffset = -0.23876953125;
         private static final double kFrontLeftXPosInches = 13.5;
         private static final double kFrontLeftYPosInches = 13.5;
@@ -174,6 +201,8 @@ public class Constants {
         private static final double kBackRightEncoderOffset = -0.23388671875;
         private static final double kBackRightXPosInches = -13.5;
         private static final double kBackRightYPosInches = -13.5;
+
+        
 
         private static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
                 CAN.kFrontLeftSteerMotorId, CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
@@ -191,11 +220,31 @@ public class Constants {
                 kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches),
                 Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 
-        public static final Swerve DriveTrain = new Swerve(DrivetrainConstants, 250, FrontLeft,
-                FrontRight, BackLeft, BackRight);
+        private static final SwerveModuleConstants FrontLeftRh = ConstantCreator.createModuleConstants(
+                CAN.kFrontLeftSteerMotorId, CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
+                kFrontLeftEncoderOffsetRh, Units.inchesToMeters(kFrontLeftXPosInchesRh),
+                Units.inchesToMeters(kFrontLeftYPosInchesRh), kInvertLeftSide);
+        private static final SwerveModuleConstants FrontRightRh = ConstantCreator.createModuleConstants(
+                CAN.kFrontRightSteerMotorId, CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
+                kFrontRightEncoderOffsetRh, Units.inchesToMeters(kFrontRightXPosInchesRh),
+                Units.inchesToMeters(kFrontRightYPosInchesRh), kInvertRightSide);
+        private static final SwerveModuleConstants BackLeftRh = ConstantCreator.createModuleConstants(
+                CAN.kBackLeftSteerMotorId, CAN.kBackLeftDriveMotorId, CAN.kBackLeftEncoderId, kBackLeftEncoderOffsetRh,
+                Units.inchesToMeters(kBackLeftXPosInchesRh), Units.inchesToMeters(kBackLeftYPosInchesRh), kInvertLeftSide);
+        private static final SwerveModuleConstants BackRightRh = ConstantCreator.createModuleConstants(
+                CAN.kBackRightSteerMotorId, CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
+                kBackRightEncoderOffsetRh, Units.inchesToMeters(kBackRightXPosInchesRh),
+                Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
 
-        public static Swerve getDrivetrain() {
-            return DriveTrain;
+        
+        public static final Swerve getDrivetrain() {
+            if(Constants.isMercury()) {
+                System.out.println("IS MERCURY");
+                return new Swerve(DrivetrainConstants, 250, FrontLeft, FrontRight, BackLeft, BackRight);
+            } else {
+                System.out.println("IS RHAPSODY");
+                return new Swerve(DrivetrainConstants, 250, FrontLeftRh, FrontRightRh, BackLeftRh, BackRightRh);
+            }
         }
     }
 
@@ -207,7 +256,9 @@ public class Constants {
                 Units.feetToMeters(26.0));
         public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
                 Units.feetToMeters(5));
+        public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 4d; //TODO: make this an actual value
+        public static final PIDController HEADING_CONTROLLER = new PIDController(0.05, 0, 0);
     }
 
     public class CollectorConstants {
