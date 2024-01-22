@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
@@ -8,7 +10,7 @@ import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
 public class Shooter extends SubsystemBase {
     private Pivot pivot;
     private Flywheel flywheel;
-    private XboxController copilot;
+    private BooleanSupplier copilotAButton;
 
     //TODO: add collector/indexer
 
@@ -19,11 +21,10 @@ public class Shooter extends SubsystemBase {
 
     private Swerve drivetrain;
 
-    public Shooter(Pivot pivot, Flywheel flywheel, Swerve drivetrain, XboxController copilot) {
+    public Shooter(Pivot pivot, Flywheel flywheel, Swerve drivetrain, BooleanSupplier copilotAButton) {
         this.pivot = pivot;
         this.flywheel = flywheel;
         this.drivetrain = drivetrain;
-        this.copilot = copilot;
     }
   
     @Override
@@ -33,7 +34,7 @@ public class Shooter extends SubsystemBase {
 
         if (yPose > ShooterConstants.CLOSE_WING_Y && yPose < ShooterConstants.FAR_WING_Y && 
         xPose > ShooterConstants.CLOSE_WING_X && xPose < ShooterConstants.FAR_WING_X) {
-            if (copilot.getAButton()) { 
+            if (copilotAButton.getAsBoolean()) { 
                 state = SHOOTER_STATES.SHOOT;
             } else {
                 state = SHOOTER_STATES.PRIME;

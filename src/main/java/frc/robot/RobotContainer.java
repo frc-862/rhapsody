@@ -31,10 +31,10 @@ public class RobotContainer extends LightningContainer {
 	XboxController coPilot;
 
 	private Swerve drivetrain;
-	// Collector collector;
-	// Flywheel flywheel;
-	// Pivot pivot;
-	// Shooter shooter;
+	Collector collector;
+	Flywheel flywheel;
+	Pivot pivot;
+	Shooter shooter;
 	Collision collision;
 
 	private SendableChooser<Command> autoChooser;
@@ -58,10 +58,10 @@ public class RobotContainer extends LightningContainer {
 		autoChooser = AutoBuilder.buildAutoChooser();	
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 		
-		// collector = new Collector();
-		// flywheel = new Flywheel();
-		// pivot = new Pivot();
-		// shooter = new Shooter(pivot, flywheel, drivetrain, coPilot);
+		collector = new Collector();
+		flywheel = new Flywheel();
+		pivot = new Pivot();
+		shooter = new Shooter(pivot, flywheel, drivetrain, () -> coPilot.getAButton());
 		collision = new Collision(drivetrain);
 
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
