@@ -40,7 +40,7 @@ public class Indexer extends SubsystemBase {
      * STOP IT GET SOME HELP
      */
     public void stop() {
-        indexerMotor.set(0);
+        indexerMotor.set(0d);
     }
 
     public boolean hasPiece() {
