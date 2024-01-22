@@ -38,6 +38,8 @@ public class PointAtTag extends Command {
 	/**
 	 * Creates a new PointAtTag.
 	 * @param drivetrain to request movement 
+	 * @param driver the driver's controller, used for drive input
+	 * @param limelight_name the name of the limelight to use
 	 * @param useLimelights to get if we want to use vision data or not
 	 */
 	public PointAtTag(Swerve drivetrain, XboxController driver, String limelight_name, boolean useLimelights) {
