@@ -64,23 +64,18 @@ public class Constants {
             private static final int kBackRightEncoderId = 33;
 
             public static final int PigeonId = 23;
-            public static final int COLLECTOR_MOTOR_FRONT = 9;
-            public static final int COLLECTOR_MOTOR_BACK = 10;
-            public static final int FLYWHEEL_MOTOR_1 = 0; // TODO Get real
-            public static final int FLYWHEEL_MOTOR_2 = 0; // TODO Get real
-            public static final int SHOOTER_ANGLE_MOTOR = 0; // TODO Get real
-            public static final int INDEXER = 0; // TODO Get real
-
-            public static final String FD_BUS = "canivore";
-            public static final String SLOW_BUS = "rio";
-
+            
+            // TODO Get real temp so less errors
             public static final int COLLECTOR_MOTOR_TOP = 9;
             public static final int COLLECTOR_MOTOR_BACK = 10;
             public static final int FLYWHEEL_MOTOR_1 = 11; 
             public static final int FLYWHEEL_MOTOR_2 = 12; 
             public static final int SHOOTER_ANGLE_MOTOR = 13; 
-
+            public static final int INDEXER_MOTOR = 14; 
+            
             public static final String CANBUS = "Canivore";
+            public static final String RIO_BUS = "rio";
+            
         }
 
         /**
