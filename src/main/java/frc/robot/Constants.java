@@ -71,6 +71,7 @@ public class Constants {
             public static final int FLYWHEEL_MOTOR_2 = 12; 
             public static final int SHOOTER_ANGLE_MOTOR = 13; 
 
+            public static final String CANBUS = "Canivore";
         }
 
         public static final int COLLECTOR_ENTRY_BEAMBREAK_FRONT = 1;
