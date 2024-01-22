@@ -3,8 +3,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.RobotMap;
 import frc.robot.Constants.RobotMap.CAN;
+import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.CollectorConstants;
 import frc.thunder.config.FalconConfig;
 
@@ -28,8 +28,8 @@ public class Collector extends SubsystemBase {
 				CollectorConstants.COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_BACK,
 				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_BACK,
 				CollectorConstants.COLLECTOR_MOTOR_NEUTRAL_MODE_BACK);
-		collectorEntryBeamBreakFront = new DigitalInput(RobotMap.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
-		collectorEntryBeamBreakBack = new DigitalInput(RobotMap.COLLECTOR_ENTRY_BEAMBREAK_BACK);
+		collectorEntryBeamBreakFront = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
+		collectorEntryBeamBreakBack = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
 	}
 
 	@Override
