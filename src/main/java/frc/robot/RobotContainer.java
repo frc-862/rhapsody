@@ -1,6 +1,9 @@
 package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter.Indenter;
+import java.util.Arrays;
+
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -18,13 +21,16 @@ import frc.robot.command.PointAtTag;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Collision;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
+import frc.robot.command.Shoot;
 import frc.robot.command.Collect;
 
 import frc.thunder.LightningContainer;
 import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.thunder.vision.Limelight;
 
 public class RobotContainer extends LightningContainer {
 	XboxController driver;
@@ -45,7 +51,6 @@ public class RobotContainer extends LightningContainer {
 	SwerveRequest.SwerveDriveBrake brake;
 	SwerveRequest.PointWheelsAt point;
 	Telemetry logger;
-
 
 	@Override
 	protected void initializeSubsystems() {
@@ -79,13 +84,15 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
 		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
 		new Trigger(driver::getRightBumper).whileTrue(
-			(drivetrain.applyRequest(() -> slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+			drivetrain.applyRequest(() -> slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
 				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT) // Drive counterclockwise with negative X (left)
-		)));
+				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
+
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 	
-		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, false));
+		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> shooter.setShoot(true))).onFalse(new InstantCommand(() -> shooter.setShoot(false)));
+
+		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", false));
 	}
 
 	@Override
@@ -98,11 +105,16 @@ public class RobotContainer extends LightningContainer {
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
 
+		shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain));
+
 		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
 		// - coPilot.getLeftTriggerAxis()), collector));
 	}
 
-	@Override
+	protected void configureAutonomousCommands() {
+
+	}
+
 	protected Command getAutonomousCommand(){
 		return autoChooser.getSelected();
 	}

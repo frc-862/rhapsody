@@ -137,4 +137,16 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void setSlowMode(boolean slow) {
         slowMode = slow;
     }
+
+    /**
+     * 
+     * @return boolean if the robot is in the wing to start aiming STATE priming
+     */
+    public boolean inWing(){
+		if(this.getState().Pose.getX() >= 0 && this.getState().Pose.getX() <= 5){ // TODO make constants
+			return true;
+		} else{
+			return false;
+		}
+	}
 }

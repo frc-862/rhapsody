@@ -69,11 +69,21 @@ public class Constants {
             public static final int FLYWHEEL_MOTOR_1 = 0; // TODO Get real
             public static final int FLYWHEEL_MOTOR_2 = 0; // TODO Get real
             public static final int SHOOTER_ANGLE_MOTOR = 0; // TODO Get real
+            public static final int INDEXER = 0; // TODO Get real
+
+            public static final String FD_BUS = "canivore";
+            public static final String SLOW_BUS = "rio";
 
         }
 
-        public static final int COLLECTOR_ENTRY_BEAMBREAK_FRONT = 1;
-        public static final int COLLECTOR_ENTRY_BEAMBREAK_BACK = 2;
+        /**
+         * You expected a javadoc, but it was me, Dio!
+         */
+        public class DIO {
+            public static final int COLLECTOR_ENTRY_BEAMBREAK_FRONT = 1;
+            public static final int COLLECTOR_ENTRY_BEAMBREAK_BACK = 2;
+            public static final int INDEXER_BEAMBREAK = 0;
+        }
     }
 
     public static class ControllerConstants {
@@ -285,6 +295,14 @@ public class Constants {
         public static final double FLYWHEEL_MOTOR_KV = 0;
 
         public static final double RPM_TOLERANCE = 0;
+    }
+
+    public class IndexerConstants {
+        public static final boolean INDEXER_MOTOR_INVERTED = false;
+        public static final int INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
+        public static final int INDEXER_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final NeutralModeValue INDEXER_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final double INDEXER_DEFAULT_POWER = 0.3; //TODO: get real
     }
 
     public class PivotConstants {
