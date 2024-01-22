@@ -46,4 +46,8 @@ public class Indexer extends SubsystemBase {
     public boolean hasPiece() {
         return indexerSensor.get();
     }
+
+    public boolean hasShot() {
+        return false; // TODO add actual logic
+    }
 }

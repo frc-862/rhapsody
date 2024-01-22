@@ -65,4 +65,10 @@ public class Shooter extends SubsystemBase {
     public void setState(SHOOTER_STATES state) {
         this.state = state;
     }
+
+    public double getDistanceToTarget() {
+        return currentDistance; // TODO FRITZ add on the fly here or we can add more logic
+    }
+    
 }
+
