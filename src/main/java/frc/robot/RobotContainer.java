@@ -77,6 +77,11 @@ public class RobotContainer extends LightningContainer {
 	}
 
 	@Override
+	protected void initializeNamedCommands() {
+		NamedCommands.registerCommand("test", new InstantCommand(() -> System.out.println("Hello World!")));
+	}
+
+	@Override
 	protected void configureButtonBindings() {
 		new Trigger(driver::getLeftBumper).onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
