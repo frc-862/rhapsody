@@ -11,6 +11,7 @@ public class Shooter extends SubsystemBase {
 
     //TODO: find initial target angle
     private double currentDistance = 0;
+    private boolean shoot = false;
 
     private SHOOTER_STATES state = SHOOTER_STATES.STOW;
 
@@ -70,5 +71,12 @@ public class Shooter extends SubsystemBase {
         return currentDistance; // TODO FRITZ add on the fly here or we can add more logic
     }
     
+    public void setShoot(boolean shoot) {
+		this.shoot = shoot;
+	}
+
+    public boolean getShoot() {
+        return shoot;
+    }
 }
 

@@ -96,7 +96,7 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 	
-		new Trigger(driver::getYButton).onTrue(new InstantCommand());
+		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> shooter.setShoot(true))).onFalse(new InstantCommand(() -> shooter.setShoot(false)));
 
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", false));
 	}

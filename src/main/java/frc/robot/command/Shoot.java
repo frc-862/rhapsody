@@ -12,7 +12,6 @@ public class Shoot extends Command {
 	Indexer indexer;
 	Swerve drivetrain;
 
-	boolean shoot = false;
 	double distancetoTarget; // FROM LIMELIGHT or form OTF
 
 	/**
@@ -38,7 +37,7 @@ public class Shoot extends Command {
 		distancetoTarget = shooter.getDistanceToTarget();
 		if(drivetrain.inWing()) {
 			shooter.setState(SHOOTER_STATES.PRIME);
-		} else if (shoot) {
+		} else if (shooter.getShoot()) {
 			shooter.setState(SHOOTER_STATES.SHOOT);
 		} else {
 			shooter.setState(SHOOTER_STATES.STOW);
