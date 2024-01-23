@@ -70,11 +70,19 @@ public class Constants {
             public static final int FLYWHEEL_MOTOR_1 = 11; 
             public static final int FLYWHEEL_MOTOR_2 = 12; 
             public static final int SHOOTER_ANGLE_MOTOR = 13; 
+            public static final int INDEXER_MOTOR = 14;
 
+            public static final String CANBUS = "Canivore";
         }
 
-        public static final int COLLECTOR_ENTRY_BEAMBREAK_FRONT = 1;
-        public static final int COLLECTOR_ENTRY_BEAMBREAK_BACK = 2;
+        /**
+         * You expected a javadoc, but it was me, Dio!
+         */
+        public class DIO {
+            public static final int COLLECTOR_ENTRY_BEAMBREAK_FRONT = 1;
+            public static final int COLLECTOR_ENTRY_BEAMBREAK_BACK = 2;
+            public static final int INDEXER_BEAMBREAK = 0;
+        }
     }
 
     public static class ControllerConstants {
@@ -295,6 +303,14 @@ public class Constants {
         public static final double RPM_TOLERANCE = 0;
     }
 
+    public class IndexerConstants {
+        public static final boolean INDEXER_MOTOR_INVERTED = false;
+        public static final int INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
+        public static final int INDEXER_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final NeutralModeValue INDEXER_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final double INDEXER_DEFAULT_POWER = 0.3; //TODO: get real
+    }
+
     public class PivotConstants {
         public static final boolean PIVOT_MOTOR_INVERT = false;
         public static final int PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
@@ -313,6 +329,11 @@ public class Constants {
     public class ShooterConstants {
         public static final double BASE_RPM = 0;
         public static final double STOW_ANGLE = 0;
+        
+        public static final int FAR_WING_X = 0;
+        public static final int FAR_WING_Y = 0;
+        public static final int CLOSE_WING_X = 0;
+        public static final int CLOSE_WING_Y = 0;
 
         public enum SHOOTER_STATES {
             STOW, PRIME, AIM, SHOOT
