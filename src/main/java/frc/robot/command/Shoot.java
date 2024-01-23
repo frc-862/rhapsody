@@ -58,6 +58,6 @@ public class Shoot extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return (drivetrain.getPose().get().getX() < ShooterConstants.FAR_WING_X);
+		return false;
 		}
 	}
