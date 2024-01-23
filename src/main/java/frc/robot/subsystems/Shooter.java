@@ -27,25 +27,25 @@ public class Shooter extends SubsystemBase {
             //Stow pivot to allow collector to input not\
             case STOW:
                 pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
-                flywheel.setRPM(0);
+                flywheel.setAllMotorsRPM(0);
                 break;
             //Prime is warming up the flywheel for shooting
             case PRIME:
                 pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
-                flywheel.setRPM(ShooterConstants.BASE_RPM);
+                flywheel.setAllMotorsRPM(ShooterConstants.BASE_RPM);
                 break;
             //Aim is targeting the pivot toward the target and speeding up the flywheel
             case AIM:
                 pivot.setTargetAngle(ShooterConstants.ANGLE_MAP.get(currentDistance));
-                flywheel.setRPM(ShooterConstants.SPEED_MAP.get(currentDistance));
+                flywheel.setAllMotorsRPM(ShooterConstants.SPEED_MAP.get(currentDistance));
                 break;
             // Shoot is shooting the note
             case SHOOT:
                 pivot.setTargetAngle(ShooterConstants.ANGLE_MAP.get(currentDistance));         
-                flywheel.setRPM(ShooterConstants.SPEED_MAP.get(currentDistance));
+                flywheel.setAllMotorsRPM(ShooterConstants.SPEED_MAP.get(currentDistance));
 
                 //If flywheel and pivot are on target (ready to shoot), shoot               
-                if(flywheel.onTarget() && pivot.onTarget()) {
+                if(flywheel.allMotorsOnTarget() && pivot.onTarget()) {
                     //index
                 }
                 break;
