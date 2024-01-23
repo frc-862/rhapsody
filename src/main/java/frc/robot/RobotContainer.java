@@ -73,7 +73,7 @@ public class RobotContainer extends LightningContainer {
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
-		tipdetection = new TipDetection(drivetrain);
+		
 	}
 
 	@Override
@@ -90,6 +90,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 	
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, false));
+		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 	}
 
 	@Override
