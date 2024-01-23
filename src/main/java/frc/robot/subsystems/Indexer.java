@@ -15,8 +15,8 @@ public class Indexer extends SubsystemBase {
 
     public Indexer() {
         indexerMotor = FalconConfig.createMotor(
-            CAN.INDEXER,
-            CAN.FD_BUS,
+            CAN.INDEXER_MOTOR,
+            CAN.CANBUS,
             IndexerConstants.INDEXER_MOTOR_INVERTED,
             IndexerConstants.INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT,
             IndexerConstants.INDEXER_MOTOR_STATOR_CURRENT_LIMIT,

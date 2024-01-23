@@ -29,8 +29,8 @@ public class Collector extends SubsystemBase {
 				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_BOTTOM,
 				CollectorConstants.COLLECTOR_MOTOR_NEUTRAL_MODE_BOTTOM);
 		collectorEntryBeamBreakEntrance =
-				new DigitalInput(RobotMap.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
-		collectorEntryBeamBreakExit = new DigitalInput(RobotMap.COLLECTOR_ENTRY_BEAMBREAK_BACK);
+				new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
+		collectorEntryBeamBreakExit = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
 	}
 
 	@Override
