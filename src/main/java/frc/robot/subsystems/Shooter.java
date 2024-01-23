@@ -7,22 +7,26 @@ import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
 public class Shooter extends SubsystemBase {
     private Pivot pivot;
     private Flywheel flywheel;
+
     //TODO: add collector/indexer
 
     //TODO: find initial target angle
     private double currentDistance = 0;
+    private boolean shoot = false;
 
     private SHOOTER_STATES state = SHOOTER_STATES.STOW;
 
-    public Shooter(Pivot pivot, Flywheel flywheel) {
+    private Indexer indexer;
+
+    public Shooter(Pivot pivot, Flywheel flywheel, Indexer indexer) {
         this.pivot = pivot;
         this.flywheel = flywheel;
+        this.indexer = indexer;
     }
   
     @Override
     public void periodic() {
         //TODO: IMPLEMENT VISION/ODO
-        currentDistance = 0;
         switch (state) {
             //Stow pivot to allow collector to input not\
             case STOW:
@@ -45,8 +49,8 @@ public class Shooter extends SubsystemBase {
                 flywheel.setAllMotorsRPM(ShooterConstants.SPEED_MAP.get(currentDistance));
 
                 //If flywheel and pivot are on target (ready to shoot), shoot               
-                if(flywheel.allMotorsOnTarget() && pivot.onTarget()) {
-                    //index
+                if(flywheel.onTarget() && pivot.onTarget()) {
+                    indexer.indexIn();
                 }
                 break;
         }
@@ -56,7 +60,6 @@ public class Shooter extends SubsystemBase {
         return state;
 
 }
-
     /**
      * Sets the state of the shooter (STOW, PRIME, AIM, SHOOT)
      * note: 
@@ -65,4 +68,13 @@ public class Shooter extends SubsystemBase {
     public void setState(SHOOTER_STATES state) {
         this.state = state;
     }
+
+    public double getDistanceToTarget() {
+        return currentDistance; // TODO FRITZ add on the fly here or we can add more logic
+    }
+
+    public boolean getShoot() {
+        return shoot;
+    }
 }
+
