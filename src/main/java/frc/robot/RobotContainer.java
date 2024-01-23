@@ -20,7 +20,7 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
-import frc.robot.subsystems.Collision;
+import frc.robot.command.TipDetection;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Collect;
 import frc.robot.Constants.ControllerConstants;
@@ -35,7 +35,7 @@ public class RobotContainer extends LightningContainer {
 	XboxController coPilot;
 
 	private Swerve drivetrain;
-	private Collision collision;
+	private TipDetection tipdetection;
 	// Collector collector = new Collector();
 	// Flywheel flywheel = new Flywheel();
 	// Pivot pivot = new Pivot();
@@ -73,7 +73,7 @@ public class RobotContainer extends LightningContainer {
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
-		collision = new Collision(drivetrain);
+		tipdetection = new TipDetection(drivetrain);
 	}
 
 	@Override
