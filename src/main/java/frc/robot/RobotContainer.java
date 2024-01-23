@@ -31,12 +31,12 @@ public class RobotContainer extends LightningContainer {
 	XboxController coPilot;
 
 	private Swerve drivetrain;
-	Collector collector;
-	Flywheel flywheel;
-	Pivot pivot;
-	Shooter shooter;
-	Collision collision;
-	Indexer indexer;
+	// Collector collector;
+	// Flywheel flywheel;
+	// Pivot pivot;
+	// Shooter shooter;
+	// Collision collision;
+	// Indexer indexer;
 
 	private SendableChooser<Command> autoChooser;
 	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
@@ -58,12 +58,12 @@ public class RobotContainer extends LightningContainer {
 		autoChooser = AutoBuilder.buildAutoChooser();	
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 		
-		indexer = new Indexer();
-		collector = new Collector();
-		flywheel = new Flywheel();
-		pivot = new Pivot();
-		shooter = new Shooter(pivot, flywheel, indexer);
-		collision = new Collision(drivetrain);
+		// indexer = new Indexer();
+		// collector = new Collector();
+		// flywheel = new Flywheel();
+		// pivot = new Pivot();
+		// shooter = new Shooter(pivot, flywheel, indexer);
+		// collision = new Collision(drivetrain);
 
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
@@ -99,7 +99,7 @@ public class RobotContainer extends LightningContainer {
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
 
-		shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
+		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
 
 		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
 		// - coPilot.getLeftTriggerAxis()), collector));
