@@ -1,9 +1,6 @@
 package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter.Indenter;
-import java.util.Arrays;
-
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -18,6 +15,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrAinConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.command.PointAtTag;
+import frc.robot.command.Shoot;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Collision;
 import frc.robot.subsystems.Flywheel;
@@ -25,12 +23,8 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
-import frc.robot.command.Shoot;
-import frc.robot.command.Collect;
-
 import frc.thunder.LightningContainer;
 import frc.thunder.shuffleboard.LightningShuffleboard;
-import frc.thunder.vision.Limelight;
 
 public class RobotContainer extends LightningContainer {
 	XboxController driver;
@@ -42,6 +36,7 @@ public class RobotContainer extends LightningContainer {
 	Pivot pivot;
 	Shooter shooter;
 	Collision collision;
+	Indexer indexer;
 
 	private SendableChooser<Command> autoChooser;
 	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
@@ -63,10 +58,11 @@ public class RobotContainer extends LightningContainer {
 		autoChooser = AutoBuilder.buildAutoChooser();	
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 		
+		indexer = new Indexer();
 		collector = new Collector();
 		flywheel = new Flywheel();
 		pivot = new Pivot();
-		shooter = new Shooter(pivot, flywheel, drivetrain, () -> coPilot.getAButton());
+		shooter = new Shooter(pivot, flywheel, indexer);
 		collision = new Collision(drivetrain);
 
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
@@ -90,8 +86,6 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 	
-		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> shooter.setShoot(true))).onFalse(new InstantCommand(() -> shooter.setShoot(false)));
-
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", false));
 	}
 
@@ -105,7 +99,7 @@ public class RobotContainer extends LightningContainer {
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
 
-		shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain));
+		shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
 
 		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
 		// - coPilot.getLeftTriggerAxis()), collector));
