@@ -71,11 +71,9 @@ public class Constants {
             public static final int FLYWHEEL_MOTOR_1 = 11; 
             public static final int FLYWHEEL_MOTOR_2 = 12; 
             public static final int SHOOTER_ANGLE_MOTOR = 13; 
-            public static final int INDEXER_MOTOR = 14; 
-            
+            public static final int INDEXER_MOTOR = 14;
+
             public static final String CANBUS = "Canivore";
-            public static final String RIO_BUS = "rio";
-            
         }
 
         /**
@@ -332,6 +330,11 @@ public class Constants {
     public class ShooterConstants {
         public static final double BASE_RPM = 0;
         public static final double STOW_ANGLE = 0;
+        
+        public static final int FAR_WING_X = 0;
+        public static final int FAR_WING_Y = 0;
+        public static final int CLOSE_WING_X = 0;
+        public static final int CLOSE_WING_Y = 0;
 
         public enum SHOOTER_STATES {
             STOW, PRIME, AIM, SHOOT

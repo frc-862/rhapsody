@@ -32,6 +32,7 @@ public class Collector extends SubsystemBase {
 				new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
 		collectorEntryBeamBreakExit = 
 				new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
+		collectorEntryBeamBreakExit = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
 	}
 
 	@Override
