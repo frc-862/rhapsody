@@ -49,7 +49,7 @@ public class Shooter extends SubsystemBase {
                 flywheel.setAllMotorsRPM(ShooterConstants.SPEED_MAP.get(currentDistance));
 
                 //If flywheel and pivot are on target (ready to shoot), shoot               
-                if(flywheel.onTarget() && pivot.onTarget()) {
+                if(flywheel.allMotorsOnTarget() && pivot.onTarget()) {
                     indexer.indexIn();
                 }
                 break;
