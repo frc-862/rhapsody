@@ -64,7 +64,8 @@ public class Constants {
             private static final int kBackRightEncoderId = 33;
 
             public static final int PigeonId = 23;
-
+            
+            // TODO Get real temp so less errors
             public static final int COLLECTOR_MOTOR_TOP = 9;
             public static final int COLLECTOR_MOTOR_BACK = 10;
             public static final int FLYWHEEL_MOTOR_1 = 11; 
