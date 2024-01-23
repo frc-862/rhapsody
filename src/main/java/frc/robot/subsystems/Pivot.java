@@ -12,15 +12,22 @@ public class Pivot extends SubsystemBase {
     private TalonFX angleMotor;
     private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
 
-    //TODO: find initial target angle
+    // TODO: find initial target angle
     private double targetAngle = 0;
 
     public Pivot() {
-        angleMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_1, getName(), PivotConstants.PIVOT_MOTOR_INVERT, PivotConstants.PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT, PivotConstants.PIVOT_MOTOR_STATOR_CURRENT_LIMIT, PivotConstants.PIVOT_MOTOR_NEUTRAL_MODE, PivotConstants.PIVOT_MOTOR_KP, PivotConstants.PIVOT_MOTOR_KI, PivotConstants.PIVOT_MOTOR_KD, PivotConstants.PIVOT_MOTOR_KS, PivotConstants.PIVOT_MOTOR_KV);
+        angleMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_1, CAN.CANBUS,
+                PivotConstants.PIVOT_MOTOR_INVERT, 
+				PivotConstants.PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT,
+                PivotConstants.PIVOT_MOTOR_STATOR_CURRENT_LIMIT,
+                PivotConstants.PIVOT_MOTOR_NEUTRAL_MODE, PivotConstants.PIVOT_MOTOR_KP,
+                PivotConstants.PIVOT_MOTOR_KI, PivotConstants.PIVOT_MOTOR_KD,
+                PivotConstants.PIVOT_MOTOR_KS, PivotConstants.PIVOT_MOTOR_KV);
     }
 
     /**
      * Sets the angle of the pivot
+     * 
      * @param angle Angle of the pivot
      */
     public void setTargetAngle(double angle) {

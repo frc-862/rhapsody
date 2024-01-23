@@ -3,8 +3,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.RobotMap;
 import frc.robot.Constants.RobotMap.CAN;
+import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.CollectorConstants;
 import frc.thunder.config.FalconConfig;
 
@@ -18,19 +18,21 @@ public class Collector extends SubsystemBase {
 
 	public Collector() {
 		// Initialize collector hardware
-		collectorMotorTop = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR_TOP, getName(),
+		collectorMotorTop = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR_TOP, CAN.CANBUS,
 				CollectorConstants.COLLECTOR_MOTOR_INVERTED_TOP,
 				CollectorConstants.COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_TOP,
 				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_TOP,
 				CollectorConstants.COLLECTOR_MOTOR_NEUTRAL_MODE_TOP);
-		collectorMotorBottom = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR_BACK, getName(),
+		collectorMotorBottom = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR_BACK, CAN.CANBUS,
 				CollectorConstants.COLLECTOR_MOTOR_INVERTED_BOTTOM,
 				CollectorConstants.COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_BOTTOM,
 				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_BOTTOM,
 				CollectorConstants.COLLECTOR_MOTOR_NEUTRAL_MODE_BOTTOM);
 		collectorEntryBeamBreakEntrance =
-				new DigitalInput(RobotMap.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
-		collectorEntryBeamBreakExit = new DigitalInput(RobotMap.COLLECTOR_ENTRY_BEAMBREAK_BACK);
+				new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
+		collectorEntryBeamBreakExit = 
+				new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
+		collectorEntryBeamBreakExit = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
 	}
 
 	@Override
