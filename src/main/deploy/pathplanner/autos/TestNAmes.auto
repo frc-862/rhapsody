@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1MeterSquare"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "test"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4MeterSquare"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
