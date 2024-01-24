@@ -331,10 +331,7 @@ public class Constants {
         public static final double BASE_RPM = 0;
         public static final double STOW_ANGLE = 0;
         
-        public static final int FAR_WING_X = 0;
-        public static final int FAR_WING_Y = 0;
-        public static final int CLOSE_WING_X = 0;
-        public static final int CLOSE_WING_Y = 0;
+        public static final double FAR_WING_X = 3.3;
 
         public enum SHOOTER_STATES {
             STOW, PRIME, AIM, SHOOT
