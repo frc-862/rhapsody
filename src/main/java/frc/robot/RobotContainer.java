@@ -28,7 +28,6 @@ import frc.robot.Constants.TunerConstants;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Shoot;
 import frc.robot.subsystems.Collector;
-import frc.robot.subsystems.Collision;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
@@ -98,7 +97,7 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 	
-		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, false));
+		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", false));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", false));
 	}
