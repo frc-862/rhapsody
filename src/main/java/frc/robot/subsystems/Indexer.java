@@ -14,14 +14,11 @@ public class Indexer extends SubsystemBase {
     private DigitalInput indexerSensor = new DigitalInput(DIO.INDEXER_BEAMBREAK);
 
     public Indexer() {
-        indexerMotor = FalconConfig.createMotor(
-            CAN.INDEXER_MOTOR,
-            CAN.CANBUS,
-            IndexerConstants.INDEXER_MOTOR_INVERTED,
-            IndexerConstants.INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT,
-            IndexerConstants.INDEXER_MOTOR_STATOR_CURRENT_LIMIT,
-            IndexerConstants.INDEXER_MOTOR_NEUTRAL_MODE
-        );
+        indexerMotor = FalconConfig.createMotor(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
+                IndexerConstants.INDEXER_MOTOR_INVERTED,
+                IndexerConstants.INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT,
+                IndexerConstants.INDEXER_MOTOR_STATOR_CURRENT_LIMIT,
+                IndexerConstants.INDEXER_MOTOR_NEUTRAL_MODE);
     }
 
     public void setPower(double power) {

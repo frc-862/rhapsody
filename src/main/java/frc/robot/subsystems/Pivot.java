@@ -16,9 +16,8 @@ public class Pivot extends SubsystemBase {
     private double targetAngle = 0;
 
     public Pivot() {
-        angleMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_1, CAN.CANBUS,
-                PivotConstants.PIVOT_MOTOR_INVERT, 
-				PivotConstants.PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT,
+        angleMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_1, CAN.CANBUS_FD,
+                PivotConstants.PIVOT_MOTOR_INVERT, PivotConstants.PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT,
                 PivotConstants.PIVOT_MOTOR_STATOR_CURRENT_LIMIT,
                 PivotConstants.PIVOT_MOTOR_NEUTRAL_MODE, PivotConstants.PIVOT_MOTOR_KP,
                 PivotConstants.PIVOT_MOTOR_KI, PivotConstants.PIVOT_MOTOR_KD,
