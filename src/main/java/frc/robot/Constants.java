@@ -29,17 +29,11 @@ public class Constants {
 
     public class DrivetrAinConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x
-                                                                                         // distance
-                                                                                         // from
-                                                                                         // center
-                                                                                         // of robot
-                                                                                         // to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
         TunerConstants.kSpeedAt12VoltsMps / // free speed
-                Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2)) // circumference of circle with
-                                                                // radius of wheelbase
-        );
+                Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // circumference of circle with radius of wheelbase
+
         // TODO: TUNE
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
@@ -71,14 +65,23 @@ public class Constants {
 
             public static final int PigeonId = 23;
 
-            // TODO Get real temp so less errors
+            // TODO check
             public static final int COLLECTOR_MOTOR_TOP = 9;
-            public static final int COLLECTOR_MOTOR_BACK = 10;
-            public static final int FLYWHEEL_MOTOR_1 = 11;
-            public static final int FLYWHEEL_MOTOR_2 = 12;
-            public static final int SHOOTER_ANGLE_MOTOR = 13;
-            public static final int INDEXER_MOTOR = 14;
+            public static final int COLLECTOR_MOTOR_BOTTOM = 10;
+            public static final int INDEXER_MOTOR = 11;
+            public static final int PIVOT_ANGLE_MOTOR = 12;
+            public static final int FLYWHEEL_MOTOR_1 = 13;
+            public static final int FLYWHEEL_MOTOR_2 = 14;
+            public static final int CLIMB_RIGHT = 15;
+            public static final int CLIMB_LEFT = 16;
 
+            // TODO check
+            // Cancoders
+            public static final int FLYWHEEL_CANCODER = 35;
+            public static final int CLIMB_CANCODERR = 36;
+            public static final int CLIMB_CANCODERL = 37;
+            public static final int PIVOT_ANGLE_CANCODER = 38;
+            
             public static final String CANBUS_FD = "Canivore";
             public static final String RIO_CANBUS = "rio";
         }
@@ -285,25 +288,15 @@ public class Constants {
     }
 
     public class CollectorConstants {
-        public static final boolean COLLECTOR_MOTOR_INVERTED_TOP = false; // TODO check once
-                                                                          // collector installed
-        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_TOP = 0; // TODO: make sure
-                                                                              // they are not set to
-                                                                              // 0
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_TOP = 0; // TODO: make sure
-                                                                              // they are not set to
-                                                                              // 0
+        public static final boolean COLLECTOR_MOTOR_INVERTED_TOP = false; // TODO check once collector installed
+        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_TOP = 0; // TODO: make sure they are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_TOP = 0; // TODO: make sure they are not set to 0
         public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_TOP =
                 NeutralModeValue.Coast;
 
-        public static final boolean COLLECTOR_MOTOR_INVERTED_BOTTOM = false; // TODO check once
-                                                                             // collector installed
-        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_BOTTOM = 0; // TODO: make sure
-                                                                                 // they are not set
-                                                                                 // to 0
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_BOTTOM = 0; // TODO: make sure
-                                                                                 // they are not set
-                                                                                 // to 0
+        public static final boolean COLLECTOR_MOTOR_INVERTED_BOTTOM = false; // TODO check once collector installed
+        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_BOTTOM = 0; // TODO: make sure they are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_BOTTOM = 0; // TODO: make sure they are not set to 0
         public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_BOTTOM =
                 NeutralModeValue.Coast;
     }

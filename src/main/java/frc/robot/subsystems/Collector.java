@@ -23,7 +23,7 @@ public class Collector extends SubsystemBase {
 				CollectorConstants.COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_TOP,
 				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_TOP,
 				CollectorConstants.COLLECTOR_MOTOR_NEUTRAL_MODE_TOP);
-		collectorMotorBottom = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR_BACK, CAN.CANBUS_FD,
+		collectorMotorBottom = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR_BOTTOM, CAN.CANBUS_FD,
 				CollectorConstants.COLLECTOR_MOTOR_INVERTED_BOTTOM,
 				CollectorConstants.COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_BOTTOM,
 				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_BOTTOM,
