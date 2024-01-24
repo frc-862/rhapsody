@@ -19,16 +19,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants.AutonomousConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
 import frc.thunder.vision.Limelight;
-import frc.thunder.util.Pose4d;
-
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
@@ -141,10 +136,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return boolean if the robot is in the wing to start aiming STATE priming
      */
     public boolean inWing(){
-		if(this.getState().Pose.getX() >= 0 && this.getState().Pose.getX() <= 5){ // TODO make constants
-			return true;
-		} else{
-			return false;
-		}
+		return (getPose().get().getX() < ShooterConstants.FAR_WING_X);
 	}
 }
