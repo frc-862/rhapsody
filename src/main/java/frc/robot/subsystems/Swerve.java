@@ -82,9 +82,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         AutoBuilder.configureHolonomic(() -> this.getState().Pose, // Supplier of current robot pose
                 this::seedFieldRelative, // Consumer for seeding pose against auto
                 this::getCurrentRobotChassisSpeeds,
-                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of
-                                                                             // ChassisSpeeds to
-                                                                             // drive the robot
+                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
                 new HolonomicPathFollowerConfig(AutonomousConstants.TRANSLATION_PID,
                         AutonomousConstants.ROTATION_PID, AutonomousConstants.MAX_MODULE_VELOCITY,
                         AutonomousConstants.DRIVE_BASE_RADIUS, new ReplanningConfig(),
