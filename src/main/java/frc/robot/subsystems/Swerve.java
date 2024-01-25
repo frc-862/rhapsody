@@ -30,25 +30,24 @@ import frc.thunder.vision.Limelight;
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
-    private final SwerveRequest.ApplyChassisSpeeds autoRequest =
-            new SwerveRequest.ApplyChassisSpeeds();
+    private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
     private Limelight[] limelights;
     private boolean slowMode = false;
-
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
-        this.limelights = new Limelight[] {new Limelight("limelight-front", "10.8.62.11"),
-                new Limelight("limelight-back", "10.8.62.12")};
+        this.limelights = new Limelight[] {
+            new Limelight("limelight-front", "10.8.62.11"),
+            new Limelight("limelight-back", "10.8.62.12")};
 
         configurePathPlanner();
     }
-    // public Swerve(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants...
-    // modules) {
-    // this(driveTrainConstants, 250, modules);
-    // }
 
+    /**
+     * Returns all limelights
+     * @return Limelight [ ] 
+     */
     public Limelight[] getLimelights() {
         return limelights;
     }
@@ -74,8 +73,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
         LightningShuffleboard.setDouble("Swerve", "yaw", m_yawGetter.getValueAsDouble());
         LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
-
-        // System.out.println()
     }
 
     private void configurePathPlanner() {
@@ -105,7 +102,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         return () -> getState().Pose;
     }
 
-        public ChassisSpeeds getCurrentRobotChassisSpeeds() {
+    public ChassisSpeeds getCurrentRobotChassisSpeeds() {
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
 
@@ -115,7 +112,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * gets if slow mode is enabled
-     * 
      * @return if the robot is driving in slow mode
      */
     public boolean inSlowMode() {
@@ -124,7 +120,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Set slow mode t/f
-     * 
      * @param slow boolean if we are in slow mode
      */
     public void setSlowMode(boolean slow) {
@@ -132,7 +127,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
-     * 
+     * Returns if the robot Pose is in Wing
      * @return boolean if the robot is in the wing to start aiming STATE priming
      */
     public boolean inWing(){

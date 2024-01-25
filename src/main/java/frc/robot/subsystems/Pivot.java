@@ -11,9 +11,8 @@ import frc.thunder.config.FalconConfig;
 public class Pivot extends SubsystemBase {
     private TalonFX angleMotor;
     private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
-
-    // TODO: find initial target angle
-    private double targetAngle = 0;
+    
+    private double targetAngle = 0; // TODO: find initial target angle
 
     public Pivot() {
         angleMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_1, CAN.CANBUS_FD,

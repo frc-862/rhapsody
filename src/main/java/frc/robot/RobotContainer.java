@@ -29,6 +29,7 @@ public class RobotContainer extends LightningContainer {
 	XboxController driver;
 	XboxController coPilot;
 
+	//Subsystems
 	private Swerve drivetrain;
 	// Collector collector;
 	// Flywheel flywheel;
@@ -48,7 +49,6 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeSubsystems() {
-		
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
 		
@@ -73,7 +73,7 @@ public class RobotContainer extends LightningContainer {
 	}
 
 	@Override
-	protected void configureButtonBindings() {
+	protected void configureButtonBindings() { //TODO decide on comp buttons
 		new Trigger(driver::getLeftBumper).onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
@@ -90,7 +90,6 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeNamedCommands() {
-		
 	}
 
 	@Override
@@ -100,17 +99,12 @@ public class RobotContainer extends LightningContainer {
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 				drivetrain.applyRequest(() -> drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
 						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive left with negative X (left)
-						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
-				));
+						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_MULT))); // Drive counterclockwise with negative X (left)
 
 		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
 
 		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
 		// - coPilot.getLeftTriggerAxis()), collector));
-	}
-
-	protected void configureAutonomousCommands() {
-
 	}
 
 	protected Command getAutonomousCommand(){
