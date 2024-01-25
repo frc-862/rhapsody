@@ -31,10 +31,8 @@ public class Constants {
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
         private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / // free speed
-                Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // circumference of circle with radius of wheelbase
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); //free speed / circumference of circle with radius of wheelbase
 
-        // TODO: TUNE
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
         public static final double SLOW_ROT_MULT = 0.007; // TODO Tune for Driver
@@ -287,21 +285,19 @@ public class Constants {
         public static final PIDController HEADING_CONTROLLER = new PIDController(0.05, 0, 0);
     }
 
-    public class CollectorConstants {
+    public class CollectorConstants { // TODO: get real
         public static final boolean COLLECTOR_MOTOR_INVERTED_TOP = false; // TODO check once collector installed
         public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_TOP = 0; // TODO: make sure they are not set to 0
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_TOP = 0; // TODO: make sure they are not set to 0
-        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_TOP =
-                NeutralModeValue.Coast;
+        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_TOP = NeutralModeValue.Coast;
 
         public static final boolean COLLECTOR_MOTOR_INVERTED_BOTTOM = false; // TODO check once collector installed
         public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_BOTTOM = 0; // TODO: make sure they are not set to 0
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_BOTTOM = 0; // TODO: make sure they are not set to 0
-        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_BOTTOM =
-                NeutralModeValue.Coast;
+        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_BOTTOM = NeutralModeValue.Coast;
     }
 
-    public class FlywheelConstants {
+    public class FlywheelConstants { // TODO: get real
         public static final boolean FLYWHEEL_MOTOR_1_INVERT = false;
         public static final boolean FLYWHEEL_MOTOR_2_INVERT = false;
         public static final int FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
@@ -316,15 +312,15 @@ public class Constants {
         public static final double RPM_TOLERANCE = 0;
     }
 
-    public class IndexerConstants {
+    public class IndexerConstants { // TODO: get real
         public static final boolean INDEXER_MOTOR_INVERTED = false;
         public static final int INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int INDEXER_MOTOR_STATOR_CURRENT_LIMIT = 0;
         public static final NeutralModeValue INDEXER_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
-        public static final double INDEXER_DEFAULT_POWER = 0.3; // TODO: get real
+        public static final double INDEXER_DEFAULT_POWER = 0.3; 
     }
 
-    public class PivotConstants {
+    public class PivotConstants { // TODO: get real
         public static final boolean PIVOT_MOTOR_INVERT = false;
         public static final int PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int PIVOT_MOTOR_STATOR_CURRENT_LIMIT = 0;
@@ -336,7 +332,6 @@ public class Constants {
         public static final double PIVOT_MOTOR_KV = 0;
 
         public static final double ANGLE_TOLERANCE = 0;
-
     }
 
     public class ShooterConstants {
