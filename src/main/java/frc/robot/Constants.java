@@ -358,4 +358,20 @@ public class Constants {
             }
         };
     }
+
+    public class ClimbConstants {
+        public static final boolean CLIMB_RIGHT_MOTOR_INVERT = false;
+        public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
+        public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
+        public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final double CLIMB_MOTOR_KP = 0;
+        public static final double CLIMB_MOTOR_KI = 0;
+        public static final double CLIMB_MOTOR_KD = 0;
+        public static final double CLIMB_MOTOR_KS = 0;
+        public static final double CLIMB_MOTOR_KV = 0;
+
+        public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; //TODO: find real values
+        public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
+    }
 }
