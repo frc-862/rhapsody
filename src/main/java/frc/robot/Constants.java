@@ -185,19 +185,19 @@ public class Constants {
                         .withSteerMotorInverted(kSteerMotorReversed);
 
         // OFFSETS Rhapsody
-        private static final double kFrontLeftEncoderOffsetRh = 0.0439453125;
+        private static final double kFrontLeftEncoderOffsetRh = -0.03564453125;
         private static final double kFrontLeftXPosInchesRh = 13.5;
         private static final double kFrontLeftYPosInchesRh = 13.5;
 
-        private static final double kFrontRightEncoderOffsetRh = 0.288818359375;
+        private static final double kFrontRightEncoderOffsetRh = 0.2978515625;
         private static final double kFrontRightXPosInchesRh = 13.5;
         private static final double kFrontRightYPosInchesRh = -13.5;
 
-        private static final double kBackLeftEncoderOffsetRh = 0.2197265625;
+        private static final double kBackLeftEncoderOffsetRh = 0.245361328125;
         private static final double kBackLeftXPosInchesRh = -13.5;
         private static final double kBackLeftYPosInchesRh = 13.5;
 
-        private static final double kBackRightEncoderOffsetRh = 0.0009765625;
+        private static final double kBackRightEncoderOffsetRh = 0.044189453125;
         private static final double kBackRightXPosInchesRh = -13.5;
         private static final double kBackRightYPosInchesRh = -13.5;
 
