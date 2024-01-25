@@ -16,6 +16,7 @@ import frc.robot.Constants.DrivetrAinConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Shoot;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Collision;
 import frc.robot.subsystems.Flywheel;
@@ -37,6 +38,7 @@ public class RobotContainer extends LightningContainer {
 	// Shooter shooter;
 	// Collision collision;
 	// Indexer indexer;
+	Climb climb;
 
 	private SendableChooser<Command> autoChooser;
 	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
@@ -64,6 +66,7 @@ public class RobotContainer extends LightningContainer {
 		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer);
 		// collision = new Collision(drivetrain);
+		climb = new Climb();
 
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
