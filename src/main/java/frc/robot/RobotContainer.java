@@ -34,6 +34,7 @@ public class RobotContainer extends LightningContainer {
 	XboxController driver;
 	XboxController coPilot;
 
+	//Subsystems
 	private Swerve drivetrain;
 	// Collector collector;
 	// Flywheel flywheel;
@@ -54,7 +55,6 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeSubsystems() {
-		
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
 		
@@ -80,7 +80,7 @@ public class RobotContainer extends LightningContainer {
 	}
 
 	@Override
-	protected void configureButtonBindings() {
+	protected void configureButtonBindings() { //TODO decide on comp buttons
 		new Trigger(driver::getLeftBumper).onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
@@ -91,7 +91,6 @@ public class RobotContainer extends LightningContainer {
 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
 
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
-	
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", false));
 
 		new Trigger(driver::getYButton).whileTrue(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_EXTENDED));
@@ -99,7 +98,6 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeNamedCommands() {
-		
 	}
 
 	@Override
@@ -118,10 +116,6 @@ public class RobotContainer extends LightningContainer {
 
 		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
 		// - coPilot.getLeftTriggerAxis()), collector));
-	}
-
-	protected void configureAutonomousCommands() {
-
 	}
 
 	protected Command getAutonomousCommand(){
