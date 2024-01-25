@@ -8,6 +8,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class ManualClimb extends Command {
 
@@ -15,7 +16,7 @@ public class ManualClimb extends Command {
   private DoubleSupplier powerSupplier;
 
   /** Creates a new ManualClimb. */
-  public ManualClimb(Climber climber, DoubleSupplier powerSupplier) {
+  public ManualClimb(DoubleSupplier powerSupplier, Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.powerSupplier = powerSupplier;
     this.climber = climber;
@@ -26,13 +27,15 @@ public class ManualClimb extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climber.setClimbPower(powerSupplier.getAsDouble());
+    climber.setPower(powerSupplier.getAsDouble());
+
+    LightningShuffleboard.setDoubleSupplier("Climb", "Height", () -> climber.getHeight());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setClimbPower(powerSupplier.getAsDouble());
+    climber.setPower(powerSupplier.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

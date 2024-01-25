@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrAinConstants;
 import frc.robot.Constants.TunerConstants;
@@ -93,7 +94,7 @@ public class RobotContainer extends LightningContainer {
 	
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", false));
 
-		// new Trigger(driver::getRightTriggerAxis).whileTrue(Climber.extendClimb);4
+		new Trigger(driver::getYButton).whileTrue(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_EXTENDED));
 	}
 
 	@Override
@@ -110,7 +111,8 @@ public class RobotContainer extends LightningContainer {
 						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive left with negative X (left)
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
-		climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), climber));
+		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), climber));
+		climber.setDefaultCommand(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_RETRACTED));
 
 		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
 

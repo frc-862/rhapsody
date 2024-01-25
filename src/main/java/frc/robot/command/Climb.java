@@ -10,12 +10,16 @@ import frc.robot.subsystems.Climber;
 
 public class Climb extends Command {
   /** Creates a new Climb. */
-private PIDController climbController = new PIDController(0.5, 0, 0);
+
+  // create vars
+  private PIDController climbController = new PIDController(0.5, 0, 0); //TODO: tune pid
   private Climber climber;
   private double setPoint;
 
   public Climb(Climber climber, double setPoint) {
     // Use addRequirements() here to declare subsystem dependencies.
+
+    // initialize variables
     this.climber = climber;
     this.setPoint = setPoint;
     addRequirements(climber);
@@ -28,13 +32,16 @@ private PIDController climbController = new PIDController(0.5, 0, 0);
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // use pid to set climber power
     double pidOutput = climbController.calculate(climber.getHeight(), setPoint);
-    climber.setClimbPower(pidOutput);
+    climber.setPower(pidOutput);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    climber.stopClimb();
+  }
 
   // Returns true when the command should end.
   @Override

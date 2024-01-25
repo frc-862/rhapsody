@@ -379,7 +379,7 @@ public class Constants {
         public static final double CLIMB_MOTOR_KS = 0;
         public static final double CLIMB_MOTOR_KV = 0;
 
-        public static final double CLIMB_DEFAULT_EXTEND_POWER = 0.3; //TODO: assign real value
-        public static final double CLIMB_DEFAULT_RETRACT_POWER = -0.3; //TODO:assign real value
+        public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; //TODO: find real values
+        public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
     }
 }
