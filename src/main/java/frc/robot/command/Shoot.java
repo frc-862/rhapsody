@@ -18,10 +18,6 @@ public class Shoot extends Command {
 	double distancetoTarget; // FROM LIMELIGHT or form OTF
 	private BooleanSupplier copilotAButton;
 
-	/**
-	 * Creates a new Shoot.
-	 * @param Shooter 
-	 */
 	public Shoot(Shooter shooter, Indexer indexer, Swerve drivetrain, BooleanSupplier copilotAButton) {
 		this.shooter = shooter;
 		this.indexer = indexer;
@@ -58,6 +54,6 @@ public class Shoot extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return (drivetrain.getPose().get().getX() < ShooterConstants.FAR_WING_X);
+		return false;
 		}
 	}
