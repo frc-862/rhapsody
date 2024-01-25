@@ -1,6 +1,7 @@
 package frc.robot.command;
 
 import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Collector;
 
