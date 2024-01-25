@@ -121,8 +121,8 @@ public class PointAtTag extends Command {
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		// limelight.setPipeline(2);
-		// drivetrain.applyRequest(() -> brake); // TODO test if this applies brake
+		limelight.setPipeline(limelightId);
+		drivetrain.applyRequest(() -> brake); // TODO test if this applies brake
 	}
 
 	// Returns true when the command should end.
