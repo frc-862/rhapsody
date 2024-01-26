@@ -31,10 +31,8 @@ public class Constants {
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
         private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / // free speed
-                Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // circumference of circle with radius of wheelbase
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); //free speed / circumference of circle with radius of wheelbase
 
-        // TODO: TUNE
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
         public static final double SLOW_ROT_MULT = 0.007; // TODO Tune for Driver
@@ -108,7 +106,7 @@ public class Constants {
         public static final PIDConstants ROTATION_PID = new PIDConstants(10, 0, 0); // TODO: Tune
 
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(17.3); // f/s to m/s
-        public static final double DRIVE_BASE_RADIUS = Units.feetToMeters(19.09); // TODO check
+        public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(19.09); // TODO check
 
         public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
     }
@@ -185,19 +183,19 @@ public class Constants {
                         .withSteerMotorInverted(kSteerMotorReversed);
 
         // OFFSETS Rhapsody
-        private static final double kFrontLeftEncoderOffsetRh = 0.0439453125;
+        private static final double kFrontLeftEncoderOffsetRh = -0.03564453125;
         private static final double kFrontLeftXPosInchesRh = 13.5;
         private static final double kFrontLeftYPosInchesRh = 13.5;
 
-        private static final double kFrontRightEncoderOffsetRh = 0.288818359375;
+        private static final double kFrontRightEncoderOffsetRh = 0.2978515625;
         private static final double kFrontRightXPosInchesRh = 13.5;
         private static final double kFrontRightYPosInchesRh = -13.5;
 
-        private static final double kBackLeftEncoderOffsetRh = 0.2197265625;
+        private static final double kBackLeftEncoderOffsetRh = 0.245361328125;
         private static final double kBackLeftXPosInchesRh = -13.5;
         private static final double kBackLeftYPosInchesRh = 13.5;
 
-        private static final double kBackRightEncoderOffsetRh = 0.0009765625;
+        private static final double kBackRightEncoderOffsetRh = 0.044189453125;
         private static final double kBackRightXPosInchesRh = -13.5;
         private static final double kBackRightYPosInchesRh = -13.5;
 
@@ -287,21 +285,19 @@ public class Constants {
         public static final PIDController HEADING_CONTROLLER = new PIDController(0.05, 0, 0);
     }
 
-    public class CollectorConstants {
+    public class CollectorConstants { // TODO: get real
         public static final boolean COLLECTOR_MOTOR_INVERTED_TOP = false; // TODO check once collector installed
         public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_TOP = 0; // TODO: make sure they are not set to 0
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_TOP = 0; // TODO: make sure they are not set to 0
-        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_TOP =
-                NeutralModeValue.Coast;
+        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_TOP = NeutralModeValue.Coast;
 
         public static final boolean COLLECTOR_MOTOR_INVERTED_BOTTOM = false; // TODO check once collector installed
         public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_BOTTOM = 0; // TODO: make sure they are not set to 0
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_BOTTOM = 0; // TODO: make sure they are not set to 0
-        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_BOTTOM =
-                NeutralModeValue.Coast;
+        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_BOTTOM = NeutralModeValue.Coast;
     }
 
-    public class FlywheelConstants {
+    public class FlywheelConstants { // TODO: get real
         public static final boolean FLYWHEEL_MOTOR_1_INVERT = false;
         public static final boolean FLYWHEEL_MOTOR_2_INVERT = false;
         public static final int FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
@@ -316,15 +312,15 @@ public class Constants {
         public static final double RPM_TOLERANCE = 0;
     }
 
-    public class IndexerConstants {
+    public class IndexerConstants { // TODO: get real
         public static final boolean INDEXER_MOTOR_INVERTED = false;
         public static final int INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int INDEXER_MOTOR_STATOR_CURRENT_LIMIT = 0;
         public static final NeutralModeValue INDEXER_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
-        public static final double INDEXER_DEFAULT_POWER = 0.3; // TODO: get real
+        public static final double INDEXER_DEFAULT_POWER = 0.3; 
     }
 
-    public class PivotConstants {
+    public class PivotConstants { // TODO: get real
         public static final boolean PIVOT_MOTOR_INVERT = false;
         public static final int PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int PIVOT_MOTOR_STATOR_CURRENT_LIMIT = 0;
@@ -336,17 +332,13 @@ public class Constants {
         public static final double PIVOT_MOTOR_KV = 0;
 
         public static final double ANGLE_TOLERANCE = 0;
-
     }
 
     public class ShooterConstants {
         public static final double BASE_RPM = 0;
         public static final double STOW_ANGLE = 0;
-
-        public static final int FAR_WING_X = 0;
-        public static final int FAR_WING_Y = 0;
-        public static final int CLOSE_WING_X = 0;
-        public static final int CLOSE_WING_Y = 0;
+        
+        public static final double FAR_WING_X = 3.3;
 
         public enum SHOOTER_STATES {
             STOW, PRIME, AIM, SHOOT

@@ -4,10 +4,8 @@
 /*
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
-
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Collision extends SubsystemBase {
