@@ -34,17 +34,6 @@ public class Climb extends Command {
 		setPoint = ClimbConstants.CLIMB_PID_SETPOINT_EXTENDED;
 	}
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    // use pid to set climber power
-    double pidOutput = climbController.calculate(climber.getHeight(), setPoint);
-    climber.setPower(pidOutput);
-    
-    LightningShuffleboard.setDouble("Climb", "Climb Height", climber.getHeight());
-    LightningShuffleboard.setDouble("Climb", "Climb Power", pidOutput);
-
-  }
 	/**
 	 * retracts climb to 0
 	 */
@@ -69,6 +58,9 @@ public class Climb extends Command {
 		if (extended() && tipDetection.isTipped()) {
 			retract();
 		}
+
+		LightningShuffleboard.setDouble("Climb", "Climb Height", climber.getHeight());
+    	LightningShuffleboard.setDouble("Climb", "Climb Power", pidOutput);
 	}
 
 	/**
