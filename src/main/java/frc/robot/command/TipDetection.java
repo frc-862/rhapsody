@@ -16,14 +16,16 @@ public class TipDetection extends Command {
   public double roll;
 
 
-  public TipDetection(Swerve Drivetrain) {
-    LightningShuffleboard.setBoolSupplier("Tip Detection", "Tipped", () -> (Math.abs(pitch) > VisionConstants.COLLISION_DEADZONE || Math.abs(roll) > VisionConstants.COLLISION_DEADZONE));
-
+  public TipDetection(Swerve drivetrain) {
+    this.drivetrain = drivetrain;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    LightningShuffleboard.setBoolSupplier("Tip Detection", "Tipped",
+    () -> (Math.abs(pitch) > VisionConstants.COLLISION_DEADZONE || Math.abs(roll) > VisionConstants.COLLISION_DEADZONE));
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -31,6 +33,13 @@ public class TipDetection extends Command {
     pitch = drivetrain.getPigeon2().getPitch().getValueAsDouble();
     roll = drivetrain.getPigeon2().getRoll().getValueAsDouble();
 
+  }
+
+  /**
+   * @return whether the robot is tipped
+   */
+  public boolean isTipped() {
+    return (Math.abs(pitch) > VisionConstants.COLLISION_DEADZONE || Math.abs(roll) > VisionConstants.COLLISION_DEADZONE);
   }
 
   // Called once the command ends or is interrupted.
