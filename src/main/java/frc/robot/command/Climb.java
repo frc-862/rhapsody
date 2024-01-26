@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.Climber;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.robot.subsystems.Swerve;
 import frc.robot.command.TipDetection;
 
@@ -57,6 +58,9 @@ public class Climb extends Command {
 		if (extended() && tipDetection.isTipped()) {
 			retract();
 		}
+
+		LightningShuffleboard.setDouble("Climb", "Climb Height", climber.getHeight());
+    	LightningShuffleboard.setDouble("Climb", "Climb Power", pidOutput);
 	}
 
 	/**

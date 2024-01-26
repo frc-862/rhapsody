@@ -48,7 +48,6 @@ public class PointAtTag extends Command {
 		this.driver = driver;
 		this.useLimelights = useLimelights;
 
-
 		//TODO Figure out which of these is the right one to use 
 		for (var l : drivetrain.getLimelights()) { 
 		 	if (l.getName().equals(limelight_name)) {
@@ -79,17 +78,15 @@ public class PointAtTag extends Command {
 	@Override
 	public void execute() {
 		if (useLimelights) {
-
 			targetHeading = limelight.getTargetX();
-
 		} else {
-
 			lockedOnHeading = LightningShuffleboard.getDouble("PointAtTag", "LockOnHeading", 0);
 			LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
 			targetHeading = lockedOnHeading - drivetrain.getPigeon2().getAngle();
-      
 		}
 
+		lockedOnHeading = LightningShuffleboard.getDouble("PointAtTag", "LockOnHeading", 0);
+		LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
 		LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
 
