@@ -361,7 +361,7 @@ public class Constants {
         };
     }
 
-    public class ClimbConstants {
+    public class ClimbConstants { //TODO: find real values
         public static final boolean CLIMB_RIGHT_MOTOR_INVERT = false;
         public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
         public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
