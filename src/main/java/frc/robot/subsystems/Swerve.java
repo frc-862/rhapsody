@@ -66,9 +66,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void periodic() {
         for (Limelight limelight : Limelight.filterLimelights(limelights)) {
             Pose4d pose = limelight.getAlliancePose();
-            addVisionMeasurement(pose.toPose2d(),
-                    Timer.getFPGATimestamp() - Units.millisecondsToSeconds(pose.getLatency())
-                            - VisionConstants.PROCESS_LATENCY);
+            addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
         }
 
         LightningShuffleboard.setDouble("Swerve", "yaw", m_yawGetter.getValueAsDouble());
