@@ -28,8 +28,6 @@ public class ManualClimb extends Command {
   @Override
   public void initialize() {
     climber.setPower(powerSupplier.getAsDouble());
-
-    LightningShuffleboard.setDoubleSupplier("Climb", "Height", () -> climber.getHeight());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
