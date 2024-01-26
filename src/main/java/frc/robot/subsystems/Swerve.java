@@ -64,8 +64,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
-        for (Limelight limelight : Limelight.filterLimelights(limelights)) {
-            Pose4d pose = limelight.getAlliancePose();
+        for (Pose4d pose : Limelight.filteredPoses(limelights)) {
             addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
         }
 
