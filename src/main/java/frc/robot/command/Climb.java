@@ -6,6 +6,7 @@ package frc.robot.command;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.Climber;
 
 public class Climb extends Command {
@@ -35,6 +36,37 @@ public class Climb extends Command {
     // use pid to set climber power
     double pidOutput = climbController.calculate(climber.getHeight(), setPoint);
     climber.setPower(pidOutput);
+
+    if(extended()){}
+  }
+
+
+  /**
+   * retracts climb
+   */
+  public void retract(){
+    setPoint = ClimbConstants.CLIMB_PID_SETPOINT_RETRACTED;
+  }
+
+  /**
+   * @return returns whether climb is extended
+   */
+  public boolean extended(){
+    return (setPoint - climber.getHeight() < ClimbConstants.CLIMB_EXTENSION_TOLERANCE);
+  }
+
+  /**
+   * @return climb setpoint
+   */
+  public double getSetPoint(){
+    return setPoint;
+  }
+
+  /**
+   * set setpoint for climb pid
+   */
+  public void setSetPoint(double setPoint){
+    this.setPoint = setPoint;
   }
 
   // Called once the command ends or is interrupted.

@@ -17,7 +17,7 @@ public class Climber extends SubsystemBase {
   // create variables
   public TalonFX climbMotorR;
   public TalonFX climbMotorL;
-  private double setPoint;
+  public double setPoint;
 
   public Climber() {
     // configure climb motors
@@ -51,20 +51,6 @@ public class Climber extends SubsystemBase {
    */
   public void stopClimb(){
     setPower(0);
-  }
-
-  /**
-   * sets a setpoint that climb will go to using pid
-   */
-  public void setSetPoint(double setPoint){
-    this.setPoint = setPoint;
-  }
-
-  /**
-   * @return current climb pid setpoint
-   */
-  public double getSetPoint(){
-    return setPoint;
   }
 
   /**
