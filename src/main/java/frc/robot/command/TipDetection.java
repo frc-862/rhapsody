@@ -33,9 +33,6 @@ public class TipDetection extends Command {
     pitch = drivetrain.getPigeon2().getPitch().getValueAsDouble();
     roll = drivetrain.getPigeon2().getRoll().getValueAsDouble();
 
-    LightningShuffleboard.setDouble("Tip Detection", "Pitch", pitch);
-    LightningShuffleboard.setDouble("Tip Detection", "Roll", roll);
-
   }
 
   /**
