@@ -68,6 +68,7 @@ public class Climb extends Command {
 
 	/**
 	 * set setpoint for climb pid
+	 * @param setPoint height to go to in TODO pick a unit
 	 */
 	public void setSetPoint(double setPoint) {
 		this.setPoint = setPoint;
