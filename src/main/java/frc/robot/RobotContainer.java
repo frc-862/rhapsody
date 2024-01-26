@@ -10,6 +10,17 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.MathUtil;
+
+import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Collector;
+import frc.robot.command.TipDetection;
+import frc.robot.command.PointAtTag;
+import frc.robot.command.Collect;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ControllerConstants;
@@ -21,7 +32,6 @@ import frc.robot.command.Climb;
 import frc.robot.command.ManualClimb;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Collector;
-import frc.robot.subsystems.Collision;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
@@ -77,6 +87,7 @@ public class RobotContainer extends LightningContainer {
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
+		
 	}
 
 	@Override
@@ -91,6 +102,8 @@ public class RobotContainer extends LightningContainer {
 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
 
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", false));
+		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", false));
 
 		new Trigger(driver::getYButton).whileTrue(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_EXTENDED));
