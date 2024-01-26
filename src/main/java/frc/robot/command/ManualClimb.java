@@ -15,7 +15,11 @@ public class ManualClimb extends Command {
   private Climber climber;
   private DoubleSupplier powerSupplier;
 
-  /** Creates a new ManualClimb. */
+  /**
+   * Creates a new ManualClimb.
+   * @param powerSupplier DoubleSupplier for power of motor (-1 to 1)
+   * @param climber subsystem
+   */
   public ManualClimb(DoubleSupplier powerSupplier, Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.powerSupplier = powerSupplier;
@@ -28,8 +32,6 @@ public class ManualClimb extends Command {
   @Override
   public void initialize() {
     climber.setPower(powerSupplier.getAsDouble());
-
-    LightningShuffleboard.setDoubleSupplier("Climb", "Height", () -> climber.getHeight());
   }
 
   // Called every time the scheduler runs while the command is scheduled.

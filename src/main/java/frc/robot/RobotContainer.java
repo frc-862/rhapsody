@@ -52,7 +52,7 @@ public class RobotContainer extends LightningContainer {
 	// Shooter shooter;
 	// Collision collision;
 	// Indexer indexer;
-	Climber climber;
+	// Climber climber;
 
 	private SendableChooser<Command> autoChooser;
 	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
@@ -79,7 +79,7 @@ public class RobotContainer extends LightningContainer {
 		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer);
 		// collision = new Collision(drivetrain);
-		climber = new Climber();
+		// climber = new Climber();
 
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
@@ -87,7 +87,6 @@ public class RobotContainer extends LightningContainer {
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
-		
 	}
 
 	@Override
@@ -106,8 +105,8 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", true, true));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 
-		new Trigger(driver::getYButton).whileTrue(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_EXTENDED));
-  }
+		// new Trigger(driver::getYButton).whileTrue(new Climb(climber, drivetrain));
+	}
 
 	@Override
 	protected void initializeNamedCommands() {
@@ -123,7 +122,6 @@ public class RobotContainer extends LightningContainer {
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
 		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), climber));
-		climber.setDefaultCommand(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_RETRACTED));
 
 		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
 
