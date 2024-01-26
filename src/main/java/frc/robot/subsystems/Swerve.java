@@ -33,6 +33,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
     private Limelight[] limelights;
     private boolean slowMode = false;
+    private boolean disableVision = false;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
@@ -66,9 +67,16 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void periodic() {
         for (Limelight limelight : Limelight.filterLimelights(limelights)) {
             Pose4d pose = limelight.getAlliancePose();
-            addVisionMeasurement(pose.toPose2d(),
-                    Timer.getFPGATimestamp() - Units.millisecondsToSeconds(pose.getLatency())
-                            - VisionConstants.PROCESS_LATENCY);
+            // LightningShuffleboard.set("Swerve", "Vision pose", pose.toPose2d());
+            LightningShuffleboard.setDouble("Swerve", "Vision pose X", pose.toPose2d().getX());
+            LightningShuffleboard.setDouble("Swerve", "Vision pose Y", pose.toPose2d().getY());
+            LightningShuffleboard.setDouble("Swerve", "Vision time offset", Timer.getFPGATimestamp() - Units.millisecondsToSeconds(pose.getLatency())
+            - VisionConstants.PROCESS_LATENCY);
+            if(!disableVision) {
+                addVisionMeasurement(pose.toPose2d(),
+                        Timer.getFPGATimestamp() - Units.millisecondsToSeconds(pose.getLatency())
+                                - VisionConstants.PROCESS_LATENCY);
+            }
         }
 
         LightningShuffleboard.setDouble("Swerve", "yaw", m_yawGetter.getValueAsDouble());
@@ -96,6 +104,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                     }
                     return false;
                 }, this); // Subsystem for requirements
+    }
+
+    public void disableVision() {
+        disableVision = true;
+    }
+
+    public void enableVision() {
+        disableVision = false;
     }
 
     public Supplier<Pose2d> getPose() {

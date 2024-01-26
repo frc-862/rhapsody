@@ -12,9 +12,33 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "disable-Vision"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Run_Through_Pieces"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "test"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StraightOut"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "test"
           }
         }
       ]
