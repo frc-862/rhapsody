@@ -15,7 +15,11 @@ public class ManualClimb extends Command {
   private Climber climber;
   private DoubleSupplier powerSupplier;
 
-  /** Creates a new ManualClimb. */
+  /**
+   * Creates a new ManualClimb.
+   * @param powerSupplier DoubleSupplier for power of motor (-1 to 1)
+   * @param climber subsystem
+   */
   public ManualClimb(DoubleSupplier powerSupplier, Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.powerSupplier = powerSupplier;
