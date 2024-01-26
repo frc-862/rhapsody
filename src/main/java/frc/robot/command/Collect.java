@@ -11,8 +11,12 @@ public class Collect extends Command {
 	private Collector collector;
 	private DoubleSupplier powerSupplier;
 
+	/**
+	 * Creates a new Collect.
+	 * @param powerSupplier DoubleSupplier for power of motor (-1 to 1)
+	 * @param collector subsystem
+	 */
 	public Collect(DoubleSupplier powerSupplier, Collector collector) {
-		// Sets collector from parameter
 		this.collector = collector;
 		this.powerSupplier = powerSupplier;
 
