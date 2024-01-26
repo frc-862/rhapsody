@@ -21,6 +21,9 @@ public class Collision extends SubsystemBase {
 
     // displays whether the robot is off balance
     LightningShuffleboard.setBoolSupplier("Collision", "offBalance", () -> (Math.abs(pitch) > VisionConstants.COLLISION_DEADZONE || Math.abs(roll) > VisionConstants.COLLISION_DEADZONE));
+    LightningShuffleboard.setDoubleSupplier("Collision", "pitch", () -> pitch);
+    LightningShuffleboard.setDoubleSupplier("Collision", "roll", () -> roll);
+
   }
 
   @Override

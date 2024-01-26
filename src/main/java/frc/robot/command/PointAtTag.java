@@ -70,8 +70,6 @@ public class PointAtTag extends Command {
 	@Override
 	public void execute() {
 		if (!useLimelights) {
-			lockedOnHeading = LightningShuffleboard.getDouble("PointAtTag", "LockOnHeading", 0);
-			LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
 			targetHeading = lockedOnHeading - drivetrain.getPigeon2().getAngle();
 
 			SwerveRequest.FieldCentric pointAtTag = new SwerveRequest.FieldCentric();
@@ -88,10 +86,10 @@ public class PointAtTag extends Command {
 			drivetrain.setControl(pointAtTag.withRotationalRate(-pidOutput));
 		}
 
+		lockedOnHeading = LightningShuffleboard.getDouble("PointAtTag", "LockOnHeading", 0);
+		LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
 		LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
-		// SwerveRequest.RobotCentric pointAtTag = new SwerveRequest.RobotCentric();
-		// drivetrain.setControl(pointAtTag.withRotationalRate(-pidOutput));
 
 		if (driver.getRightBumper()) {
 			drivetrain.setControl(slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_

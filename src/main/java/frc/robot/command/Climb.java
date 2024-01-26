@@ -7,6 +7,7 @@ package frc.robot.command;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Climb extends Command {
   /** Creates a new Climb. */
@@ -27,7 +28,9 @@ public class Climb extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -35,6 +38,10 @@ public class Climb extends Command {
     // use pid to set climber power
     double pidOutput = climbController.calculate(climber.getHeight(), setPoint);
     climber.setPower(pidOutput);
+    
+    LightningShuffleboard.setDouble("Climb", "Climb Height", climber.getHeight());
+    LightningShuffleboard.setDouble("Climb", "Climb Power", pidOutput);
+
   }
 
   // Called once the command ends or is interrupted.
