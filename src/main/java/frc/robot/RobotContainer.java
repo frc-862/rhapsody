@@ -117,10 +117,6 @@ public class RobotContainer extends LightningContainer {
 	}
 
 	@Override
-	protected void initializeNamedCommands() {
-	}
-
-	@Override
 	protected void configureDefaultCommands() {
 		drivetrain.registerTelemetry(logger::telemeterize);
 
