@@ -10,6 +10,7 @@ import frc.robot.subsystems.LEDs;
 public class SwirlLEDs extends Command {
   private LEDs leds;
   private int index = 0;
+  
   /** Creates a new LEDs. *//**
      * Sets the angle of the pivot
      * 
@@ -45,7 +46,7 @@ public class SwirlLEDs extends Command {
   for (int i = 0; i < index; i++) {
     leds.setIndexHSV(i, 240, 255, 255);
   }
-  index ++;
+  index++;
   index %= 6;
   }
   // Called once the command ends or is interrupted.
