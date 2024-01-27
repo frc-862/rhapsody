@@ -13,7 +13,7 @@ import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 
-public class ChasePieces extends Command {
+public class chasePieces extends Command {
 
 	private Swerve drivetrain;
 	private Limelight limelight;
@@ -30,7 +30,7 @@ public class ChasePieces extends Command {
 	 * Creates a new ChasePieces.
 	 * @param drivetrain to request movement 
 	 */
-	public ChasePieces(Swerve drivetrain) {
+	public chasePieces(Swerve drivetrain) {
 		this.drivetrain = drivetrain;
 
 		limelight = drivetrain.getLimelights()[0];
