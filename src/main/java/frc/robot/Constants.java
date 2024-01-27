@@ -378,4 +378,9 @@ public class Constants {
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
     }
+
+    public class LEDsConstants {
+        public static final int LED_PWM_PORT = 0;
+        public static final int LED_BUFFER_TIME = 60;
+    }
 }
