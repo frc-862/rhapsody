@@ -165,7 +165,6 @@ public class RobotContainer extends LightningContainer {
 			new TimedCommand(new TurnSystemTest(drivetrain, () -> 0.25), 2),
 			new WaitCommand(0.5),
 			new TimedCommand(new TurnSystemTest(drivetrain, () -> -0.25), 2)
-
 		));
 	}
 }

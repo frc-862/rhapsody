@@ -6,7 +6,6 @@ package frc.robot.command.tests;
 
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,6 +17,12 @@ public class DriveTest extends Command {
   private DoubleSupplier speedX;
   private DoubleSupplier speedY;
 
+  /**
+   * Creates a new drive test
+   * @param drivetrain swerve subsystem
+   * @param speedX X velocity
+   * @param speedY Y velocity
+   */
   public DriveTest(Swerve drivetrain, DoubleSupplier speedX, DoubleSupplier speedY) {
     this.drivetrain = drivetrain;
     this.speedX = speedX;

@@ -16,6 +16,11 @@ public class TurnSystemTest extends Command {
   private Swerve drivetrain;
   private DoubleSupplier speed;
 
+  /**
+   * System test for testing azimuth motors
+   * @param drivetrain swerve subsystem
+   * @param speed rotational rate
+   */
   public TurnSystemTest(Swerve drivetrain, DoubleSupplier speed) {
     this.drivetrain = drivetrain;
     this.speed = speed;
