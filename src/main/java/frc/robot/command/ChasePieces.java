@@ -56,8 +56,7 @@ public class ChasePieces extends Command {
 
         if(Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE){
             onTarget = true;
-        }
-        else{
+        } else{
             onTarget = false;
         }
 
