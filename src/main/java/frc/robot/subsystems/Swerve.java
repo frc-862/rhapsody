@@ -38,8 +38,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         this.limelights = new Limelight[] {
-            new Limelight("limelight-front", "10.8.62.11"),
-            new Limelight("limelight-back", "10.8.62.12")};
+            new Limelight("limelight-front", "10.8.62.11")};
+            // new Limelight("limelight-back", "10.8.62.12")};
 
         configurePathPlanner();
     }
@@ -66,12 +66,17 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void periodic() {
         for (Pose4d pose : Limelight.filteredPoses(limelights)) {
             addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
+            LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
+            LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
+            LightningShuffleboard.setDouble("Swerve", "PoseTime", pose.getFPGATimestamp()); 
+            LightningShuffleboard.setDouble("Swerve", "Timer", Timer.getFPGATimestamp());           
         }
 
         LightningShuffleboard.setDouble("Swerve", "Robot Heading", getPigeon2().getAngle());
         LightningShuffleboard.setDouble("Swerve", "Odo X", getState().Pose.getX());
         LightningShuffleboard.setDouble("Swerve", "Odo Y", getState().Pose.getY());
         LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
+        
 
     }
 
