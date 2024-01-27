@@ -283,6 +283,8 @@ public class Constants {
         public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 4d; // TODO: make this an actual value
         public static final PIDController HEADING_CONTROLLER = new PIDController(0.05, 0, 0);
+        public static final int TAG_PIPELINE = 0;
+        public static final int NOTE_PIPELINE = 2;
     }
 
     public class CollectorConstants { // TODO: get real
@@ -359,7 +361,7 @@ public class Constants {
         };
     }
 
-    public class ClimbConstants {
+    public class ClimbConstants { //TODO: find real values
         public static final boolean CLIMB_RIGHT_MOTOR_INVERT = false;
         public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
         public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
@@ -373,6 +375,7 @@ public class Constants {
 
         public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; //TODO: find real values
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
+        public static final double CLIMB_EXTENSION_TOLERANCE = 0;
     }
 
     public class LEDsConstants {
