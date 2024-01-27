@@ -87,7 +87,6 @@ public class RobotContainer extends LightningContainer {
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
-		
 	}
 
 	@Override
@@ -108,11 +107,17 @@ public class RobotContainer extends LightningContainer {
 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
 
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
-		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", false));
+	
+		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", true, true));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 
 		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.disableVision()).alongWith(new InstantCommand(() -> System.out.println("Vision Disabled"))));
 		// new Trigger(driver::getYButton).whileTrue(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_EXTENDED));
+		// new Trigger(driver::getYButton).whileTrue(new Climb(climber, drivetrain));
+	}
+
+	@Override
+	protected void initializeNamedCommands() {
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.config.FalconConfig;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climb. */
@@ -17,7 +18,7 @@ public class Climber extends SubsystemBase {
   // create variables
   public TalonFX climbMotorR;
   public TalonFX climbMotorL;
-  private double setPoint;
+  public double setPoint;
 
   public Climber() {
     // configure climb motors
@@ -35,6 +36,8 @@ public class Climber extends SubsystemBase {
       ClimbConstants.FLYWHEEL_MOTOR_NEUTRAL_MODE, ClimbConstants.CLIMB_MOTOR_KP,
       ClimbConstants.CLIMB_MOTOR_KI, ClimbConstants.CLIMB_MOTOR_KD, 
       ClimbConstants.CLIMB_MOTOR_KS, ClimbConstants.CLIMB_MOTOR_KV);
+
+    LightningShuffleboard.setDoubleSupplier("Climb", "Height", () -> getHeight());
   }
 
   /**
@@ -54,24 +57,10 @@ public class Climber extends SubsystemBase {
   }
 
   /**
-   * sets a setpoint that climb will go to using pid
-   */
-  public void setSetPoint(double setPoint){
-    this.setPoint = setPoint;
-  }
-
-  /**
-   * @return current climb pid setpoint
-   */
-  public double getSetPoint(){
-    return setPoint;
-  }
-
-  /**
    * @return height of climb
    */
   public double getHeight(){
-    return climbMotorR.getRotorPosition().getValueAsDouble();
+    return climbMotorR.getRotorPosition().getValueAsDouble(); // TODO: check if returns correct height value
   }
 
   @Override
