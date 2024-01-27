@@ -10,6 +10,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.MathUtil;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
@@ -26,6 +30,8 @@ import frc.robot.command.PointAtTag;
 import frc.robot.command.SetLED;
 import frc.robot.command.TipDetection;
 import frc.robot.command.Shoot;
+import frc.robot.command.tests.DrivetrainSystemTest;
+import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Climb;
 import frc.robot.command.ManualClimb;
@@ -38,7 +44,9 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.LightningContainer;
+import frc.thunder.command.TimedCommand;
 import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.thunder.testing.SystemTest;
 
 public class RobotContainer extends LightningContainer {
 	XboxController driver;
@@ -161,5 +169,12 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureSystemTests() {
+		SystemTest.registerTest("Drive All Directions", new DrivetrainSystemTest(drivetrain, 0.25));
+
+		SystemTest.registerTest("Azimuth Test", new SequentialCommandGroup(
+			new TimedCommand(new TurnSystemTest(drivetrain, () -> 0.25), 2),
+			new WaitCommand(0.5),
+			new TimedCommand(new TurnSystemTest(drivetrain, () -> -0.25), 2)
+		));
 	}
 }
