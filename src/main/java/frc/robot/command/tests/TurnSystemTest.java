@@ -4,45 +4,26 @@
 
 package frc.robot.command.tests;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.command.tests.testCommands.TurnTest;
 import frc.robot.subsystems.Swerve;
+import frc.thunder.command.TimedCommand;
+import frc.thunder.testing.SystemTestCommandGroup;
 
-public class TurnSystemTest extends Command {
-  
-  private Swerve drivetrain;
-  private DoubleSupplier speed;
+public class TurnSystemTest extends SystemTestCommandGroup {
 
-  /**
-   * System test for testing azimuth motors
-   * @param drivetrain swerve subsystem
-   * @param speed rotational rate
-   */
-  public TurnSystemTest(Swerve drivetrain, DoubleSupplier speed) {
-    this.drivetrain = drivetrain;
-    this.speed = speed;
-
-    addRequirements(drivetrain);
+  public TurnSystemTest(Swerve drivetrain, SwerveRequest brake, double speed) {
+    super(
+      new SequentialCommandGroup(
+        new TimedCommand(new TurnTest(drivetrain, () -> speed), 1),
+        new WaitCommand(0.5),
+        new TimedCommand(new TurnTest(drivetrain, () -> -speed), 1),
+        drivetrain.applyRequest(() -> brake)
+      )
+    );
   }
 
-  @Override
-  public void initialize() {}
-
-  @Override
-  public void execute() {
-    drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0).withVelocityY(0).withRotationalRate(speed.getAsDouble()));
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0).withVelocityY(0).withRotationalRate(0));
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
 }
