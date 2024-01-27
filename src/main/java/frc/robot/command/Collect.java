@@ -1,8 +1,10 @@
 package frc.robot.command;
 
 import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Collector;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Collect extends Command {
 
@@ -30,6 +32,8 @@ public class Collect extends Command {
 	@Override
 	public void execute() {
 		collector.setPower(powerSupplier.getAsDouble());
+
+		LightningShuffleboard.getDouble("Collect", "Collector Power", powerSupplier.getAsDouble());
 	}
 
 	@Override

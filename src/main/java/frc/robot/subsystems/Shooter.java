@@ -7,21 +7,25 @@ import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
 public class Shooter extends SubsystemBase {
     private Pivot pivot;
     private Flywheel flywheel;
+    private Indexer indexer;
+    private Collector collector;
 
-    //TODO: add collector/indexer
-
-    //TODO: find initial target angle
+    private SHOOTER_STATES state = SHOOTER_STATES.STOW;
     private double currentDistance = 0;
     private boolean shoot = false;
 
-    private SHOOTER_STATES state = SHOOTER_STATES.STOW;
-
-    private Indexer indexer;
-
-    public Shooter(Pivot pivot, Flywheel flywheel, Indexer indexer) {
+    /**
+     * Shooter Subsystem
+     * @param pivot Sets target angle
+     * @param flywheel Sets target RPM
+     * @param indexer For peice beambrake
+     * @param collector For peice beambrakes
+     */
+    public Shooter(Pivot pivot, Flywheel flywheel, Indexer indexer, Collector collector) {
         this.pivot = pivot;
         this.flywheel = flywheel;
         this.indexer = indexer;
+        this.collector = collector;
     }
   
     @Override
@@ -55,26 +59,36 @@ public class Shooter extends SubsystemBase {
                 break;
         }
     }
-    // soo
+
+    /**
+     * Get current shooter state
+     * @return SHOOTER_STATES
+     */
     public SHOOTER_STATES getState() {
         return state;
+    }
 
-}
     /**
      * Sets the state of the shooter (STOW, PRIME, AIM, SHOOT)
-     * note: 
      * @param state
      */
     public void setState(SHOOTER_STATES state) {
         this.state = state;
     }
 
+    /**
+     * Distance from target, no current logic
+     * @return distance to target in meters
+     */
     public double getDistanceToTarget() {
         return currentDistance; // TODO FRITZ add on the fly here or we can add more logic
     }
 
+    /**
+     * Get shoot
+     * @return boolean if the shot has been requested
+     */
     public boolean getShoot() {
         return shoot;
     }
 }
-

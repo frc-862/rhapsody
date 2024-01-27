@@ -9,13 +9,11 @@ import frc.robot.Constants.FlywheelConstants;
 import frc.thunder.config.FalconConfig;
 
 public class Flywheel extends SubsystemBase {
-    private TalonFX shooterMotor1;
+    private TalonFX shooterMotor1; //TODO figure out which is top vs bottom
     private TalonFX shooterMotor2;
 
-
-    private double targetRPM = 0;
-
     private final VelocityVoltage rpmPID = new VelocityVoltage(0).withSlot(0);
+    private double targetRPM = 0;
 
     public Flywheel() {
         shooterMotor1 = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_1, CAN.CANBUS_FD,
@@ -69,8 +67,7 @@ public class Flywheel extends SubsystemBase {
      * @return The current Average RPM of the flywheel
      */
     public double getAverageMotorRPM() {
-        return (shooterMotor1.getVelocity().getValue() + shooterMotor2.getVelocity().getValue())
-                / 2;
+        return (shooterMotor1.getVelocity().getValue() + shooterMotor2.getVelocity().getValue()) / 2;
     }
 
     /**

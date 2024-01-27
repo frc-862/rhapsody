@@ -3,24 +3,25 @@ package frc.robot.command;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
 public class Shoot extends Command {
-	
-	Shooter shooter;
-	Indexer indexer;
-	Swerve drivetrain;
-
-	double distancetoTarget; // FROM LIMELIGHT or form OTF
+	private Shooter shooter;
+	private Indexer indexer;
+	private Swerve drivetrain;
 	private BooleanSupplier copilotAButton;
 
+	double distancetoTarget; // FROM LIMELIGHT or form OTF
+
 	/**
-	 * Creates a new Shoot.
-	 * @param Shooter 
+	 * Creates Shoot command
+	 * @param shooter Shooter logic, calls Flywheel and Pivot
+	 * @param indexer 
+	 * @param drivetrain for pose
+	 * @param copilotAButton To trigger the shot
 	 */
 	public Shoot(Shooter shooter, Indexer indexer, Swerve drivetrain, BooleanSupplier copilotAButton) {
 		this.shooter = shooter;
@@ -58,6 +59,6 @@ public class Shoot extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return (drivetrain.getPose().get().getX() < ShooterConstants.FAR_WING_X);
-		}
+		return false;
 	}
+}
