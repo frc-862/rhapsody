@@ -28,6 +28,7 @@ import frc.robot.Constants.DrivetrAinConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Shoot;
+import frc.robot.command.ChasePieces;
 import frc.robot.command.Climb;
 import frc.robot.command.ManualClimb;
 import frc.robot.subsystems.Climber;
@@ -102,7 +103,7 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 	
-		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
+		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 
 
