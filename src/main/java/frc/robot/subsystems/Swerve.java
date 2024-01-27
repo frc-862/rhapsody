@@ -33,6 +33,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
     private Limelight[] limelights;
     private boolean slowMode = false;
+    private boolean disableVision = false;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
@@ -64,8 +65,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
+        //TODO Remove the unecessary shuffleboard stuff eventually
+
         for (Pose4d pose : Limelight.filteredPoses(limelights)) {
-            addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
+            if(!disableVision){
+                addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
+                // System.out.println("Vision Updating");
+            }
+
             LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
             LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
             LightningShuffleboard.setDouble("Swerve", "PoseTime", pose.getFPGATimestamp()); 
@@ -138,4 +145,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public boolean inWing(){
 		return (getPose().get().getX() < ShooterConstants.FAR_WING_X);
 	}
+
+    public void disableVision () {
+        disableVision = true;
+        System.out.println("Vision Disabled");
+    }
+
+    public void enableVision () {
+        disableVision = false;
+        System.out.println("Vision Enabled");
+    }
 }
