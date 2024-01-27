@@ -376,5 +376,7 @@ public class Constants {
         public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; //TODO: find real values
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
+
+        public static final double CLIMB_TEST_POWER = .1;
     }
 }
