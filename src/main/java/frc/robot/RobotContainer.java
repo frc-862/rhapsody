@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.databind.util.Named;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -70,9 +71,6 @@ public class RobotContainer extends LightningContainer {
 		
 		drivetrain = TunerConstants.getDrivetrain(); // My drivetrain
 		
-		autoChooser = AutoBuilder.buildAutoChooser();	
-		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
-		
 		// indexer = new Indexer();
 		// collector = new Collector();
 		// flywheel = new Flywheel();
@@ -91,8 +89,12 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeNamedCommands() {
-		NamedCommands.registerCommand("test", new InstantCommand(() -> System.out.println("Hello World!")));
+		NamedCommands.registerCommand("test", new InstantCommand(() -> System.err.println("HELLO WORLD AHHHHHHHHHHHHH!!!!")));
 		NamedCommands.registerCommand("disable-Vision", new InstantCommand(() -> drivetrain.disableVision()));
+
+		// make sure named commands is initialized before autobuilder!
+		autoChooser = AutoBuilder.buildAutoChooser();	
+		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 	}
 
 	@Override
