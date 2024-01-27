@@ -18,7 +18,6 @@ public class ChasePieces extends Command {
 	private Swerve drivetrain;
 	private Limelight limelight;
 
-	private FieldCentric drive;
 	private RobotCentric noteChase;
 	
 	private int limelightId = 0;
@@ -30,10 +29,6 @@ public class ChasePieces extends Command {
 	/**
 	 * Creates a new ChasePieces.
 	 * @param drivetrain to request movement 
-	 * @param driver the driver's controller, used for drive input
-	 * @param limelight_name the name of the limelight to use
-	 * @param useLimelights to get if we want to use vision data or not
-	 * @param noteDetection to get if we want to use this for note detection or april tag detection
 	 */
 	public ChasePieces(Swerve drivetrain) {
 		this.drivetrain = drivetrain;
@@ -43,8 +38,6 @@ public class ChasePieces extends Command {
 
 		limelight.setPipeline(VisionConstants.NOTE_PIPELINE);
 		
-		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
-
 		noteChase = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
 	}
