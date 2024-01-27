@@ -27,7 +27,7 @@ public class Constants {
         return MERCURY_PATH.toFile().exists();
     }
 
-    public class DrivetrAinConstants { // TODO Get new for new robot
+    public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
         private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
@@ -37,6 +37,9 @@ public class Constants {
 
         public static final double SLOW_ROT_MULT = 0.007; // TODO Tune for Driver
         public static final double SLOW_SPEED_MULT = 0.4; // TODO Tune for Driver
+
+        public static final double SYS_TEST_SPEED_DRIVE = 0.5;
+        public static final double SYS_TEST_SPEED_TURN = 1d;
     }
 
     public class RobotMap {

@@ -33,12 +33,12 @@ public class TurnSystemTest extends Command {
 
   @Override
   public void execute() {
-    drivetrain.setControl(new SwerveRequest.FieldCentric().withVelocityX(0).withVelocityY(0).withRotationalRate(speed.getAsDouble()));
+    drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0).withVelocityY(0).withRotationalRate(speed.getAsDouble()));
   }
 
   @Override
   public void end(boolean interrupted) {
-    drivetrain.setControl(new SwerveRequest.FieldCentric().withVelocityX(0).withVelocityY(0).withRotationalRate(0));
+    drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0).withVelocityY(0).withRotationalRate(0));
   }
 
   @Override
