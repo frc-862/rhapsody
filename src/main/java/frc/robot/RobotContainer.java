@@ -19,6 +19,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.command.TipDetection;
+import frc.robot.command.pathfinding;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Collect;
 import frc.robot.Constants.AutonomousConstants;
@@ -72,8 +73,6 @@ public class RobotContainer extends LightningContainer {
 		
 		drivetrain = TunerConstants.getDrivetrain(); // My drivetrain
 		
-		autoChooser = AutoBuilder.buildAutoChooser();	
-		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 		
 		// indexer = new Indexer();
 		// collector = new Collector();
@@ -89,8 +88,16 @@ public class RobotContainer extends LightningContainer {
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
-
-		pathfindingCommand = AutoBuilder.pathfindToPose(AutonomousConstants.TARGET_POSE, AutonomousConstants.PATH_CONSTRAINTS, AutonomousConstants.GOAL_END_VELOCITY, AutonomousConstants.ROTATION_DELAY_DISTACE);
+		
+	}
+	
+	@Override
+	protected void initializeNamedCommands() {
+		
+		autoChooser = AutoBuilder.buildAutoChooser();	
+		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
+		
+		// pathfindingCommand = AutoBuilder.pathfindToPose(AutonomousConstants.TARGET_POSE, AutonomousConstants.PATH_CONSTRAINTS, AutonomousConstants.GOAL_END_VELOCITY, AutonomousConstants.ROTATION_DELAY_DISTACE);
 	}
 
 	@Override
@@ -106,17 +113,20 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
-		new Trigger(driver::getXButton).whileTrue(pathfindingCommand);
+		// new Trigger(driver::getXButton).whileTrue(new pathfinding(drivetrain, brake));
+		new Trigger(driver::getXButton).onTrue(pathfindingCommand = AutoBuilder.pathfindToPose(
+			AutonomousConstants.TARGET_POSE,
+			AutonomousConstants.PATH_CONSTRAINTS,
+			0.0, // Goal end velocity in meters/sec
+			0.0)); // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
 	
-		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", true, true));
+		// new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", true, true));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 
 		// new Trigger(driver::getYButton).whileTrue(new Climb(climber, drivetrain));
 	}
 
-	@Override
-	protected void initializeNamedCommands() {
-	}
+	
 
 	@Override
 	protected void configureDefaultCommands() {
