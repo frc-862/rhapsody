@@ -3,67 +3,50 @@ package frc.robot.command;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveDriveBrake;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.DrivetrAinConstants;
+
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 
-public class chasePieces extends Command {
+public class ChasePieces extends Command {
 
 	private Swerve drivetrain;
 	private Limelight limelight;
 
-	private XboxController driver;
-	private FieldCentric slow;
 	private FieldCentric drive;
-
-	private SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-	private Limelight[] limelights;
+	private RobotCentric noteChase;
 	
 	private int limelightId = 0;
 	private double pidOutput;
-	private double lockedOnHeading;
 	private double targetHeading;
-	private boolean useLimelights;
     private boolean onTarget;
-	private PIDController headingController = VisionConstants.HEADING_CONTROLLER;
+	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
 
 	/**
-	 * Creates a new PointAtTag.
+	 * Creates a new ChasePieces.
 	 * @param drivetrain to request movement 
 	 * @param driver the driver's controller, used for drive input
 	 * @param limelight_name the name of the limelight to use
 	 * @param useLimelights to get if we want to use vision data or not
 	 * @param noteDetection to get if we want to use this for note detection or april tag detection
 	 */
-	public chasePieces(Swerve drivetrain, XboxController driver, String limelight_name, boolean useLimelights, boolean noteDetection) {
+	public ChasePieces(Swerve drivetrain) {
 		this.drivetrain = drivetrain;
-		this.driver = driver;
-		this.useLimelights = useLimelights;
-
-		//TODO Figure out which of these is the right one to use 
-		for (var l : drivetrain.getLimelights()) { 
-		 	if (l.getName().equals(limelight_name)) {
-		 		limelight = l;
-			}
-		}
 
 		limelight = drivetrain.getLimelights()[0];
-
 		limelightId = limelight.getPipeline();
 
 		limelight.setPipeline(VisionConstants.NOTE_PIPELINE);
 		
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
-		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+		noteChase = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
 	}
 	
 	// Called when the command is initially scheduled.
@@ -76,29 +59,31 @@ public class chasePieces extends Command {
 	@Override
 	public void execute() {
 
-        if(Math.abs(limelight.getTargetX()) < VisionConstants.ALIGNMENT_TOLERANCE){
+		targetHeading = limelight.getTargetX();
 
+        if(Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE){
             onTarget = true;
         }
         else{
             onTarget = false;
         }
+
+		LightningShuffleboard.setBool("ChasePieces", "On Target", onTarget);
+		LightningShuffleboard.setDouble("ChasePieces", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
+		LightningShuffleboard.setDouble("ChasePieces", "Target Heading", targetHeading);
+		LightningShuffleboard.setDouble("ChasePieces", "Pid Output", pidOutput);
+
+		headingController.setP(LightningShuffleboard.getDouble("ChasePieces", "Pid P", 0.1));
+		headingController.setI(LightningShuffleboard.getDouble("ChasePieces", "Pid I", 0));
+		headingController.setD(LightningShuffleboard.getDouble("ChasePieces", "Pid D", 0));
+
+
+		pidOutput = headingController.calculate(0, targetHeading);
 		
-        if (onTarget){
-            if (driver.getRightBumper()) {
-                drivetrain.setControl(slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-                    .withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-                    .withRotationalRate(-pidOutput) // Drive counterclockwise with negative X (left)
-                );
-            } else {
-                drivetrain.setControl(drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-                    .withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-pidOutput) // Rotate toward the desired direction
-                ); // Drive counterclockwise with negative X (left)
-            }
-        } else {
-            
-        }
+        drivetrain.setControl(noteChase.withRotationalRate(-pidOutput) 
+		.withVelocityX(1.5)
+		);
+        
 	}
 
 	// Called once the command ends or is interrupted.
