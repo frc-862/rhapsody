@@ -19,7 +19,6 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.command.TipDetection;
-import frc.robot.command.chasePieces;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Collect;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -103,7 +102,7 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 	
-		new Trigger(driver::getXButton).whileTrue(new chasePieces(drivetrain));
+		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 
 
