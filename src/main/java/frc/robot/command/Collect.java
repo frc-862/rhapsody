@@ -4,6 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Collector;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Collect extends Command {
 
@@ -11,8 +12,12 @@ public class Collect extends Command {
 	private Collector collector;
 	private DoubleSupplier powerSupplier;
 
+	/**
+	 * Creates a new Collect.
+	 * @param powerSupplier DoubleSupplier for power of motor (-1 to 1)
+	 * @param collector subsystem
+	 */
 	public Collect(DoubleSupplier powerSupplier, Collector collector) {
-		// Sets collector from parameter
 		this.collector = collector;
 		this.powerSupplier = powerSupplier;
 
@@ -27,6 +32,8 @@ public class Collect extends Command {
 	@Override
 	public void execute() {
 		collector.setPower(powerSupplier.getAsDouble());
+
+		LightningShuffleboard.getDouble("Collect", "Collector Power", powerSupplier.getAsDouble());
 	}
 
 	@Override
