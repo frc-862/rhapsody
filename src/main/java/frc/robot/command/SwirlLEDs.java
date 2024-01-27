@@ -10,7 +10,11 @@ import frc.robot.subsystems.LEDs;
 public class SwirlLEDs extends Command {
   private LEDs leds;
   private int index = 0;
-  /** Creates a new LEDs. */
+  /** Creates a new LEDs. *//**
+     * Sets the angle of the pivot
+     * 
+     * @param leds set the leds
+     */
   public SwirlLEDs(LEDs leds) {
     this.leds = leds;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,13 +28,13 @@ public class SwirlLEDs extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-   for (int i = 0; i < 55; i += 5) {
+   for (int i = 0; i < 55; i+= 5) {
     if (i % 10 == 0) { 
-      for (int x = 0; x < 5; x ++) {
+      for (int x = 0; x < 5; x++) {
         leds.setIndexHSV(i + x + index, 30, 255, 255);
       }
     } else {
-      for (int x = 0; x < 5; x ++) {
+      for (int x = 0; x < 5; x++) {
         leds.setIndexHSV(i + x + index, 240, 255, 255);
       }
     }

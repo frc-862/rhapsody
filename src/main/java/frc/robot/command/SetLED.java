@@ -11,7 +11,12 @@ import frc.robot.subsystems.LEDs;
 public class SetLED extends Command {
   private LEDs leds;
   private Collector collector;
-  /** Creates a new LEDs. */
+  /**
+     * Sets the angle of the pivot
+     * 
+     * @param leds set the leds
+     * @param collector find if collector has peice
+     */
   public SetLED(LEDs leds, Collector collector) {
     this.leds = leds;
     this.collector = collector;
