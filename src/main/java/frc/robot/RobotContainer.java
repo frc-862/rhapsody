@@ -90,7 +90,6 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeNamedCommands() {
-		NamedCommands.registerCommand("test", new InstantCommand(() -> System.err.println("HELLO WORLD AHHHHHHHHHHHHH!!!!")));
 		NamedCommands.registerCommand("disable-Vision", new InstantCommand(() -> drivetrain.disableVision()));
 
 		// make sure named commands is initialized before autobuilder!
