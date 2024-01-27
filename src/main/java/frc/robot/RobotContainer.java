@@ -20,6 +20,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.command.TipDetection;
 import frc.robot.command.PointAtTag;
+import frc.robot.command.SetLED;
 import frc.robot.command.Collect;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClimbConstants;
@@ -37,6 +38,7 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.LEDs;
 import frc.thunder.LightningContainer;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
@@ -53,6 +55,7 @@ public class RobotContainer extends LightningContainer {
 	// Collision collision;
 	// Indexer indexer;
 	Climber climber;
+	LEDs leds;
 
 	private SendableChooser<Command> autoChooser;
 	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
@@ -87,6 +90,7 @@ public class RobotContainer extends LightningContainer {
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
+		leds = new LEDs();
 		
 	}
 
@@ -124,6 +128,10 @@ public class RobotContainer extends LightningContainer {
 				));
 		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), climber));
 		climber.setDefaultCommand(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_RETRACTED));
+
+		leds.setDefaultCommand(new SetLED(leds));
+
+
 
 		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
 
