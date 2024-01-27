@@ -38,7 +38,8 @@ public class Constants {
         public static final double SLOW_ROT_MULT = 0.007; // TODO Tune for Driver
         public static final double SLOW_SPEED_MULT = 0.4; // TODO Tune for Driver
 
-        public static final double SYS_TEST_SPEED = 0.25;
+        public static final double SYS_TEST_SPEED_DRIVE = 0.5;
+        public static final double SYS_TEST_SPEED_TURN = 1d;
     }
 
     public class RobotMap {

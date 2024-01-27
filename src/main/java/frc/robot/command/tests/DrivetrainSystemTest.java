@@ -4,6 +4,9 @@
 
 package frc.robot.command.tests;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Swerve;
@@ -11,16 +14,18 @@ import frc.thunder.command.TimedCommand;
 
 public class DrivetrainSystemTest extends SequentialCommandGroup {
 
-  public DrivetrainSystemTest(Swerve drivetrain, double speed) {
+  public DrivetrainSystemTest(Swerve drivetrain, SwerveRequest brake, double speed) {
     addCommands(
       new WaitCommand(0.5),
-      new TimedCommand(new DriveTest(drivetrain, () -> 0d, () -> speed), 2), // Forward
+      new TimedCommand(new DriveTest(drivetrain, () -> speed, () -> 0d), 1), // Forward
       new WaitCommand(1),
-      new TimedCommand(new DriveTest(drivetrain, () -> 0d, () -> -speed), 2), // Backward
+      new TimedCommand(new DriveTest(drivetrain, () -> -speed, () -> 0d), 1), // Backward
       new WaitCommand(1),
-      new TimedCommand(new DriveTest(drivetrain, () -> -speed, () -> 0), 2), // Left
+      new TimedCommand(new DriveTest(drivetrain, () -> 0d, () -> speed), 1), // Left
       new WaitCommand(1),
-      new TimedCommand(new DriveTest(drivetrain, () -> speed, () -> 0), 2) // Right
+      new TimedCommand(new DriveTest(drivetrain, () -> 0d, () -> -speed), 1), // Right
+      new WaitCommand(0.5),
+      drivetrain.applyRequest(() -> brake) // Brake
     );
   }
 }
