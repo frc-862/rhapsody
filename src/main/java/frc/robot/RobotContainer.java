@@ -24,7 +24,7 @@ import frc.robot.command.PointAtTag;
 import frc.robot.command.Collect;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.DrivetrAinConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.SetLED;
@@ -93,7 +93,7 @@ public class RobotContainer extends LightningContainer {
 
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
-		logger = new Telemetry(DrivetrAinConstants.MaxSpeed);
+		logger = new Telemetry(DrivetrainConstants.MaxSpeed);
 		
 	}
 
@@ -113,9 +113,9 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
 		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
 		new Trigger(driver::getRightBumper).whileTrue(
-			drivetrain.applyRequest(() -> slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
+			drivetrain.applyRequest(() -> slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
+				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
 
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 	
@@ -130,9 +130,9 @@ public class RobotContainer extends LightningContainer {
 		drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-				drivetrain.applyRequest(() -> drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxSpeed) // Drive left with negative X (left)
-						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
+				drivetrain.applyRequest(() -> drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
+						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
 		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), climber));
 		// climber.setDefaultCommand(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_RETRACTED));
@@ -169,12 +169,12 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureSystemTests() {
-		SystemTest.registerTest("Drive All Directions", new DrivetrainSystemTest(drivetrain, 0.25));
+		SystemTest.registerTest("Drive All Directions", new DrivetrainSystemTest(drivetrain, Constants.DrivetrainConstants.SYS_TEST_SPEED));
 
 		SystemTest.registerTest("Azimuth Test", new SequentialCommandGroup(
-			new TimedCommand(new TurnSystemTest(drivetrain, () -> 0.25), 2),
+			new TimedCommand(new TurnSystemTest(drivetrain, () -> Constants.DrivetrainConstants.SYS_TEST_SPEED), 2),
 			new WaitCommand(0.5),
-			new TimedCommand(new TurnSystemTest(drivetrain, () -> -0.25), 2)
+			new TimedCommand(new TurnSystemTest(drivetrain, () -> -Constants.DrivetrainConstants.SYS_TEST_SPEED), 2)
 		));
 	}
 }
