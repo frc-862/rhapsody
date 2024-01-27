@@ -33,6 +33,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
     private Limelight[] limelights;
     private boolean slowMode = false;
+    private boolean disableVision = false;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
@@ -96,6 +97,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                     }
                     return false;
                 }, this); // Subsystem for requirements
+    }
+
+    public void disableVision() {
+        disableVision = true;
+    }
+
+    public void enableVision() {
+        disableVision = false;
     }
 
     public Supplier<Pose2d> getPose() {

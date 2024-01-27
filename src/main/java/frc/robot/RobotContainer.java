@@ -1,9 +1,10 @@
 package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.databind.util.Named;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
-
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
@@ -71,9 +72,6 @@ public class RobotContainer extends LightningContainer {
 		
 		drivetrain = TunerConstants.getDrivetrain(); // My drivetrain
 		
-		autoChooser = AutoBuilder.buildAutoChooser();	
-		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
-		
 		// indexer = new Indexer();
 		// collector = new Collector();
 		// flywheel = new Flywheel();
@@ -91,7 +89,16 @@ public class RobotContainer extends LightningContainer {
 	}
 
 	@Override
-	protected void configureButtonBindings() { //TODO decide on comp buttons
+	protected void initializeNamedCommands() {
+		NamedCommands.registerCommand("disable-Vision", new InstantCommand(() -> drivetrain.disableVision()));
+
+		// make sure named commands is initialized before autobuilder!
+		autoChooser = AutoBuilder.buildAutoChooser();	
+		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
+	}
+
+	@Override
+	protected void configureButtonBindings() {
 		new Trigger(driver::getLeftBumper).onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
@@ -106,12 +113,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 
-
 		// new Trigger(driver::getYButton).whileTrue(new Climb(climber, drivetrain));
-	}
-
-	@Override
-	protected void initializeNamedCommands() {
 	}
 
 	@Override
@@ -124,6 +126,7 @@ public class RobotContainer extends LightningContainer {
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
 		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), climber));
+		// climber.setDefaultCommand(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_RETRACTED));
 
 		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
 
