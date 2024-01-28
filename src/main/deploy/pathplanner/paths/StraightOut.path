@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.32,
-        "y": 5.525487974052871
+        "x": -0.11668000958650661,
+        "y": 8.476052284957749
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4380339887498943,
-        "y": 5.525487974052871
+        "x": 1.0013539791633876,
+        "y": 8.476052284957749
       },
       "isLocked": false,
-      "linkedName": "SubwooferFront"
+      "linkedName": null
     },
     {
       "anchor": {
