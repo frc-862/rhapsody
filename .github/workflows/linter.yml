@@ -25,9 +25,11 @@ jobs:
                 fetch-depth: 0
             - name: Check Supressions
               run: |
-                if [ ${{ github.event.inputs.showSupressions }} == true ]; then
+                if [ $SUPPRESSIONS == true ]; then
                   rm .github/linter_supressions.xml
                 fi
+              env:
+                SUPRESSIONS: ${{ github.event.inputs.showSupressions }}
             - name: Java Code Linter
               uses: super-linter/super-linter/slim@v5.7.2
               env:
