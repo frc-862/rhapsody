@@ -171,7 +171,6 @@ public class RobotContainer extends LightningContainer {
 	@Override
 	protected void configureSystemTests() {
 		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
-
 		SystemTest.registerTest("Azimuth Test", new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 	}
 }
