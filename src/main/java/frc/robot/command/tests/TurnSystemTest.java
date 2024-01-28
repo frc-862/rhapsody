@@ -18,9 +18,11 @@ public class TurnSystemTest extends SystemTestCommandGroup {
   public TurnSystemTest(Swerve drivetrain, SwerveRequest brake, double speed) {
     super(
       new SequentialCommandGroup(
-        new TimedCommand(new TurnTest(drivetrain, () -> speed), 1),
         new WaitCommand(0.5),
+        new TimedCommand(new TurnTest(drivetrain, () -> speed), 1),
+        new WaitCommand(1),
         new TimedCommand(new TurnTest(drivetrain, () -> -speed), 1),
+        new WaitCommand(0.5),
         drivetrain.applyRequest(() -> brake)
       )
     );
