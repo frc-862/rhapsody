@@ -1,4 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
+/*// Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -24,4 +24,41 @@ public class ClimbTest extends SequentialCommandGroup {
 
     )
   }
+}
+*/
+
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.command.tests;
+
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.command.tests.testCommands.DriveTest;
+import frc.robot.subsystems.Swerve;
+import frc.thunder.command.TimedCommand;
+import frc.thunder.testing.SystemTestCommandGroup;
+import edu.wpi.first.wpilibj2.command.Command;
+
+public class DrivetrainSystemTest extends SystemTestCommandGroup {
+  
+  public ClimbSystemTest(Climber climber, double power) {
+    super(
+      new SequentialCommandGroup(
+        new WaitCommand(0.5),
+        new TimedCommand(new ClimbMotorTest(climber, power), 1), // UP
+        new WaitCommand(1),
+        new TimedCommand(new ClimbMotorTest(climber, power), -1), // DOWN
+        new WaitCommand(1),
+        new TimedCommand(new ClimbMotorTest(climber, power), 1), // UP
+        new WaitCommand(1),
+        new TimedCommand(new ClimbMotorTest(climber, power), -1), // DOWN
+        new WaitCommand(0.5)
+      )
+    );
+  }
+
 }
