@@ -12,9 +12,11 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Climber extends SubsystemBase {
     // create variables
-    public TalonFX climbMotorR;
-    public TalonFX climbMotorL;
-    public double setPoint;
+    private TalonFX climbMotorR;
+    private TalonFX climbMotorL;
+
+    private PositionTorqueCurrentFOC setPointR;
+    private PositionTorqueCurrentFOC setPointL;
 
     public Climber() {
         // configure climb motors
@@ -65,14 +67,15 @@ public class Climber extends SubsystemBase {
 
     /**
      * sets the setpoint of the climb motors
-     * @param setPointL setpoint for left climb motor in inches
-     * @param setPointR setpoint for right climb motor in inches
+     * @param leftInches setpoint for left climb motor in inches
+     * @param rightInches setpoint for right climb motor in inches
      */
-    public void setSetpoint(double setPointL, double setPointR){
-        setPointL = Conversions.getInputShaftRotations(setPointL/ClimbConstants.WINCH_CIRCUFERENCE, ClimbConstants.GEAR_REDUCTION);
-        setPointR = Conversions.getInputShaftRotations(setPointR/ClimbConstants.WINCH_CIRCUFERENCE, ClimbConstants.GEAR_REDUCTION);
-        climbMotorL.setControl(new PositionTorqueCurrentFOC(setPointL));
-        climbMotorR.setControl(new PositionTorqueCurrentFOC(setPointR));
+    public void setSetpoint(double leftInches, double rightInches){
+        this.setPointL = new PositionTorqueCurrentFOC(Conversions.getInputShaftRotations(leftInches/ClimbConstants.WINCH_CIRCUFERENCE, ClimbConstants.GEAR_REDUCTION));
+        this.setPointR = new PositionTorqueCurrentFOC(Conversions.getInputShaftRotations(rightInches/ClimbConstants.WINCH_CIRCUFERENCE, ClimbConstants.GEAR_REDUCTION));
+
+        climbMotorL.setControl(this.setPointL);
+        climbMotorR.setControl(this.setPointR);
     }
 
     /**
@@ -102,6 +105,20 @@ public class Climber extends SubsystemBase {
      */
     public double getHeightL(){
         return Conversions.getOutputShaftRotations(climbMotorL.getRotorPosition().getValueAsDouble(), ClimbConstants.GEAR_REDUCTION) * ClimbConstants.WINCH_CIRCUFERENCE;
+    }
+
+    /**
+     * @return the setpoint of the right climb arm
+     */
+    public double getSetpointR(){
+        return Conversions.getOutputShaftRotations(this.setPointR.Position, ClimbConstants.GEAR_REDUCTION) * ClimbConstants.WINCH_CIRCUFERENCE;
+    }
+
+    /**
+     * @return the setpoint of the left climb arm
+     */
+    public double getSetpointL(){
+        return Conversions.getOutputShaftRotations(this.setPointL.Position, ClimbConstants.GEAR_REDUCTION) * ClimbConstants.WINCH_CIRCUFERENCE;
     }
 
     @Override
