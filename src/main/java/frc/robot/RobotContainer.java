@@ -32,6 +32,7 @@ import frc.robot.command.TipDetection;
 import frc.robot.command.Shoot;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
+import frc.robot.command.tests.testCommands.TurnTest;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Climb;
 import frc.robot.command.ManualClimb;
@@ -170,12 +171,6 @@ public class RobotContainer extends LightningContainer {
 	@Override
 	protected void configureSystemTests() {
 		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
-
-		SystemTest.registerTest("Azimuth Test", new SequentialCommandGroup(
-			new TimedCommand(new TurnSystemTest(drivetrain, () -> DrivetrainConstants.SYS_TEST_SPEED_TURN), 1),
-			new WaitCommand(0.5),
-			new TimedCommand(new TurnSystemTest(drivetrain, () -> -DrivetrainConstants.SYS_TEST_SPEED_TURN), 1),
-			drivetrain.applyRequest(() -> brake)
-		));
+		SystemTest.registerTest("Azimuth Test", new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 	}
 }
