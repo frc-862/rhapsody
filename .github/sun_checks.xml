@@ -62,7 +62,9 @@
 
   <!-- Checks whether files end with a new line.                        -->
   <!-- See https://checkstyle.org/checks/misc/newlineatendoffile.html -->
-  <module name="NewlineAtEndOfFile"/>
+  <module name="NewlineAtEndOfFile">
+    <property name="severity" value="warning"/>
+  </module>
 
   <!-- Checks that property files contain the same keys.         -->
   <!-- See https://checkstyle.org/checks/misc/translation.html -->
@@ -130,6 +132,7 @@
     </module>
     <module name="UnusedImports">
       <property name="processJavadoc" value="false"/>
+      <property name="severity" value="warning"/>
     </module>
 
     <!-- Checks for Size Violations.                    -->
@@ -188,11 +191,11 @@
     <!-- See https://checkstyle.org/checks/design/index.html -->
     <module name="DesignForExtension"/>
     <module name="FinalClass"/>
-    <module name="HideUtilityClassConstructor">
+    <module name="HideUtilityClassConstructor"/>
+    <module name="InterfaceIsType"/>
+    <module name="VisibilityModifier">
       <property name="severity" value="warning"/>
     </module>
-    <module name="InterfaceIsType"/>
-    <module name="VisibilityModifier"/>
 
     <!-- Miscellaneous other checks.                   -->
     <!-- See https://checkstyle.org/checks/misc/index.html -->
