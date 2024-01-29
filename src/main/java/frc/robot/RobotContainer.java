@@ -31,7 +31,6 @@ import frc.robot.command.SetLED;
 import frc.robot.command.TipDetection;
 import frc.robot.command.Shoot;
 import frc.robot.command.tests.DrivetrainSystemTest;
-import frc.robot.command.tests.ShooterSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.tests.testCommands.TurnTest;
 import frc.robot.command.ChasePieces;
