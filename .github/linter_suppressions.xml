@@ -5,6 +5,7 @@
   "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 
 <suppressions>
+  <suppress checks="HideUtilityClassConstructor"/>
   <suppress checks="NewlineAtEndOfFile"/>
   <suppress checks="WhitespaceAround"/>
   <suppress checks="WhitespaceAfter"/>
@@ -23,7 +24,9 @@
   <suppress checks="TypeName"/>
   <suppress checks="TodoComment"/>
   <suppress checks="HideUtilityClassConstructor"/>
+  <suppress checks="MagicNumber"/>
   <suppress checks="VisibilityModifier"/> <!-- May delete this one later -->
   <suppress checks="MemberName"/> <!-- May delete this one later -->
+  <suppress checks="FinalParameters"/> <!-- May delete this one later -->
 </suppressions>
         

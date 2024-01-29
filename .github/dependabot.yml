@@ -5,7 +5,7 @@ updates:
     reviewers:
       - "frc-862/reviewers"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     commit-message:
       prefix: "[#3] "
     labels:
