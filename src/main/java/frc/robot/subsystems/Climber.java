@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import org.opencv.core.Mat;
-
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -54,7 +52,14 @@ public class Climber extends SubsystemBase {
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
-        LightningShuffleboard.set("Climb", "Left Lower Pose", () -> convertLowerPose(getHeightL(), false));
+        LightningShuffleboard.set("Climb", "Left Lower Pose", convertLowerPose(getHeightL(), false));
+        LightningShuffleboard.set("Climb", "Right Lower Pose", convertLowerPose(getHeightR(), true));
+        LightningShuffleboard.set("Climb", "Left Upper Pose", convertUpperPose(getHeightL(), false));
+        LightningShuffleboard.set("Climb", "Right Upper Pose", convertUpperPose(getHeightR(), true));
+        LightningShuffleboard.set("Climb", "Left Lower Setpoint", convertLowerPose(getSetpointL(), false));
+        LightningShuffleboard.set("Climb", "Right Lower Setpoint", convertLowerPose(getSetpointR(), true));
+        LightningShuffleboard.set("Climb", "Left Upper Setpoint", convertUpperPose(getSetpointL(), false));
+        LightningShuffleboard.set("Climb", "Right Upper Setpoint", convertUpperPose(getSetpointR(), true));
     }
 
     /**
@@ -99,7 +104,7 @@ public class Climber extends SubsystemBase {
     /**
      * stops all climb motors
      */
-    public void stopClimb(){
+    public void stop(){
         setPower(0d);
     }
 
