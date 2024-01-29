@@ -33,6 +33,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
     private Limelight[] limelights;
     private boolean slowMode = false;
+    private boolean disableVision = false;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
@@ -64,11 +65,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
-        for (Limelight limelight : Limelight.filterLimelights(limelights)) {
-            Pose4d pose = limelight.getAlliancePose();
-            addVisionMeasurement(pose.toPose2d(),
-                    Timer.getFPGATimestamp() - Units.millisecondsToSeconds(pose.getLatency())
-                            - VisionConstants.PROCESS_LATENCY);
+        for (Pose4d pose : Limelight.filteredPoses(limelights)) {
+            addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
         }
 
         LightningShuffleboard.setDouble("Swerve", "Robot Heading", getPigeon2().getAngle());
@@ -99,6 +97,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                     }
                     return false;
                 }, this); // Subsystem for requirements
+    }
+
+    public void disableVision() {
+        disableVision = true;
+    }
+
+    public void enableVision() {
+        disableVision = false;
     }
 
     public Supplier<Pose2d> getPose() {

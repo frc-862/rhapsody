@@ -8,56 +8,56 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.182352826244115,
-        "y": 5.8313632011879415
+        "x": 1.82,
+        "y": 5.525487974052871
       },
       "isLocked": false,
       "linkedName": "SubwooferFront"
     },
     {
       "anchor": {
-        "x": 2.882905765811533,
-        "y": 6.985795510052559
+        "x": 2.32,
+        "y": 5.53
       },
       "prevControl": {
-        "x": 2.86590358669177,
-        "y": 7.291834734208283
+        "x": 1.8199999999999998,
+        "y": 5.53
       },
       "nextControl": {
-        "x": 2.9026396514331507,
-        "y": 6.630585568863446
+        "x": 2.38,
+        "y": 5.53
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.882905765811533,
-        "y": 5.525487974052871
+        "x": 2.32,
+        "y": 6.53
       },
       "prevControl": {
-        "x": 2.896920829581515,
-        "y": 6.142150779932127
+        "x": 2.32,
+        "y": 6.03
       },
       "nextControl": {
-        "x": 2.8730388230007247,
-        "y": 5.091342490377289
+        "x": 2.32,
+        "y": 6.59
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.882905765811533,
-        "y": 4.1046482092964185
+        "x": 1.32,
+        "y": 6.53
       },
       "prevControl": {
-        "x": 2.882905765811533,
-        "y": 4.538905802846993
+        "x": 1.82,
+        "y": 6.53
       },
       "nextControl": {
-        "x": 2.882905765811533,
-        "y": 4.005978781188332
+        "x": 1.26,
+        "y": 6.53
       },
       "isLocked": false,
       "linkedName": null
@@ -68,31 +68,15 @@
         "y": 5.525487974052871
       },
       "prevControl": {
-        "x": 3.204586076864461,
-        "y": 5.160411090052949
+        "x": 1.32,
+        "y": 6.025487974052871
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "SubwooferFront"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.95,
-      "rotationDegrees": 180.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 2.95,
-      "rotationDegrees": 180.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 4.0,
-      "rotationDegrees": 120.0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -103,11 +87,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Test paths",
   "previewStartingState": null,
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
