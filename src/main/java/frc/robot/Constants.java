@@ -371,11 +371,17 @@ public class Constants {
         public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 0;
         public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
-        public static final double CLIMB_MOTOR_KP = 0;
-        public static final double CLIMB_MOTOR_KI = 0;
-        public static final double CLIMB_MOTOR_KD = 0;
-        public static final double CLIMB_MOTOR_KS = 0;
-        public static final double CLIMB_MOTOR_KV = 0;
+        public static final double EXTEND_KP = 0;
+        public static final double EXTEND_KI = 0;
+        public static final double EXTEND_KD = 0;
+        public static final double RETRACT_KP = 0;
+        public static final double RETRACT_KI = 0;
+        public static final double RETRACT_KD = 0;
+        public static final double GEAR_REDUCTION = 20d;
+        public static final double WINCH_DIAMETER_INCHES = 1d;
+        public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
+
+        public static final double MAX_HEIGHT = 999d;
 
         public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; //TODO: find real values
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
