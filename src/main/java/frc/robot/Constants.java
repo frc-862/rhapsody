@@ -12,6 +12,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
@@ -382,10 +386,13 @@ public class Constants {
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
         public static final double MAX_HEIGHT = 999d;
+        public static final double LOWER_LENGTH = 22d; //center of pivot-center of pivot length of lower arm in inches
+        public static final double UPPER_LENGTH = 25d; //center of pivot-center of pivot length of upper arm in inches
 
-        public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; //TODO: find real values
-        public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
-        public static final double CLIMB_EXTENSION_TOLERANCE = 0;
+        public static final Pose3d LOWER_OFFSET = new Pose3d(); //NOTE: Poses are in meters despite george washington's best efforts
+        public static final Pose3d UPPER_OFFSET = new Pose3d(); //NOTE 2: these poses should exclude side to side offset, since it gets set below
+
+        public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); //NOTE 3: this is the side to side offset of the pivot point of the arms, should exclude anything but side to side values
     }
 
     public class LEDsConstants {
