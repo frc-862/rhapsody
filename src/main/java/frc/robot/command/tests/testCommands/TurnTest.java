@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.command.tests;
+package frc.robot.command.tests.testCommands;
 
 import java.util.function.DoubleSupplier;
 
@@ -11,22 +11,19 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Swerve;
 
-public class DriveTest extends Command {
-
+public class TurnTest extends Command {
+  
   private Swerve drivetrain;
-  private DoubleSupplier speedX;
-  private DoubleSupplier speedY;
+  private DoubleSupplier speed;
 
   /**
-   * Creates a new drive test
+   * System test command for testing azimuth motors
    * @param drivetrain swerve subsystem
-   * @param speedX X velocity
-   * @param speedY Y velocity
+   * @param speed rotational rate
    */
-  public DriveTest(Swerve drivetrain, DoubleSupplier speedX, DoubleSupplier speedY) {
+  public TurnTest(Swerve drivetrain, DoubleSupplier speed) {
     this.drivetrain = drivetrain;
-    this.speedX = speedX;
-    this.speedY = speedY;
+    this.speed = speed;
 
     addRequirements(drivetrain);
   }
@@ -36,7 +33,7 @@ public class DriveTest extends Command {
 
   @Override
   public void execute() {
-    drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(speedX.getAsDouble()).withVelocityY(speedY.getAsDouble()));
+    drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0).withVelocityY(0).withRotationalRate(speed.getAsDouble()));
   }
 
   @Override
