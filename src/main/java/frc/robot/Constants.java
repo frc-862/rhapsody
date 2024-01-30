@@ -393,6 +393,11 @@ public class Constants {
         public static final Pose3d UPPER_OFFSET = new Pose3d(); //NOTE 2: these poses should exclude side to side offset, since it gets set below
 
         public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); //NOTE 3: this is the side to side offset of the pivot point of the arms, should exclude anything but side to side values
+        public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; //TODO: find real values
+        public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
+        public static final double CLIMB_EXTENSION_TOLERANCE = 0;
+
+        public static final double CLIMB_TEST_POWER = .1;
     }
 
     public class LEDsConstants {
