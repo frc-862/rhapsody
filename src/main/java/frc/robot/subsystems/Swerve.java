@@ -110,6 +110,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 }, this); // Subsystem for requirements
     }
 
+    public void disableVision() {
+        disableVision = true;
+    }
+
+    public void enableVision() {
+        disableVision = false;
+    }
+
     public Supplier<Pose2d> getPose() {
         return () -> getState().Pose;
     }
