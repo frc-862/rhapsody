@@ -1,5 +1,46 @@
 name: Code Linter
-on: [pull_request]
+
+on:
+    pull_request:
+    workflow_dispatch:
+        inputs:
+            suppressionLevel:
+                description: 'Suppressions Level'
+                required: true
+                default: 'Normal'
+                type: choice
+                options:
+                - Normal
+                - More
+                - Show All
+            lintActions:
+                description: 'Lint Github Actions'
+                required: true
+                default: true
+                type: boolean
+            lintMD:
+                description: 'Lint Markdown'
+                required: true
+                default: false
+                type: boolean
+            lintXML:
+                description: 'Lint XML'
+                required: true
+                default: false
+                type: boolean
+            lintYML:
+                description: 'Lint YML'
+                required: true
+                default: false
+                type: boolean
+
+env:
+    suppressionLevel: ${{ github.event_name != 'workflow_dispatch' && 'Normal' || inputs.suppressionLevel }}
+    lintActions: ${{ github.event_name != 'workflow_dispatch' && 'true' || inputs.lintActions }}
+    lintMD: ${{ github.event_name != 'workflow_dispatch' && 'false' || inputs.lintMD }}
+    lintXML: ${{ github.event_name != 'workflow_dispatch' && 'false' || inputs.lintXML }}
+    lintYML: ${{ github.event_name != 'workflow_dispatch' && 'false' || inputs.lintYML }}
+
 jobs:
     Build:
         runs-on: ubuntu-latest
@@ -13,6 +54,20 @@ jobs:
               uses: actions/checkout@v4
               with:
                 fetch-depth: 0
+            - name: Check Suppressions Level
+              run: |
+                if [ "$SUPPRESSIONS" == "Show All" ]; then
+                  echo "Showing ALL Suppressions (Use at your own risk)"
+                  rm .github/linter_suppressions.xml
+                elif [ "$SUPPRESSIONS" == "More" ]; then
+                  echo "Showing More Suppressions"
+                  rm .github/linter_suppressions.xml
+                  mv .github/linter_suppressions_limited.xml .github/linter_suppressions.xml
+                else 
+                  echo "Using Normal Suppressions"
+                fi
+              env:
+                SUPPRESSIONS: ${{ env.suppressionLevel }}
             - name: Java Code Linter
               uses: super-linter/super-linter/slim@v5.7.2
               env:
@@ -22,12 +77,13 @@ jobs:
                 JAVA_FILE_NAME: 'sun_checks.xml'
                 VALIDATE_BASH: false
                 VALIDATE_BASH_EXEC: false
+                VALIDATE_GITHUB_ACTIONS: ${{ env.lintActions != 'true' && 'false' || '' }}
                 VALIDATE_GITLEAKS: false
                 VALIDATE_GOOGLE_JAVA_FORMAT: false
                 VALIDATE_GROOVY: false
                 VALIDATE_JSCPD: false
                 VALIDATE_JSON: false
-                VALIDATE_MARKDOWN: false
+                VALIDATE_MARKDOWN: ${{ env.lintMD != 'true' && 'false' || '' }}
                 VALIDATE_NATURAL_LANGUAGE: false
-                VALIDATE_XML: false
-                VALIDATE_YAML: false
+                VALIDATE_XML: ${{ env.lintXML != 'true' && 'false' || '' }}
+                VALIDATE_YAML: ${{ env.lintYML != 'true' && 'false' || '' }}
