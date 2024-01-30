@@ -45,18 +45,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class DrivetrainSystemTest extends SystemTestCommandGroup {
   
-  public ClimbSystemTest(Climber climber, double power) {
+  public ClimbSystemTest(Climber climber) {
     super(
       new SequentialCommandGroup(
         new WaitCommand(0.5),
-        new TimedCommand(new ClimbMotorTest(climber, power), 1), // UP
+        new TimedCommand(new ClimbTest(climber, 1), 1), // UP
         new WaitCommand(1),
-        new TimedCommand(new ClimbMotorTest(climber, power), -1), // DOWN
-        new WaitCommand(1),
-        new TimedCommand(new ClimbMotorTest(climber, power), 1), // UP
-        new WaitCommand(1),
-        new TimedCommand(new ClimbMotorTest(climber, power), -1), // DOWN
-        new WaitCommand(0.5)
+        new TimedCommand(new ClimbTest(climber, -1), 1), // DOWN
       )
     );
   }
