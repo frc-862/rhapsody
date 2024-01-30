@@ -2,13 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.command.tests;
+package frc.robot.command.tests.testCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
 import frc.robot.Constants.ClimbConstants;
 
-public class ClimbMotorTest extends Command {
+public class ClimbTest extends Command {
   
   private Climber climber;
   private double power;
@@ -18,7 +18,7 @@ public class ClimbMotorTest extends Command {
    * @param climber climber subsystem 
    * @param power power to control up or down
    */
-  public ClimbMotorTest(Climber climber, double power) {
+  public ClimbTest(Climber climber, double power) {
     this.climber = climber;
     this.power = power;
 
