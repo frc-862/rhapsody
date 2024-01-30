@@ -5,11 +5,13 @@
 package frc.robot.command;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.LEDsConstants;
 import frc.robot.subsystems.LEDs;
 
 public class SwirlLEDs extends Command {
   private LEDs leds;
   private int index = 0;
+  private int segmentLength = 5;
   
   /**
    * Creats a new SwirlLEDs command
@@ -26,25 +28,25 @@ public class SwirlLEDs extends Command {
 
   @Override
   public void execute() {
-   for (int i = 0; i < 55; i+= 5) {
-    if (i % 10 == 0) { 
-      for (int x = 0; x < 5; x++) {
+   for (int i = 0; i < LEDsConstants.LED_BUFFER_TIME - segmentLength; i+= segmentLength) {
+    if (i % segmentLength * 2 == 0) { 
+      for (int x = 0; x < segmentLength; x++) {
         leds.setIndexHSV(i + x + index, 30, 255, 255);
       }
     } else {
-      for (int x = 0; x < 5; x++) {
+      for (int x = 0; x < segmentLength; x++) {
         leds.setIndexHSV(i + x + index, 240, 255, 255);
       }
     }
   }
-  for (int i = 55+index; i < 60; i++) {
+  for (int i = LEDsConstants.LED_BUFFER_TIME + index - segmentLength; i < LEDsConstants.LED_BUFFER_TIME; i++) {
     leds.setIndexHSV(i, 240, 255, 255);
   }
   for (int i = 0; i < index; i++) {
     leds.setIndexHSV(i, 240, 255, 255);
   }
   index++;
-  index %= 6;
+  index %= segmentLength + 1;
   }
 
   @Override
