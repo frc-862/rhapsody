@@ -219,7 +219,7 @@
     },
     {
       "name": "collect1",
-      "waypointRelativePos": 0.8999999999999999,
+      "waypointRelativePos": 1.0499999999999998,
       "command": {
         "type": "parallel",
         "data": {

@@ -31,10 +31,6 @@ public class LEDCollect extends Command {
 
 	@Override
 	public boolean isFinished() {
-		if (Timer.getFPGATimestamp() - startTime > 2) {
-			return true;
-		} else {
-			return false;
-		}
+		return Timer.getFPGATimestamp() - startTime > 1;
 	}
 }
