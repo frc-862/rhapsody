@@ -138,6 +138,7 @@ public class Climber extends SubsystemBase {
 
     /**
      * @param height the height to convert to a pose, in inches
+     * @param isRight whether the pose is for the right arm
      * @return the pose of the climb arm
      */
     private Pose3d convertLowerPose(double height, boolean isRight) {
@@ -163,6 +164,7 @@ public class Climber extends SubsystemBase {
 
     /**
      * @param height the height to convert to a pose, in inches
+     * @param isRight whether the pose is for the right arm
      * @return the pose of the climb arm
      */
     private Pose3d convertUpperPose(double height, boolean isRight) {

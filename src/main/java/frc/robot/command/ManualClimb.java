@@ -13,7 +13,8 @@ public class ManualClimb extends Command {
 
     /**
      * Creates a new ManualClimb.
-     * @param powerSupplier DoubleSupplier for power of motor (-1 to 1)
+     * @param leftPower supplier for left motor power
+     * @param rightPower supplier for right motor power
      * @param climber subsystem
      */
     public ManualClimb(DoubleSupplier leftPower, DoubleSupplier rightPower, Climber climber) {
