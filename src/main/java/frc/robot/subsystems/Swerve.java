@@ -110,14 +110,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 }, this); // Subsystem for requirements
     }
 
-    public void disableVision() {
-        disableVision = true;
-    }
-
-    public void enableVision() {
-        disableVision = false;
-    }
-
     public Supplier<Pose2d> getPose() {
         return () -> getState().Pose;
     }
@@ -154,12 +146,12 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 		return (getPose().get().getX() < ShooterConstants.FAR_WING_X);
 	}
 
-    public void disableVision () {
+    public void disableVision() {
         disableVision = true;
         System.out.println("Vision Disabled");
     }
 
-    public void enableVision () {
+    public void enableVision() {
         disableVision = false;
         System.out.println("Vision Enabled");
     }
