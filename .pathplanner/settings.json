@@ -4,6 +4,7 @@
   "holonomicMode": true,
   "pathFolders": [
     "Bottom side paths",
+    "Return Paths",
     "Test paths",
     "Top side paths"
   ],
