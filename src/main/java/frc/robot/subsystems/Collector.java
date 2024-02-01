@@ -93,7 +93,7 @@ public class Collector extends SubsystemBase {
 	 */
 	public boolean hasPiece() {
 		// Could use beam breaks and store when a piece enters until it leaves
-		return hasPiece; // TODO add actual logic
+		return hasPiece;
 	}
 
 	/**
