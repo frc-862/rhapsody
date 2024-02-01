@@ -284,6 +284,40 @@
           ]
         }
       }
+    },
+    {
+      "name": "disablevision",
+      "waypointRelativePos": 3.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "disable-Vision"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "enablevision",
+      "waypointRelativePos": 5.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "enable-Vision"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
