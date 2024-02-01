@@ -9,12 +9,13 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.pathplanner.lib.path.PathConstraints;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
@@ -108,20 +109,13 @@ public class Constants {
     }
 
     public static class AutonomousConstants {
-        // For autobuilder
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 0, 0);  //TODO: Tune
-        public static final PIDConstants ROTATION_PID = new PIDConstants(10, 0, 0);     //TODO: Tune
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(2.0, 0, 0); // TODO: Tune
+        public static final PIDConstants ROTATION_PID = new PIDConstants(4, 0, 0); // TODO: Tune
 
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(17.3); // f/s to m/s
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(19.09); // TODO check
 
         public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
-
-        //For Pathfinding
-        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(1, 0), new Rotation2d(Units.degreesToRadians(0d)));
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(1.0, 0.5, 1.0, 0.5); //TODO get constants
-        public static final double GOAL_END_VELOCITY = 0; // Goal end velocity in meters/sec
-        public static final double ROTATION_DELAY_DISTACE = 0d; // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
     }
 
     public static class TunerConstants {
@@ -381,12 +375,24 @@ public class Constants {
         public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 0;
         public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
-        public static final double CLIMB_MOTOR_KP = 0;
-        public static final double CLIMB_MOTOR_KI = 0;
-        public static final double CLIMB_MOTOR_KD = 0;
-        public static final double CLIMB_MOTOR_KS = 0;
-        public static final double CLIMB_MOTOR_KV = 0;
+        public static final double EXTEND_KP = 0;
+        public static final double EXTEND_KI = 0;
+        public static final double EXTEND_KD = 0;
+        public static final double RETRACT_KP = 0;
+        public static final double RETRACT_KI = 0;
+        public static final double RETRACT_KD = 0;
+        public static final double GEAR_REDUCTION = 20d;
+        public static final double WINCH_DIAMETER_INCHES = 1d;
+        public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
+        public static final double MAX_HEIGHT = 999d;
+        public static final double LOWER_LENGTH = 22d; //center of pivot-center of pivot length of lower arm in inches
+        public static final double UPPER_LENGTH = 25d; //center of pivot-center of pivot length of upper arm in inches
+
+        public static final Pose3d LOWER_OFFSET = new Pose3d(); //NOTE: Poses are in meters despite george washington's best efforts
+        public static final Pose3d UPPER_OFFSET = new Pose3d(); //NOTE 2: these poses should exclude side to side offset, since it gets set below
+
+        public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); //NOTE 3: this is the side to side offset of the pivot point of the arms, should exclude anything but side to side values
         public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; //TODO: find real values
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
@@ -396,6 +402,6 @@ public class Constants {
 
     public class LEDsConstants {
         public static final int LED_PWM_PORT = 0;
-        public static final int LED_BUFFER_TIME = 60;
+        public static final int LED_BUFFER_TIME = 14;
     }
 }
