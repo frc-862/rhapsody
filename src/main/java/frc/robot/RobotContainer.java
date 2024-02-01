@@ -16,6 +16,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.command.ChasePieces;
+import frc.robot.command.PointAtTag;
 import frc.robot.command.TipDetection;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
@@ -82,6 +83,7 @@ public class RobotContainer extends LightningContainer {
 	@Override
 	protected void initializeNamedCommands() {
 		NamedCommands.registerCommand("disable-Vision", new InstantCommand(() -> drivetrain.disableVision()));
+		NamedCommands.registerCommand("enable-Vision", new InstantCommand(() -> drivetrain.enableVision()));
 
 		// make sure named commands is initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();	
@@ -104,6 +106,8 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 
+		new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.disableVision()));
+		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
 		// new Trigger(driver::getYButton).whileTrue(new Climb(climber, drivetrain));
 	}
 
@@ -119,7 +123,7 @@ public class RobotContainer extends LightningContainer {
 		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), climber));
 		// climber.setDefaultCommand(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_RETRACTED));
 
-		leds.setDefaultCommand(new InstantCommand(() -> ledCommands.Swirl(3), leds));
+		leds.setDefaultCommand(new InstantCommand(() -> ledCommands.swirl(3), leds));
 
 		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
 
