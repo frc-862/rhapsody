@@ -27,7 +27,6 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.command.PointAtTag;
-import frc.robot.command.SetLED;
 import frc.robot.command.TipDetection;
 import frc.robot.command.Shoot;
 import frc.robot.command.tests.DrivetrainSystemTest;
@@ -102,8 +101,6 @@ public class RobotContainer extends LightningContainer {
 	protected void initializeNamedCommands() {
 		NamedCommands.registerCommand("disable-Vision", new InstantCommand(() -> drivetrain.disableVision()));
 		NamedCommands.registerCommand("enable-Vision", new InstantCommand(() -> drivetrain.enableVision()));
-		NamedCommands.registerCommand("LEDShoot", new LEDShoot(leds));
-		NamedCommands.registerCommand("LEDCollect", new LEDCollect(leds));
 
 		// make sure named commands is initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();	
