@@ -10,7 +10,9 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
+import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.Constants.RobotMap.CAN;
+import frc.robot.command.TipDetection;
 import frc.thunder.config.FalconConfig;
 import frc.thunder.math.Conversions;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -23,7 +25,16 @@ public class Climber extends SubsystemBase {
     private PositionTorqueCurrentFOC setPointR;
     private PositionTorqueCurrentFOC setPointL;
 
-    public Climber() {
+    private CLIMBER_STATES state = CLIMBER_STATES.STOW;
+    private TipDetection tipDetection;
+    private Swerve drivetrain;
+
+    public boolean hasTipped = false;
+    public boolean hasStowed = false;
+    public boolean hasGroundedR = false;
+    public boolean hasGroundedL = false;
+
+    public Climber(Swerve drivetrain) {
         // configure climb motors
         climbMotorR = FalconConfig.createMotor(CAN.CLIMB_RIGHT, CAN.CANBUS_FD,
             ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT, 
@@ -60,6 +71,8 @@ public class Climber extends SubsystemBase {
         LightningShuffleboard.set("Climb", "Right Lower Setpoint", convertLowerPose(getSetpointR(), true));
         LightningShuffleboard.set("Climb", "Left Upper Setpoint", convertUpperPose(getSetpointL(), false));
         LightningShuffleboard.set("Climb", "Right Upper Setpoint", convertUpperPose(getSetpointR(), true));
+
+        tipDetection = new TipDetection(drivetrain);
     }
 
     /**
@@ -70,6 +83,14 @@ public class Climber extends SubsystemBase {
     public void setPower(double powerL, double powerR) {
         climbMotorR.set(powerR);
         climbMotorL.set(powerL);
+    }
+
+    public void setPowerL(double powerL) {
+        climbMotorL.set(powerL);
+    }
+
+    public void setPowerR(double powerR) {
+        climbMotorL.set(powerR);
     }
 
     /**
@@ -195,6 +216,30 @@ public class Climber extends SubsystemBase {
         }
     }
 
+    public void setState(CLIMBER_STATES state){
+        this.state = state;
+    }
+
+    public CLIMBER_STATES getState() {
+        return state;
+    }
+
+    public void setHasTipped(boolean hasTipped){
+        this.hasTipped = hasTipped;
+    }
+
+    public void setHasGroundedR(boolean hasGroundedR){
+        this.hasGroundedR = hasGroundedR;
+    }
+
+    public void setHasGroundedL(boolean hasGroundedL){
+        this.hasGroundedL = hasGroundedL;
+    }
+
+    public void setHasStowed(boolean hasStowed){
+        this.hasStowed = hasStowed;
+    }
+
     @Override
     public void periodic() {
         for (TalonFX motor : new TalonFX[] {climbMotorR, climbMotorL}) {
@@ -204,6 +249,24 @@ public class Climber extends SubsystemBase {
             if (motor.getRotorPosition().getValueAsDouble() < 0 || motor.getReverseLimit().getValueAsDouble() == 0) {
                 motor.setPosition(0);
             }
+        }
+        
+        if (hasTipped && getHeightL() < ClimbConstants.MAX_HEIGHT/2 &&
+			getHeightR() < ClimbConstants.MAX_HEIGHT/2){
+            state = CLIMBER_STATES.CLIMBED;
+            hasStowed = false;
+            hasGroundedL = false;
+        }
+
+        if (getHeightR() <= ClimbConstants.CLIMB_RETRACTION_TOLERANCE && 
+        getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE && !tipDetection.isTipped() && hasStowed) {
+            state = CLIMBER_STATES.STOW;
+        }
+
+        if (ClimbConstants.MAX_HEIGHT - getHeightR() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE &&
+        ClimbConstants.MAX_HEIGHT - getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE &&
+        !tipDetection.isTipped() && hasGroundedR && hasGroundedL) {
+            state = CLIMBER_STATES.GROUNDED;
         }
     }
 }
