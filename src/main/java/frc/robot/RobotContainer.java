@@ -4,48 +4,26 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.MathUtil;
-import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Collector;
-import frc.robot.command.TipDetection;
-import frc.robot.command.PointAtTag;
-import frc.robot.command.Collect;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TunerConstants;
+import frc.robot.command.ChasePieces;
 import frc.robot.command.PointAtTag;
-import frc.robot.command.SetLED;
 import frc.robot.command.TipDetection;
-import frc.robot.command.Shoot;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
-import frc.robot.command.tests.testCommands.TurnTest;
-import frc.robot.command.ChasePieces;
-import frc.robot.command.Climb;
-import frc.robot.command.ManualClimb;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.LEDCommands;
 import frc.robot.subsystems.LEDs;
-import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.LightningContainer;
-import frc.thunder.command.TimedCommand;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
 
@@ -62,6 +40,7 @@ public class RobotContainer extends LightningContainer {
 	// Indexer indexer;
 	// Climber climber;
 	LEDs leds;
+	LEDCommands ledCommands;
 
 	private SendableChooser<Command> autoChooser;
 	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
@@ -86,6 +65,7 @@ public class RobotContainer extends LightningContainer {
 		// shooter = new Shooter(pivot, flywheel, indexer);
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
+		ledCommands = new LEDCommands(leds);
 
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
@@ -93,12 +73,12 @@ public class RobotContainer extends LightningContainer {
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrainConstants.MaxSpeed);
-		
 	}
 
 	@Override
 	protected void initializeNamedCommands() {
 		NamedCommands.registerCommand("disable-Vision", new InstantCommand(() -> drivetrain.disableVision()));
+		NamedCommands.registerCommand("enable-Vision", new InstantCommand(() -> drivetrain.enableVision()));
 
 		// make sure named commands is initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();	
@@ -121,6 +101,8 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 
+		new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.disableVision()));
+		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
 		// new Trigger(driver::getYButton).whileTrue(new Climb(climber, drivetrain));
 	}
 
@@ -136,9 +118,7 @@ public class RobotContainer extends LightningContainer {
 		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), climber));
 		// climber.setDefaultCommand(new Climb(climber, drivetrain));
 
-		// leds.setDefaultCommand(new SetLED(leds, collector));
-
-
+		leds.setDefaultCommand(new InstantCommand(() -> ledCommands.swirl(3), leds));
 
 		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
 
