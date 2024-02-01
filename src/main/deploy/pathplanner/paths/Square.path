@@ -107,7 +107,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Test paths",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }
