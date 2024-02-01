@@ -19,6 +19,7 @@ import frc.robot.command.ChasePieces;
 import frc.robot.command.TipDetection;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
+import frc.robot.subsystems.LEDCommands;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.LightningContainer;
@@ -39,6 +40,8 @@ public class RobotContainer extends LightningContainer {
 	// Indexer indexer;
 	// Climber climber;
 	LEDs leds;
+	LEDCommands ledCommands;
+
 
 	private int LEDHueColor;
 
@@ -66,6 +69,8 @@ public class RobotContainer extends LightningContainer {
 		// collision = new Collision(drivetrain);
 		// climber = new Climber();
 		leds = new LEDs();
+		ledCommands = new LEDCommands(leds);
+
 
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
@@ -116,12 +121,7 @@ public class RobotContainer extends LightningContainer {
 		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), climber));
 		// climber.setDefaultCommand(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_RETRACTED));
 
-		// leds.setDefaultCommand(new LEDBlink(leds, 10, 30));
-		LightningShuffleboard.set("LEDS", "Hue Color", LEDHueColor);
-		leds.setDefaultCommand(new InstantCommand(() -> leds.setSolidHSV((int)LightningShuffleboard.getDouble("LEDS", "Hue Color", 0), 255, 255), leds));
-		
-
-
+		leds.setDefaultCommand(new InstantCommand(() -> ledCommands.Swirl(3), leds));
 
 		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
 
