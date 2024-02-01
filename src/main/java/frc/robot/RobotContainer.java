@@ -59,7 +59,6 @@ public class RobotContainer extends LightningContainer {
 	// Flywheel flywheel;
 	// Pivot pivot;
 	// Shooter shooter;
-	// Collision collision;
 	// Indexer indexer;
 	// Climber climber;
 	LEDs leds;
@@ -85,8 +84,7 @@ public class RobotContainer extends LightningContainer {
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer);
-		// collision = new Collision(drivetrain);
-		// climber = new Climber();
+		// climber = new Climber(drivetrain);
 		leds = new LEDs();
 
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
@@ -136,7 +134,7 @@ public class RobotContainer extends LightningContainer {
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
 		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), climber));
-		// climber.setDefaultCommand(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_RETRACTED));
+		// climber.setDefaultCommand(new Climb(climber, drivetrain));
 
 		// leds.setDefaultCommand(new SetLED(leds, collector));
 

@@ -26,7 +26,7 @@ public class Climb extends Command {
 
 	@Override
 	public void initialize() {
-
+		// extend arm is preperation for climbing
 		if (climber.getState() == CLIMBER_STATES.STOW){
 		climber.setSetpoint(ClimbConstants.MAX_HEIGHT);
 		}
@@ -37,6 +37,7 @@ public class Climb extends Command {
 
 		switch (climber.getState()) {
 			case STOW:
+				// check if robot is tipped when arm is extended more than half max height (2 ft probably)
 				if (climber.getHeightL() > ClimbConstants.MAX_HEIGHT/2 &&
 					climber.getHeightR() > ClimbConstants.MAX_HEIGHT/2 &&
 					tipDetection.isTipped()) {
@@ -45,6 +46,7 @@ public class Climb extends Command {
 				}
 				break;
 			case CLIMBED:
+				// re-extend arm slowly to retun to ground
 				if (ClimbConstants.MAX_HEIGHT - climber.getHeightR() >= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
 					climber.setPowerR(ClimbConstants.CLIMB_RETURN_TO_GROUND_MAX_POWER);					
 				} 
@@ -62,6 +64,7 @@ public class Climb extends Command {
 				}
 				break;
 			case GROUNDED:
+				// retract arm after returning to ground and robot moved away from chain
 				climber.setSetpoint(0d);
 				break;
 		}

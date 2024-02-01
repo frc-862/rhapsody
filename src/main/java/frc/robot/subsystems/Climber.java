@@ -29,10 +29,10 @@ public class Climber extends SubsystemBase {
     private TipDetection tipDetection;
     private Swerve drivetrain;
 
-    public boolean hasTipped = false;
-    public boolean hasStowed = false;
-    public boolean hasGroundedR = false;
-    public boolean hasGroundedL = false;
+    private boolean hasTipped = false;
+    private boolean hasStowed = false;
+    private boolean hasGroundedR = false;
+    private boolean hasGroundedL = false;
 
     public Climber(Swerve drivetrain) {
         // configure climb motors
@@ -71,7 +71,8 @@ public class Climber extends SubsystemBase {
         LightningShuffleboard.set("Climb", "Right Lower Setpoint", convertLowerPose(getSetpointR(), true));
         LightningShuffleboard.set("Climb", "Left Upper Setpoint", convertUpperPose(getSetpointL(), false));
         LightningShuffleboard.set("Climb", "Right Upper Setpoint", convertUpperPose(getSetpointR(), true));
-
+        
+        // initialize tipdetection command
         tipDetection = new TipDetection(drivetrain);
     }
 
@@ -216,32 +217,66 @@ public class Climber extends SubsystemBase {
         }
     }
 
+    /**
+     * stores state value for climber
+     * @param state
+     */
     public void setState(CLIMBER_STATES state){
         this.state = state;
     }
 
+    /**
+     * @return current stored state of climber
+     */
     public CLIMBER_STATES getState() {
         return state;
     }
 
+    /**
+     * tell climber if climber has begun climbing
+     * @param hasTipped
+     */
     public void setHasTipped(boolean hasTipped){
         this.hasTipped = hasTipped;
     }
 
+    /**
+     * tell climber if the right arm has been fully extended (robot should have returned to ground after climb)
+     * @param hasGroundedR
+     */
     public void setHasGroundedR(boolean hasGroundedR){
         this.hasGroundedR = hasGroundedR;
     }
 
+    /**
+     * tell climber if the left arm has been fully extended (robot should have returned to ground after climb)
+     * @param hasGroundedL
+     */
     public void setHasGroundedL(boolean hasGroundedL){
         this.hasGroundedL = hasGroundedL;
     }
 
+    /**
+     * tell climber if both arms have been retracted after returning to gound
+     * @param hasStowed
+     */
     public void setHasStowed(boolean hasStowed){
         this.hasStowed = hasStowed;
     }
 
+    /**
+     * resets has stowed/grounded/tipped values
+     */
+    public void resetHasValues() {
+        hasGroundedL = false;
+        hasGroundedR = false;
+        hasStowed = false;
+        hasTipped = false;
+    }
+
     @Override
     public void periodic() {
+        // updates height based on limit switches
         for (TalonFX motor : new TalonFX[] {climbMotorR, climbMotorL}) {
             if (motor.getRotorPosition().getValueAsDouble() > ClimbConstants.MAX_HEIGHT) {
                 motor.setPosition(ClimbConstants.MAX_HEIGHT);
@@ -251,22 +286,24 @@ public class Climber extends SubsystemBase {
             }
         }
         
+        // updates states
         if (hasTipped && getHeightL() < ClimbConstants.MAX_HEIGHT/2 &&
 			getHeightR() < ClimbConstants.MAX_HEIGHT/2){
             state = CLIMBER_STATES.CLIMBED;
-            hasStowed = false;
-            hasGroundedL = false;
+            resetHasValues();
         }
 
         if (getHeightR() <= ClimbConstants.CLIMB_RETRACTION_TOLERANCE && 
         getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE && !tipDetection.isTipped() && hasStowed) {
             state = CLIMBER_STATES.STOW;
+            resetHasValues();
         }
 
         if (ClimbConstants.MAX_HEIGHT - getHeightR() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE &&
         ClimbConstants.MAX_HEIGHT - getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE &&
         !tipDetection.isTipped() && hasGroundedR && hasGroundedL) {
             state = CLIMBER_STATES.GROUNDED;
+            resetHasValues();
         }
     }
 }
