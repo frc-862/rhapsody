@@ -42,9 +42,6 @@ public class RobotContainer extends LightningContainer {
 	LEDs leds;
 	LEDCommands ledCommands;
 
-
-	private int LEDHueColor;
-
 	private SendableChooser<Command> autoChooser;
 	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
 	// Change beacuse with open loop is gone
@@ -71,6 +68,7 @@ public class RobotContainer extends LightningContainer {
 		leds = new LEDs();
 		ledCommands = new LEDCommands(leds);
 
+		leds = new LEDs();
 
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop

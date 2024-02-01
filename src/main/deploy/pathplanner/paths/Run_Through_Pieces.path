@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.32,
-        "y": 5.525487974052871
+        "x": -0.11668000958650661,
+        "y": 8.476052284957749
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.182352826244115,
-        "y": 5.8313632011879415
+        "x": 0.7456728166576085,
+        "y": 8.78192751209282
       },
       "isLocked": false,
-      "linkedName": "SubwooferFront"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -64,16 +64,16 @@
     },
     {
       "anchor": {
-        "x": 1.32,
-        "y": 5.525487974052871
+        "x": -0.11668000958650661,
+        "y": 8.476052284957749
       },
       "prevControl": {
-        "x": 3.204586076864461,
-        "y": 5.160411090052949
+        "x": 1.7679060672779543,
+        "y": 8.110975400957827
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "SubwooferFront"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
