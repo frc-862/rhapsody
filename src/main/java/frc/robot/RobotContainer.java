@@ -69,15 +69,12 @@ public class RobotContainer extends LightningContainer {
 		leds = new LEDs();
 		ledCommands = new LEDCommands(leds);
 
-		leds = new LEDs();
-
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrainConstants.MaxSpeed);
-		
 	}
 
 	@Override
