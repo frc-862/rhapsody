@@ -74,7 +74,6 @@ public class RobotContainer extends LightningContainer {
 	SwerveRequest.SwerveDriveBrake brake;
 	SwerveRequest.PointWheelsAt point;
 	Telemetry logger;
-	Command pathfindingCommand;
 
 	@Override
 	protected void initializeSubsystems() {
@@ -111,14 +110,6 @@ public class RobotContainer extends LightningContainer {
 		
 	}
 	
-	@Override
-	protected void initializeNamedCommands() {
-		
-		autoChooser = AutoBuilder.buildAutoChooser();	
-		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
-		
-		// pathfindingCommand = AutoBuilder.pathfindToPose(AutonomousConstants.TARGET_POSE, AutonomousConstants.PATH_CONSTRAINTS, AutonomousConstants.GOAL_END_VELOCITY, AutonomousConstants.ROTATION_DELAY_DISTACE);
-	}
 
 	@Override
 	protected void configureButtonBindings() {
@@ -134,14 +125,12 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 	
 		new Trigger(driver::getXButton).whileTrue(new PointAtTag(drivetrain, driver, "limelight-front", true, true));
+		new Trigger(driver::getYButton).whileTrue(new pathfinding(drivetrain, brake));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 
 		// new Trigger(driver::getYButton).whileTrue(new Climb(climber, drivetrain));
 	}
 
-	@Override
-	protected void initializeNamedCommands() {
-	}
 
 	@Override
 	protected void configureDefaultCommands() {
