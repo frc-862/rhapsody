@@ -16,6 +16,7 @@ public class Collector extends SubsystemBase {
 	private TalonFX collectorBottomMotor;
 	private DigitalInput collectorEntryBeamBreakEntrance;
 	private DigitalInput collectorEntryBeamBreakExit;
+	private boolean hasPiece;
 
 	public Collector() {
 		collectorTopMotor = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR_TOP, CAN.CANBUS_FD,
@@ -32,10 +33,6 @@ public class Collector extends SubsystemBase {
 		collectorEntryBeamBreakEntrance = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
 		collectorEntryBeamBreakExit = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
 		collectorEntryBeamBreakExit = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
-	}
-
-	@Override
-	public void periodic() {
 	}
 
 	/**
@@ -79,13 +76,24 @@ public class Collector extends SubsystemBase {
 		collectorBottomMotor.set(power);
 	}
 
+
+	@Override
+	public void periodic() {
+		// tells robot if we have a piece in collector
+		if (getEntryBeamBreakState()) {
+			hasPiece = true;
+		} else if (getExitBeamBreakState()){
+			hasPiece = false;
+		}
+	}
+
 	/**
 	 * Has piece
 	 * @return boolean, true if collector has piece
 	 */
 	public boolean hasPiece() {
 		// Could use beam breaks and store when a piece enters until it leaves
-		return false; // TODO add actual logic
+		return hasPiece;
 	}
 
 	/**
