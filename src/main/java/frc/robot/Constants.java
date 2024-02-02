@@ -31,7 +31,7 @@ public class Constants {
         return MERCURY_PATH.toFile().exists();
     }
 
-    public static final String HOOT_PATH = "/home/lvuser/datalog/signallogger";
+    public static final String HOOT_PATH = "/home/lvuser/datalog";
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
