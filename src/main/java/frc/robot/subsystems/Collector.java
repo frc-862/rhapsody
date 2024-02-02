@@ -12,26 +12,20 @@ import frc.thunder.config.FalconConfig;
 public class Collector extends SubsystemBase {
 
 	// Declare collector hardware
-	private TalonFX collectorTopMotor;
-	private TalonFX collectorBottomMotor;
+	private TalonFX motor;
 	private DigitalInput collectorEntryBeamBreakEntrance;
 	private DigitalInput collectorEntryBeamBreakExit;
 	private boolean hasPiece;
 
 	public Collector() {
-		collectorTopMotor = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR_TOP, CAN.CANBUS_FD,
-				CollectorConstants.COLLECTOR_MOTOR_INVERTED_TOP,
-				CollectorConstants.COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_TOP,
-				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_TOP,
-				CollectorConstants.COLLECTOR_MOTOR_NEUTRAL_MODE_TOP);
-		collectorBottomMotor = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR_BOTTOM, CAN.CANBUS_FD,
-				CollectorConstants.COLLECTOR_MOTOR_INVERTED_BOTTOM,
-				CollectorConstants.COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_BOTTOM,
-				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_BOTTOM,
-				CollectorConstants.COLLECTOR_MOTOR_NEUTRAL_MODE_BOTTOM);
+		motor = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
+				CollectorConstants.COLLECTOR_MOTOR_INVERTED,
+				CollectorConstants.COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT,
+				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT,
+				CollectorConstants.COLLECTOR_MOTOR_NEUTRAL_MODE);
 
+		//TODO: real robot doesn't currently have a plan to have 2 beam breaks, if programming requires this they need to say so soon.
 		collectorEntryBeamBreakEntrance = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
-		collectorEntryBeamBreakExit = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
 		collectorEntryBeamBreakExit = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
 	}
 
@@ -56,26 +50,8 @@ public class Collector extends SubsystemBase {
 	 * @param power Double value from -1.0 to 1.0 (positive collects inwards)
 	 */
 	public void setPower(double power) {
-		collectorTopMotor.set(power);
-		collectorBottomMotor.set(power);
+		motor.set(power);
 	}
-
-	/**
-	 * Sets the power of the top collector motor
-	 * @param power Double value from -1.0 to 1.0 (positive collects inwards)
-	 */
-	public void setPowerTop(double power) {
-		collectorTopMotor.set(power);
-	}
-
-	/**
-	 * Sets the power of the bottom collector motor
-	 * @param power Double value from -1.0 to 1.0 (positive collects inwards)
-	 */
-	public void setPowerBottom(double power) {
-		collectorBottomMotor.set(power);
-	}
-
 
 	@Override
 	public void periodic() {
