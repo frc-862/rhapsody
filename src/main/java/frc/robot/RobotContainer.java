@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -54,6 +55,9 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeSubsystems() {
+		SignalLogger.setPath(Constants.HOOT_PATH);
+		SignalLogger.enableAutoLogging(true);
+
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
 		
