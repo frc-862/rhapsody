@@ -73,8 +73,7 @@ public class Constants {
             public static final int PigeonId = 23;
 
             // TODO check
-            public static final int COLLECTOR_MOTOR_TOP = 9;
-            public static final int COLLECTOR_MOTOR_BOTTOM = 10;
+            public static final int COLLECTOR_MOTOR = 9;
             public static final int INDEXER_MOTOR = 11;
             public static final int PIVOT_ANGLE_MOTOR = 12;
             public static final int FLYWHEEL_MOTOR_1 = 13;
@@ -298,15 +297,10 @@ public class Constants {
     }
 
     public class CollectorConstants { // TODO: get real
-        public static final boolean COLLECTOR_MOTOR_INVERTED_TOP = false; // TODO check once collector installed
-        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_TOP = 0; // TODO: make sure they are not set to 0
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_TOP = 0; // TODO: make sure they are not set to 0
-        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_TOP = NeutralModeValue.Coast;
-
-        public static final boolean COLLECTOR_MOTOR_INVERTED_BOTTOM = false; // TODO check once collector installed
-        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_BOTTOM = 0; // TODO: make sure they are not set to 0
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_BOTTOM = 0; // TODO: make sure they are not set to 0
-        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_BOTTOM = NeutralModeValue.Coast;
+        public static final boolean COLLECTOR_MOTOR_INVERTED = false; // TODO check once collector installed
+        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
+        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
     }
 
     public class FlywheelConstants { // TODO: get real
