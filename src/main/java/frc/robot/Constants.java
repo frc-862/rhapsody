@@ -9,6 +9,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -338,6 +339,11 @@ public class Constants {
         public static final double PIVOT_MOTOR_KV = 0;
 
         public static final double ANGLE_TOLERANCE = 0;
+
+        public static final double ENCODER_OFFSET = 0d;
+        public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
+        public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
+        public static final double ENCODER_TO_ROTOR_RATIO = 1d;
     }
 
     public class ShooterConstants {
