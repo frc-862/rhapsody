@@ -1,6 +1,9 @@
 package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+
+import java.util.Set;
+
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -10,8 +13,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TunerConstants;
@@ -56,9 +61,9 @@ public class RobotContainer extends LightningContainer {
 	protected void initializeSubsystems() {
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
-		
+
 		drivetrain = TunerConstants.getDrivetrain(); // My drivetrain
-		
+
 		// indexer = new Indexer();
 		// collector = new Collector();
 		// flywheel = new Flywheel();
@@ -83,7 +88,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("enable-Vision", new InstantCommand(() -> drivetrain.enableVision()));
 
 		// make sure named commands is initialized before autobuilder!
-		autoChooser = AutoBuilder.buildAutoChooser();	
+		autoChooser = AutoBuilder.buildAutoChooser();
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 	}
 
@@ -99,9 +104,15 @@ public class RobotContainer extends LightningContainer {
 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
 
 		new Trigger(driver::getRightBumper).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
-	
+
 		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
+		new Trigger(driver::getYButton).whileTrue(new DeferredCommand(() -> AutoBuilder.pathfindToPose(
+			AutonomousConstants.TARGET_POSE,
+			AutonomousConstants.PATH_CONSTRAINTS,
+			0.0, // Goal end velocity in meters/sec
+			0.0) // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+		, Set.of(drivetrain)));
 
 		new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.disableVision()));
 		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
