@@ -10,6 +10,12 @@
           "data": {
             "pathName": "5Piece"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
+          }
         }
       ]
     }
