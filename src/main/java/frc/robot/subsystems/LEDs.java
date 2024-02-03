@@ -134,9 +134,10 @@ public class LEDs extends SubsystemBase {
 		setSolidHSV(hue, 255, (int) Math.abs((Math.sin(Timer.getFPGATimestamp() * 2) * 255)));
 	}
 
+	
 	public void rainbow() {
 		for (int i = 0; i < ledBuffer.getLength(); i++) {
-			ledBuffer.setHSV(i,i * 360 / ledBuffer.getLength(), 255, 255);
+			ledBuffer.setHSV(i,(i + (int)(Timer.getFPGATimestamp() * 20)) % ledBuffer.getLength() * 180 / 14 , 255, 100);
 		}
 	}
 	

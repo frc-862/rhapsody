@@ -406,7 +406,7 @@ public class Constants {
         public static final int LED_PWM_PORT = 0;
         public static final int LED_BUFFER_TIME = 12;
         
-        public static enum LED_STATES{
+        public enum LED_STATES{
             DISABLED(-1),
             MIXER(1),
             HAS_POSE(2), 
@@ -423,7 +423,7 @@ public class Constants {
             OFF(13);
 
             private final int priority;
-            private LED_STATES(int priority) {
+            LED_STATES(int priority) {
                 this.priority = priority;
             }
 
