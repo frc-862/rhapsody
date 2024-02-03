@@ -125,7 +125,7 @@ public class BuildDynamicCommand extends Command {
       m_command.end(interrupted);
       m_command = m_nullCommand;
       System.out.println("m_command.end(interrupted)");
-      state = State.NOCOMMAND;
+      // state = State.NOCOMMAND;
     }
   }
 

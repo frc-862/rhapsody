@@ -22,6 +22,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.command.BuildDynamicCommand;
 import frc.robot.command.ChasePieces;
+import frc.robot.command.MoveToPose;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.TipDetection;
 import frc.robot.command.tests.DrivetrainSystemTest;
@@ -115,7 +116,7 @@ public class RobotContainer extends LightningContainer {
 			0.0) // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
 		, Set.of(drivetrain)));
 
-		new Trigger(driver::getAButton).whileTrue(AutoBuilder.buildAuto("Andrew"));
+		new Trigger(driver::getAButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive));
 		// new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.disableVision()));
 		// new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
 		// new Trigger(driver::getYButton).whileTrue(new Climb(climber, drivetrain));
