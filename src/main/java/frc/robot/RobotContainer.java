@@ -20,9 +20,15 @@ import frc.robot.command.PointAtTag;
 import frc.robot.command.TipDetection;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
-import frc.robot.subsystems.LEDCommands;
+import frc.robot.command.Climb;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Shooter;
 import frc.thunder.LightningContainer;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
@@ -40,7 +46,6 @@ public class RobotContainer extends LightningContainer {
 	// Indexer indexer;
 	// Climber climber;
 	LEDs leds;
-	LEDCommands ledCommands;
 
 	private SendableChooser<Command> autoChooser;
 	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
@@ -65,7 +70,6 @@ public class RobotContainer extends LightningContainer {
 		// shooter = new Shooter(pivot, flywheel, indexer);
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
-		ledCommands = new LEDCommands(leds);
 
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
@@ -104,7 +108,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.disableVision()));
 		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
 
-		new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain, () -> coPilot.getBackButton));
+		// new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain, () -> coPilot.getBackButton()));
 	}
 
 	@Override
@@ -119,7 +123,6 @@ public class RobotContainer extends LightningContainer {
 		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), climber));
 		// climber.setDefaultCommand(new Climb(climber, drivetrain));
 
-		leds.setDefaultCommand(new InstantCommand(() -> ledCommands.swirl(3), leds));
 
 		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
 

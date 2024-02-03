@@ -1,6 +1,8 @@
 package frc.robot.command;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import java.util.function.BooleanSupplier;
+
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.subsystems.Climber;
@@ -29,7 +31,6 @@ public class Climb extends Command {
 		// extend arm is preperation for climbing
 		if (climber.getState() == CLIMBER_STATES.STOW){
 			climber.setSetpoint(ClimbConstants.MAX_HEIGHT);
-			climber.hasPressed();
 		}
 
 
@@ -82,11 +83,11 @@ public class Climb extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return abort.getAsBoolean;
+		return abort.getAsBoolean();
 	}
 
 	public void abort(){
-		Climber.setState(CLIMBER_STATES.CLIMBED);
+		climber.setState(CLIMBER_STATES.CLIMBED);
 		climber.stop();
 	}
 }
