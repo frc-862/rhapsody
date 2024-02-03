@@ -292,7 +292,7 @@ public class Constants {
         public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 4d; // TODO: make this an actual value
         public static final PIDController HEADING_CONTROLLER = new PIDController(0.05, 0, 0);
-        public static final PIDController CHASE_CONTROLLER = new PIDController(0.12, 0, 0.05);
+        public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
     }
@@ -427,6 +427,32 @@ public class Constants {
 
     public class LEDsConstants {
         public static final int LED_PWM_PORT = 0;
-        public static final int LED_BUFFER_TIME = 14;
+        public static final int LED_BUFFER_TIME = 12;
+        
+        public enum LED_STATES{
+            DISABLED(-1),
+            MIXER(1),
+            HAS_POSE(2), 
+            COLLECTED(3), 
+            SHOT(4), 
+            FINISHED_CLIMB(5), 
+            SHOOTING(6), 
+            CHASING(7), 
+            READYING_SHOOT(8), 
+            CLIMBED(9), 
+            CAN_SHOOT(10), 
+            HAS_PIECE(11), 
+            HAS_VISION(12),
+            OFF(13);
+
+            private final int priority;
+            LED_STATES(int priority) {
+                this.priority = priority;
+            }
+
+            public int getPriority() {
+                return priority;
+            }
+        }
     }
 }
