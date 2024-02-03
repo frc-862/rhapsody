@@ -10,6 +10,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackTy
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.path.PathConstraints;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -32,6 +33,8 @@ public class Constants {
     public static final boolean isMercury() {
         return MERCURY_PATH.toFile().exists();
     }
+
+    public static final String HOOT_PATH = "/home/lvuser/signallogger";
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
@@ -73,8 +76,7 @@ public class Constants {
             public static final int PigeonId = 23;
 
             // TODO check
-            public static final int COLLECTOR_MOTOR_TOP = 9;
-            public static final int COLLECTOR_MOTOR_BOTTOM = 10;
+            public static final int COLLECTOR_MOTOR = 9;
             public static final int INDEXER_MOTOR = 11;
             public static final int PIVOT_ANGLE_MOTOR = 12;
             public static final int FLYWHEEL_MOTOR_1 = 13;
@@ -298,21 +300,16 @@ public class Constants {
         public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 4d; // TODO: make this an actual value
         public static final PIDController HEADING_CONTROLLER = new PIDController(0.05, 0, 0);
-        public static final PIDController CHASE_CONTROLLER = new PIDController(0.12, 0, 0.05);
+        public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
     }
 
     public class CollectorConstants { // TODO: get real
-        public static final boolean COLLECTOR_MOTOR_INVERTED_TOP = false; // TODO check once collector installed
-        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_TOP = 0; // TODO: make sure they are not set to 0
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_TOP = 0; // TODO: make sure they are not set to 0
-        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_TOP = NeutralModeValue.Coast;
-
-        public static final boolean COLLECTOR_MOTOR_INVERTED_BOTTOM = false; // TODO check once collector installed
-        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT_BOTTOM = 0; // TODO: make sure they are not set to 0
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT_BOTTOM = 0; // TODO: make sure they are not set to 0
-        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE_BOTTOM = NeutralModeValue.Coast;
+        public static final boolean COLLECTOR_MOTOR_INVERTED = false; // TODO check once collector installed
+        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
+        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
     }
 
     public class FlywheelConstants { // TODO: get real
@@ -350,6 +347,11 @@ public class Constants {
         public static final double PIVOT_MOTOR_KV = 0;
 
         public static final double ANGLE_TOLERANCE = 0;
+
+        public static final double ENCODER_OFFSET = 0d;
+        public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
+        public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
+        public static final double ENCODER_TO_ROTOR_RATIO = 1d;
     }
 
     public class ShooterConstants {
@@ -359,8 +361,31 @@ public class Constants {
         public static final double FAR_WING_X = 3.3;
 
         public enum SHOOTER_STATES {
-            STOW, PRIME, AIM, SHOOT
+            STOW, PRIME, AIM, SHOOT, CAND_SHOTS
         }
+
+        public enum CAND_STATES {
+            AMP(0), 
+            SUBWOOFER(1), 
+            PODIUM(2);
+
+            private final int priority;
+            CAND_STATES(int priority) {
+                this.priority = priority;
+            }
+
+            public int getPriority() {
+                return priority;
+            }
+         }
+
+
+        // angle in rotations (pivot), speed in rpm (flywheel)
+        public static final double[][] CAND_SHOT_VALUES = new double[][] { // TODO: get real values
+            {0, 0}, // amp
+            {0, 0}, // subwoofer
+            {0, 0}, // podium
+        };
 
         // Distance in meters, angle in degrees
         public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {
@@ -410,6 +435,32 @@ public class Constants {
 
     public class LEDsConstants {
         public static final int LED_PWM_PORT = 0;
-        public static final int LED_BUFFER_TIME = 14;
+        public static final int LED_BUFFER_TIME = 12;
+        
+        public enum LED_STATES{
+            DISABLED(-1),
+            MIXER(1),
+            HAS_POSE(2), 
+            COLLECTED(3), 
+            SHOT(4), 
+            FINISHED_CLIMB(5), 
+            SHOOTING(6), 
+            CHASING(7), 
+            READYING_SHOOT(8), 
+            CLIMBED(9), 
+            CAN_SHOOT(10), 
+            HAS_PIECE(11), 
+            HAS_VISION(12),
+            OFF(13);
+
+            private final int priority;
+            LED_STATES(int priority) {
+                this.priority = priority;
+            }
+
+            public int getPriority() {
+                return priority;
+            }
+        }
     }
 }

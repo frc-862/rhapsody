@@ -17,6 +17,8 @@ public class MoveToPose extends Command {
   private final Pose2d target; 
   private final Swerve drivetrain;
   private FieldCentric drive; 
+  private boolean finished;
+
   /** Creates a new MoveToPose. */
   public MoveToPose(Pose2d target, Swerve drivetrain, SwerveRequest.FieldCentric drive) {
     this.drive = drive;
@@ -24,11 +26,19 @@ public class MoveToPose extends Command {
     this.drivetrain = drivetrain; 
     addRequirements(drivetrain); 
     // Use addRequirements() here to declare subsystem dependencies.
+    LightningShuffleboard.setDouble("MoveToPose", "dx", 0);
+    LightningShuffleboard.setDouble("MoveToPose", "dy", 0);
+    LightningShuffleboard.setDouble("MoveToPose", "targetX", target.getX());
+    LightningShuffleboard.setDouble("MoveToPose", "targetY", target.getY());
+    LightningShuffleboard.setDouble("MoveToPose", "currentX", 0);
+    LightningShuffleboard.setDouble("MoveToPose", "currentY", 0);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    finished = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -38,17 +48,42 @@ public class MoveToPose extends Command {
     double dy = target.getTranslation().getY() - current.getTranslation().getY();
     LightningShuffleboard.setDouble("MoveToPose", "dx", dx);
     LightningShuffleboard.setDouble("MoveToPose", "dy", dy);
-    final double kp = 1.0; 
-    drivetrain.applyRequest(()->drive.withVelocityX(dx*kp).withVelocityY(dy*kp));
+    LightningShuffleboard.setDouble("MoveToPose", "targetX", target.getX());
+    LightningShuffleboard.setDouble("MoveToPose", "targetY", target.getY());
+    LightningShuffleboard.setDouble("MoveToPose", "currentX", current.getX());
+    LightningShuffleboard.setDouble("MoveToPose", "currentY", current.getY());
+    final double kp = 0.3; 
+    final double minSpeed = 0.1;
+
+    double powerx = dx * kp;
+    double powery = dy * kp;
+
+    if (minSpeed > Math.abs(powerx)) {
+      powerx = minSpeed * Math.signum(dx);
+    }
+
+    if (minSpeed > Math.abs(powery)) {
+      powery = -minSpeed * -Math.signum(dy);
+    }
+
+    var dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 0.1) {
+      powerx = 0;
+      powery = 0;
+      finished = true;
+    }
+    drivetrain.setControl(drive.withVelocityX(powerx).withVelocityY(powery));
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0));
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return finished;
   }
 }
