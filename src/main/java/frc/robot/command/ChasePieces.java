@@ -78,8 +78,9 @@ public class ChasePieces extends Command {
 		pidOutput = headingController.calculate(0, targetHeading);
 		
         drivetrain.setControl(noteChase.withRotationalRate(-pidOutput) 
-		.withVelocityX(-3)
+		.withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
 		);
+		
         
 	}
 
