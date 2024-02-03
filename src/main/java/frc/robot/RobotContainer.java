@@ -20,6 +20,7 @@ import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.command.ChasePieces;
+import frc.robot.command.HapticFeedback;
 import frc.robot.command.Index;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.SetLEDState;
@@ -108,6 +109,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
 
+		new Trigger(driver::getYButton).whileTrue(new HapticFeedback(driver, 1));
 		/* copilot */
 		// new Trigger(coPilot::getBButton).whileTrue(new InstantCommand(() -> shooter.setState(SHOOTER_STATES.STOW)));
 		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
