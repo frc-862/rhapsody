@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
+import frc.robot.Constants.ShooterConstants.CAND_STATES;
 
 public class Shooter extends SubsystemBase {
     private Pivot pivot;
@@ -11,6 +13,7 @@ public class Shooter extends SubsystemBase {
     private Collector collector;
 
     private SHOOTER_STATES state = SHOOTER_STATES.STOW;
+    private CAND_STATES candState = CAND_STATES.AMP;
     private double currentDistance = 0;
     private boolean shoot = false;
 
@@ -37,16 +40,25 @@ public class Shooter extends SubsystemBase {
                 pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
                 flywheel.setAllMotorsRPM(0);
                 break;
+            
+            //set shots for the pivot and flywheel
+            case CAND_SHOTS:
+                pivot.setTargetAngle(ShooterConstants.CAND_SHOT_VALUES[candState.getPriority()][0]);
+                flywheel.setAllMotorsRPM(ShooterConstants.CAND_SHOT_VALUES[candState.getPriority()][1]);
+                break;
+            
             //Prime is warming up the flywheel for shooting
             case PRIME:
                 pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
                 flywheel.setAllMotorsRPM(ShooterConstants.BASE_RPM);
                 break;
+            
             //Aim is targeting the pivot toward the target and speeding up the flywheel
             case AIM:
                 pivot.setTargetAngle(ShooterConstants.ANGLE_MAP.get(currentDistance));
                 flywheel.setAllMotorsRPM(ShooterConstants.SPEED_MAP.get(currentDistance));
                 break;
+            
             // Shoot is shooting the note
             case SHOOT:
                 pivot.setTargetAngle(ShooterConstants.ANGLE_MAP.get(currentDistance));         
@@ -59,7 +71,6 @@ public class Shooter extends SubsystemBase {
                 break;
         }
     }
-
     /**
      * Get current shooter state
      * @return SHOOTER_STATES
@@ -74,6 +85,22 @@ public class Shooter extends SubsystemBase {
      */
     public void setState(SHOOTER_STATES state) {
         this.state = state;
+    }
+
+    /**
+     * get current cand shot state
+     * @param candState
+     */
+    public CAND_STATES getCANDState() {
+        return candState;
+    }
+
+    /**
+     * Sets the states for cand shots (AMP, SUBWOOFER, PODIUM)
+     * @param candState
+     */
+    public void setCANDState(CAND_STATES candState) {
+        this.candState = candState;
     }
 
     /**
