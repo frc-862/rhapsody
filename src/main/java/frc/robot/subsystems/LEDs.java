@@ -137,7 +137,7 @@ public class LEDs extends SubsystemBase {
 	
 	public void rainbow() {
 		for (int i = 0; i < ledBuffer.getLength(); i++) {
-			ledBuffer.setHSV(i,(i + (int)(Timer.getFPGATimestamp() * 20)) % ledBuffer.getLength() * 180 / 14 , 255, 100);
+			ledBuffer.setHSV(i, (i + (int)(Timer.getFPGATimestamp() * 20)) % ledBuffer.getLength() * 180 / 14, 255, 100);
 		}
 	}
 	
