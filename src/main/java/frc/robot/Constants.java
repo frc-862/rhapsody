@@ -404,7 +404,7 @@ public class Constants {
 
     public class LEDsConstants {
         public static final int LED_PWM_PORT = 0;
-        public static final int LED_BUFFER_TIME = 14;
+        public static final int LED_BUFFER_TIME = 12;
         
         public static enum LED_STATES{
             DISABLED(-1),
