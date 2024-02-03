@@ -65,7 +65,7 @@ public class ChasePieces extends Command {
 		LightningShuffleboard.setDouble("ChasePieces", "Target Heading", targetHeading);
 		LightningShuffleboard.setDouble("ChasePieces", "Pid Output", pidOutput);
 
-		headingController.setP(LightningShuffleboard.getDouble("ChasePieces", "Pid P", 0.1));
+		headingController.setP(LightningShuffleboard.getDouble("ChasePieces", "Pid P", 0.05));
 		headingController.setI(LightningShuffleboard.getDouble("ChasePieces", "Pid I", 0));
 		headingController.setD(LightningShuffleboard.getDouble("ChasePieces", "Pid D", 0));
 
@@ -73,7 +73,7 @@ public class ChasePieces extends Command {
 		pidOutput = headingController.calculate(0, targetHeading);
 		
         drivetrain.setControl(noteChase.withRotationalRate(-pidOutput) 
-		.withVelocityX(1.5)
+		.withVelocityX(3)
 		);
         
 	}
