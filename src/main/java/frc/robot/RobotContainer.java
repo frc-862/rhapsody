@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.ShooterConstants.CAND_STATES;
 import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
@@ -29,22 +30,26 @@ import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Collector;
 import frc.thunder.LightningContainer;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
 
 public class RobotContainer extends LightningContainer {
-	XboxController driver;
-	XboxController coPilot;
+	public XboxController driver;
+	public XboxController coPilot;
 
 	//Subsystems
 	private Swerve drivetrain;
-	// Collector collector;
-	// Flywheel flywheel;
-	// Pivot pivot;
-	// Shooter shooter;
+	Collector collector;
+	Flywheel flywheel;
+	Pivot pivot;
+	Shooter shooter;
 	// Collision collision;
-	// Indexer indexer;
+	Indexer indexer;
 	// Climber climber;
 	LEDs leds;
 
@@ -67,11 +72,11 @@ public class RobotContainer extends LightningContainer {
 		
 		drivetrain = TunerConstants.getDrivetrain(); // My drivetrain
 		
-		// indexer = new Indexer();
-		// collector = new Collector();
-		// flywheel = new Flywheel();
-		// pivot = new Pivot();
-		// shooter = new Shooter(pivot, flywheel, indexer);
+		indexer = new Indexer();
+		collector = new Collector();
+		flywheel = new Flywheel();
+		pivot = new Pivot();
+		shooter = new Shooter(pivot, flywheel, indexer, collector);
 		// collision = new Collision(drivetrain);
 		// climber = new Climber();
 		leds = new LEDs();
@@ -112,7 +117,10 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getBButton).whileTrue(new InstantCommand(() -> shooter.setState(SHOOTER_STATES.STOW)));
 		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
-		new Trigger(() -> coPilot.getAButton() || coPilot.getBButton() || coPilot.getXButton()).whileTrue(ChangeCandShotState());
+		new Trigger(() -> coPilot.getAButton() || coPilot.getBButton() || coPilot.getXButton()).whileTrue(new InstantCommand(() -> shooter.setState(SHOOTER_STATES.CAND_SHOTS)));
+		new Trigger(coPilot::getAButton).whileTrue(new InstantCommand(() -> shooter.setCANDState(CAND_STATES.AMP)));
+		new Trigger(coPilot::getBButton).whileTrue(new InstantCommand(() -> shooter.setCANDState(CAND_STATES.SUBWOOFER)));
+		new Trigger(coPilot::getXButton).whileTrue(new InstantCommand(() -> shooter.setCANDState(CAND_STATES.PODIUM)));
 	}
 
 	@Override
