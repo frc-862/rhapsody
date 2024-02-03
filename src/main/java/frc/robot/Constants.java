@@ -295,6 +295,7 @@ public class Constants {
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
+        public static final String BACK_NAME = "limelight-back";
     }
 
     public class CollectorConstants { // TODO: get real
