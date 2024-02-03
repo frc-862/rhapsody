@@ -121,7 +121,7 @@ public class Constants {
 
         //For Pathfinding
         public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(1, 0), new Rotation2d(Units.degreesToRadians(0d)));
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(1.0, 0.5, 1.0, 0.5); //TODO get constants
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); //TODO get constants
         public static final double GOAL_END_VELOCITY = 0; // Goal end velocity in meters/sec
         public static final double ROTATION_DELAY_DISTACE = 0d; // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
     }

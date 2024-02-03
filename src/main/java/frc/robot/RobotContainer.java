@@ -20,6 +20,7 @@ import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TunerConstants;
+import frc.robot.command.BuildDynamicCommand;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.TipDetection;
@@ -107,15 +108,16 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
-		new Trigger(driver::getYButton).whileTrue(new DeferredCommand(() -> AutoBuilder.pathfindToPose(
+		new Trigger(driver::getYButton).whileTrue(new BuildDynamicCommand(() -> AutoBuilder.pathfindToPose(
 			AutonomousConstants.TARGET_POSE,
 			AutonomousConstants.PATH_CONSTRAINTS,
 			0.0, // Goal end velocity in meters/sec
 			0.0) // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
 		, Set.of(drivetrain)));
 
-		new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.disableVision()));
-		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
+		new Trigger(driver::getAButton).whileTrue(AutoBuilder.buildAuto("Andrew"));
+		// new Trigger(driver::getXButton).onTrue(new InstantCommand(() -> drivetrain.disableVision()));
+		// new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
 		// new Trigger(driver::getYButton).whileTrue(new Climb(climber, drivetrain));
 	}
 
