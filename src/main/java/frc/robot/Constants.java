@@ -414,13 +414,14 @@ public class Constants {
             SHOT(4), 
             FINISHED_CLIMB(5), 
             SHOOTING(6), 
-            CHASING(7), 
-            READYING_SHOOT(8), 
-            CLIMBED(9), 
-            CAN_SHOOT(10), 
-            HAS_PIECE(11), 
-            HAS_VISION(12),
-            OFF(13);
+            COLLECTING(7),
+            CHASING(8), 
+            READYING_SHOOT(9), 
+            CLIMBED(10), 
+            CAN_SHOOT(11), 
+            HAS_PIECE(12), 
+            HAS_VISION(13),
+            OFF(14);
 
             private final int priority;
             LED_STATES(int priority) {

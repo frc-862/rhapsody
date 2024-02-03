@@ -88,6 +88,10 @@ public class RobotContainer extends LightningContainer {
 	protected void initializeNamedCommands() {
 		NamedCommands.registerCommand("disable-Vision", new InstantCommand(() -> drivetrain.disableVision()));
 		NamedCommands.registerCommand("enable-Vision", new InstantCommand(() -> drivetrain.enableVision()));
+		NamedCommands.registerCommand("Shoot", new SetLEDState(leds, LED_STATES.SHOOTING, 3));
+		NamedCommands.registerCommand("Collect", new SetLEDState(leds, LED_STATES.COLLECTING, 3));
+		NamedCommands.registerCommand("Collected", new SetLEDState(leds, LED_STATES.COLLECTED, 2));
+		NamedCommands.registerCommand("Shot", new SetLEDState(leds, LED_STATES.SHOT, 2));
 
 		// make sure named commands is initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();	

@@ -61,6 +61,10 @@ public class LEDs extends SubsystemBase {
             case SHOOTING:
 				blink(15);
 				break;
+			
+			case COLLECTING:
+				blink(315);
+				break;
 
             case CHASING:
 				blink(0);
