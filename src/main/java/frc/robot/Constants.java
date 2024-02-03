@@ -408,6 +408,7 @@ public class Constants {
         
         public static enum LED_STATES{
             DISABLED(-1),
+            MIXER(1),
             HAS_POSE(2), 
             COLLECTED(3), 
             SHOT(4), 

@@ -86,6 +86,11 @@ public class LEDs extends SubsystemBase {
 				setSolidHSV(355, 255, 255);
 				break;
 
+			case MIXER:
+				LightningShuffleboard.set("LEDs","Mixer Hue", 0);
+				setSolidHSV((int)LightningShuffleboard.getDouble("LEDs", "Mixer Hue", 0), 255, 255);
+				break;
+
 			case OFF:
 				swirl(4);
 				break;
