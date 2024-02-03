@@ -292,7 +292,7 @@ public class Constants {
         public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 4d; // TODO: make this an actual value
         public static final PIDController HEADING_CONTROLLER = new PIDController(0.05, 0, 0);
-        public static final PIDController CHASE_CONTROLLER = new PIDController(0.12, 0, 0.05);
+        public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
     }
