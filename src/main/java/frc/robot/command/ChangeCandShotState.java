@@ -35,7 +35,7 @@ public class ChangeCandShotState extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-		// sets cand states based off which button is pressed
+		// Sets cand states based off which button is pressed
 		if(copilotAButton.getAsBoolean()){
 			shooter.setCANDState(CAND_STATES.AMP);	
 		} else if (copilotBButton.getAsBoolean()){
