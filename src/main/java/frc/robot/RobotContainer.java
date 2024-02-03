@@ -112,6 +112,7 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getBButton).whileTrue(new InstantCommand(() -> shooter.setState(SHOOTER_STATES.STOW)));
 		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
+		new Trigger(() -> coPilot.getAButton() || coPilot.getBButton() || coPilot.getXButton()).whileTrue(ChangeCandShotState());
 	}
 
 	@Override
