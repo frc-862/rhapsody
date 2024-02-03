@@ -404,6 +404,32 @@ public class Constants {
 
     public class LEDsConstants {
         public static final int LED_PWM_PORT = 0;
-        public static final int LED_BUFFER_TIME = 14;
+        public static final int LED_BUFFER_TIME = 12;
+        
+        public enum LED_STATES{
+            DISABLED(-1),
+            MIXER(1),
+            HAS_POSE(2), 
+            COLLECTED(3), 
+            SHOT(4), 
+            FINISHED_CLIMB(5), 
+            SHOOTING(6), 
+            CHASING(7), 
+            READYING_SHOOT(8), 
+            CLIMBED(9), 
+            CAN_SHOOT(10), 
+            HAS_PIECE(11), 
+            HAS_VISION(12),
+            OFF(13);
+
+            private final int priority;
+            LED_STATES(int priority) {
+                this.priority = priority;
+            }
+
+            public int getPriority() {
+                return priority;
+            }
+        }
     }
 }
