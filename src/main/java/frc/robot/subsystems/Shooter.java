@@ -89,7 +89,7 @@ public class Shooter extends SubsystemBase {
 
     /**
      * get current cand shot state
-     * @param candState
+     * @return CAND_STATES
      */
     public CAND_STATES getCANDState() {
         return candState;
