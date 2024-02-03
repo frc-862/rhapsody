@@ -53,6 +53,11 @@ public class Pivot extends SubsystemBase {
         angleMotor.getConfigurator().apply(motorConfig);
     }
 
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+    }
+
     /**
      * Sets the angle of the pivot
      * 
