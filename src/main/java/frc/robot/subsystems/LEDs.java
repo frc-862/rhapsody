@@ -121,9 +121,9 @@ public class LEDs extends SubsystemBase {
 	 */
 	public void blink(int hue) {
 		if ((int)(Timer.getFPGATimestamp() * 10) % 2 == 0) {
-			setSolidRGB(hue, 255, 255);
+			setSolidHSV(hue, 255, 255);
 		} else {
-			setSolidRGB(0, 0, 0);
+			setSolidHSV(0, 0, 0);
 		}
 	}
 	
