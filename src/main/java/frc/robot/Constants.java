@@ -354,8 +354,31 @@ public class Constants {
         public static final double FAR_WING_X = 3.3;
 
         public enum SHOOTER_STATES {
-            STOW, PRIME, AIM, SHOOT
+            STOW, PRIME, AIM, SHOOT, CAND_SHOTS
         }
+
+        public enum CAND_STATES {
+            AMP(0), 
+            SUBWOOFER(1), 
+            PODIUM(2);
+
+            private final int priority;
+            CAND_STATES(int priority) {
+                this.priority = priority;
+            }
+
+            public int getPriority() {
+                return priority;
+            }
+         }
+
+
+        // angle in rotations (pivot), speed in rpm (flywheel)
+        public static final double[][] CAND_SHOT_VALUES = new double[][] { // TODO: get real values
+            {0, 0}, // amp
+            {0, 0}, // subwoofer
+            {0, 0}, // podium
+        };
 
         // Distance in meters, angle in degrees
         public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {
