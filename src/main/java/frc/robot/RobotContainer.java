@@ -15,6 +15,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.ShooterConstants.CAND_STATES;
+import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.HapticFeedback;
@@ -37,11 +40,12 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
 
 public class RobotContainer extends LightningContainer {
-	XboxController driver;
-	XboxController coPilot;
+	public XboxController driver;
+	public XboxController coPilot;
 
 	// Subsystems
 	private Swerve drivetrain;
+	// Indexer indexer;
 	// Collector collector;
 	// Flywheel flywheel;
 	// Pivot pivot;
@@ -73,8 +77,8 @@ public class RobotContainer extends LightningContainer {
 		// collector = new Collector();
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
-		// shooter = new Shooter(pivot, flywheel, indexer);
-		// climber = new Climber(drivetrain);
+		// shooter = new Shooter(pivot, flywheel, indexer, collector);
+		// climber = new Climber();
 		leds = new LEDs();
 
 		drive = new SwerveRequest.FieldCentric()
@@ -126,6 +130,10 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getBButton).whileTrue(new InstantCommand(() -> shooter.setState(SHOOTER_STATES.STOW)));
 		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
+		// new Trigger(() -> coPilot.getAButton() || coPilot.getBButton() || coPilot.getXButton()).whileTrue(new InstantCommand(() -> shooter.setState(SHOOTER_STATES.CAND_SHOTS)));
+		// new Trigger(coPilot::getAButton).whileTrue(new InstantCommand(() -> shooter.setCANDState(CAND_STATES.AMP)));
+		// new Trigger(coPilot::getBButton).whileTrue(new InstantCommand(() -> shooter.setCANDState(CAND_STATES.SUBWOOFER)));
+		// new Trigger(coPilot::getXButton).whileTrue(new InstantCommand(() -> shooter.setCANDState(CAND_STATES.PODIUM)));
 		new Trigger(driver::getRightBumper)
 				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
 				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
