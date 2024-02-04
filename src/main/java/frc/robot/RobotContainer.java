@@ -65,8 +65,7 @@ public class RobotContainer extends LightningContainer {
 		SignalLogger.enableAutoLogging(true);
 
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
-		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot
-																					// controller
+		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
 
 		drivetrain = TunerConstants.getDrivetrain(); // My drivetrain
 
@@ -79,21 +78,9 @@ public class RobotContainer extends LightningContainer {
 		leds = new LEDs();
 
 		drive = new SwerveRequest.FieldCentric()
-				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed
-																		// *
-																		// DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate
-																		// *
-																		// DrivetrAinConstants.ROT_DB);
-																		// // I want field-centric
-																		// driving in closed loop
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric()
-				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed
-																		// *
-																		// DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate
-																		// *
-																		// DrivetrAinConstants.ROT_DB);
-																		// // I want field-centric
-																		// driving in closed loop
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
@@ -124,21 +111,15 @@ public class RobotContainer extends LightningContainer {
 				.withVelocityX(
 						-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND)
 								* DrivetrainConstants.MaxSpeed
-								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with
-																		// negative Y (Its worth
-																		// noting the field Y axis
-																		// differs from the robot Y
-																		// axis_
+								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
 				.withVelocityY(
 						-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND)
 								* DrivetrainConstants.MaxSpeed
-								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X
-																		// (left)
+								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
 				.withRotationalRate(
 						-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND)
 								* DrivetrainConstants.MaxAngularRate
-								* DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise
-																		// with negative X (left)
+								* DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
 
 		new Trigger(driver::getYButton).whileTrue(new HapticFeedback(driver, 1));
 		/* copilot */
@@ -167,40 +148,16 @@ public class RobotContainer extends LightningContainer {
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 				drivetrain.applyRequest(() -> drive
 						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive
-																								// forward
-																								// with
-																								// negative
-																								// Y
-																								// (Its
-																								// worth
-																								// noting
-																								// the
-																								// field
-																								// Y
-																								// axis
-																								// differs
-																								// from
-																								// the
-																								// robot
-																								// Y
-																								// axis_
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
 						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive
-																								// left
-																								// with
-																								// negative
-																								// X
-																								// (left)
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
-								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with
-																// negative X (left)
+								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
 		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() -
 		// coPilot.getLeftTriggerAxis()), climber));
 		// climber.setDefaultCommand(new Climb(climber, drivetrain));
-
 
 		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () ->
 		// coPilot.getAButton()));
