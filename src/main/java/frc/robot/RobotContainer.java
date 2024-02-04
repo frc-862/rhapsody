@@ -15,21 +15,23 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.Constants.IndexerConstants;
-import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
 import frc.robot.Constants.TunerConstants;
-import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.HapticFeedback;
 import frc.robot.command.Index;
 import frc.robot.command.PointAtTag;
-import frc.robot.command.SetLEDState;
 import frc.robot.command.TipDetection;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
+import frc.robot.command.Climb;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Shooter;
 import frc.thunder.LightningContainer;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
@@ -38,13 +40,12 @@ public class RobotContainer extends LightningContainer {
 	XboxController driver;
 	XboxController coPilot;
 
-	//Subsystems
+	// Subsystems
 	private Swerve drivetrain;
 	// Collector collector;
 	// Flywheel flywheel;
 	// Pivot pivot;
 	// Shooter shooter;
-	// Collision collision;
 	// Indexer indexer;
 	// Climber climber;
 	LEDs leds;
@@ -64,21 +65,35 @@ public class RobotContainer extends LightningContainer {
 		SignalLogger.enableAutoLogging(true);
 
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
-		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
-		
+		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot
+																					// controller
+
 		drivetrain = TunerConstants.getDrivetrain(); // My drivetrain
-		
+
 		// indexer = new Indexer();
 		// collector = new Collector();
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer);
-		// collision = new Collision(drivetrain);
-		// climber = new Climber();
+		// climber = new Climber(drivetrain);
 		leds = new LEDs();
 
-		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
-		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+		drive = new SwerveRequest.FieldCentric()
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed
+																		// *
+																		// DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate
+																		// *
+																		// DrivetrAinConstants.ROT_DB);
+																		// // I want field-centric
+																		// driving in closed loop
+		slow = new SwerveRequest.FieldCentric()
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed
+																		// *
+																		// DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate
+																		// *
+																		// DrivetrAinConstants.ROT_DB);
+																		// // I want field-centric
+																		// driving in closed loop
 
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
@@ -87,33 +102,62 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeNamedCommands() {
-		NamedCommands.registerCommand("disable-Vision", new InstantCommand(() -> drivetrain.disableVision()));
-		NamedCommands.registerCommand("enable-Vision", new InstantCommand(() -> drivetrain.enableVision()));
+		NamedCommands.registerCommand("disable-Vision",
+				new InstantCommand(() -> drivetrain.disableVision()));
+		NamedCommands.registerCommand("enable-Vision",
+				new InstantCommand(() -> drivetrain.enableVision()));
 
 		// make sure named commands is initialized before autobuilder!
-		autoChooser = AutoBuilder.buildAutoChooser();	
+		autoChooser = AutoBuilder.buildAutoChooser();
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 	}
 
 	@Override
 	protected void configureButtonBindings() {
-		/* driver */
-		new Trigger(() -> driver.getStartButton() && driver.getBackButton()).onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+		new Trigger(driver::getLeftBumper)
+				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
-		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
-		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d).whileTrue(
-			drivetrain.applyRequest(() -> slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
-		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
-		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
+		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point
+				.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
+		new Trigger(driver::getRightBumper).whileTrue(drivetrain.applyRequest(() -> slow
+				.withVelocityX(
+						-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND)
+								* DrivetrainConstants.MaxSpeed
+								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with
+																		// negative Y (Its worth
+																		// noting the field Y axis
+																		// differs from the robot Y
+																		// axis_
+				.withVelocityY(
+						-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND)
+								* DrivetrainConstants.MaxSpeed
+								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X
+																		// (left)
+				.withRotationalRate(
+						-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND)
+								* DrivetrainConstants.MaxAngularRate
+								* DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise
+																		// with negative X (left)
 
 		new Trigger(driver::getYButton).whileTrue(new HapticFeedback(driver, 1));
 		/* copilot */
 		// new Trigger(coPilot::getBButton).whileTrue(new InstantCommand(() -> shooter.setState(SHOOTER_STATES.STOW)));
 		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
+		new Trigger(driver::getRightBumper)
+				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
+				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+
+		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
+		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
+
+		new Trigger(driver::getXButton)
+				.onTrue(new InstantCommand(() -> drivetrain.disableVision()));
+		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
+
+		// new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain, () ->
+		// coPilot.getBackButton()));
 	}
 
 	@Override
@@ -121,44 +165,74 @@ public class RobotContainer extends LightningContainer {
 		drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-				drivetrain.applyRequest(() -> drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
+				drivetrain.applyRequest(() -> drive
+						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive
+																								// forward
+																								// with
+																								// negative
+																								// Y
+																								// (Its
+																								// worth
+																								// noting
+																								// the
+																								// field
+																								// Y
+																								// axis
+																								// differs
+																								// from
+																								// the
+																								// robot
+																								// Y
+																								// axis_
+						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive
+																								// left
+																								// with
+																								// negative
+																								// X
+																								// (left)
+						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
+								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with
+																// negative X (left)
 				));
-		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), climber));
-		// climber.setDefaultCommand(new Climb(climber, ClimbConstants.CLIMB_PID_SETPOINT_RETRACTED));
+		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() -
+		// coPilot.getLeftTriggerAxis()), climber));
+		// climber.setDefaultCommand(new Climb(climber, drivetrain));
 
-		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () -> coPilot.getAButton()));
+
+		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () ->
+		// coPilot.getAButton()));
 
 		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
 		// - coPilot.getLeftTriggerAxis()), collector));
 	}
 
-	protected Command getAutonomousCommand(){
+	protected Command getAutonomousCommand() {
 		return autoChooser.getSelected();
 	}
 
 	@Override
-	protected void releaseDefaultCommands() {
-	}
+	protected void releaseDefaultCommands() {}
 
 	@Override
-	protected void initializeDashboardCommands() {
-	}
+	protected void initializeDashboardCommands() {}
 
 	@Override
-	protected void configureFaultCodes() {
-	}
+	protected void configureFaultCodes() {}
 
 	@Override
-	protected void configureFaultMonitors() {
-	}
+	protected void configureFaultMonitors() {}
 
 	@Override
 	protected void configureSystemTests() {
-		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
-		SystemTest.registerTest("Azimuth Test", new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
+		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain, brake,
+				DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
+		SystemTest.registerTest("Azimuth Test",
+				new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
-		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel, collector, indexer, pivot));
+		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
+		// collector, indexer, pivot));
 	}
 }
