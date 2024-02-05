@@ -295,6 +295,7 @@ public class Constants {
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
+        public static final String BACK_NAME = "limelight-back";
     }
 
     public class CollectorConstants { // TODO: get real
@@ -353,8 +354,31 @@ public class Constants {
         public static final double FAR_WING_X = 3.3;
 
         public enum SHOOTER_STATES {
-            STOW, PRIME, AIM, SHOOT
+            STOW, PRIME, AIM, SHOOT, CAND_SHOTS
         }
+
+        public enum CAND_STATES {
+            AMP(0), 
+            SUBWOOFER(1), 
+            PODIUM(2);
+
+            private final int priority;
+            CAND_STATES(int priority) {
+                this.priority = priority;
+            }
+
+            public int getPriority() {
+                return priority;
+            }
+         }
+
+
+        // angle in rotations (pivot), speed in rpm (flywheel)
+        public static final double[][] CAND_SHOT_VALUES = new double[][] { // TODO: get real values
+            {0, 0}, // amp
+            {0, 0}, // subwoofer
+            {0, 0}, // podium
+        };
 
         // Distance in meters, angle in degrees
         public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {
@@ -398,8 +422,15 @@ public class Constants {
         public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; //TODO: find real values
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
+        public static final double CLIMB_RETRACTION_TOLERANCE = 0;
+        public static final double CLIMB_RETURN_TO_GROUND_MAX_POWER = 0.05;
 
         public static final double CLIMB_TEST_POWER = .1;
+
+        public enum CLIMBER_STATES{
+            CLIMBED, GROUNDED, STOW
+        }
+
     }
 
     public class LEDsConstants {
