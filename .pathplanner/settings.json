@@ -9,6 +9,7 @@
     "Top side paths"
   ],
   "autoFolders": [
+    "Mobility Auton",
     "Test Autos"
   ],
   "defaultMaxVel": 3.0,

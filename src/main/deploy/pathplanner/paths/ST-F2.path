@@ -8,24 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3174962869183984,
-        "y": 7.144722259377582
+        "x": 4.310318800592316,
+        "y": 6.620577870812049
       },
       "isLocked": false,
       "linkedName": "SubwooferTop"
     },
     {
       "anchor": {
-        "x": 2.9066934025451485,
-        "y": 6.99
+        "x": 5.606181981594733,
+        "y": 6.383911998593228
       },
       "prevControl": {
-        "x": 1.9932481519786498,
-        "y": 6.991369417830336
+        "x": 3.467657492275249,
+        "y": 6.899584570485869
+      },
+      "nextControl": {
+        "x": 6.99742091791876,
+        "y": 6.048435943025733
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.293678213604645,
+        "y": 5.785153253616065
+      },
+      "prevControl": {
+        "x": 6.6520779195404565,
+        "y": 6.127371485512202
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "C1"
+      "linkedName": "F2"
     }
   ],
   "rotationTargets": [],
@@ -40,10 +56,13 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": 0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Top side paths",
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": -120.0,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }

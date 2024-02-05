@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.661248751006227,
-        "y": 4.016493198135086
+        "x": 1.0673882886227328,
+        "y": 2.6344737304859236
       },
       "isLocked": false,
       "linkedName": "SubwooferBottom"
     },
     {
       "anchor": {
-        "x": 2.577030538676463,
-        "y": 4.084914323674802
+        "x": 5.85285555186495,
+        "y": 1.1445653660538107
       },
       "prevControl": {
-        "x": 1.837009827865811,
-        "y": 4.075047380863993
+        "x": 3.534123991324907,
+        "y": 0.5426818545944785
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "C3"
+      "linkedName": "BottomLine"
     }
   ],
   "rotationTargets": [],
@@ -43,7 +43,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Top side paths",
-  "previewStartingState": null,
+  "folder": "Bottom side paths",
+  "previewStartingState": {
+    "rotation": 120.0,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }

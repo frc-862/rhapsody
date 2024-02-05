@@ -1,0 +1,134 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BF-SB"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.23
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LEDShoot"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.23
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SB-F4"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.23
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LEDCollect"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.23
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "F4-SB"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.23
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LEDShoot"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.23
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SB-C3"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.23
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LEDCollect"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.23
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C3-SB"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.23
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LEDShoot"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
