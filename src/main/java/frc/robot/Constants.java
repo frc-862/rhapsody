@@ -303,6 +303,7 @@ public class Constants {
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
+        public static final String BACK_NAME = "limelight-back";
     }
 
     public class CollectorConstants { // TODO: get real
@@ -429,8 +430,15 @@ public class Constants {
         public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; //TODO: find real values
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
+        public static final double CLIMB_RETRACTION_TOLERANCE = 0;
+        public static final double CLIMB_RETURN_TO_GROUND_MAX_POWER = 0.05;
 
         public static final double CLIMB_TEST_POWER = .1;
+
+        public enum CLIMBER_STATES{
+            CLIMBED, GROUNDED, STOW
+        }
+
     }
 
     public class LEDsConstants {
