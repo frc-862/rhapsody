@@ -50,16 +50,14 @@ public class Climb extends Command {
 				// re-extend arm slowly to return to ground
 				if (ClimbConstants.MAX_HEIGHT - climber.getHeightR() >= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
 					climber.setPowerR(ClimbConstants.CLIMB_RETURN_TO_GROUND_MAX_POWER);					
-				} 
-				else if (ClimbConstants.MAX_HEIGHT - climber.getHeightR() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
+				} else if (ClimbConstants.MAX_HEIGHT - climber.getHeightR() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
 					climber.setPowerR(0d);
 					climber.setHasGroundedR(true);
 				}
 
 				if (ClimbConstants.MAX_HEIGHT - climber.getHeightL() >= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
 					climber.setPowerL(ClimbConstants.CLIMB_RETURN_TO_GROUND_MAX_POWER);					
-				} 
-				else if (ClimbConstants.MAX_HEIGHT - climber.getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
+				} else if (ClimbConstants.MAX_HEIGHT - climber.getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
 					climber.setPowerL(0d);
 					climber.setHasGroundedL(true);
 				}
@@ -85,5 +83,5 @@ public class Climb extends Command {
 		climber.setState(CLIMBER_STATES.CLIMBED);
 		climber.stop();
 	}
-	
+
 }
