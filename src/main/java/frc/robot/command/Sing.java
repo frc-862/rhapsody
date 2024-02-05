@@ -16,12 +16,19 @@ public class Sing extends Command {
   String filepath;
 
   /** Creates a new Sing. */
+  /*
+   * @param drivetrain used to grab the motors for the song
+   * @param filepath used to select what song to sing
+   * please note that this removes all usage of the drivetrain until it is ended.
+   * use with caution, and only when the drivetrain is not in use.
+   */
   public Sing(Swerve drivetrain, String filepath) {
     this.drivetrain = drivetrain;
     this.filepath = filepath;
   }
 
   // Called when the command is initially scheduled.
+
   @Override
   public void initialize() {
     for (int i = 0; i < 4; i++){
