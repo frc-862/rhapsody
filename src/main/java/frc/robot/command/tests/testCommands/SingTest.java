@@ -2,27 +2,26 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.command;
+package frc.robot.command.tests.testCommands;
 
 import com.ctre.phoenix6.Orchestra;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Swerve;
 
-public class Sing extends Command {
-
+public class SingTest extends Command {
   Orchestra sing = new Orchestra();
   Swerve drivetrain;
   String filepath;
 
-  /** Creates a new Sing. */
+  /** Creates a new SingTest. */
   /*
    * @param drivetrain used to grab the motors for the song
    * @param filepath used to select what song to sing
    * please note that this removes all usage of the drivetrain until it is ended.
    * use with caution, and only when the drivetrain is not in use.
    */
-  public Sing(Swerve drivetrain, String filepath) {
+  public SingTest(Swerve drivetrain, String filepath) {
     this.drivetrain = drivetrain;
     this.filepath = filepath;
   }
@@ -41,7 +40,11 @@ public class Sing extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (!sing.isPlaying()){
+      end(false);
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override

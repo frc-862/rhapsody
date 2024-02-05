@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.MusicConstants;
 import frc.robot.Constants.ShooterConstants.CAND_STATES;
 import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
 import frc.robot.Constants.TunerConstants;
@@ -25,7 +26,9 @@ import frc.robot.command.Index;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.TipDetection;
 import frc.robot.command.tests.DrivetrainSystemTest;
+import frc.robot.command.tests.OrchestraSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
+import frc.robot.command.tests.testCommands.SingTest;
 import frc.robot.command.Climb;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Swerve;
@@ -196,6 +199,8 @@ public class RobotContainer extends LightningContainer {
 				DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
 		SystemTest.registerTest("Azimuth Test",
 				new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
+		SystemTest.registerTest("Singing Test", 
+				new OrchestraSystemTest(drivetrain, MusicConstants.JEOPARDY_FILEPATH));
 
 		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
 		// collector, indexer, pivot));
