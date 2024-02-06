@@ -89,11 +89,11 @@ public class ChasePieces extends Command {
 		if (trustValues()){
 			if (!onTarget) {
 				drivetrain.setControl(
-					noteChase.withRotationalRate(-pidOutput).withVelocityX(3) // Should be positive for front of robot, negative for back of robot.
+					noteChase.withRotationalRate(-pidOutput).withVelocityX(-0.5) // Should be positive for front of robot, negative for back of robot.
 				);
 			} else {
 				drivetrain.setControl(
-					noteChase.withVelocityX(3) // Should be positive for front of robot, negative for back of robot.
+					noteChase.withVelocityX(-0.5) // Should be positive for front of robot, negative for back of robot.
 				);
 			}
 
@@ -101,9 +101,10 @@ public class ChasePieces extends Command {
 			if (targetPitch < 0) {
 				collector.setPower(0.2); // TODO: get the proper value to set to the collector.
 			}
-		} else {
-			end(false);
+
 		}
+
+		isFinished();
         
 	}
 
@@ -116,10 +117,6 @@ public class ChasePieces extends Command {
 
 	// Makes sure that the robot isn't jerking over to a different side while chasing pieces.
 	public boolean trustValues(){
-		if (hasPiece){
-			return false;
-		}
-
 		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6){
 			return true;
 		}
@@ -129,6 +126,10 @@ public class ChasePieces extends Command {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
+		if (hasPiece){
+			return true;
+		}
+		
 		return false;
 	}
 }
