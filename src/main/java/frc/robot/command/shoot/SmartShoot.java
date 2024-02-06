@@ -1,4 +1,4 @@
-package frc.robot.command;
+package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
@@ -50,10 +50,10 @@ public class SmartShoot extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		if (hasShot) {
-			flywheel.setAllMotorsRPM(ShooterConstants.STOW_RPM);
+			flywheel.coast();
 			pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
-			// CommandScheduler.getInstance().schedule(new SetLEDState(leds,
-			// LED_STATES.SHOT, 2, null));
+			indexer.stop();
+			// CommandScheduler.getInstance().schedule(new SetLEDState(leds, LED_STATES.SHOT, 2, null));
 			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
 		} else {
 			flywheel.coast();
@@ -63,7 +63,7 @@ public class SmartShoot extends Command {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false; //TODO add timer
+		return false; //TODO add timer + piece passed through indexer
 	}
 
 	public boolean onTarget() {
@@ -75,7 +75,7 @@ public class SmartShoot extends Command {
 	 * @return Angle to set pivot to
 	 */
 	public double calculateTargetAngle() {
-		return 45d; //TODO Add math from Chris branch
+		return 45d; //TODO Add math from Chris branch or interpolation map
 	}
 
 	public double calculateTargetRPM() {
