@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
@@ -26,7 +27,6 @@ public class PointAtTag extends Command {
 	private FieldCentric drive;
 
 	private SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-	private Limelight[] limelights;
 	
 	private int limelightId = 0;
 	private double pidOutput;
@@ -43,19 +43,13 @@ public class PointAtTag extends Command {
 	 * @param useLimelights to get if we want to use vision data or not
 	 * @param noteDetection to get if we want to use this for note detection or april tag detection
 	 */
-	public PointAtTag(Swerve drivetrain, XboxController driver, String limelight_name, boolean useLimelights, boolean noteDetection) {
+	public PointAtTag(Swerve drivetrain, Limelights limelights, XboxController driver, String limelight_name, boolean useLimelights, boolean noteDetection) {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
 		this.useLimelights = useLimelights;
 
 		//TODO Figure out which of these is the right one to use 
-		for (var l : drivetrain.getLimelights()) { 
-		 	if (l.getName().equals(limelight_name)) {
-		 		limelight = l;
-			}
-		}
-
-		limelight = drivetrain.getLimelights()[0];
+		limelight = limelights.getPressure();
 
 		limelightId = limelight.getPipeline();
 		if (noteDetection){

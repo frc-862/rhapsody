@@ -28,6 +28,7 @@ import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Collector;
@@ -45,7 +46,7 @@ public class RobotContainer extends LightningContainer {
 
 	// Subsystems
 	private Swerve drivetrain;
-	// Indexer indexer;
+	private Limelights limelights;
 	// Collector collector;
 	// Flywheel flywheel;
 	// Pivot pivot;
@@ -70,9 +71,10 @@ public class RobotContainer extends LightningContainer {
 
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
-
-		drivetrain = TunerConstants.getDrivetrain(); // My drivetrain
-
+		
+		limelights = new Limelights();
+		drivetrain = TunerConstants.getDrivetrain(limelights);
+		
 		// indexer = new Indexer();
 		// collector = new Collector();
 		// flywheel = new Flywheel();
@@ -138,7 +140,7 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
 				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
-		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
+		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, limelights));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 
 		new Trigger(driver::getXButton)
