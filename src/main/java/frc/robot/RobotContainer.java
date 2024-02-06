@@ -8,23 +8,24 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.MusicConstants;
-import frc.robot.Constants.ShooterConstants.CAND_STATES;
-import frc.robot.Constants.ShooterConstants.SHOOTER_STATES;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.command.ChasePieces;
-import frc.robot.command.HapticFeedback;
 import frc.robot.command.Index;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.TipDetection;
+import frc.robot.command.shoot.AmpShot;
+import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
@@ -37,15 +38,14 @@ import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Shooter;
 import frc.thunder.LightningContainer;
 import frc.thunder.command.TimedCommand;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
 
 public class RobotContainer extends LightningContainer {
-	public XboxController driver;
-	public XboxController coPilot;
+	public static XboxController driver;
+	public static XboxController coPilot;
 
 	// Subsystems
 	private Swerve drivetrain;
@@ -127,31 +127,28 @@ public class RobotContainer extends LightningContainer {
 						-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND)
 								* DrivetrainConstants.MaxAngularRate
 								* DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
+		
 
-		new Trigger(driver::getYButton).whileTrue(new HapticFeedback(driver, 1));
-		/* copilot */
-		// new Trigger(coPilot::getBButton).whileTrue(new InstantCommand(() -> shooter.setState(SHOOTER_STATES.STOW)));
-		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
-		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
-		// new Trigger(() -> coPilot.getAButton() || coPilot.getBButton() || coPilot.getXButton()).whileTrue(new InstantCommand(() -> shooter.setState(SHOOTER_STATES.CAND_SHOTS)));
-		// new Trigger(coPilot::getAButton).whileTrue(new InstantCommand(() -> shooter.setCANDState(CAND_STATES.AMP)));
-		// new Trigger(coPilot::getBButton).whileTrue(new InstantCommand(() -> shooter.setCANDState(CAND_STATES.SUBWOOFER)));
-		// new Trigger(coPilot::getXButton).whileTrue(new InstantCommand(() -> shooter.setCANDState(CAND_STATES.PODIUM)));
 		new Trigger(driver::getRightBumper)
 				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
 				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
 		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
-
-		new Trigger(driver::getXButton)
-				.onTrue(new InstantCommand(() -> drivetrain.disableVision()));
+		
+		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds).
+			// alongWith(new PointAtTag(drivetrain, driver, null, false, false)));
+		
+		
 		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
 
-		// new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain, () ->
-		// coPilot.getBackButton()));
+		/* copilot */
+		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
+		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
+		// new trigger(coPilot::getAButton).whileTrue(new AmpShot(pivot, flywheel));
+		// new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain, () -> coPilot.getBackButton()));
 	}
-
+	
 	@Override
 	protected void configureDefaultCommands() {
 		drivetrain.registerTelemetry(logger::telemeterize);
@@ -205,5 +202,23 @@ public class RobotContainer extends LightningContainer {
 
 		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
 		// collector, indexer, pivot));
+	}
+
+	public static Command hapticDriverCommand() {
+		return new StartEndCommand(() -> {
+			driver.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
+    		driver.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);}, 
+			() -> {
+			driver.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+			driver.setRumble(GenericHID.RumbleType.kLeftRumble, 0);});
+	}
+
+	public static Command hapticCopilotCommand() {
+		return new StartEndCommand(() -> {
+			coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
+    		coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);}, 
+			() -> {
+			coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+			coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 0);});
 	}
 }
