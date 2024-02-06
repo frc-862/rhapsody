@@ -36,6 +36,7 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.thunder.LightningContainer;
+import frc.thunder.command.TimedCommand;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
 
@@ -138,7 +139,7 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
 				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
-		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, collector));
+		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, collector).andThen(new TimedCommand(new HapticFeedback(driver, 1), 0.5)));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 
 		new Trigger(driver::getXButton)

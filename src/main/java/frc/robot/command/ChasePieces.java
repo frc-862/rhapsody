@@ -7,7 +7,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Swerve;
@@ -70,6 +70,7 @@ public class ChasePieces extends Command {
 		targetPitch = limelight.getTargetY();
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
+		hasPiece = collector.getEntryBeamBreakState();
 
 		LightningShuffleboard.setBool("ChasePieces", "On Target", onTarget);
 
@@ -86,19 +87,23 @@ public class ChasePieces extends Command {
 
 		pidOutput = headingController.calculate(0, targetHeading);
 		
-		if (!onTarget) {
-			drivetrain.setControl(
-				noteChase.withRotationalRate(-pidOutput).withVelocityX(3) // Should be positive for front of robot, negative for back of robot.
-			);
-		} else {
-			drivetrain.setControl(
-				noteChase.withVelocityX(3) // Should be positive for front of robot, negative for back of robot.
-			);
-		}
+		if (!hasPiece){
+			if (!onTarget) {
+				drivetrain.setControl(
+					noteChase.withRotationalRate(-pidOutput).withVelocityX(3) // Should be positive for front of robot, negative for back of robot.
+				);
+			} else {
+				drivetrain.setControl(
+					noteChase.withVelocityX(3) // Should be positive for front of robot, negative for back of robot.
+				);
+			}
 
-		// Activates if the target is close to the drivetrain.
-		if (targetPitch < 0) {
-			collector.setPower(0.2); // TODO: get the proper value to set to the collector.
+			// Activates if the target is close to the drivetrain.
+			if (targetPitch < 0) {
+				collector.setPower(0.2); // TODO: get the proper value to set to the collector.
+			}
+		} else {
+			end(false);
 		}
         
 	}
