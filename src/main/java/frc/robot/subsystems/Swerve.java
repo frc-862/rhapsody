@@ -35,23 +35,13 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private boolean slowMode = false;
     private boolean disableVision = false;
 
-    public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
+    public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, Limelights limelightSubsystem,
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
-        this.limelights = new Limelight[] {
-            new Limelight("limelight-front", "10.8.62.11"),
-            new Limelight("limelight-back", "10.8.62.12")
-        };
+
+        this.limelights = new Limelight[]{limelightSubsystem.getPressure()};
 
         configurePathPlanner();
-    }
-
-    /**
-     * Returns all limelights
-     * @return Limelight [ ] 
-     */
-    public Limelight[] getLimelights() {
-        return limelights;
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {

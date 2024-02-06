@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
+import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.math.InterpolationMap;
 
@@ -269,14 +270,14 @@ public class Constants {
                         Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
 
 
-        public static final Swerve getDrivetrain() {
+        public static final Swerve getDrivetrain(Limelights limelights) {
             if (Constants.isMercury()) {
                 System.out.println("IS MERCURY");
-                return new Swerve(DrivetrainConstants, 250, FrontLeft, FrontRight, BackLeft,
+                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeft, FrontRight, BackLeft,
                         BackRight);
             } else {
                 System.out.println("IS RHAPSODY");
-                return new Swerve(DrivetrainConstants, 250, FrontLeftRh, FrontRightRh, BackLeftRh,
+                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeftRh, FrontRightRh, BackLeftRh,
                         BackRightRh);
             }
         }
@@ -291,11 +292,15 @@ public class Constants {
                 new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
         public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 4d; // TODO: make this an actual value
-        public static final PIDController HEADING_CONTROLLER = new PIDController(0.05, 0, 0);
+        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
-        public static final String BACK_NAME = "limelight-back";
+    }
+
+    public class MusicConstants {
+        public static final String BOH_RHAP_FILEPATH = "bohemianrhapsody.chrp";
+        public static final String JEOPARDY_FILEPATH = "jeopardy.chrp";
     }
 
     public class CollectorConstants { // TODO: get real

@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.MusicConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Index;
@@ -26,9 +27,11 @@ import frc.robot.command.TipDetection;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.tests.DrivetrainSystemTest;
+import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Collector;
@@ -45,7 +48,7 @@ public class RobotContainer extends LightningContainer {
 
 	// Subsystems
 	private Swerve drivetrain;
-	// Indexer indexer;
+	private Limelights limelights;
 	// Collector collector;
 	// Flywheel flywheel;
 	// Pivot pivot;
@@ -55,8 +58,6 @@ public class RobotContainer extends LightningContainer {
 	LEDs leds;
 
 	private SendableChooser<Command> autoChooser;
-	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
-	// Change beacuse with open loop is gone
 	SwerveRequest.FieldCentric drive;
 	SwerveRequest.FieldCentric slow;
 	SwerveRequest.SwerveDriveBrake brake;
@@ -70,9 +71,10 @@ public class RobotContainer extends LightningContainer {
 
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
-
-		drivetrain = TunerConstants.getDrivetrain(); // My drivetrain
-
+		
+		limelights = new Limelights();
+		drivetrain = TunerConstants.getDrivetrain(limelights);
+		
 		// indexer = new Indexer();
 		// collector = new Collector();
 		// flywheel = new Flywheel();
@@ -127,10 +129,10 @@ public class RobotContainer extends LightningContainer {
 		
 
 		new Trigger(driver::getRightBumper)
-		.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
-		.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
-		
-		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
+				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
+				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+
+		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, limelights));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 		
 		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds).
@@ -193,6 +195,9 @@ public class RobotContainer extends LightningContainer {
 				DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
 		SystemTest.registerTest("Azimuth Test",
 				new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
+				
+		SystemTest.registerTest("Singing Test", 
+				new SingSystemTest(drivetrain, MusicConstants.JEOPARDY_FILEPATH));
 
 		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
 		// collector, indexer, pivot));
