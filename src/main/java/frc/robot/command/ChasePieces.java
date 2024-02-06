@@ -24,6 +24,9 @@ public class ChasePieces extends Command {
 	private int limelightId = 0;
 	private double pidOutput;
 	private double targetHeading;
+	private double previousTargetHeading;
+
+
     private boolean onTarget;
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
 
@@ -53,7 +56,7 @@ public class ChasePieces extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-
+		previousTargetHeading = targetHeading;
 		targetHeading = limelight.getTargetX();
 
         if(Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE){
@@ -74,10 +77,11 @@ public class ChasePieces extends Command {
 
 		pidOutput = headingController.calculate(0, targetHeading);
 		
-        drivetrain.setControl(noteChase.withRotationalRate(-pidOutput) 
-		.withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
-		);
-		
+		if (trustValues()){
+			drivetrain.setControl(noteChase.withRotationalRate(-pidOutput) 
+				.withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
+			);
+		}
         
 	}
 
@@ -85,6 +89,15 @@ public class ChasePieces extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		limelight.setPipeline(limelightId);
+	}
+
+	// Makes sure that the robot isn't jerking over to a different side while chasing pieces.
+	public boolean trustValues(){
+		if ((targetHeading - previousTargetHeading) > 5){ //TODO: find this magic number and make it a constant
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	// Returns true when the command should end.
