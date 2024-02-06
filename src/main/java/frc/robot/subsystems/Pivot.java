@@ -16,15 +16,15 @@ public class Pivot extends SubsystemBase {
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
     private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
-    
+    private double bias = 0;
+
     private double targetAngle = 0; // TODO: find initial target angle
 
     public Pivot() { 
         
         CANcoderConfiguration angleConfig = new CANcoderConfiguration();
-        angleConfig.MagnetSensor.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1
-        ).withMagnetOffset(PivotConstants.ENCODER_OFFSET
-        ).withSensorDirection(PivotConstants.ENCODER_DIRECTION);
+        angleConfig.MagnetSensor.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
+                .withMagnetOffset(PivotConstants.ENCODER_OFFSET).withSensorDirection(PivotConstants.ENCODER_DIRECTION);
 
         angleEncoder = new CANcoder(CAN.PIVOT_ANGLE_CANCODER, CAN.CANBUS_FD);
         angleEncoder.getConfigurator().apply(angleConfig);
@@ -64,9 +64,38 @@ public class Pivot extends SubsystemBase {
     }
 
     /**
-     * @return Whether or not the pivot is on target, within PivotConstants.ANGLE_TOLERANCE
+     * @return Whether or not the pivot is on target, within
+     *         PivotConstants.ANGLE_TOLERANCE
      */
     public boolean onTarget() {
         return Math.abs(getAngle() - targetAngle) < PivotConstants.ANGLE_TOLERANCE;
+    }
+
+    /**
+     * @return The bias to add to the target angle of the pivot
+     */
+    public double getBias() {
+        return bias;
+    }
+
+    /**
+     * Increases the bias of the pivot by set amount
+     */
+    public void increaseBias() {
+        bias += PivotConstants.BIAS_INCREMENT;
+    }
+
+    /**
+     * Decreases the bias of the pivot by set amount
+     */
+    public void decreaseBias() {
+        bias -= PivotConstants.BIAS_INCREMENT;
+    }
+
+    /**
+     * Resets the bias of the pivot
+     */
+    public void resetBias() {
+        bias = 0;
     }
 }
