@@ -27,6 +27,8 @@ public class SmartShoot extends Command {
 		this.drivetrain = drivetrain;
 		this.indexer = indexer;
 		this.leds = leds;
+
+		addRequirements(pivot, flywheel, indexer);
 	}
 
 	// Called when the command is initially scheduled.
@@ -67,7 +69,7 @@ public class SmartShoot extends Command {
 	}
 
 	public boolean onTarget() {
-		return flywheel.allMotorsOnTarget() && pivot.onTarget();
+		return flywheel.allMotorsOnTarget() && pivot.onTarget(); //TODO add indexer sensor and drivetrain speed
 	}
 
 	/**

@@ -102,7 +102,7 @@ public class Flywheel extends SubsystemBase {
     }
 
     public void coast() {
-        shooterBottomMotor.setVoltage(0d);
-        shooterTopMotor.setVoltage(0d);
+        shooterBottomMotor.setVoltage(FlywheelConstants.COAST_VOLTAGE);
+        shooterTopMotor.setVoltage(FlywheelConstants.COAST_VOLTAGE);
     }
 }

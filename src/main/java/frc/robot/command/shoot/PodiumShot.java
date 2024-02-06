@@ -19,8 +19,7 @@ public class PodiumShot extends Command {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 
-		addRequirements(flywheel);
-		addRequirements(pivot);
+		addRequirements(pivot, flywheel);
 	}
 
 	// Called when the command is initially scheduled.

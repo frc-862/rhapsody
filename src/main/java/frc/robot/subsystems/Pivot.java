@@ -11,11 +11,10 @@ import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
-import frc.thunder.hardware.ThunderBird;
 import frc.robot.Constants.PivotConstants;
 
 public class Pivot extends SubsystemBase {
-    private ThunderBird angleMotor;
+    private TalonFX angleMotor;
     private CANcoder angleEncoder;
     private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
 

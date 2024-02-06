@@ -323,6 +323,8 @@ public class Constants {
         public static final double FLYWHEEL_MOTOR_KV = 0;
 
         public static final double RPM_TOLERANCE = 0;
+
+        public static final double COAST_VOLTAGE = 0.1;
     }
 
     public class IndexerConstants { // TODO: get real
