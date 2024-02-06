@@ -323,6 +323,8 @@ public class Constants {
         public static final double FLYWHEEL_MOTOR_KV = 0;
 
         public static final double RPM_TOLERANCE = 0;
+
+        public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get amount to bias by
     }
 
     public class IndexerConstants { // TODO: get real
@@ -350,13 +352,15 @@ public class Constants {
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ENCODER_TO_ROTOR_RATIO = 1d;
+
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
     }
 
     public class ShooterConstants {
         public static final double STOW_ANGLE = 0;
         
         public static final double FAR_WING_X = 3.3;
-    
+
         // Distance in meters, angle in degrees
         public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {
             {
@@ -374,7 +378,8 @@ public class Constants {
 
     public class CandConstants {
         //Amp
-        public static final double AMP_RPM = 0;
+        public static final double AMP_TOP_RPM = 0;
+        public static final double AMP_BOTTOM_RPM = 0;
         public static final double AMP_ANGLE = 0;
 
         //PointBlank

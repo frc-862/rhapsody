@@ -75,10 +75,10 @@ public class SmartShoot extends Command {
 	 * @return Angle to set pivot to
 	 */
 	public double calculateTargetAngle() {
-		return 45d; //TODO Add math from Chris branch or interpolation map
+		return 45d + pivot.getBias(); //TODO Add math from Chris branch or interpolation map
 	}
 
 	public double calculateTargetRPM() {
-		return 5500; // TODO test with interpolation or math 
+		return 5500 + flywheel.getBias(); // TODO test with interpolation or math 
 	}
 }
