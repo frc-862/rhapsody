@@ -26,12 +26,12 @@ public class PointAtTag extends Command {
 	private FieldCentric slow;
 	private FieldCentric drive;
 	
-	private int limelightId = 0;
+	private int limelightPrevPipeline = 0;
 	private double pidOutput;
 	private double targetHeading;
 
 
-	private PIDController headingController = VisionConstants.HEADING_CONTROLLER;
+	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
 	/**
 	 * Creates a new PointAtTag.
@@ -46,12 +46,13 @@ public class PointAtTag extends Command {
 		//TODO Figure out which of these is the right one to use 
 		limelight = limelights.getPressure();
 
-		limelightId = limelight.getPipeline();
+		limelightPrevPipeline = limelight.getPipeline();
 
 		limelight.setPipeline(VisionConstants.TAG_PIPELINE);
 		
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+		
 	}
 	
 	// Called when the command is initially scheduled.
@@ -89,7 +90,7 @@ public class PointAtTag extends Command {
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		limelight.setPipeline(limelightId);
+		limelight.setPipeline(limelightPrevPipeline);
 	}
 
 	// Returns true when the command should end.
