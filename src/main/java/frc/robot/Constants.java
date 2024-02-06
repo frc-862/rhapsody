@@ -298,6 +298,11 @@ public class Constants {
         public static final String BACK_NAME = "limelight-back";
     }
 
+    public class MusicConstants {
+        public static final String BOH_RHAP_FILEPATH = "bohemianrhapsody.chrp";
+        public static final String JEOPARDY_FILEPATH = "jeopardy.chrp";
+    }
+
     public class CollectorConstants { // TODO: get real
         public static final boolean COLLECTOR_MOTOR_INVERTED = false; // TODO check once collector installed
         public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
