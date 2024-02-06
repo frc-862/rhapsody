@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Flywheel;
 
 public class FlywheelTest extends Command {
-  
+
   private Flywheel flywheel;
   private double motor2Speed;
   private double motor1Speed;
@@ -17,18 +17,19 @@ public class FlywheelTest extends Command {
     this.flywheel = flywheel;
     this.motor1Speed = motor1Speed;
     this.motor2Speed = motor2Speed;
-    
+
     addRequirements(flywheel);
   }
 
   @Override
   public void initialize() {
-    flywheel.setMoter1RPM(motor1Speed);
-    flywheel.setMoter1RPM(motor2Speed);
+    flywheel.setTopMoterRPM(motor1Speed);
+    flywheel.setTopMoterRPM(motor2Speed);
   }
 
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   @Override
   public void end(boolean interrupted) {

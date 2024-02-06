@@ -310,7 +310,7 @@ public class Constants {
         public static final boolean FLYWHEEL_MOTOR_2_INVERT = false;
         public static final int FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
         public static final double FLYWHEEL_MOTOR_KP = 0;
         public static final double FLYWHEEL_MOTOR_KI = 0;
         public static final double FLYWHEEL_MOTOR_KD = 0;
@@ -348,10 +348,13 @@ public class Constants {
     }
 
     public class ShooterConstants {
-        public static final double BASE_RPM = 0;
+        public static final double STOW_RPM = 0;
         public static final double STOW_ANGLE = 0;
         
         public static final double FAR_WING_X = 3.3;
+        // amp
+        public static final double AMP_RPM = 0;
+        public static final double AMP_ANGLE = 0;
 
         public enum SHOOTER_STATES {
             STOW, PRIME, AIM, SHOOT, CAND_SHOTS

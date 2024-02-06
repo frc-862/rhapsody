@@ -11,27 +11,28 @@ import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
+import frc.thunder.hardware.ThunderBird;
 import frc.robot.Constants.PivotConstants;
 
 public class Pivot extends SubsystemBase {
-    private TalonFX angleMotor;
+    private ThunderBird angleMotor;
     private CANcoder angleEncoder;
     private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
-    
+
     private double targetAngle = 0; // TODO: find initial target angle
 
-    public Pivot() { 
+    public Pivot() {
         TalonFXConfiguration motorConfig = new TalonFXConfiguration();
 
         CANcoderConfiguration angleConfig = new CANcoderConfiguration();
-        angleConfig.MagnetSensor.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1
-        ).withMagnetOffset(PivotConstants.ENCODER_OFFSET
-        ).withSensorDirection(PivotConstants.ENCODER_DIRECTION);
+        angleConfig.MagnetSensor.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
+                .withMagnetOffset(PivotConstants.ENCODER_OFFSET).withSensorDirection(PivotConstants.ENCODER_DIRECTION);
 
         angleEncoder = new CANcoder(CAN.PIVOT_ANGLE_CANCODER, CAN.CANBUS_FD);
         angleEncoder.getConfigurator().apply(angleConfig);
 
-        motorConfig.MotorOutput.Inverted = PivotConstants.PIVOT_MOTOR_INVERT ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+        motorConfig.MotorOutput.Inverted = PivotConstants.PIVOT_MOTOR_INVERT ? InvertedValue.Clockwise_Positive
+                : InvertedValue.CounterClockwise_Positive;
         motorConfig.CurrentLimits.SupplyCurrentLimitEnable = PivotConstants.PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT > 0;
         motorConfig.CurrentLimits.SupplyCurrentLimit = PivotConstants.PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT;
         motorConfig.CurrentLimits.StatorCurrentLimitEnable = PivotConstants.PIVOT_MOTOR_STATOR_CURRENT_LIMIT > 0;
@@ -49,8 +50,7 @@ public class Pivot extends SubsystemBase {
         motorConfig.Feedback.SensorToMechanismRatio = PivotConstants.ENCODER_TO_MECHANISM_RATIO;
         motorConfig.Feedback.RotorToSensorRatio = PivotConstants.ENCODER_TO_ROTOR_RATIO;
 
-        angleMotor = new TalonFX(CAN.PIVOT_ANGLE_MOTOR, CAN.CANBUS_FD);
-        angleMotor.getConfigurator().apply(motorConfig);
+        
     }
 
     @Override
@@ -76,7 +76,8 @@ public class Pivot extends SubsystemBase {
     }
 
     /**
-     * @return Whether or not the pivot is on target, within PivotConstants.ANGLE_TOLERANCE
+     * @return Whether or not the pivot is on target, within
+     *         PivotConstants.ANGLE_TOLERANCE
      */
     public boolean onTarget() {
         return Math.abs(getAngle() - targetAngle) < PivotConstants.ANGLE_TOLERANCE;
