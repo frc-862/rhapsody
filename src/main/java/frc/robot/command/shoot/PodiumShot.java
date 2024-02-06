@@ -25,8 +25,8 @@ public class PodiumShot extends Command {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM);
-		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE);
+		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
+		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
 	}
 
 	// Called once the command ends or is interrupted.

@@ -17,6 +17,7 @@ public class Pivot extends SubsystemBase {
     private TalonFX angleMotor;
     private CANcoder angleEncoder;
     private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
+    private double bias = 0;
 
     private double targetAngle = 0; // TODO: find initial target angle
 
@@ -80,5 +81,33 @@ public class Pivot extends SubsystemBase {
      */
     public boolean onTarget() {
         return Math.abs(getAngle() - targetAngle) < PivotConstants.ANGLE_TOLERANCE;
+    }
+
+    /**
+     * @return The bias to add to the target angle of the pivot
+     */
+    public double getBias() {
+        return bias;
+    }
+
+    /**
+     * Increases the bias of the pivot by set amount
+     */
+    public void increaseBias() {
+        bias += PivotConstants.BIAS_INCREMENT;
+    }
+
+    /**
+     * Decreases the bias of the pivot by set amount
+     */
+    public void decreaseBias() {
+        bias -= PivotConstants.BIAS_INCREMENT;
+    }
+
+    /**
+     * Resets the bias of the pivot
+     */
+    public void resetBias() {
+        bias = 0;
     }
 }

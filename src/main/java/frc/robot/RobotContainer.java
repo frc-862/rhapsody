@@ -51,8 +51,8 @@ public class RobotContainer extends LightningContainer {
 	private Swerve drivetrain;
 	private Limelights limelights;
 	// Collector collector;
-	// Flywheel flywheel;
-	// Pivot pivot;
+	Flywheel flywheel;
+	Pivot pivot;
 	// Shooter shooter;
 	// Indexer indexer;
 	// Climber climber;
@@ -147,6 +147,17 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
 		// new trigger(coPilot::getAButton).whileTrue(new AmpShot(pivot, flywheel));
 		// new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain, () -> coPilot.getBackButton()));
+
+		/*BIAS */
+		// new Trigger(() -> coPilot.getPOV() == 0).onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
+		// new Trigger(() -> coPilot.getPOV() == 180).onTrue(new InstantCommand(() -> pivot.decreaseBias())); // DOWN
+
+		// new Trigger(() -> coPilot.getPOV() == 90).onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
+		// new Trigger(() -> coPilot.getPOV() == 270).onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
+
+		// new Trigger(() -> (coPilot.getBackButton() && coPilot.getStartButton()))
+		// 	.onTrue(new InstantCommand(() -> flywheel.resetBias())
+		// 	.alongWith(new InstantCommand(() -> pivot.resetBias())));
 	}
 	
 	@Override
@@ -172,6 +183,8 @@ public class RobotContainer extends LightningContainer {
 
 		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
 		// - coPilot.getLeftTriggerAxis()), collector));
+
+		
 	}
 
 	protected Command getAutonomousCommand() {

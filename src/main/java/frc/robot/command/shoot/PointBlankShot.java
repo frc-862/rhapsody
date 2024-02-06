@@ -26,8 +26,8 @@ public class PointBlankShot extends Command {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM);
-		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE);
+		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
+		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
 	}
 
 	// Called once the command ends or is interrupted.

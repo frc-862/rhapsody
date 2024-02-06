@@ -6,6 +6,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.FlywheelConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.thunder.config.FalconConfig;
 
 public class Flywheel extends SubsystemBase {
@@ -14,6 +15,7 @@ public class Flywheel extends SubsystemBase {
 
     private final VelocityVoltage rpmPID = new VelocityVoltage(0).withSlot(0);
     private double targetRPM = 0;
+    private double bias = 0;
 
     public Flywheel() {
         shooterTopMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_1, CAN.CANBUS_FD,
@@ -104,5 +106,33 @@ public class Flywheel extends SubsystemBase {
     public void coast() {
         shooterBottomMotor.setVoltage(FlywheelConstants.COAST_VOLTAGE);
         shooterTopMotor.setVoltage(FlywheelConstants.COAST_VOLTAGE);
+    }
+
+    /**
+     * @return The bias to add to the target RPM of the flywheel
+     */
+    public double getBias() {
+        return bias;
+    }
+
+    /**
+     * Increases the bias of the Flywheel by set amount
+     */
+    public void increaseBias() {
+        bias += FlywheelConstants.BIAS_INCREMENT;
+    }
+
+    /**
+     * Decreases the bias of the Flywheel by set amount
+     */
+    public void decreaseBias() {
+        bias -= FlywheelConstants.BIAS_INCREMENT;
+    }
+
+    /**
+     * Resets the bias of the Flywheel
+     */
+    public void resetBias() {
+        bias = 0;
     }
 }

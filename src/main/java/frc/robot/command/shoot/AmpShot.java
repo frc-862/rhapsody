@@ -26,8 +26,9 @@ public class AmpShot extends Command {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		flywheel.setAllMotorsRPM(CandConstants.AMP_RPM);
-		pivot.setTargetAngle(CandConstants.AMP_ANGLE);
+		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
+		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 	}
 
 	// Called once the command ends or is interrupted.
