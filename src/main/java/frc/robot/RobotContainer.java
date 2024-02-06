@@ -65,8 +65,6 @@ public class RobotContainer extends LightningContainer {
 	SwerveRequest.PointWheelsAt point;
 	Telemetry logger;
 
-	private boolean isRobotCentric = false;
-
 	@Override
 	protected void initializeSubsystems() {
 		SignalLogger.setPath(Constants.HOOT_PATH);
@@ -117,10 +115,14 @@ public class RobotContainer extends LightningContainer {
 	@Override
 	protected void configureButtonBindings() {
 		/* driver */
-		// activates between robot and field centric for the robot
+		// activates between robot and field centric for the robot + logs when active
 		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
-			.onTrue(new InstantCommand(() -> isRobotCentric = true))
-			.whileFalse(new InstantCommand(() -> isRobotCentric = false));
+			.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
+			.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
+		// Logs slow mode
+		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
+			.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
+			.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
 		new Trigger(driver::getLeftBumper)
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
@@ -128,7 +130,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
 		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point
 				.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
-		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d).whileTrue(isRobotCentric ?
+		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d).whileTrue(drivetrain.isRobotCentricControl() ?
 			drivetrain.applyRequest(() -> slowRobotCentric
 				.withVelocityX(
 						-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND)
@@ -157,6 +159,13 @@ public class RobotContainer extends LightningContainer {
 								* DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
 
 		new Trigger(driver::getYButton).whileTrue(new HapticFeedback(driver, 1));
+		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
+		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
+
+		new Trigger(driver::getXButton)
+				.onTrue(new InstantCommand(() -> drivetrain.disableVision()));
+		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
+
 		/* copilot */
 		// new Trigger(coPilot::getBButton).whileTrue(new InstantCommand(() -> shooter.setState(SHOOTER_STATES.STOW)));
 		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
@@ -165,16 +174,7 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getAButton).whileTrue(new InstantCommand(() -> shooter.setCANDState(CAND_STATES.AMP)));
 		// new Trigger(coPilot::getBButton).whileTrue(new InstantCommand(() -> shooter.setCANDState(CAND_STATES.SUBWOOFER)));
 		// new Trigger(coPilot::getXButton).whileTrue(new InstantCommand(() -> shooter.setCANDState(CAND_STATES.PODIUM)));
-		new Trigger(driver::getRightBumper)
-				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
-				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
-		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain));
-		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
-
-		new Trigger(driver::getXButton)
-				.onTrue(new InstantCommand(() -> drivetrain.disableVision()));
-		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
 
 		// new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain, () ->
 		// coPilot.getBackButton()));

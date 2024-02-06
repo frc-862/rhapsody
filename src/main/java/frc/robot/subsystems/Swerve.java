@@ -34,6 +34,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private Limelight[] limelights;
     private boolean slowMode = false;
     private boolean disableVision = false;
+    private boolean robotCentricControl = false;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
@@ -83,8 +84,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         LightningShuffleboard.setDouble("Swerve", "Robot Heading", getPigeon2().getAngle());
         LightningShuffleboard.setDouble("Swerve", "Odo X", getState().Pose.getX());
         LightningShuffleboard.setDouble("Swerve", "Odo Y", getState().Pose.getY());
-        LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
         
+        LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
+        LightningShuffleboard.setBool("Swerve", "Robot Centric", isRobotCentricControl());
 
     }
 
@@ -137,6 +139,22 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public void setSlowMode(boolean slow) {
         slowMode = slow;
+    }
+
+    /**
+     * Logs if the robot is in robot centric control
+     * @param robotCentricControl boolean if the robot is in robot centric control
+     */
+    public void setRobotCentricControl(boolean robotCentricControl) {
+        this.robotCentricControl = robotCentricControl;
+    }
+
+    /**
+     * Returns if the robot is in robot centric control
+     * @return boolean if the robot is in robot centric control
+     */
+    public boolean isRobotCentricControl() {
+        return robotCentricControl;
     }
 
     /**
