@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.Constants.RobotMap.CAN;
-import frc.robot.command.TipDetection;
 import frc.thunder.config.FalconConfig;
 import frc.thunder.math.Conversions;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -26,7 +25,6 @@ public class Climber extends SubsystemBase {
     private PositionTorqueCurrentFOC setPointL;
 
     private CLIMBER_STATES state = CLIMBER_STATES.STOW;
-    private TipDetection tipDetection;
     private Swerve drivetrain;
 
     private boolean hasTipped = false;
@@ -71,9 +69,6 @@ public class Climber extends SubsystemBase {
         LightningShuffleboard.set("Climb", "Right Lower Setpoint", convertLowerPose(getSetpointR(), true));
         LightningShuffleboard.set("Climb", "Left Upper Setpoint", convertUpperPose(getSetpointL(), false));
         LightningShuffleboard.set("Climb", "Right Upper Setpoint", convertUpperPose(getSetpointR(), true));
-        
-        // initialize tipdetection command
-        tipDetection = new TipDetection(drivetrain);
     }
 
     /**
@@ -294,14 +289,14 @@ public class Climber extends SubsystemBase {
         }
 
         if (getHeightR() <= ClimbConstants.CLIMB_RETRACTION_TOLERANCE && 
-        getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE && !tipDetection.isTipped() && hasStowed) {
+        getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE && !drivetrain.isTipped() && hasStowed) {
             state = CLIMBER_STATES.STOW;
             resetHasValues();
         }
 
         if (ClimbConstants.MAX_HEIGHT - getHeightR() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE &&
         ClimbConstants.MAX_HEIGHT - getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE &&
-        !tipDetection.isTipped() && hasGroundedR && hasGroundedL) {
+        !drivetrain.isTipped() && hasGroundedR && hasGroundedL) {
             state = CLIMBER_STATES.GROUNDED;
             resetHasValues();
         }

@@ -63,19 +63,19 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
                 // System.out.println("Vision Updating");
             }
-
+            
             LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
             LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
             LightningShuffleboard.setDouble("Swerve", "PoseTime", pose.getFPGATimestamp()); 
-            LightningShuffleboard.setDouble("Swerve", "Timer", Timer.getFPGATimestamp());           
         }
-
+        
+        LightningShuffleboard.setDouble("Swerve", "Timer", Timer.getFPGATimestamp());           
         LightningShuffleboard.setDouble("Swerve", "Robot Heading", getPigeon2().getAngle());
         LightningShuffleboard.setDouble("Swerve", "Odo X", getState().Pose.getX());
         LightningShuffleboard.setDouble("Swerve", "Odo Y", getState().Pose.getY());
-        LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
         
-
+        LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
+        LightningShuffleboard.setBool("Sweve", "Tipped", isTipped());
     }
 
     private void configurePathPlanner() {
@@ -111,6 +111,13 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
+    }
+
+    /**
+    * @return whether the robot is tipped
+    */
+    public boolean isTipped() {
+        return (Math.abs(getPigeon2().getPitch().getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE || Math.abs(getPigeon2().getRoll().getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE);
     }
 
     /**
