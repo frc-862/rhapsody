@@ -38,6 +38,7 @@ public class ChasePieces extends Command {
 	 * Creates a new ChasePieces.
 	 * @param drivetrain to request movement 
 	 * @param collector to collect pieces
+	 * @param limelights to get vision data from dust
 	 */
 	public ChasePieces(Swerve drivetrain, Collector collector, Limelights limelights) {
 		this.drivetrain = drivetrain;
