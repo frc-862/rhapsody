@@ -13,6 +13,10 @@ public class HapticFeedback extends Command {
   private double value;
 
   /** Creates a new HapticFeedback. */
+  /*
+   * @param driver the controller to vibrate
+   * @param value the strength of the vibration
+   */
   public HapticFeedback(XboxController driver, double value) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.value = value;

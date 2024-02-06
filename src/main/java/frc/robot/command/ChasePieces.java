@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
@@ -38,16 +39,11 @@ public class ChasePieces extends Command {
 	 * @param drivetrain to request movement 
 	 * @param collector to collect pieces
 	 */
-	public ChasePieces(Swerve drivetrain, Collector collector) {
+	public ChasePieces(Swerve drivetrain, Collector collector, Limelights limelights) {
 		this.drivetrain = drivetrain;
 		this.collector = collector;
 
-		for (var l : drivetrain.getLimelights()) { 
-			if (l.getName().equals(VisionConstants.BACK_NAME)) {
-				limelight = l;
-		   }
-	   }
-
+		limelight = limelights.getDust();
 		limelightId = limelight.getPipeline();
 		
 		noteChase = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
