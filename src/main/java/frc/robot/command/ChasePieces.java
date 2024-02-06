@@ -52,6 +52,7 @@ public class ChasePieces extends Command {
 		
 		noteChase = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
+		addRequirements(drivetrain, collector);
 	}
 	
 	// Called when the command is initially scheduled.
@@ -68,16 +69,9 @@ public class ChasePieces extends Command {
 		targetHeading = limelight.getTargetX();
 		targetPitch = limelight.getTargetY();
 
-        if(Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE){
-            onTarget = true;
-        } else{
-            onTarget = false;
-        }
-
-		hasPiece = collector.getEntryBeamBreakState(); // TODO: see if this actually works.
+		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
 
 		LightningShuffleboard.setBool("ChasePieces", "On Target", onTarget);
-		LightningShuffleboard.setBool("ChasePieces", "Has Piece", hasPiece);
 
 		LightningShuffleboard.setDouble("ChasePieces", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
 		LightningShuffleboard.setDouble("ChasePieces", "Target Heading", targetHeading);
@@ -92,18 +86,18 @@ public class ChasePieces extends Command {
 
 		pidOutput = headingController.calculate(0, targetHeading);
 		
-		if (!onTarget){
-			drivetrain.setControl(noteChase.withRotationalRate(-pidOutput) 
-			.withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
+		if (!onTarget) {
+			drivetrain.setControl(
+				noteChase.withRotationalRate(-pidOutput).withVelocityX(3) // Should be positive for front of robot, negative for back of robot.
 			);
 		} else {
-			drivetrain.setControl(noteChase
-			.withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
+			drivetrain.setControl(
+				noteChase.withVelocityX(3) // Should be positive for front of robot, negative for back of robot.
 			);
 		}
 
 		// Activates if the target is close to the drivetrain.
-		if (targetPitch < 0 && !hasPiece) {
+		if (targetPitch < 0) {
 			collector.setPower(0.2); // TODO: get the proper value to set to the collector.
 		}
         
@@ -113,6 +107,7 @@ public class ChasePieces extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		limelight.setPipeline(limelightId);
+		collector.stop();
 	}
 
 	// Returns true when the command should end.
