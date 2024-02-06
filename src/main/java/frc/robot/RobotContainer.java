@@ -39,6 +39,7 @@ import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 import frc.thunder.LightningContainer;
+import frc.thunder.command.TimedCommand;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
 
@@ -132,7 +133,7 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
 				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
-		new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, limelights));
+		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 		
 		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds).

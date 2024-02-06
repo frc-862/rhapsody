@@ -19,8 +19,7 @@ public class Stow extends Command {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 
-		addRequirements(pivot);
-		addRequirements(flywheel);
+		addRequirements(pivot, flywheel);
 	}
 
 	// Called when the command is initially scheduled.

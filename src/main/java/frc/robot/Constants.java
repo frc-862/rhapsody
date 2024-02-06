@@ -296,6 +296,12 @@ public class Constants {
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
+
+        public class Pipelines { // TODO get real
+            public static final int APRIL_TAG_3d = 0;
+            public static final int APRIL_TAG_2d = 1;
+            public static final int CHASE_PIECE = 2; // FOR the collector 
+        }
     }
 
     public class MusicConstants {
@@ -325,6 +331,7 @@ public class Constants {
         public static final double RPM_TOLERANCE = 0;
 
         public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get amount to bias by
+        public static final double COAST_VOLTAGE = 0.1;
     }
 
     public class IndexerConstants { // TODO: get real
