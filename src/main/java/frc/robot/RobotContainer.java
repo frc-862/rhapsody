@@ -59,9 +59,13 @@ public class RobotContainer extends LightningContainer {
 	// Change beacuse with open loop is gone
 	SwerveRequest.FieldCentric drive;
 	SwerveRequest.FieldCentric slow;
+	SwerveRequest.RobotCentric driveRobotCentric;
+	SwerveRequest.RobotCentric slowRobotCentric;
 	SwerveRequest.SwerveDriveBrake brake;
 	SwerveRequest.PointWheelsAt point;
 	Telemetry logger;
+
+	private boolean isRobotCentric = false;
 
 	@Override
 	protected void initializeSubsystems() {
@@ -80,10 +84,17 @@ public class RobotContainer extends LightningContainer {
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
 		// climber = new Climber();
 		leds = new LEDs();
-
+		
+		// field centric for the robot
 		drive = new SwerveRequest.FieldCentric()
 				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric()
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+
+		// robot centric for the robot
+		driveRobotCentric = new SwerveRequest.RobotCentric()
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+		slowRobotCentric = new SwerveRequest.RobotCentric()
 				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 
 		brake = new SwerveRequest.SwerveDriveBrake();
@@ -105,13 +116,33 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureButtonBindings() {
+		/* driver */
+		// activates between robot and field centric for the robot
+		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
+			.onTrue(new InstantCommand(() -> isRobotCentric = true))
+			.whileFalse(new InstantCommand(() -> isRobotCentric = false));
+
 		new Trigger(driver::getLeftBumper)
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
 		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point
 				.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
-		new Trigger(driver::getRightBumper).whileTrue(drivetrain.applyRequest(() -> slow
+		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d).whileTrue(isRobotCentric ?
+			drivetrain.applyRequest(() -> slowRobotCentric
+				.withVelocityX(
+						-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND)
+								* DrivetrainConstants.MaxSpeed
+								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+				.withVelocityY(
+						-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND)
+								* DrivetrainConstants.MaxSpeed
+								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
+				.withRotationalRate(
+						-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND)
+								* DrivetrainConstants.MaxAngularRate
+								* DrivetrainConstants.SLOW_ROT_MULT))
+			: drivetrain.applyRequest(() -> slow
 				.withVelocityX(
 						-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND)
 								* DrivetrainConstants.MaxSpeed
