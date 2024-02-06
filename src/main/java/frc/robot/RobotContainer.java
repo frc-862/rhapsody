@@ -56,8 +56,6 @@ public class RobotContainer extends LightningContainer {
 	LEDs leds;
 
 	private SendableChooser<Command> autoChooser;
-	// TODO I want field-centric driving in open loop WE NEED TO FIGURE OUT WHAT
-	// Change beacuse with open loop is gone
 	SwerveRequest.FieldCentric drive;
 	SwerveRequest.FieldCentric slow;
 	SwerveRequest.SwerveDriveBrake brake;
