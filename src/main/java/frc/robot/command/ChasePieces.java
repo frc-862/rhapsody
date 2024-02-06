@@ -79,7 +79,7 @@ public class ChasePieces extends Command {
 		
 		if (trustValues()){
 			drivetrain.setControl(noteChase.withRotationalRate(-pidOutput) 
-				.withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
+				.withVelocityX(-0.5) // Should be positive for front of robot, negative for back of robot.
 			);
 		}
         
@@ -93,11 +93,10 @@ public class ChasePieces extends Command {
 
 	// Makes sure that the robot isn't jerking over to a different side while chasing pieces.
 	public boolean trustValues(){
-		if ((targetHeading - previousTargetHeading) > 5){ //TODO: find this magic number and make it a constant
-			return false;
-		} else {
+		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6){
 			return true;
 		}
+		return false;
 	}
 
 	// Returns true when the command should end.
