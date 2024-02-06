@@ -335,9 +335,8 @@ public class Constants {
 
     public class PivotConstants { // TODO: get real
         public static final boolean PIVOT_MOTOR_INVERT = false;
-        public static final int PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int PIVOT_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue PIVOT_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final boolean PIVOT_MOTOR_BRAKE_MODE = true;
         public static final double PIVOT_MOTOR_KP = 0;
         public static final double PIVOT_MOTOR_KI = 0;
         public static final double PIVOT_MOTOR_KD = 0;
