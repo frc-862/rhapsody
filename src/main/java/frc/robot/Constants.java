@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
+import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.math.InterpolationMap;
 
@@ -269,14 +270,14 @@ public class Constants {
                         Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
 
 
-        public static final Swerve getDrivetrain() {
+        public static final Swerve getDrivetrain(Limelights limelights) {
             if (Constants.isMercury()) {
                 System.out.println("IS MERCURY");
-                return new Swerve(DrivetrainConstants, 250, FrontLeft, FrontRight, BackLeft,
+                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeft, FrontRight, BackLeft,
                         BackRight);
             } else {
                 System.out.println("IS RHAPSODY");
-                return new Swerve(DrivetrainConstants, 250, FrontLeftRh, FrontRightRh, BackLeftRh,
+                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeftRh, FrontRightRh, BackLeftRh,
                         BackRightRh);
             }
         }

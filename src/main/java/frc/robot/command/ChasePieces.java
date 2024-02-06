@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
@@ -29,16 +30,12 @@ public class ChasePieces extends Command {
 	/**
 	 * Creates a new ChasePieces.
 	 * @param drivetrain to request movement 
+	 * @param limelights to get the limelight from
 	 */
-	public ChasePieces(Swerve drivetrain) {
+	public ChasePieces(Swerve drivetrain, Limelights limelights) {
 		this.drivetrain = drivetrain;
 
-		for (var l : drivetrain.getLimelights()) { 
-			if (l.getName().equals(VisionConstants.BACK_NAME)) {
-				limelight = l;
-		   }
-	   }
-
+		limelight = limelights.getDust();
 		limelightId = limelight.getPipeline();
 
 		limelight.setPipeline(VisionConstants.NOTE_PIPELINE);

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.FlywheelConstants;
 import frc.thunder.config.FalconConfig;
+import frc.thunder.tuning.FalconTuner;
 
 public class Flywheel extends SubsystemBase {
     private TalonFX shooterMotor1; //TODO figure out which is top vs bottom
