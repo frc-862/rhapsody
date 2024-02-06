@@ -292,11 +292,10 @@ public class Constants {
                 new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
         public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 4d; // TODO: make this an actual value
-        public static final PIDController HEADING_CONTROLLER = new PIDController(0.05, 0, 0);
+        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
-        public static final String BACK_NAME = "limelight-back";
     }
 
     public class MusicConstants {
