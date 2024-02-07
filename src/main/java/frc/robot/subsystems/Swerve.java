@@ -40,7 +40,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
 
-        this.limelights = new Limelight[]{limelightSubsystem.getPressure()};
+        this.limelights = new Limelight[]{limelightSubsystem.getStopMe()};
 
         configurePathPlanner();
     }
