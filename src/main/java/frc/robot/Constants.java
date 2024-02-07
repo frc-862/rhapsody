@@ -308,6 +308,8 @@ public class Constants {
         public static final String BOH_RHAP_FILEPATH = "bohemianrhapsody.chrp";
         public static final String JEOPARDY_FILEPATH = "jeopardy.chrp";
         public static final String BEWARE_THE_FOREST_MUSHROOMS_FILEPATH = "bewaretheforestmushrooms.chrp";
+        public static final String UNDER_PRESSURE_FILEPATH = "underpressure.chrp";
+        public static final String NATIONAL_PARK_FILEPATH = "nationalpark.chrp";
     }
 
     public class CollectorConstants { // TODO: get real
