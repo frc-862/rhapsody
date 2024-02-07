@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.BooleanSupplier;
 
 import frc.robot.Constants.ClimbConstants;
-import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Swerve;
 

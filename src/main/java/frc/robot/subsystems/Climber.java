@@ -53,14 +53,22 @@ public class Climber extends SubsystemBase {
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
-        LightningShuffleboard.set("Climb", "Left Lower Pose", convertLowerPose(getHeightL(), false));
-        LightningShuffleboard.set("Climb", "Right Lower Pose", convertLowerPose(getHeightR(), true));
-        LightningShuffleboard.set("Climb", "Left Upper Pose", convertUpperPose(getHeightL(), false));
-        LightningShuffleboard.set("Climb", "Right Upper Pose", convertUpperPose(getHeightR(), true));
-        LightningShuffleboard.set("Climb", "Left Lower Setpoint", convertLowerPose(getSetpointL(), false));
-        LightningShuffleboard.set("Climb", "Right Lower Setpoint", convertLowerPose(getSetpointR(), true));
-        LightningShuffleboard.set("Climb", "Left Upper Setpoint", convertUpperPose(getSetpointL(), false));
-        LightningShuffleboard.set("Climb", "Right Upper Setpoint", convertUpperPose(getSetpointR(), true));
+        LightningShuffleboard.set("Climb", "Left Lower Pose",
+                convertLowerPose(getHeightL(), false));
+        LightningShuffleboard.set("Climb", "Right Lower Pose",
+                convertLowerPose(getHeightR(), true));
+        LightningShuffleboard.set("Climb", "Left Upper Pose",
+                convertUpperPose(getHeightL(), false));
+        LightningShuffleboard.set("Climb", "Right Upper Pose",
+                convertUpperPose(getHeightR(), true));
+        LightningShuffleboard.set("Climb", "Left Lower Setpoint",
+                convertLowerPose(getSetpointL(), false));
+        LightningShuffleboard.set("Climb", "Right Lower Setpoint",
+                convertLowerPose(getSetpointR(), true));
+        LightningShuffleboard.set("Climb", "Left Upper Setpoint",
+                convertUpperPose(getSetpointL(), false));
+        LightningShuffleboard.set("Climb", "Right Upper Setpoint",
+                convertUpperPose(getSetpointR(), true));
     }
 
     /**
@@ -228,8 +236,7 @@ public class Climber extends SubsystemBase {
 
     /**
      * tell climber if climber has begun climbing
-     * 
-     * @param hasCLimbed
+     * @param hasCLimbed boolean if the robot has climbed
      */
     public void setHasClimbed(boolean hasClimbed) {
         this.hasCLimbed = hasClimbed;
@@ -289,24 +296,25 @@ public class Climber extends SubsystemBase {
 
         // updates states
         if (hasCLimbed && getHeightL() < ClimbConstants.MAX_HEIGHT / 2
-            && getHeightR() < ClimbConstants.MAX_HEIGHT / 2) {
-                state = CLIMBER_STATES.CLIMBED;
-                resetHasValues();
+                && getHeightR() < ClimbConstants.MAX_HEIGHT / 2) {
+            state = CLIMBER_STATES.CLIMBED;
+            resetHasValues();
         }
-        
+
         // ONCE the robot is completely climbed, the robot will be in the STOW state
         if (getHeightR() <= ClimbConstants.CLIMB_RETRACTION_TOLERANCE
-            && getHeightL() <= ClimbConstants.CLIMB_RETRACTION_TOLERANCE
-            && !drivetrain.isTipped() && hasStowed) {
-                state = CLIMBER_STATES.STOW;
-                resetHasValues();
+                && getHeightL() <= ClimbConstants.CLIMB_RETRACTION_TOLERANCE
+                && !drivetrain.isTipped() && hasStowed) {
+            state = CLIMBER_STATES.STOW;
+            resetHasValues();
         }
 
         if (ClimbConstants.MAX_HEIGHT - getHeightR() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE
-            && ClimbConstants.MAX_HEIGHT - getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE
-            && !drivetrain.isTipped() && hasGroundedR && hasGroundedL) {
-                state = CLIMBER_STATES.GROUNDED;
-                resetHasValues();
+                && ClimbConstants.MAX_HEIGHT
+                        - getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE
+                && !drivetrain.isTipped() && hasGroundedR && hasGroundedL) {
+            state = CLIMBER_STATES.GROUNDED;
+            resetHasValues();
         }
     }
 }
