@@ -75,11 +75,12 @@ public class RobotContainer extends LightningContainer {
 		SignalLogger.enableAutoLogging(true);
 
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
-		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
-		
+		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot
+																					// controller
+
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
-		
+
 		// indexer = new Indexer();
 		// collector = new Collector();
 		// flywheel = new Flywheel();
@@ -87,18 +88,42 @@ public class RobotContainer extends LightningContainer {
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
-		
+
 		// field centric for the robot
 		drive = new SwerveRequest.FieldCentric()
-				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed
+																		// *
+																		// DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate
+																		// *
+																		// DrivetrAinConstants.ROT_DB);
+																		// // I want field-centric
+																		// driving in closed loop
 		slow = new SwerveRequest.FieldCentric()
-				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed
+																		// *
+																		// DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate
+																		// *
+																		// DrivetrAinConstants.ROT_DB);
+																		// // I want field-centric
+																		// driving in closed loop
 
 		// robot centric for the robot
 		driveRobotCentric = new SwerveRequest.RobotCentric()
-				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed
+																		// *
+																		// DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate
+																		// *
+																		// DrivetrAinConstants.ROT_DB);
+																		// // I want field-centric
+																		// driving in closed loop
 		slowRobotCentric = new SwerveRequest.RobotCentric()
-				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed
+																		// *
+																		// DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate
+																		// *
+																		// DrivetrAinConstants.ROT_DB);
+																		// // I want field-centric
+																		// driving in closed loop
 
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
@@ -152,8 +177,7 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
 
-		// TODO: automatic climb
-		// TODO: manual climb
+		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber, drivetrain));
 
 		/*BIAS */
 		// new Trigger(() -> coPilot.getPOV() == 0).onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
@@ -167,7 +191,7 @@ public class RobotContainer extends LightningContainer {
 
 		
 	}
-	
+
 	@Override
 	protected void configureDefaultCommands() {
 		/* driver */
@@ -176,19 +200,44 @@ public class RobotContainer extends LightningContainer {
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 				drivetrain.applyRequest(() -> drive
 						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive
+																								// forward
+																								// with
+																								// negative
+																								// Y
+																								// (Its
+																								// worth
+																								// noting
+																								// the
+																								// field
+																								// Y
+																								// axis
+																								// differs
+																								// from
+																								// the
+																								// robot
+																								// Y
+																								// axis_
 						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive
+																								// left
+																								// with
+																								// negative
+																								// X
+																								// (left)
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
-								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
+								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with
+																// negative X (left)
 				));
-				
-				
+
+
 		/* copilot */
-		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector));
-		
-		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() -> coPilot.getRightY(), climber));
+		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() -
+		// coPilot.getLeftTriggerAxis()), collector));
+
+		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
+		// coPilot.getRightY(), climber));
 	}
 
 	protected Command getAutonomousCommand() {
@@ -213,8 +262,8 @@ public class RobotContainer extends LightningContainer {
 				DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
 		SystemTest.registerTest("Azimuth Test",
 				new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
-				
-		SystemTest.registerTest("Singing Test", 
+
+		SystemTest.registerTest("Singing Test",
 				new SingSystemTest(drivetrain, MusicConstants.JEOPARDY_FILEPATH));
 
 		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
@@ -224,18 +273,20 @@ public class RobotContainer extends LightningContainer {
 	public static Command hapticDriverCommand() {
 		return new StartEndCommand(() -> {
 			driver.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
-    		driver.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);}, 
-			() -> {
+			driver.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
+		}, () -> {
 			driver.setRumble(GenericHID.RumbleType.kRightRumble, 0);
-			driver.setRumble(GenericHID.RumbleType.kLeftRumble, 0);});
+			driver.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+		});
 	}
 
 	public static Command hapticCopilotCommand() {
 		return new StartEndCommand(() -> {
 			coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
-    		coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);}, 
-			() -> {
+			coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
+		}, () -> {
 			coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 0);
-			coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 0);});
+			coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+		});
 	}
 }
