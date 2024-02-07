@@ -211,7 +211,7 @@ public class RobotContainer extends LightningContainer {
 				new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 				
 		SystemTest.registerTest("Singing Test", 
-				new SingSystemTest(drivetrain, MusicConstants.JEOPARDY_FILEPATH));
+				new SingSystemTest(drivetrain, MusicConstants.UNDER_PRESSURE_FILEPATH));
 
 		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
 		// collector, indexer, pivot));
