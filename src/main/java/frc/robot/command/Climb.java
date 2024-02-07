@@ -5,24 +5,29 @@ import java.util.function.BooleanSupplier;
 
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
+import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Swerve;
 public class Climb extends Command {
 	private Climber climber;
 	boolean hasTipped = false;
 	private TipDetection tipDetection;
 	BooleanSupplier abort;
+	LEDs leds;
 
 	/**
 	 * Creates a new Climb.
 	 * @param climber subsystem
 	 * @param drivetrain subsystem
 	 * @param abort to stop the command
+	 * @param leds to set the state
 	 */
-	public Climb(Climber climber, Swerve drivetrain, BooleanSupplier abort) {
+	public Climb(Climber climber, Swerve drivetrain, BooleanSupplier abort, LEDs leds) {
 		this.climber = climber;
 		this.tipDetection = new TipDetection(drivetrain);
 		this.abort = abort;
+		this.leds = leds;
 		addRequirements(climber);
 	}
 
@@ -72,6 +77,7 @@ public class Climb extends Command {
 	@Override
 	public void end(boolean interrupted){
 		abort();
+		
 	}
 
 	@Override
@@ -82,6 +88,7 @@ public class Climb extends Command {
 	public void abort(){
 		climber.setState(CLIMBER_STATES.CLIMBED);
 		climber.stop();
+		leds.EnableState(LED_STATES.FINISHED_CLIMB).withTimeout(2).schedule();
 	}
 
 }

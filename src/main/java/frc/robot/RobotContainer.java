@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,7 +20,9 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.MusicConstants;
+import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.TunerConstants;
+import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Index;
 import frc.robot.command.PointAtTag;
@@ -30,13 +33,13 @@ import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
-import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
 import frc.thunder.LightningContainer;
 import frc.thunder.command.TimedCommand;
@@ -73,7 +76,8 @@ public class RobotContainer extends LightningContainer {
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
 		
-		limelights = new Limelights();
+		leds = new LEDs();
+		limelights = new Limelights(leds);
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 		
 		// indexer = new Indexer();
@@ -82,7 +86,6 @@ public class RobotContainer extends LightningContainer {
 		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
 		// climber = new Climber();
-		leds = new LEDs();
 
 		drive = new SwerveRequest.FieldCentric()
 				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
@@ -92,6 +95,7 @@ public class RobotContainer extends LightningContainer {
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrainConstants.MaxSpeed);
+
 	}
 
 	@Override
@@ -133,20 +137,21 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
 				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
-		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, collector, limelights));
+		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, collector, limelights).deadlineWith(leds.EnableState(LED_STATES.CHASING));
 		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 		
-		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds).
-			// alongWith(new PointAtTag(drivetrain, driver, null, false, false)));
-		
+		// new Trigger(driver::getAButton).whileTrue((new SmartShoot(flywheel, pivot, drivetrain, indexer, leds).
+		// 	alongWith(new PointAtTag(drivetrain, driver, null, false, false))).deadlineWith(leds.EnableState(LED_STATES.SHOOTING)));
 		
 		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
+
+		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.EnableState(LED_STATES.DISABLED));
 
 		/* copilot */
 		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
 		// new trigger(coPilot::getAButton).whileTrue(new AmpShot(pivot, flywheel));
-		// new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain, () -> coPilot.getBackButton()));
+		// new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain, () -> coPilot.getBackButton()).deadlineWith(leds.EnableState(LED_STATES.CLIMBING));
 
 		/*BIAS */
 		// new Trigger(() -> coPilot.getPOV() == 0).onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP

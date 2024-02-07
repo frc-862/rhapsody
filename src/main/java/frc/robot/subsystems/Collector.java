@@ -3,10 +3,12 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.CollectorConstants;
+import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.thunder.config.FalconConfig;
 
 public class Collector extends SubsystemBase {
@@ -15,9 +17,10 @@ public class Collector extends SubsystemBase {
 	private TalonFX motor;
 	private DigitalInput collectorEntryBeamBreakEntrance;
 	private DigitalInput collectorEntryBeamBreakExit;
+	private LEDs leds;
 	private boolean hasPiece;
 
-	public Collector() {
+	public Collector(LEDs leds) {
 		motor = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
 				CollectorConstants.COLLECTOR_MOTOR_INVERTED,
 				CollectorConstants.COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT,
@@ -27,6 +30,9 @@ public class Collector extends SubsystemBase {
 		//TODO: real robot doesn't currently have a plan to have 2 beam breaks, if programming requires this they need to say so soon.
 		collectorEntryBeamBreakEntrance = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
 		collectorEntryBeamBreakExit = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
+
+		this.leds = leds;
+		new Trigger(() -> hasPiece).whileTrue(leds.EnableState(LED_STATES.HAS_PIECE));
 	}
 
 	/**
@@ -58,6 +64,7 @@ public class Collector extends SubsystemBase {
 		// tells robot if we have a piece in collector
 		if (getEntryBeamBreakState()) {
 			hasPiece = true;
+			leds.EnableState(LED_STATES.COLLECTED).withTimeout(2).schedule();
 		} else if (getExitBeamBreakState()){
 			hasPiece = false;
 		}
