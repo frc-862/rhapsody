@@ -44,7 +44,7 @@ public class PointAtTag extends Command {
 		this.driver = driver;
 
 		//TODO Figure out which of these is the right one to use 
-		limelight = limelights.getPressure();
+		limelight = limelights.getStopMe();
 
 		limelightPrevPipeline = limelight.getPipeline();
 
