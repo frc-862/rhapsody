@@ -310,6 +310,12 @@ public class Constants {
         public static final String BEWARE_THE_FOREST_MUSHROOMS_FILEPATH = "bewaretheforestmushrooms.chrp";
         public static final String UNDER_PRESSURE_FILEPATH = "underpressure.chrp";
         public static final String NATIONAL_PARK_FILEPATH = "nationalpark.chrp";
+        public static final String ENCOUNTER_FILEPATH = "encounter.chrp";
+        public static final String PIRATES_OF_THE_CARIBBEAN_FILEPATH = "piratesofthecaribbean.chrp";
+        public static final String CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH = "crazylittlethingcalledlove.chrp";
+        public static final String ANOTHER_ONE_BITES_THE_DUST_FILEPATH = "anotheronebitesthedust.chrp";
+        public static final String SWEET_CAROLINE_FILEPATH = "sweetcaroline.chrp";
+        public static final String WE_ARE_THE_CHAMPIONS_FILEPATH = "wearethechampions.chrp";
     }
 
     public class CollectorConstants { // TODO: get real
