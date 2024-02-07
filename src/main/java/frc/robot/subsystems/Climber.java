@@ -27,7 +27,7 @@ public class Climber extends SubsystemBase {
     private CLIMBER_STATES state = CLIMBER_STATES.STOW;
     private Swerve drivetrain;
 
-    private boolean hasCLimbed = false;
+    private boolean hasClimbed = false;
     private boolean hasStowed = false;
     private boolean hasGroundedR = false;
     private boolean hasGroundedL = false;
@@ -239,7 +239,7 @@ public class Climber extends SubsystemBase {
      * @param hasClimbed boolean if the robot has climbed
      */
     public void setHasClimbed(boolean hasClimbed) {
-        this.hasCLimbed = hasClimbed;
+        this.hasClimbed = hasClimbed;
     }
 
     /**
@@ -278,7 +278,7 @@ public class Climber extends SubsystemBase {
         hasGroundedL = false;
         hasGroundedR = false;
         hasStowed = false;
-        hasCLimbed = false;
+        hasClimbed = false;
     }
 
     @Override
@@ -295,7 +295,7 @@ public class Climber extends SubsystemBase {
         }
 
         // updates states
-        if (hasCLimbed && getHeightL() < ClimbConstants.MAX_HEIGHT / 2
+        if (hasClimbed && getHeightL() < ClimbConstants.MAX_HEIGHT / 2
                 && getHeightR() < ClimbConstants.MAX_HEIGHT / 2) {
             state = CLIMBER_STATES.CLIMBED;
             resetHasValues();
