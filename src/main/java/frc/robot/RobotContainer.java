@@ -53,8 +53,8 @@ public class RobotContainer extends LightningContainer {
 	private Swerve drivetrain;
 	private Limelights limelights;
 	// Collector collector;
-	Flywheel flywheel;
-	Pivot pivot;
+	// Flywheel flywheel;
+	// Pivot pivot;
 	// Shooter shooter;
 	// Indexer indexer;
 	// Climber climber;
@@ -82,8 +82,8 @@ public class RobotContainer extends LightningContainer {
 		
 		// indexer = new Indexer();
 		// collector = new Collector();
-		flywheel = new Flywheel();
-		pivot = new Pivot();
+		// flywheel = new Flywheel();
+		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
 		// climber = new Climber();
 		leds = new LEDs();
