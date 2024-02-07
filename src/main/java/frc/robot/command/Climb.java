@@ -12,14 +12,12 @@ public class Climb extends Command {
 	private final Swerve drivetrain;
 
 	boolean hasTipped = false;
-	BooleanSupplier abort;
 
 	/**
 	 * Creates a new Climb.
 	 * 
 	 * @param climber subsystem
 	 * @param drivetrain subsystem
-	 * @param abort to stop the command
 	 */
 	public Climb(Climber climber, Swerve drivetrain) {
 		this.climber = climber;
