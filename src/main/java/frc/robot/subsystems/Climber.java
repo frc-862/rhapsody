@@ -236,7 +236,7 @@ public class Climber extends SubsystemBase {
 
     /**
      * tell climber if climber has begun climbing
-     * @param hasCLimbed boolean if the robot has climbed
+     * @param hasClimbed boolean if the robot has climbed
      */
     public void setHasClimbed(boolean hasClimbed) {
         this.hasCLimbed = hasClimbed;
