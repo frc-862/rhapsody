@@ -22,8 +22,8 @@ import frc.robot.Constants.MusicConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Index;
+import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
-import frc.robot.command.TipDetection;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.tests.DrivetrainSystemTest;
@@ -51,8 +51,8 @@ public class RobotContainer extends LightningContainer {
 	private Swerve drivetrain;
 	private Limelights limelights;
 	// Collector collector;
-	Flywheel flywheel;
-	Pivot pivot;
+	// Flywheel flywheel;
+	// Pivot pivot;
 	// Shooter shooter;
 	// Indexer indexer;
 	// Climber climber;
@@ -81,7 +81,7 @@ public class RobotContainer extends LightningContainer {
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
-		// climber = new Climber();
+		// climber = new Climber(drivetrain);
 		leds = new LEDs();
 
 		drive = new SwerveRequest.FieldCentric()
@@ -134,7 +134,6 @@ public class RobotContainer extends LightningContainer {
 				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
 		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, collector, limelights));
-		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 		
 		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds).
 			// alongWith(new PointAtTag(drivetrain, driver, null, false, false)));
@@ -146,7 +145,7 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
 		// new trigger(coPilot::getAButton).whileTrue(new AmpShot(pivot, flywheel));
-		// new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain, () -> coPilot.getBackButton()));
+		// new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain));
 
 		/*BIAS */
 		// new Trigger(() -> coPilot.getPOV() == 0).onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
@@ -174,9 +173,7 @@ public class RobotContainer extends LightningContainer {
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
 								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
-		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() -
-		// coPilot.getLeftTriggerAxis()), climber));
-		// climber.setDefaultCommand(new Climb(climber, drivetrain));
+		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() -> coPilot.getRightY(), climber));
 
 		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () ->
 		// coPilot.getAButton()));
