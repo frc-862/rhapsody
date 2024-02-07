@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
+import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.math.InterpolationMap;
 
@@ -269,14 +270,14 @@ public class Constants {
                         Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
 
 
-        public static final Swerve getDrivetrain() {
+        public static final Swerve getDrivetrain(Limelights limelights) {
             if (Constants.isMercury()) {
                 System.out.println("IS MERCURY");
-                return new Swerve(DrivetrainConstants, 250, FrontLeft, FrontRight, BackLeft,
+                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeft, FrontRight, BackLeft,
                         BackRight);
             } else {
                 System.out.println("IS RHAPSODY");
-                return new Swerve(DrivetrainConstants, 250, FrontLeftRh, FrontRightRh, BackLeftRh,
+                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeftRh, FrontRightRh, BackLeftRh,
                         BackRightRh);
             }
         }
@@ -291,11 +292,21 @@ public class Constants {
                 new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
         public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 4d; // TODO: make this an actual value
-        public static final PIDController HEADING_CONTROLLER = new PIDController(0.05, 0, 0);
+        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
-        public static final String BACK_NAME = "limelight-back";
+
+        public class Pipelines { // TODO get real
+            public static final int APRIL_TAG_3d = 0;
+            public static final int APRIL_TAG_2d = 1;
+            public static final int CHASE_PIECE = 2; // FOR the collector 
+        }
+    }
+
+    public class MusicConstants {
+        public static final String BOH_RHAP_FILEPATH = "bohemianrhapsody.chrp";
+        public static final String JEOPARDY_FILEPATH = "jeopardy.chrp";
     }
 
     public class CollectorConstants { // TODO: get real
@@ -310,7 +321,7 @@ public class Constants {
         public static final boolean FLYWHEEL_MOTOR_2_INVERT = false;
         public static final int FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
         public static final double FLYWHEEL_MOTOR_KP = 0;
         public static final double FLYWHEEL_MOTOR_KI = 0;
         public static final double FLYWHEEL_MOTOR_KD = 0;
@@ -318,6 +329,9 @@ public class Constants {
         public static final double FLYWHEEL_MOTOR_KV = 0;
 
         public static final double RPM_TOLERANCE = 0;
+
+        public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get amount to bias by
+        public static final double COAST_VOLTAGE = 0.1;
     }
 
     public class IndexerConstants { // TODO: get real
@@ -330,9 +344,8 @@ public class Constants {
 
     public class PivotConstants { // TODO: get real
         public static final boolean PIVOT_MOTOR_INVERT = false;
-        public static final int PIVOT_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int PIVOT_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue PIVOT_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final boolean PIVOT_MOTOR_BRAKE_MODE = true;
         public static final double PIVOT_MOTOR_KP = 0;
         public static final double PIVOT_MOTOR_KI = 0;
         public static final double PIVOT_MOTOR_KD = 0;
@@ -345,40 +358,14 @@ public class Constants {
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ENCODER_TO_ROTOR_RATIO = 1d;
+
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
     }
 
     public class ShooterConstants {
-        public static final double BASE_RPM = 0;
         public static final double STOW_ANGLE = 0;
         
         public static final double FAR_WING_X = 3.3;
-
-        public enum SHOOTER_STATES {
-            STOW, PRIME, AIM, SHOOT, CAND_SHOTS
-        }
-
-        public enum CAND_STATES {
-            AMP(0), 
-            SUBWOOFER(1), 
-            PODIUM(2);
-
-            private final int priority;
-            CAND_STATES(int priority) {
-                this.priority = priority;
-            }
-
-            public int getPriority() {
-                return priority;
-            }
-         }
-
-
-        // angle in rotations (pivot), speed in rpm (flywheel)
-        public static final double[][] CAND_SHOT_VALUES = new double[][] { // TODO: get real values
-            {0, 0}, // amp
-            {0, 0}, // subwoofer
-            {0, 0}, // podium
-        };
 
         // Distance in meters, angle in degrees
         public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {
@@ -393,6 +380,21 @@ public class Constants {
                 put(0d, 0d);
             }
         };
+    }
+
+    public class CandConstants {
+        //Amp
+        public static final double AMP_TOP_RPM = 0;
+        public static final double AMP_BOTTOM_RPM = 0;
+        public static final double AMP_ANGLE = 0;
+
+        //PointBlank
+        public static final double POINT_BLANK_RPM = 0;
+        public static final double POINT_BLANK_ANGLE = 0;
+
+        //Podium
+        public static final double PODIUM_RPM = 0;
+        public static final double PODIUM_ANGLE = 0;
     }
 
     public class ClimbConstants { //TODO: find real values

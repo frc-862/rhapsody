@@ -15,9 +15,9 @@ public class Climb extends Command {
 
 	/**
 	 * Creates a new Climb.
-	 * 
 	 * @param climber subsystem
 	 * @param drivetrain subsystem
+	 * @param abort to stop the command
 	 */
 	public Climb(Climber climber, Swerve drivetrain, BooleanSupplier abort) {
 		this.climber = climber;
@@ -32,14 +32,10 @@ public class Climb extends Command {
 		if (climber.getState() == CLIMBER_STATES.STOW){
 			climber.setSetpoint(ClimbConstants.MAX_HEIGHT);
 		}
-
-
-
 	}
 
 	@Override
 	public void execute() {
-
 		switch (climber.getState()) {
 			case STOW:
 				// check if robot is tipped when arm is extended more than half max height (2 ft probably)
@@ -48,23 +44,20 @@ public class Climb extends Command {
 					tipDetection.isTipped()) {
 					climber.setSetpoint(0d);
 					climber.setHasTipped(true);
-					
 				}
 				break;
 			case CLIMBED:
 				// re-extend arm slowly to return to ground
 				if (ClimbConstants.MAX_HEIGHT - climber.getHeightR() >= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
 					climber.setPowerR(ClimbConstants.CLIMB_RETURN_TO_GROUND_MAX_POWER);					
-				} 
-				else if (ClimbConstants.MAX_HEIGHT - climber.getHeightR() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
+				} else if (ClimbConstants.MAX_HEIGHT - climber.getHeightR() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
 					climber.setPowerR(0d);
 					climber.setHasGroundedR(true);
 				}
 
 				if (ClimbConstants.MAX_HEIGHT - climber.getHeightL() >= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
 					climber.setPowerL(ClimbConstants.CLIMB_RETURN_TO_GROUND_MAX_POWER);					
-				} 
-				else if (ClimbConstants.MAX_HEIGHT - climber.getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
+				} else if (ClimbConstants.MAX_HEIGHT - climber.getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE){
 					climber.setPowerL(0d);
 					climber.setHasGroundedL(true);
 				}
@@ -90,4 +83,5 @@ public class Climb extends Command {
 		climber.setState(CLIMBER_STATES.CLIMBED);
 		climber.stop();
 	}
+
 }
