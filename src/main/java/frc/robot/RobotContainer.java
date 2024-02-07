@@ -25,6 +25,8 @@ import frc.robot.command.Index;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.TipDetection;
 import frc.robot.command.shoot.AmpShot;
+import frc.robot.command.shoot.PodiumShot;
+import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.SingSystemTest;
@@ -80,8 +82,8 @@ public class RobotContainer extends LightningContainer {
 		
 		// indexer = new Indexer();
 		// collector = new Collector();
-		// flywheel = new Flywheel();
-		// pivot = new Pivot();
+		flywheel = new Flywheel();
+		pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
 		// climber = new Climber();
 		leds = new LEDs();
@@ -122,64 +124,36 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
 			.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
 			.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
+		
 		// Logs slow mode
 		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
 			.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
 			.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
-
-		new Trigger(driver::getLeftBumper)
+		
+		// resets the gyro of the robot
+		new Trigger(() -> driver.getStartButton() && driver.getBackButton())
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+		
+		// makes the robot chase pieces
+		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
-		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
-		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point
-				.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
-		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d).whileTrue(drivetrain.isRobotCentricControl() ?
-			drivetrain.applyRequest(() -> slowRobotCentric
-				.withVelocityX(
-						-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND)
-								* DrivetrainConstants.MaxSpeed
-								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-				.withVelocityY(
-						-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND)
-								* DrivetrainConstants.MaxSpeed
-								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-				.withRotationalRate(
-						-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND)
-								* DrivetrainConstants.MaxAngularRate
-								* DrivetrainConstants.SLOW_ROT_MULT))
-			: drivetrain.applyRequest(() -> slow
-				.withVelocityX(
-						-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND)
-								* DrivetrainConstants.MaxSpeed
-								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-				.withVelocityY(
-						-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND)
-								* DrivetrainConstants.MaxSpeed
-								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-				.withRotationalRate(
-						-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND)
-								* DrivetrainConstants.MaxAngularRate
-								* DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
+		// parks the robot
+		new Trigger(driver::getXButton).whileTrue(drivetrain.applyRequest(() -> brake));
 		
+		// smart shoot for the robot
+		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
 
-		new Trigger(driver::getRightBumper)
-				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
-				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
-
-		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, collector, limelights));
-		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
-		
-		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds).
-			// alongWith(new PointAtTag(drivetrain, driver, null, false, false)));
-		
-		
-		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
+		// aim at amp and stage tags for the robot
+		new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
 		/* copilot */
-		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
-		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
-		// new trigger(coPilot::getAButton).whileTrue(new AmpShot(pivot, flywheel));
-		// new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain, () -> coPilot.getBackButton()));
+		// cand shots for the robot
+		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
+		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
+		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
+
+		// TODO: automatic climb
+		// TODO: manual climb
 
 		/*BIAS */
 		// new Trigger(() -> coPilot.getPOV() == 0).onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
@@ -188,13 +162,15 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(() -> coPilot.getPOV() == 90).onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
 		// new Trigger(() -> coPilot.getPOV() == 270).onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
 
-		// new Trigger(() -> (coPilot.getBackButton() && coPilot.getStartButton()))
-		// 	.onTrue(new InstantCommand(() -> flywheel.resetBias())
-		// 	.alongWith(new InstantCommand(() -> pivot.resetBias())));
+		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
+		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
+
+		
 	}
 	
 	@Override
 	protected void configureDefaultCommands() {
+		/* driver */
 		drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -207,13 +183,8 @@ public class RobotContainer extends LightningContainer {
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
 								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
-		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() -
-		// coPilot.getLeftTriggerAxis()), climber));
-		// climber.setDefaultCommand(new Climb(climber, drivetrain));
-
-		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () ->
-		// coPilot.getAButton()));
-
+		
+		/* copilot */
 		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
 		// - coPilot.getLeftTriggerAxis()), collector));
 
