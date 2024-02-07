@@ -200,35 +200,12 @@ public class RobotContainer extends LightningContainer {
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 				drivetrain.applyRequest(() -> drive
 						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive
-																								// forward
-																								// with
-																								// negative
-																								// Y
-																								// (Its
-																								// worth
-																								// noting
-																								// the
-																								// field
-																								// Y
-																								// axis
-																								// differs
-																								// from
-																								// the
-																								// robot
-																								// Y
-																								// axis_
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
 						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive
-																								// left
-																								// with
-																								// negative
-																								// X
-																								// (left)
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
-								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with
-																// negative X (left)
+								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
 
 
