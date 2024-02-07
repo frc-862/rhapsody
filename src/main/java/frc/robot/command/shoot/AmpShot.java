@@ -16,7 +16,7 @@ public class AmpShot extends Command {
 	 * @param pivot
 	 * @param flywheel
 	 */
-	public AmpShot(Pivot pivot, Flywheel flywheel) {
+	public AmpShot(Flywheel flywheel, Pivot pivot) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 	
