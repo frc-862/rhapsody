@@ -176,7 +176,6 @@ public class RobotContainer extends LightningContainer {
 		// 		.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
 		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, collector, limelights));
-		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
 
 		// new Trigger(driver::getXButton)
 				// .onTrue(new InstantCommand(() -> drivetrain.disableVision()));
