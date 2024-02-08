@@ -57,7 +57,7 @@ public class RobotContainer extends LightningContainer {
 	// Subsystems
 	private Swerve drivetrain;
 	private Limelights limelights;
-	Collector collector;
+	// Collector collector;
 	// Flywheel flywheel;
 	// Pivot pivot;
 	// Shooter shooter;
@@ -86,7 +86,7 @@ public class RobotContainer extends LightningContainer {
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
 		// indexer = new Indexer();
-		collector = new Collector();
+		// collector = new Collector();
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
@@ -141,10 +141,6 @@ public class RobotContainer extends LightningContainer {
 				new InstantCommand(() -> drivetrain.disableVision()));
 		NamedCommands.registerCommand("enable-Vision",
 				new InstantCommand(() -> drivetrain.enableVision()));
-		NamedCommands.registerCommand("led-Collect",
-				leds.enableState(LED_STATES.COLLECTED).withTimeout(1));
-		NamedCommands.registerCommand("led-Shoot",
-				leds.enableState(LED_STATES.SHOOTING).withTimeout(1));
 
 		// make sure named commands is initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -169,7 +165,7 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 		
 		// makes the robot chase pieces
-		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
+		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
 		// parks the robot
 		new Trigger(driver::getXButton).whileTrue(drivetrain.applyRequest(() -> brake));
@@ -177,25 +173,10 @@ public class RobotContainer extends LightningContainer {
 		// smart shoot for the robot
 		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
 
-		// new Trigger(driver::getRightBumper)
-		// 		.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
-		// 		.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
-
-		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, collector, limelights));
-
-		// new Trigger(driver::getXButton)
-				// .onTrue(new InstantCommand(() -> drivetrain.disableVision()));
-		
-		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds).
-			// alongWith(new PointAtTag(drivetrain, driver, null, false, false)));
-		
-		
-		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
 		// aim at amp and stage tags for the robot
 		new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive));
-		new Trigger(driver::getYButton).whileTrue(new InstantCommand(() -> hapticDriverCommand()));
+		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive).alongWith(hapticDriverCommand()));
 		
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 

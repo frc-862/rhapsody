@@ -29,7 +29,11 @@ public class MoveToPose extends Command {
   private final double minSpeed = 0.9;
   private double powerx;
   private double powery;
-  /** Creates a new MoveToPose. */
+  /** 
+   * @param target The target pose to move to
+   * @param drivetrain The drivetrain subsystem
+   * @param drive The drive mode
+  */
   public MoveToPose(Pose2d target, Swerve drivetrain, SwerveRequest.FieldCentric drive) {
     this.drive = drive;
     this.target = target; 
