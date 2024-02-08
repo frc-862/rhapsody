@@ -33,6 +33,7 @@ public class ChasePieces extends Command {
 
     private boolean onTarget;
 	private boolean hasPiece;
+	private boolean hasTarget;
 
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
 
@@ -64,14 +65,19 @@ public class ChasePieces extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		previousTargetHeading = targetHeading;
-		targetHeading = limelight.getTargetX();
-		targetPitch = limelight.getTargetY();
+		hasTarget = limelight.hasTarget();
+
+		if (hasTarget){
+			previousTargetHeading = targetHeading;
+			targetHeading = limelight.getTargetX();
+			targetPitch = limelight.getTargetY();
+		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		hasPiece = collector.getEntryBeamBreakState();
+		hasPiece = collector.hasPiece();
 
 		LightningShuffleboard.setBool("ChasePieces", "On Target", onTarget);
+		LightningShuffleboard.setBool("ChasePieces", "Has Target", hasTarget);
 
 		LightningShuffleboard.setDouble("ChasePieces", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
 		LightningShuffleboard.setDouble("ChasePieces", "Target Heading", targetHeading);
@@ -86,22 +92,28 @@ public class ChasePieces extends Command {
 
 		pidOutput = headingController.calculate(0, targetHeading);
 		
-		if (trustValues()){
-			if (!onTarget) {
-				drivetrain.setControl(
-					noteChase.withRotationalRate(-pidOutput).withVelocityX(-0.5) // Should be positive for front of robot, negative for back of robot.
-				);
-			} else {
-				drivetrain.setControl(
-					noteChase.withVelocityX(-0.5) // Should be positive for front of robot, negative for back of robot.
-				);
-			}
+		if (hasTarget){
+			if (trustValues()){
+				if (!onTarget) {
+					drivetrain.setControl(
+						noteChase.withRotationalRate(-pidOutput).withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
+					);
+				} else {
+					drivetrain.setControl(
+						noteChase.withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
+					);
+				}
 
-			// Activates if the target is close to the drivetrain.
-			if (targetPitch < 0) {
-				collector.setPower(0.2); // TODO: get the proper value to set to the collector.
-			}
+				// Activates if the target is close to the drivetrain.
+				if (targetPitch < 0) {
+					collector.setPower(0.2); // TODO: get the proper value to set to the collector.
+				}
 
+			}
+		} else {
+			drivetrain.setControl(
+				noteChase.withVelocityX(-3).withRotationalRate(0) // Should be positive for front of robot, negative for back of robot.
+			);
 		}
 
 		isFinished();
