@@ -196,6 +196,8 @@ public class RobotContainer extends LightningContainer {
 
 		/* Other */
 		new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.EnableState(LED_STATES.HAS_VISION));
+		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.EnableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.EnableState(LED_STATES.COLLECTED).withTimeout(2));
+
 	}
 
 	@Override

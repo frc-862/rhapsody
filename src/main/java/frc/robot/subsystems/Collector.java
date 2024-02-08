@@ -17,10 +17,9 @@ public class Collector extends SubsystemBase {
 	private TalonFX motor;
 	private DigitalInput collectorEntryBeamBreakEntrance;
 	private DigitalInput collectorEntryBeamBreakExit;
-	private LEDs leds;
 	private boolean hasPiece;
 
-	public Collector(LEDs leds) {
+	public Collector() {
 		motor = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
 				CollectorConstants.COLLECTOR_MOTOR_INVERTED,
 				CollectorConstants.COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT,
@@ -31,8 +30,6 @@ public class Collector extends SubsystemBase {
 		collectorEntryBeamBreakEntrance = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
 		collectorEntryBeamBreakExit = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
 
-		this.leds = leds;
-		new Trigger(() -> hasPiece).whileTrue(leds.EnableState(LED_STATES.HAS_PIECE));
 	}
 
 	/**
@@ -64,7 +61,6 @@ public class Collector extends SubsystemBase {
 		// tells robot if we have a piece in collector
 		if (getEntryBeamBreakState()) {
 			hasPiece = true;
-			leds.EnableState(LED_STATES.COLLECTED).withTimeout(2).schedule();
 		} else if (getExitBeamBreakState()){
 			hasPiece = false;
 		}
