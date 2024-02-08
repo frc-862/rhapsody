@@ -8,7 +8,11 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.AutonomousConstants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
@@ -18,20 +22,20 @@ public class MoveToPose extends Command {
   private final Swerve drivetrain;
   private FieldCentric drive; 
   private boolean finished;
-
+  private Pose2d current;
+  private double dx;
+  private double dy;
+  private final double kp = 1.8; 
+  private final double minSpeed = 0.9;
+  private double powerx;
+  private double powery;
   /** Creates a new MoveToPose. */
   public MoveToPose(Pose2d target, Swerve drivetrain, SwerveRequest.FieldCentric drive) {
     this.drive = drive;
     this.target = target; 
-    this.drivetrain = drivetrain; 
+    this.drivetrain = drivetrain;
+
     addRequirements(drivetrain); 
-    // Use addRequirements() here to declare subsystem dependencies.
-    LightningShuffleboard.setDouble("MoveToPose", "dx", 0);
-    LightningShuffleboard.setDouble("MoveToPose", "dy", 0);
-    LightningShuffleboard.setDouble("MoveToPose", "targetX", target.getX());
-    LightningShuffleboard.setDouble("MoveToPose", "targetY", target.getY());
-    LightningShuffleboard.setDouble("MoveToPose", "currentX", 0);
-    LightningShuffleboard.setDouble("MoveToPose", "currentY", 0);
   }
 
   // Called when the command is initially scheduled.
@@ -42,32 +46,39 @@ public class MoveToPose extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() { 
-    Pose2d current = drivetrain.getPose().get(); 
-    double dx = target.getTranslation().getX() - current.getTranslation().getX();
-    double dy = target.getTranslation().getY() - current.getTranslation().getY();
+  public void execute() {
+    
     LightningShuffleboard.setDouble("MoveToPose", "dx", dx);
     LightningShuffleboard.setDouble("MoveToPose", "dy", dy);
     LightningShuffleboard.setDouble("MoveToPose", "targetX", target.getX());
     LightningShuffleboard.setDouble("MoveToPose", "targetY", target.getY());
-    LightningShuffleboard.setDouble("MoveToPose", "currentX", current.getX());
-    LightningShuffleboard.setDouble("MoveToPose", "currentY", current.getY());
-    final double kp = 0.3; 
-    final double minSpeed = 0.1;
 
-    double powerx = dx * kp;
-    double powery = dy * kp;
-
+    current = drivetrain.getPose().get(); 
+    dx = target.getTranslation().getX() - current.getTranslation().getX();
+    dy = target.getTranslation().getY() - current.getTranslation().getY();
+    
+  
+    powerx = dx * kp;
+    powery = dy * kp;
+    
     if (minSpeed > Math.abs(powerx)) {
       powerx = minSpeed * Math.signum(dx);
     }
 
     if (minSpeed > Math.abs(powery)) {
-      powery = -minSpeed * -Math.signum(dy);
+      powery = minSpeed * Math.signum(dy);
+    }
+
+    if (dx == 0) {
+      powerx = 0;
+    }
+
+    if (dy == 0) {
+      powery = 0;
     }
 
     var dist = Math.sqrt(dx*dx + dy*dy);
-    if (dist < 0.1) {
+    if (dist < 0.3) {
       powerx = 0;
       powery = 0;
       finished = true;

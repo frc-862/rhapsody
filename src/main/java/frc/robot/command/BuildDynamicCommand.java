@@ -128,7 +128,7 @@ public class BuildDynamicCommand extends Command {
       // state = State.NOCOMMAND;
     }
   }
-
+  
   @Override
   @SuppressWarnings("PMD.CompareObjectsWithEquals")
   public void initSendable(SendableBuilder builder) {
