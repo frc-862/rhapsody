@@ -98,8 +98,7 @@ public class Constants {
          * You expected a javadoc, but it was me, Dio!
          */
         public class DIO {
-            public static final int COLLECTOR_ENTRY_BEAMBREAK_FRONT = 1;
-            public static final int COLLECTOR_ENTRY_BEAMBREAK_BACK = 2;
+            public static final int COLLECTOR_BEAMBREAK = 1;
             public static final int INDEXER_BEAMBREAK = 0;
         }
     }

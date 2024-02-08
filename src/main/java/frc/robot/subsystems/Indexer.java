@@ -11,7 +11,8 @@ import frc.thunder.config.FalconConfig;
 
 public class Indexer extends SubsystemBase {
     private TalonFX indexerMotor;
-    private DigitalInput indexerSensor = new DigitalInput(DIO.INDEXER_BEAMBREAK);
+    private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_BEAMBREAK);
+    private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_BEAMBREAK);
 
     public Indexer() {
         indexerMotor = FalconConfig.createMotor(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
@@ -40,10 +41,22 @@ public class Indexer extends SubsystemBase {
         indexerMotor.set(0d);
     }
 
-    public boolean hasPiece() {
-        return indexerSensor.get();
+    /**
+     * 
+     * @return entry beambreak state
+     */
+    public boolean getEntryBeamBreakState() {
+        return !indexerSensorEntry.get();
     }
 
+    public boolean getExitBeamBreakState() {
+        return !indexerSensorExit.get();
+    }
+     /**
+      * 
+      * @return exit beambreak state
+      */
+    
     public boolean hasShot() {
         return false; // TODO add actual logic
     }
