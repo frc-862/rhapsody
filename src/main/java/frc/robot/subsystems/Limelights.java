@@ -1,17 +1,15 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.thunder.vision.Limelight;
 
 public class Limelights extends SubsystemBase {
     private Limelight stopMe;
     private Limelight dust;
     private Limelight champs;
-    private Limelight champions;
 
     public Limelights() {
-        stopMe = new Limelight("limelight-pressure", "10.8.62.11");   // LL3   Back
+        stopMe = new Limelight("limelight-stopMe", "10.8.62.11");   // LL3   Back
         dust = new Limelight("limelight-dust", "10.8.62.12");           // LL2+  Front up
         champs = new Limelight("limelight-champs", "10.8.62.13"); // LL2+  Front down (collector)
 

@@ -3,12 +3,10 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.CollectorConstants;
-import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.thunder.config.FalconConfig;
 
 public class Collector extends SubsystemBase {

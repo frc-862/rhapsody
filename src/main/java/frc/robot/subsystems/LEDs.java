@@ -19,7 +19,6 @@ public class LEDs extends SubsystemBase {
 	private LED_STATES state = LED_STATES.OFF;
 	private Map<LED_STATES, Boolean> ledStates;
 
-	/** Creates a new  */
 	public LEDs() {
 		leds = new AddressableLED(LEDsConstants.LED_PWM_PORT);
 		ledBuffer = new AddressableLEDBuffer(LEDsConstants.LED_LENGTH);
@@ -90,7 +89,7 @@ public class LEDs extends SubsystemBase {
 		leds.setData(ledBuffer);
 	}
 
-	public Command EnableState(LED_STATES state) {
+	public Command enableState(LED_STATES state) {
 		return new StartEndCommand(() -> {
 			System.out.println("start");
 			ledStates.put(state, true);}, 

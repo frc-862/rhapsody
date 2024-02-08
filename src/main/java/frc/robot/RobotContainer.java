@@ -174,7 +174,7 @@ public class RobotContainer extends LightningContainer {
 		// aim at amp and stage tags for the robot
 		new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.EnableState(LED_STATES.DISABLED));
+		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
 		// cand shots for the robot
@@ -182,7 +182,7 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
 
-		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber, drivetrain).deadlineWith(leds.EnableState(LED_STATES.CLIMBING)));
+		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber, drivetrain).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
 		/*BIAS */
 		// new Trigger(() -> coPilot.getPOV() == 0).onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
@@ -195,8 +195,8 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
 
 		/* Other */
-		new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.EnableState(LED_STATES.HAS_VISION));
-		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.EnableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.EnableState(LED_STATES.COLLECTED).withTimeout(2));
+		new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
+		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
 	}
 

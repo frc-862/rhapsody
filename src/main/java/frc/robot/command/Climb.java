@@ -34,7 +34,7 @@ public class Climb extends Command {
 	public void initialize() {
 		// extend arm is preperation for climbing
 			climber.setSetpoint(ClimbConstants.MAX_HEIGHT);
-		}
+	}
 
 	@Override
 	public void execute() {
@@ -78,7 +78,7 @@ public class Climb extends Command {
 	@Override
 	public void end(boolean interrupted){
 		climber.setSetpoint(0d);
-		leds.EnableState(LED_STATES.FINISHED_CLIMB).withTimeout(2).schedule();
+		leds.enableState(LED_STATES.FINISHED_CLIMB).withTimeout(2).schedule();
 	}
 
 	@Override
