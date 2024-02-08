@@ -13,8 +13,6 @@ public class Climb extends Command {
 	private final Climber climber;
 	private final Swerve drivetrain;
 
-	boolean hasTipped = false;
-	BooleanSupplier abort;
 	LEDs leds;
 
 	/**

@@ -438,7 +438,6 @@ public class Constants {
     public class LEDsConstants {
         public static final int LED_PWM_PORT = 0;
         public static final int LED_LENGTH = 14;
-        public static final int LED_BUFFER_TIME = 60;
 
         public static final int SWRIL_SEGMENT_SIZE = 5;
         
