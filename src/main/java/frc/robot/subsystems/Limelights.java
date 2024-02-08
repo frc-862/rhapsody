@@ -9,10 +9,8 @@ public class Limelights extends SubsystemBase {
     private Limelight dust;
     private Limelight champs;
     private Limelight champions;
-    private LEDs leds;
 
-    public Limelights(LEDs leds) {
-        this.leds = leds;
+    public Limelights() {
         stopMe = new Limelight("limelight-pressure", "10.8.62.11");   // LL3   Back
         dust = new Limelight("limelight-dust", "10.8.62.12");           // LL2+  Front up
         champs = new Limelight("limelight-champs", "10.8.62.13"); // LL2+  Front down (collector)
@@ -62,8 +60,5 @@ public class Limelights extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (stopMe.hasTarget() || champions.hasTarget()){
-            leds.EnableState(LED_STATES.HAS_VISION);
-        }
     }
 }

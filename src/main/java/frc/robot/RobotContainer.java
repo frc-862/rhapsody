@@ -80,8 +80,7 @@ public class RobotContainer extends LightningContainer {
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
 		
-		leds = new LEDs();
-		limelights = new Limelights(leds);
+		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
 		// indexer = new Indexer();
@@ -195,7 +194,8 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
 
-		
+		/* Other */
+		new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.EnableState(LED_STATES.HAS_VISION));
 	}
 
 	@Override
