@@ -55,8 +55,8 @@ public class SmartShoot extends Command {
 			flywheel.coast();
 			pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
 			indexer.stop();
-			// CommandScheduler.getInstance().schedule(new SetLEDState(leds, LED_STATES.SHOT, 2, null));
 			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
+			leds.enableState(LED_STATES.SHOT).withTimeout(2).schedule();
 		} else {
 			flywheel.coast();
 		}
