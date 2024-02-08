@@ -27,10 +27,13 @@ public class ChasePieces extends Command {
 
 	private double pidOutput;
 	private double targetHeading;
+	private double previousTargetHeading;
+
 	private double targetPitch;
 
     private boolean onTarget;
 	private boolean hasPiece;
+	private boolean hasTarget;
 
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
 
@@ -62,14 +65,19 @@ public class ChasePieces extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
+		hasTarget = limelight.hasTarget();
 
-		targetHeading = limelight.getTargetX();
-		targetPitch = limelight.getTargetY();
+		if (hasTarget){
+			previousTargetHeading = targetHeading;
+			targetHeading = limelight.getTargetX();
+			targetPitch = limelight.getTargetY();
+		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		hasPiece = collector.getEntryBeamBreakState();
+		hasPiece = collector.hasPiece();
 
 		LightningShuffleboard.setBool("ChasePieces", "On Target", onTarget);
+		LightningShuffleboard.setBool("ChasePieces", "Has Target", hasTarget);
 
 		LightningShuffleboard.setDouble("ChasePieces", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
 		LightningShuffleboard.setDouble("ChasePieces", "Target Heading", targetHeading);
@@ -84,24 +92,31 @@ public class ChasePieces extends Command {
 
 		pidOutput = headingController.calculate(0, targetHeading);
 		
-		if (!hasPiece){
-			if (!onTarget) {
-				drivetrain.setControl(
-					noteChase.withRotationalRate(-pidOutput).withVelocityX(3) // Should be positive for front of robot, negative for back of robot.
-				);
-			} else {
-				drivetrain.setControl(
-					noteChase.withVelocityX(3) // Should be positive for front of robot, negative for back of robot.
-				);
-			}
+		if (hasTarget){
+			if (trustValues()){
+				if (!onTarget) {
+					drivetrain.setControl(
+						noteChase.withRotationalRate(-pidOutput).withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
+					);
+				} else {
+					drivetrain.setControl(
+						noteChase.withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
+					);
+				}
 
-			// Activates if the target is close to the drivetrain.
-			if (targetPitch < 0) {
-				collector.setPower(0.2); // TODO: get the proper value to set to the collector.
+				// Activates if the target is close to the drivetrain.
+				if (targetPitch < 0) {
+					collector.setPower(0.2); // TODO: get the proper value to set to the collector.
+				}
+
 			}
 		} else {
-			end(false);
+			drivetrain.setControl(
+				noteChase.withVelocityX(-3).withRotationalRate(0) // Should be positive for front of robot, negative for back of robot.
+			);
 		}
+
+		isFinished();
         
 	}
 
@@ -112,9 +127,21 @@ public class ChasePieces extends Command {
 		collector.stop();
 	}
 
+	// Makes sure that the robot isn't jerking over to a different side while chasing pieces.
+	public boolean trustValues(){
+		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6){
+			return true;
+		}
+		return false;
+	}
+
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
+		if (hasPiece){
+			return true;
+		}
+		
 		return false;
 	}
 }
