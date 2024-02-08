@@ -177,7 +177,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
 		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive));
-		new Trigger(driver::getYButton).whileTrue(new HapticFeedback(driver, 1));
+		new Trigger(driver::getYButton).whileTrue(new InstantCommand(() -> hapticDriverCommand()));
 		
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
