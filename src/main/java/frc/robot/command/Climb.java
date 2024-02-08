@@ -4,25 +4,27 @@ import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.BooleanSupplier;
 
 import frc.robot.Constants.ClimbConstants;
+import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Swerve;
 
 public class Climb extends Command {
 	private final Climber climber;
 	private final Swerve drivetrain;
 
-	boolean hasTipped = false;
+	LEDs leds;
 
 	/**
 	 * Creates a new Climb.
-	 * 
 	 * @param climber subsystem
 	 * @param drivetrain subsystem
+	 * @param leds to
 	 */
-	public Climb(Climber climber, Swerve drivetrain) {
+	public Climb(Climber climber, Swerve drivetrain, LEDs leds) {
 		this.climber = climber;
 		this.drivetrain = drivetrain;
-
+		this.leds = leds;
 		addRequirements(climber);
 	}
 
@@ -72,8 +74,9 @@ public class Climb extends Command {
 	}
 
 	@Override
-	public void end(boolean interrupted) {
+	public void end(boolean interrupted){
 		climber.setSetpoint(0d);
+		leds.enableState(LED_STATES.FINISHED_CLIMB).withTimeout(2).schedule();
 	}
 
 	@Override

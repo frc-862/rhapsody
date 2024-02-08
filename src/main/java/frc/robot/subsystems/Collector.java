@@ -27,6 +27,7 @@ public class Collector extends SubsystemBase {
 		//TODO: real robot doesn't currently have a plan to have 2 beam breaks, if programming requires this they need to say so soon.
 		collectorEntryBeamBreakEntrance = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
 		collectorEntryBeamBreakExit = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
+
 	}
 
 	/**
