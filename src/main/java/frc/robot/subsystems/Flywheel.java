@@ -6,7 +6,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.FlywheelConstants;
-import frc.robot.Constants.PivotConstants;
 import frc.thunder.config.FalconConfig;
 
 public class Flywheel extends SubsystemBase {
