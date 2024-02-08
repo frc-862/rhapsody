@@ -5,63 +5,64 @@ import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.thunder.vision.Limelight;
 
 public class Limelights extends SubsystemBase {
-    private Limelight pressure;
+    private Limelight stopMe;
     private Limelight dust;
+    private Limelight champs;
     private Limelight champions;
     private LEDs leds;
 
     public Limelights(LEDs leds) {
         this.leds = leds;
-        pressure = new Limelight("limelight-pressure", "10.8.62.11");   // LL3   Back
+        stopMe = new Limelight("limelight-pressure", "10.8.62.11");   // LL3   Back
         dust = new Limelight("limelight-dust", "10.8.62.12");           // LL2+  Front up
-        champions = new Limelight("limelight-champions", "10.8.62.13"); // LL2+  Front down (collector)
+        champs = new Limelight("limelight-champs", "10.8.62.13"); // LL2+  Front down (collector)
 
         //TODO: make actual pipelines... maybe an enum? At least use constants
-        pressure.setPipeline(0);
+        stopMe.setPipeline(0);
         dust.setPipeline(0);
-        champions.setPipeline(0);
+        champs.setPipeline(0);
     }
 
-    public Limelight getPressure() {
-        return pressure;
+    public Limelight getStopMe() {
+        return stopMe;
     }
 
     public Limelight getDust() {
         return dust;
     }
 
-    public Limelight getChampions() {
-        return champions;
+    public Limelight getChamps() {
+        return champs;
     }
 
-    public void setPressurePipeline(int pipeline) {
-        pressure.setPipeline(pipeline);
+    public void setStopMePipeline(int pipeline) {
+        stopMe.setPipeline(pipeline);
     }
 
     public void setDustPipeline(int pipeline) {
         dust.setPipeline(pipeline);
     }
 
-    public void setChampionsPipeline(int pipeline) {
-        champions.setPipeline(pipeline);
+    public void setChampsPipeline(int pipeline) {
+        champs.setPipeline(pipeline);
     }
 
-    public int getPressurePipeline() {
-        return  pressure.getPipeline();
+    public int getStopMePipeline() {
+        return  stopMe.getPipeline();
     }
 
     public int getDustPipeline() {
         return  dust.getPipeline();
     }
 
-    public int getChampionsPipeline() {
-        return  champions.getPipeline();
+    public int getChampsPipeline() {
+        return  champs.getPipeline();
     }
 
 
     @Override
     public void periodic() {
-        if (pressure.hasTarget() || champions.hasTarget()){
+        if (stopMe.hasTarget() || champions.hasTarget()){
             leds.EnableState(LED_STATES.HAS_VISION);
         }
     }

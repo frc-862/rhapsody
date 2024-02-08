@@ -25,9 +25,11 @@ import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Index;
+import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
-import frc.robot.command.TipDetection;
 import frc.robot.command.shoot.AmpShot;
+import frc.robot.command.shoot.PodiumShot;
+import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.SingSystemTest;
@@ -54,8 +56,8 @@ public class RobotContainer extends LightningContainer {
 	private Swerve drivetrain;
 	private Limelights limelights;
 	// Collector collector;
-	Flywheel flywheel;
-	Pivot pivot;
+	// Flywheel flywheel;
+	// Pivot pivot;
 	// Shooter shooter;
 	// Indexer indexer;
 	// Climber climber;
@@ -64,6 +66,8 @@ public class RobotContainer extends LightningContainer {
 	private SendableChooser<Command> autoChooser;
 	SwerveRequest.FieldCentric drive;
 	SwerveRequest.FieldCentric slow;
+	SwerveRequest.RobotCentric driveRobotCentric;
+	SwerveRequest.RobotCentric slowRobotCentric;
 	SwerveRequest.SwerveDriveBrake brake;
 	SwerveRequest.PointWheelsAt point;
 	Telemetry logger;
@@ -79,18 +83,50 @@ public class RobotContainer extends LightningContainer {
 		leds = new LEDs();
 		limelights = new Limelights(leds);
 		drivetrain = TunerConstants.getDrivetrain(limelights);
-		
+
 		// indexer = new Indexer();
 		// collector = new Collector();
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
-		// climber = new Climber();
+		// climber = new Climber(drivetrain);
+		leds = new LEDs();
 
+		// field centric for the robot
 		drive = new SwerveRequest.FieldCentric()
-				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed
+																		// *
+																		// DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate
+																		// *
+																		// DrivetrAinConstants.ROT_DB);
+																		// // I want field-centric
+																		// driving in closed loop
 		slow = new SwerveRequest.FieldCentric()
-				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed
+																		// *
+																		// DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate
+																		// *
+																		// DrivetrAinConstants.ROT_DB);
+																		// // I want field-centric
+																		// driving in closed loop
+
+		// robot centric for the robot
+		driveRobotCentric = new SwerveRequest.RobotCentric()
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed
+																		// *
+																		// DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate
+																		// *
+																		// DrivetrAinConstants.ROT_DB);
+																		// // I want field-centric
+																		// driving in closed loop
+		slowRobotCentric = new SwerveRequest.RobotCentric()
+				.withDriveRequestType(DriveRequestType.OpenLoopVoltage);// .withDeadband(DrivetrAinConstants.MaxSpeed
+																		// *
+																		// DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate
+																		// *
+																		// DrivetrAinConstants.ROT_DB);
+																		// // I want field-centric
+																		// driving in closed loop
 
 		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
@@ -112,46 +148,42 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureButtonBindings() {
-		new Trigger(driver::getLeftBumper)
+		/* driver */
+		// activates between robot and field centric for the robot + logs when active
+		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
+			.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
+			.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
+		
+		// Logs slow mode
+		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
+			.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
+			.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+		
+		// resets the gyro of the robot
+		new Trigger(() -> driver.getStartButton() && driver.getBackButton())
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
-
-		new Trigger(driver::getAButton).whileTrue(drivetrain.applyRequest(() -> brake));
-		new Trigger(driver::getBButton).whileTrue(drivetrain.applyRequest(() -> point
-				.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
-		new Trigger(driver::getRightBumper).whileTrue(drivetrain.applyRequest(() -> slow
-				.withVelocityX(
-						-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND)
-								* DrivetrainConstants.MaxSpeed
-								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-				.withVelocityY(
-						-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND)
-								* DrivetrainConstants.MaxSpeed
-								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-				.withRotationalRate(
-						-MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND)
-								* DrivetrainConstants.MaxAngularRate
-								* DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
 		
+		// makes the robot chase pieces
+		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
-		new Trigger(driver::getRightBumper)
-				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
-				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+		// parks the robot
+		new Trigger(driver::getXButton).whileTrue(drivetrain.applyRequest(() -> brake));
+		
+		// smart shoot for the robot
+		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
 
-		// new Trigger(driver::getXButton).whileTrue(new ChasePieces(drivetrain, collector, limelights).deadlineWith(leds.EnableState(LED_STATES.CHASING));
-		new Trigger(driver::getBackButton).whileTrue(new TipDetection(drivetrain));
-		
-		// new Trigger(driver::getAButton).whileTrue((new SmartShoot(flywheel, pivot, drivetrain, indexer, leds).
-		// 	alongWith(new PointAtTag(drivetrain, driver, null, false, false))).deadlineWith(leds.EnableState(LED_STATES.SHOOTING)));
-		
-		new Trigger(driver::getYButton).onTrue(new InstantCommand(() -> drivetrain.enableVision()));
+		// aim at amp and stage tags for the robot
+		new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.EnableState(LED_STATES.DISABLED));
 
 		/* copilot */
-		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
-		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
-		// new trigger(coPilot::getAButton).whileTrue(new AmpShot(pivot, flywheel));
-		// new Trigger(driver::getYButton).onTrue(new Climb(climber, drivetrain, () -> coPilot.getBackButton()).deadlineWith(leds.EnableState(LED_STATES.CLIMBING));
+		// cand shots for the robot
+		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
+		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
+		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
+
+		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber, drivetrain).deadlineWith(leds.EnableState(LED_STATES.CLIMBING)));
 
 		/*BIAS */
 		// new Trigger(() -> coPilot.getPOV() == 0).onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
@@ -160,36 +192,35 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(() -> coPilot.getPOV() == 90).onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
 		// new Trigger(() -> coPilot.getPOV() == 270).onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
 
-		// new Trigger(() -> (coPilot.getBackButton() && coPilot.getStartButton()))
-		// 	.onTrue(new InstantCommand(() -> flywheel.resetBias())
-		// 	.alongWith(new InstantCommand(() -> pivot.resetBias())));
+		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
+		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
+
+		
 	}
-	
+
 	@Override
 	protected void configureDefaultCommands() {
+		/* driver */
 		drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 				drivetrain.applyRequest(() -> drive
 						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
 						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
 								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
 				));
-		// climber.setDefaultCommand(new ManualClimb(() -> (coPilot.getRightTriggerAxis() -
-		// coPilot.getLeftTriggerAxis()), climber));
-		// climber.setDefaultCommand(new Climb(climber, drivetrain));
 
-		// shooter.setDefaultCommand(new Shoot(shooter, indexer, drivetrain, () ->
-		// coPilot.getAButton()));
 
-		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis()
-		// - coPilot.getLeftTriggerAxis()), collector));
+		/* copilot */
+		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() -
+		// coPilot.getLeftTriggerAxis()), collector));
 
-		
+		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
+		// coPilot.getRightY(), climber));
 	}
 
 	protected Command getAutonomousCommand() {
@@ -214,8 +245,8 @@ public class RobotContainer extends LightningContainer {
 				DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
 		SystemTest.registerTest("Azimuth Test",
 				new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
-				
-		SystemTest.registerTest("Singing Test", 
+
+		SystemTest.registerTest("Singing Test",
 				new SingSystemTest(drivetrain, MusicConstants.JEOPARDY_FILEPATH));
 
 		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
@@ -225,18 +256,20 @@ public class RobotContainer extends LightningContainer {
 	public static Command hapticDriverCommand() {
 		return new StartEndCommand(() -> {
 			driver.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
-    		driver.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);}, 
-			() -> {
+			driver.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
+		}, () -> {
 			driver.setRumble(GenericHID.RumbleType.kRightRumble, 0);
-			driver.setRumble(GenericHID.RumbleType.kLeftRumble, 0);});
+			driver.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+		});
 	}
 
 	public static Command hapticCopilotCommand() {
 		return new StartEndCommand(() -> {
 			coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
-    		coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);}, 
-			() -> {
+			coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
+		}, () -> {
 			coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 0);
-			coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 0);});
+			coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+		});
 	}
 }
