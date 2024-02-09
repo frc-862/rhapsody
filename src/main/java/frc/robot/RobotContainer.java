@@ -37,6 +37,7 @@ import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
+import frc.robot.command.CollisionDetection;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climber;
@@ -45,6 +46,7 @@ import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.CollisionDetector;
 import frc.thunder.LightningContainer;
 import frc.thunder.command.TimedCommand;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -63,6 +65,7 @@ public class RobotContainer extends LightningContainer {
 	// Shooter shooter;
 	// Indexer indexer;
 	// Climber climber;
+	CollisionDetector collisionDetector;
 	LEDs leds;
 
 	private SendableChooser<Command> autoChooser;
@@ -91,6 +94,7 @@ public class RobotContainer extends LightningContainer {
 		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
 		// climber = new Climber(drivetrain);
+		collisionDetector = new CollisionDetector();
 		leds = new LEDs();
 
 		// field centric for the robot
@@ -227,6 +231,8 @@ public class RobotContainer extends LightningContainer {
 				));
 
 
+		collisionDetector.setDefaultCommand(new CollisionDetection(drivetrain));
+			
 		/* copilot */
 		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() -
 		// coPilot.getLeftTriggerAxis()), collector));
