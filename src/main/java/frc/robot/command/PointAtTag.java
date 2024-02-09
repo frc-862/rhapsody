@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
@@ -20,52 +21,38 @@ public class PointAtTag extends Command {
 
 	private Swerve drivetrain;
 	private Limelight limelight;
-
 	private XboxController driver;
+
 	private FieldCentric slow;
 	private FieldCentric drive;
-
-	private SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-	private Limelight[] limelights;
 	
-	private int limelightId = 0;
+	private int limelightPrevPipeline = 0;
 	private double pidOutput;
-	private double lockedOnHeading;
 	private double targetHeading;
-	private boolean useLimelights;
-	private PIDController headingController = VisionConstants.HEADING_CONTROLLER;
+
+
+	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
 	/**
 	 * Creates a new PointAtTag.
 	 * @param drivetrain to request movement 
+	 * @param limelights to get the limelight from
 	 * @param driver the driver's controller, used for drive input
-	 * @param limelight_name the name of the limelight to use
-	 * @param useLimelights to get if we want to use vision data or not
-	 * @param noteDetection to get if we want to use this for note detection or april tag detection
 	 */
-	public PointAtTag(Swerve drivetrain, XboxController driver, String limelight_name, boolean useLimelights, boolean noteDetection) {
+	public PointAtTag(Swerve drivetrain, Limelights limelights, XboxController driver) {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
-		this.useLimelights = useLimelights;
 
 		//TODO Figure out which of these is the right one to use 
-		for (var l : drivetrain.getLimelights()) { 
-		 	if (l.getName().equals(limelight_name)) {
-		 		limelight = l;
-			}
-		}
+		limelight = limelights.getStopMe();
 
-		limelight = drivetrain.getLimelights()[0];
+		limelightPrevPipeline = limelight.getPipeline();
 
-		limelightId = limelight.getPipeline();
-		if (noteDetection){
-			limelight.setPipeline(VisionConstants.NOTE_PIPELINE);
-		} else {
-			limelight.setPipeline(VisionConstants.TAG_PIPELINE);
-		}
+		limelight.setPipeline(VisionConstants.TAG_PIPELINE);
 		
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+		
 	}
 	
 	// Called when the command is initially scheduled.
@@ -77,15 +64,9 @@ public class PointAtTag extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		if (useLimelights) {
-			targetHeading = limelight.getTargetX();
-		} else {
-			lockedOnHeading = LightningShuffleboard.getDouble("PointAtTag", "LockOnHeading", 0);
-			LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
-			targetHeading = lockedOnHeading - drivetrain.getPigeon2().getAngle();
-		}
 
-		lockedOnHeading = LightningShuffleboard.getDouble("PointAtTag", "LockOnHeading", 0);
+		targetHeading = limelight.getTargetX();
+
 		LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
 		LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
@@ -109,7 +90,7 @@ public class PointAtTag extends Command {
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		limelight.setPipeline(limelightId);
+		limelight.setPipeline(limelightPrevPipeline);
 	}
 
 	// Returns true when the command should end.

@@ -34,23 +34,15 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private Limelight[] limelights;
     private boolean slowMode = false;
     private boolean disableVision = false;
+    private boolean robotCentricControl = false;
 
-    public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
+    public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, Limelights limelightSubsystem,
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
-        this.limelights = new Limelight[] {
-            new Limelight("limelight-front", "10.8.62.11")};
-            // new Limelight("limelight-back", "10.8.62.12")};
+
+        this.limelights = new Limelight[]{limelightSubsystem.getStopMe()};
 
         configurePathPlanner();
-    }
-
-    /**
-     * Returns all limelights
-     * @return Limelight [ ] 
-     */
-    public Limelight[] getLimelights() {
-        return limelights;
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -72,19 +64,21 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
                 // System.out.println("Vision Updating");
             }
-
+            
             LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
             LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
             LightningShuffleboard.setDouble("Swerve", "PoseTime", pose.getFPGATimestamp()); 
-            LightningShuffleboard.setDouble("Swerve", "Timer", Timer.getFPGATimestamp());           
         }
-
+        
+        LightningShuffleboard.setDouble("Swerve", "Timer", Timer.getFPGATimestamp());           
         LightningShuffleboard.setDouble("Swerve", "Robot Heading", getPigeon2().getAngle());
         LightningShuffleboard.setDouble("Swerve", "Odo X", getState().Pose.getX());
         LightningShuffleboard.setDouble("Swerve", "Odo Y", getState().Pose.getY());
-        LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
         
+        LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
+        LightningShuffleboard.setBool("Swerve", "Robot Centric", isRobotCentricControl());
 
+        LightningShuffleboard.setBool("Sweve", "Tipped", isTipped());
     }
 
     private void configurePathPlanner() {
@@ -123,6 +117,13 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
+    * @return whether the robot is tipped
+    */
+    public boolean isTipped() {
+        return (Math.abs(getPigeon2().getPitch().getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE || Math.abs(getPigeon2().getRoll().getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE);
+    }
+
+    /**
      * gets if slow mode is enabled
      * @return if the robot is driving in slow mode
      */
@@ -136,6 +137,22 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public void setSlowMode(boolean slow) {
         slowMode = slow;
+    }
+
+    /**
+     * Logs if the robot is in robot centric control
+     * @param robotCentricControl boolean if the robot is in robot centric control
+     */
+    public void setRobotCentricControl(boolean robotCentricControl) {
+        this.robotCentricControl = robotCentricControl;
+    }
+
+    /**
+     * Returns if the robot is in robot centric control
+     * @return boolean if the robot is in robot centric control
+     */
+    public boolean isRobotCentricControl() {
+        return robotCentricControl;
     }
 
     /**

@@ -1,18 +1,17 @@
 package frc.robot.subsystems;
 
 import java.util.Arrays;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDsConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class LEDs extends SubsystemBase {
 	AddressableLED leds;
@@ -20,14 +19,13 @@ public class LEDs extends SubsystemBase {
 	private LED_STATES state = LED_STATES.OFF;
 	private Map<LED_STATES, Boolean> ledStates;
 
-	/** Creates a new  */
 	public LEDs() {
 		leds = new AddressableLED(LEDsConstants.LED_PWM_PORT);
-		ledBuffer = new AddressableLEDBuffer(LEDsConstants.LED_BUFFER_TIME);
+		ledBuffer = new AddressableLEDBuffer(LEDsConstants.LED_LENGTH);
 		leds.setLength(ledBuffer.getLength());
 		leds.start();
-		ledStates = new HashMap<LEDsConstants.LED_STATES, Boolean>();
 
+		ledStates = new HashMap<LEDsConstants.LED_STATES, Boolean>();
 	}
 
 	@Override
@@ -42,80 +40,84 @@ public class LEDs extends SubsystemBase {
 		}
 
 		switch (state) {
-			case HAS_POSE:
-				rainbow();
-				break;
-
             case COLLECTED:
-				pulse(240);
+				pulse(LEDsConstants.GREEN_HUE);
 				break;
 
             case SHOT:
-				pulse(240);
+				pulse(LEDsConstants.GREEN_HUE);
 				break;
 
-            case FINISHED_CLIMB:
-				pulse(240);
+            case FINISHED_CLIMB: 
+				pulse(LEDsConstants.GREEN_HUE);
 				break;
 
-            case SHOOTING:
-				blink(15);
+            case SHOOTING: 
+				rainbow();
 				break;
 			
 			case COLLECTING:
 				blink(315);
 				break;
 
-            case CHASING:
-				blink(0);
+            case CHASING: 
+				blink(LEDsConstants.RED_HUE);
 				break;
 
-            case READYING_SHOOT:
-				pulse(15);
+			case CLIMBING:
+				blink(LEDsConstants.PURPLE_HUE);
 				break;
 
-            case CLIMBED:
-				setSolidHSV(315, 255, 255);
+            case HAS_PIECE: 
+			    setSolidHSV(LEDsConstants.ORANGE_HUE, 255, 255);
 				break;
 
-            case CAN_SHOOT:
-				setSolidHSV(15, 255, 255);
-				break;
-
-            case HAS_PIECE:
-			    setSolidHSV(5, 255, 255);
-				break;
-
-            case HAS_VISION:
-				setSolidHSV(355, 255, 255);
+            case HAS_VISION: 
+				setSolidHSV(LEDsConstants.PINK_HUE, 255, 255);
 				break;
 
 			case MIXER:
-				LightningShuffleboard.set("LEDs","Mixer Hue", 0);
-				setSolidHSV((int)LightningShuffleboard.getDouble("LEDs", "Mixer Hue", 0), 255, 255);
+				// LightningShuffleboard.set("LEDs","Mixer Hue", 0);
+				// setSolidHSV((int)LightningShuffleboard.getDouble("LEDs", "Mixer Hue", 0), 255, 255);
 				break;
 
 			case OFF:
-				swirl(4);
+				swirl(LEDsConstants.SWRIL_SEGMENT_SIZE);
 				break;
 			
-			default:
-				setSolidRGB(0, 0, 0);
-
+			case DISABLED:
+				setSolidHSV(0, 0, 0);
+				break;
 		}
 
 		leds.setData(ledBuffer);
+	}
+
+	public Command enableState(LED_STATES state) {
+		return new StartEndCommand(() -> {
+			System.out.println("start");
+			ledStates.put(state, true);}, 
+			() -> {
+			System.out.println("end");
+			ledStates.put(state, false);
+			}).ignoringDisable(true);
+	}
+
+	public void rainbow() {
+		for (int i = 0; i < LEDsConstants.LED_LENGTH; i++) {
+			ledBuffer.setHSV(i, (i + (int)(Timer.getFPGATimestamp() * 20)) % ledBuffer.getLength() * 180 / 14, 255, 100);
+		}
 	}
 
 	/**
 	 * @param segmentSize size of each color segment
 	 */
 	public void swirl(int segmentSize) {
-		for (int i = 0; i < LEDsConstants.LED_BUFFER_TIME; i++) {
+		for (int i = 0; i < LEDsConstants.LED_LENGTH; i++) {
 			if (((i + (int)(Timer.getFPGATimestamp() * 10)) / segmentSize) % 2 == 0) {
-				setIndexRGB(i, 0, 0, 255);
+				ledBuffer.setHSV(i, LEDsConstants.BLUE_HUE, 255, 255);
 			} else {
-				setIndexRGB(i, 255, 35, 0);
+				ledBuffer.setHSV(i, LEDsConstants.ORANGE_HUE, 255, 255);
 			}
 		}
 	}
@@ -138,46 +140,9 @@ public class LEDs extends SubsystemBase {
 		setSolidHSV(hue, 255, (int) Math.abs((Math.sin(Timer.getFPGATimestamp() * 2) * 255)));
 	}
 
-	
-	public void rainbow() {
-		for (int i = 0; i < ledBuffer.getLength(); i++) {
-			ledBuffer.setHSV(i, (i + (int)(Timer.getFPGATimestamp() * 20)) % ledBuffer.getLength() * 180 / 14, 255, 100);
-		}
-	}
-	
-	public void setState(LED_STATES state, boolean value) {
-		ledStates.put(state, value);
-	}
-
-	public void disable() {
-		if(ledStates.get(LED_STATES.DISABLED) != null && ledStates.get(LED_STATES.DISABLED)) {
-			ledStates.put(LED_STATES.DISABLED, false);
-		} else {
-			ledStates.put(LED_STATES.DISABLED, true);
-		}
-	}
-
-	public int getBufferLength() {
-		return ledBuffer.getLength();
-	}
-
-	public void setSolidRGB(int r, int g, int b) {
-		for (var i = 0; i < ledBuffer.getLength(); i++) {
-			ledBuffer.setRGB(i, r, g, b);
-		}
-	}
-
-	public void setIndexRGB(int index, int r, int g, int b) {
-		ledBuffer.setRGB(index, r, g, b);
-	}
-
 	public void setSolidHSV(int h, int s, int v) {
-		for (var i = 0; i < ledBuffer.getLength(); i++) {
+		for (var i = 0; i < LEDsConstants.LED_LENGTH; i++) {
 			ledBuffer.setHSV(i, h, s, v);
 		}
-	}
-
-	public void setIndexHSV(int index, int h, int s, int v) {
-		ledBuffer.setHSV(index, h, s, v);
 	}
 }

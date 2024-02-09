@@ -18,10 +18,10 @@ public class ManualClimb extends Command {
      * @param climber subsystem
      */
     public ManualClimb(DoubleSupplier leftPower, DoubleSupplier rightPower, Climber climber) {
-        // Use addRequirements() here to declare subsystem dependencies.
         this.climber = climber;
         this.leftPower = leftPower;
         this.rightPower = rightPower;
+        
         addRequirements(climber);
     }
 
