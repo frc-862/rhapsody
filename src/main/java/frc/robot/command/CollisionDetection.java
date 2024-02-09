@@ -6,6 +6,7 @@ package frc.robot.command;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.TunerConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.CollisionDetector;
 import frc.robot.subsystems.Swerve;
 import frc.robot.Constants.TunerConstants;
@@ -20,6 +21,7 @@ public Swerve drivetrain;
 public CollisionDetector collisionDetector;
 public double pigeonAcceleration;
 public double motorAcceleration;
+public boolean collided = false;
 
 
 
@@ -41,6 +43,7 @@ public double motorAcceleration;
 
     LightningShuffleboard.setDoubleSupplier("Collision Detection", "pidgeon vel", () -> pigeonAcceleration);
     LightningShuffleboard.setDoubleSupplier("Collision Detection", "motor vel", () -> motorAcceleration);
+    LightningShuffleboard.setBoolSupplier("Collision Detection", "collided", () -> collided);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,13 +52,21 @@ public double motorAcceleration;
     pigeonAcceleration = Math.sqrt(Math.pow(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble() - 1, 2) 
     + Math.pow(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() - 1, 2)) * 9.8;
 
-    motorAcceleration = drivetrain.getModule(0).getDriveMotor().getAcceleration().getValueAsDouble() 
-    * TunerConstants.kWheelRadiusInches * 2 * Math.PI;
+    motorAcceleration = Math.abs(drivetrain.getModule(0).getDriveMotor().getAcceleration().getValueAsDouble() 
+    * TunerConstants.kWheelRadiusInches * 2 * Math.PI);
+
+    if (Math.abs(pigeonAcceleration - motorAcceleration) > VisionConstants.Collision_Acceleration_Tolerance) {
+      collided = false;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
+
+  public boolean getIfCollided(){
+    return collided;
+  }
 
   // Returns true when the command should end.
   @Override
