@@ -19,6 +19,7 @@ public class Sing extends Command {
   /*
    * @param drivetrain used to grab the motors for the song
    * @param filepath used to select what song to sing
+   * @param sing used to play the song and stop any current songs
    * please note that this removes all usage of the drivetrain until it is ended.
    * use with caution, and only when the drivetrain is not in use.
    */
