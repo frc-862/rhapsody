@@ -11,7 +11,7 @@ import frc.thunder.testing.SystemTestCommand;
 
 public class SingSystemTest extends SystemTestCommand {
   
-  private Orchestra sing = new Orchestra();
+  private Orchestra sing;
 
   private Swerve drivetrain;
   private String filepath;
@@ -22,13 +22,17 @@ public class SingSystemTest extends SystemTestCommand {
    * @param drivetrain used to grab the motors for the song
    * @param filepath used to select what song to sing
    */
-  public SingSystemTest(Swerve drivetrain, String filepath) {
+  public SingSystemTest(Swerve drivetrain, String filepath, Orchestra sing) {
     this.drivetrain = drivetrain;
     this.filepath = filepath;
+    this.sing = sing;
   }
 
   @Override
   public void initialize() {
+    sing.clearInstruments();
+    sing.stop();
+    
     for (int i = 0; i < 4; i++){
       sing.addInstrument(drivetrain.getModule(i).getDriveMotor());
       sing.addInstrument(drivetrain.getModule(i).getSteerMotor());
