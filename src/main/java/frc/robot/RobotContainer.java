@@ -49,6 +49,7 @@ import frc.thunder.LightningContainer;
 import frc.thunder.command.TimedCommand;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
+import frc.thunder.testing.SystemTestCommand;
 
 public class RobotContainer extends LightningContainer {
 	public static XboxController driver;
@@ -149,8 +150,9 @@ public class RobotContainer extends LightningContainer {
 		// make sure named commands is initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
-	}
 
+		
+	}
 	@Override
 	protected void configureButtonBindings() {
 		/* driver */
@@ -263,6 +265,14 @@ public class RobotContainer extends LightningContainer {
 
 		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
 		// collector, indexer, pivot));
+		
+		//Make sing appear on shuffleboard!! :)
+		SendableChooser<SystemTestCommand> chooser = new SendableChooser<>();
+		for (String filepath: MusicConstants.SET_LIST){
+			chooser.addOption(filepath, new SingSystemTest(drivetrain, filepath));
+		}
+		chooser.close();
+
 	}
 
 	public static Command hapticDriverCommand() {
