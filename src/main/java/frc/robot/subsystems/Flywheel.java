@@ -1,11 +1,17 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-
+import com.ctre.phoenix6.sim.CANcoderSimState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.FlywheelConstants;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.thunder.config.FalconConfig;
 
 public class Flywheel extends SubsystemBase {
@@ -16,6 +22,9 @@ public class Flywheel extends SubsystemBase {
     private double targetRPM = 0;
     private double bias = 0;
 
+    // new flywheel simulation
+    private final DCMotor m_flywheelGearbox = DCMotor.getFalcon500(2);
+    private final FlywheelSim flywheelsim = new FlywheelSim(m_flywheelGearbox, FlywheelConstants.FLYWHEEL_GEARING, bias); // TODO: get inertia value
     public Flywheel() {
         shooterTopMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_1, CAN.CANBUS_FD,
                 FlywheelConstants.FLYWHEEL_MOTOR_1_INVERT,
@@ -31,6 +40,13 @@ public class Flywheel extends SubsystemBase {
                 FlywheelConstants.FLYWHEEL_MOTOR_NEUTRAL_MODE, FlywheelConstants.FLYWHEEL_MOTOR_KP,
                 FlywheelConstants.FLYWHEEL_MOTOR_KI, FlywheelConstants.FLYWHEEL_MOTOR_KD,
                 FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
+
+        
+    }
+
+    public void simulationPeriodic() {
+        flywheelsim.setInput(targetRPM);
+        flywheelsim.update(0.02); 
     }
 
     /**

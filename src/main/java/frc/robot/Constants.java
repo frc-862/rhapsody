@@ -86,9 +86,9 @@ public class Constants {
             // TODO check
             // Cancoders
             public static final int FLYWHEEL_CANCODER = 35;
-            public static final int CLIMB_CANCODERR = 36;
+            public static final int CLIMB_CANCODER = 36;
             public static final int CLIMB_CANCODERL = 37;
-            public static final int PIVOT_ANGLE_CANCODER = 38;
+            public static final int PIVOT_ANGLE_CANCODER = 38;  
             
             public static final String CANBUS_FD = "Canivore";
             public static final String RIO_CANBUS = "rio";
@@ -332,6 +332,8 @@ public class Constants {
 
         public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get amount to bias by
         public static final double COAST_VOLTAGE = 0.1;
+
+        public static final double FLYWHEEL_GEARING = 0;
     }
 
     public class IndexerConstants { // TODO: get real
