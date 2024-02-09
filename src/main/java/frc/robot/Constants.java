@@ -9,10 +9,12 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.path.PathConstraints;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -23,6 +25,7 @@ import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.math.InterpolationMap;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 /** Add your docs here. */
 public class Constants {
@@ -89,7 +92,7 @@ public class Constants {
             public static final int CLIMB_CANCODERR = 36;
             public static final int CLIMB_CANCODERL = 37;
             public static final int PIVOT_ANGLE_CANCODER = 38;
-            
+
             public static final String CANBUS_FD = "Canivore";
             public static final String RIO_CANBUS = "rio";
         }
@@ -119,6 +122,13 @@ public class Constants {
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(19.09); // TODO check
 
         public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
+
+        //For Pathfinding
+        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(-1, 2), new Rotation2d(0d));
+        public static final double GOAL_END_VELOCITY = 0; // Goal end velocity in meters/sec
+        public static final double ROTATION_DELAY_DISTACE = 0d; // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+        
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); //TODO get constants
     }
 
     public static class TunerConstants {
@@ -339,7 +349,7 @@ public class Constants {
         public static final int INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int INDEXER_MOTOR_STATOR_CURRENT_LIMIT = 0;
         public static final NeutralModeValue INDEXER_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
-        public static final double INDEXER_DEFAULT_POWER = 0.3; 
+        public static final double INDEXER_DEFAULT_POWER = 0.3;
     }
 
     public class PivotConstants { // TODO: get real
@@ -364,7 +374,7 @@ public class Constants {
 
     public class ShooterConstants {
         public static final double STOW_ANGLE = 0;
-        
+
         public static final double FAR_WING_X = 3.3;
 
         // Distance in meters, angle in degrees
