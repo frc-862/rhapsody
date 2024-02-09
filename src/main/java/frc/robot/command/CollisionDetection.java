@@ -55,9 +55,7 @@ public boolean collided = false;
     motorAcceleration = Math.abs(drivetrain.getModule(0).getDriveMotor().getAcceleration().getValueAsDouble() 
     * TunerConstants.kWheelRadiusInches * 2 * Math.PI);
 
-    if (Math.abs(pigeonAcceleration - motorAcceleration) > VisionConstants.Collision_Acceleration_Tolerance) {
-      collided = false;
-    }
+      collided = Math.abs(pigeonAcceleration - motorAcceleration) > VisionConstants.Collision_Acceleration_Tolerance;
   }
 
   // Called once the command ends or is interrupted.
