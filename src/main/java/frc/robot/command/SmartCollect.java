@@ -35,22 +35,27 @@ public class SmartCollect extends Command {
 
 	@Override
 	public void execute() {
-		// if getentrybeambreakstate and the exit one are false then run both collector and indxer
-		if (!indexer.getEntryBeamBreakState() && !indexer.getExitBeamBreakState()) {
-			collector.setPower(powerSupplier.getAsDouble());
-			indexer.setPower(powerSupplier.getAsDouble());
+		switch(indexer.getPieceState()) {
+			case NONE: 
+				collector.setPower(powerSupplier.getAsDouble());
+				indexer.setPower(powerSupplier.getAsDouble());
+				break;
 
-		}
-		// if getenrtrybeambreakstate true and not the other one then slow down the collector and indexer
+			case IN_PIVOT:
+				collector.setPower(0.5*powerSupplier.getAsDouble());
+				indexer.setPower(0.5*powerSupplier.getAsDouble());
+				break;
 
-		if (indexer.getEntryBeamBreakState() && !indexer.getExitBeamBreakState()) {
-			collector.setPower(0.5*powerSupplier.getAsDouble());
-			indexer.setPower(0.5*powerSupplier.getAsDouble());
-		}
-		// if both of them are true then stop both collector and indexer
-		if (indexer.getEntryBeamBreakState() && indexer.getExitBeamBreakState()) {
-			collector.setPower(0);
-			indexer.setPower(0);
+			case IN_COLLECT:
+				collector.setPower(powerSupplier.getAsDouble());
+				indexer.setPower(powerSupplier.getAsDouble());
+				break;
+
+			case IN_DEXER:
+				collector.setPower(0);
+				indexer.setPower(0);
+				break;
+
 		}
 	}
 

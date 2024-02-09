@@ -99,7 +99,9 @@ public class Constants {
          */
         public class DIO {
             public static final int COLLECTOR_BEAMBREAK = 1;
-            public static final int INDEXER_BEAMBREAK = 0;
+            public static final int INDEXER_ENTER_BEAMBREAK = 0;
+            public static final int INDEXER_EXIT_BEAMBREAK = 0;
+
         }
     }
 
@@ -339,6 +341,10 @@ public class Constants {
         public static final int INDEXER_MOTOR_STATOR_CURRENT_LIMIT = 0;
         public static final NeutralModeValue INDEXER_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
         public static final double INDEXER_DEFAULT_POWER = 0.3; 
+
+        public enum PIECE_STATE {
+            IN_COLLECT, IN_PIVOT, IN_DEXER, NONE
+        }
     }
 
     public class PivotConstants { // TODO: get real

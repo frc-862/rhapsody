@@ -5,14 +5,17 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.IndexerConstants.PIECE_STATE;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.thunder.config.FalconConfig;
 
 public class Indexer extends SubsystemBase {
     private TalonFX indexerMotor;
-    private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_BEAMBREAK);
-    private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_BEAMBREAK);
+    private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_ENTER_BEAMBREAK);
+    private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_EXIT_BEAMBREAK);
+
+    private PIECE_STATE currentState = PIECE_STATE.NONE;
 
     public Indexer() {
         indexerMotor = FalconConfig.createMotor(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
@@ -22,6 +25,14 @@ public class Indexer extends SubsystemBase {
                 IndexerConstants.INDEXER_MOTOR_NEUTRAL_MODE);
     }
 
+    public PIECE_STATE getPieceState() {
+        return currentState;
+    }
+    
+    public void setPieceState(PIECE_STATE state) {
+        currentState = state;
+    }
+        
     public void setPower(double power) {
         indexerMotor.set(power);
     }
