@@ -87,7 +87,7 @@ public class RobotContainer extends LightningContainer {
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
 		// indexer = new Indexer();
-		collector = new Collector();
+		// collector = new Collector();
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
@@ -170,7 +170,7 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 		
 		// makes the robot chase pieces
-		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
+		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
 		// parks the robot
 		new Trigger(driver::getXButton).whileTrue(drivetrain.applyRequest(() -> brake));
@@ -179,9 +179,9 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
 
 		// aim at amp and stage tags for the robot
-		new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
+		// new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive).alongWith(hapticDriverCommand()));
+		// new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive).alongWith(hapticDriverCommand()));
 		
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
@@ -204,7 +204,7 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
 
 		/* Other */
-		new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
+		// new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
 	}
@@ -229,8 +229,8 @@ public class RobotContainer extends LightningContainer {
 
 
 		/* copilot */
-		collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() -
-		coPilot.getLeftTriggerAxis()), collector));
+		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() -
+		// coPilot.getLeftTriggerAxis()), collector));
 
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
