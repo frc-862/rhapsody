@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
@@ -25,6 +26,7 @@ import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Index;
+import frc.robot.command.MoveToPose;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.shoot.AmpShot;
@@ -139,6 +141,10 @@ public class RobotContainer extends LightningContainer {
 				new InstantCommand(() -> drivetrain.disableVision()));
 		NamedCommands.registerCommand("enable-Vision",
 				new InstantCommand(() -> drivetrain.enableVision()));
+		NamedCommands.registerCommand("led-Collect",
+				leds.enableState(LED_STATES.COLLECTED).withTimeout(0.5));
+		NamedCommands.registerCommand("led-Shoot",
+				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
 		// make sure named commands is initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -174,6 +180,8 @@ public class RobotContainer extends LightningContainer {
 		// aim at amp and stage tags for the robot
 		new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
+		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive).alongWith(hapticDriverCommand()));
+		
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
@@ -199,6 +207,8 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
 	}
+
+	
 
 	@Override
 	protected void configureDefaultCommands() {
