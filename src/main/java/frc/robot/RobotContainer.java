@@ -231,7 +231,7 @@ public class RobotContainer extends LightningContainer {
 				));
 
 
-		collisionDetector.setDefaultCommand(new CollisionDetection(drivetrain));
+		collisionDetector.setDefaultCommand(new CollisionDetection(drivetrain, collisionDetector));
 			
 		/* copilot */
 		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() -

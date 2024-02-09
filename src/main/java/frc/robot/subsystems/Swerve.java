@@ -43,6 +43,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         this.limelights = new Limelight[]{limelightSubsystem.getStopMe()};
 
         configurePathPlanner();
+
+        // LightningShuffleboard.setDoubleSupplier("Collision Detection", "ang vel", () -> getPigeon2().getAngularVelocityZWorld().getValueAsDouble());
+        // LightningShuffleboard.setDoubleSupplier("Collision Detection", "motor vel", () -> getModule(0).getDriveMotor().getVelocity().getValueAsDouble());
+        // LightningShuffleboard.setDoubleSupplier("Collision Detection", "x acc", () -> getPigeon2().getAccelerationX().getValueAsDouble());
+        // LightningShuffleboard.setDoubleSupplier("Collision Detection", "y acc", () -> getPigeon2().getAccelerationY().getValueAsDouble());
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
