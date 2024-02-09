@@ -32,15 +32,15 @@
     },
     {
       "anchor": {
-        "x": 2.894982565999367,
+        "x": 2.65,
         "y": 5.539225686154654
       },
       "prevControl": {
-        "x": 1.9835161426313401,
+        "x": 1.738533576631973,
         "y": 5.4784612579301175
       },
       "nextControl": {
-        "x": 3.1692352303176134,
+        "x": 2.9242526643182463,
         "y": 5.557509197109204
       },
       "isLocked": false,
@@ -95,7 +95,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.1500000000000001,
-      "rotationDegrees": 159.82168562246875,
+      "rotationDegrees": 166.5486268193816,
       "rotateFast": false
     },
     {
@@ -121,7 +121,7 @@
             {
               "type": "named",
               "data": {
-                "name": "LEDShoot"
+                "name": "led-Shoot"
               }
             }
           ]
@@ -138,7 +138,7 @@
             {
               "type": "named",
               "data": {
-                "name": "LEDShoot"
+                "name": "led-Shoot"
               }
             }
           ]
@@ -155,7 +155,7 @@
             {
               "type": "named",
               "data": {
-                "name": "LEDShoot"
+                "name": "led-Shoot"
               }
             }
           ]
@@ -172,7 +172,7 @@
             {
               "type": "named",
               "data": {
-                "name": "LEDShoot"
+                "name": "led-Collect"
               }
             }
           ]
@@ -189,7 +189,7 @@
             {
               "type": "named",
               "data": {
-                "name": "LEDShoot"
+                "name": "led-Shoot"
               }
             }
           ]
@@ -198,7 +198,7 @@
     },
     {
       "name": "collect1",
-      "waypointRelativePos": 1.0499999999999998,
+      "waypointRelativePos": 0.8,
       "command": {
         "type": "parallel",
         "data": {
@@ -206,7 +206,7 @@
             {
               "type": "named",
               "data": {
-                "name": "LEDCollect"
+                "name": "led-Shoot"
               }
             }
           ]
@@ -223,7 +223,7 @@
             {
               "type": "named",
               "data": {
-                "name": "LEDCollect"
+                "name": "led-Collect"
               }
             }
           ]
@@ -240,7 +240,7 @@
             {
               "type": "named",
               "data": {
-                "name": "LEDCollect"
+                "name": "led-Shoot"
               }
             }
           ]
@@ -257,41 +257,7 @@
             {
               "type": "named",
               "data": {
-                "name": "LEDCollect"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "disablevision",
-      "waypointRelativePos": 3.55,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "disable-Vision"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "enablevision",
-      "waypointRelativePos": 5,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "enable-Vision"
+                "name": "led-Shoot"
               }
             }
           ]

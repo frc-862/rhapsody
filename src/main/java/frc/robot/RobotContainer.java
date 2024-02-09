@@ -37,6 +37,7 @@ import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
+import frc.robot.command.Collect;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climber;
@@ -57,7 +58,7 @@ public class RobotContainer extends LightningContainer {
 	// Subsystems
 	private Swerve drivetrain;
 	private Limelights limelights;
-	// Collector collector;
+	Collector collector;
 	// Flywheel flywheel;
 	// Pivot pivot;
 	// Shooter shooter;
@@ -86,7 +87,7 @@ public class RobotContainer extends LightningContainer {
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
 		// indexer = new Indexer();
-		// collector = new Collector();
+		collector = new Collector();
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
@@ -169,7 +170,7 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 		
 		// makes the robot chase pieces
-		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
+		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
 		// parks the robot
 		new Trigger(driver::getXButton).whileTrue(drivetrain.applyRequest(() -> brake));
@@ -228,8 +229,8 @@ public class RobotContainer extends LightningContainer {
 
 
 		/* copilot */
-		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() -
-		// coPilot.getLeftTriggerAxis()), collector));
+		collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() -
+		coPilot.getLeftTriggerAxis()), collector));
 
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
