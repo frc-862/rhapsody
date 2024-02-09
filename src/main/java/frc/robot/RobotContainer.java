@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -29,6 +30,7 @@ import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
+import frc.robot.command.Sing;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.PodiumShot;
 import frc.robot.command.shoot.PointBlankShot;
@@ -49,6 +51,7 @@ import frc.thunder.LightningContainer;
 import frc.thunder.command.TimedCommand;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
+import frc.thunder.testing.SystemTestCommand;
 
 public class RobotContainer extends LightningContainer {
 	public static XboxController driver;
@@ -64,6 +67,7 @@ public class RobotContainer extends LightningContainer {
 	// Indexer indexer;
 	// Climber climber;
 	LEDs leds;
+	Orchestra sing;
 
 	private SendableChooser<Command> autoChooser;
 	SwerveRequest.FieldCentric drive;
@@ -92,6 +96,7 @@ public class RobotContainer extends LightningContainer {
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
+		sing = new Orchestra();
 
 		// field centric for the robot
 		drive = new SwerveRequest.FieldCentric()
@@ -149,8 +154,9 @@ public class RobotContainer extends LightningContainer {
 		// make sure named commands is initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
-	}
 
+		
+	}
 	@Override
 	protected void configureButtonBindings() {
 		/* driver */
@@ -258,11 +264,27 @@ public class RobotContainer extends LightningContainer {
 		SystemTest.registerTest("Azimuth Test",
 				new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
-		SystemTest.registerTest("Singing Test",
-				new SingSystemTest(drivetrain, MusicConstants.JEOPARDY_FILEPATH));
-
 		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
 		// collector, indexer, pivot));
+		
+		//Make sing appear on shuffleboard!! :)
+		SendableChooser<SystemTestCommand> songChooser = new SendableChooser<>();
+		songChooser.setDefaultOption(MusicConstants.BOH_RHAP_FILEPATH, new SingSystemTest(drivetrain, MusicConstants.BOH_RHAP_FILEPATH, sing));
+		for (String filepath: MusicConstants.SET_LIST){
+			songChooser.addOption(filepath, new SingSystemTest(drivetrain, filepath, sing));
+		}
+
+		LightningShuffleboard.set("SystemTest", "Songs List", songChooser);
+		
+		songChooser.onChange((SystemTestCommand command) -> {
+			if (command != null) {
+				command.schedule();
+			}
+		});
+
+
+		songChooser.close();
+
 	}
 
 	public static Command hapticDriverCommand() {
