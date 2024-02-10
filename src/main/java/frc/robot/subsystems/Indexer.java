@@ -8,17 +8,15 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.thunder.config.FalconConfig;
+import frc.thunder.hardware.ThunderBird;
 
 public class Indexer extends SubsystemBase {
-    private TalonFX indexerMotor;
+    private ThunderBird indexerMotor;
     private DigitalInput indexerSensor = new DigitalInput(DIO.INDEXER_BEAMBREAK);
 
-    public Indexer() {
-        indexerMotor = FalconConfig.createMotor(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
-                IndexerConstants.INDEXER_MOTOR_INVERTED,
-                IndexerConstants.INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT,
-                IndexerConstants.INDEXER_MOTOR_STATOR_CURRENT_LIMIT,
-                IndexerConstants.INDEXER_MOTOR_NEUTRAL_MODE);
+    public Indexer() {   
+        indexerMotor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD, IndexerConstants.INDEXER_MOTOR_INVERTED,
+            IndexerConstants.INDEXER_MOTOR_STATOR_CURRENT_LIMIT, IndexerConstants.INDEXER_MOTOR_NEUTRAL_MODE);
     }
 
     public void setPower(double power) {

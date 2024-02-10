@@ -8,20 +8,19 @@ import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.CollectorConstants;
 import frc.thunder.config.FalconConfig;
+import frc.thunder.hardware.ThunderBird;
 
 public class Collector extends SubsystemBase {
 
 	// Declare collector hardware
-	private TalonFX motor;
+	private ThunderBird motor;
 	private DigitalInput collectorEntryBeamBreakEntrance;
 	private DigitalInput collectorEntryBeamBreakExit;
 	private boolean hasPiece;
 
 	public Collector() {
-		motor = FalconConfig.createMotor(CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
-				CollectorConstants.COLLECTOR_MOTOR_INVERTED,
-				CollectorConstants.COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT,
-				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT,
+		motor = new ThunderBird(CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
+				CollectorConstants.COLLECTOR_MOTOR_INVERTED, CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT, 
 				CollectorConstants.COLLECTOR_MOTOR_NEUTRAL_MODE);
 
 		//TODO: real robot doesn't currently have a plan to have 2 beam breaks, if programming requires this they need to say so soon.
