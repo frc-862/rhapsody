@@ -56,7 +56,11 @@ public class LEDs extends SubsystemBase {
 				blink(LEDsConstants.YELLOW_HUE);
 				break;
 
-			case CHASING:
+			case COLLECTING:
+				blink(LEDsConstants.RED_HUE);
+				break;
+				
+            case CHASING: 
 				blink(LEDsConstants.RED_HUE);
 				break;
 

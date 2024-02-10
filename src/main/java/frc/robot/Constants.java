@@ -2,6 +2,10 @@ package frc.robot;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
@@ -317,6 +321,20 @@ public class Constants {
     public class MusicConstants {
         public static final String BOH_RHAP_FILEPATH = "bohemianrhapsody.chrp";
         public static final String JEOPARDY_FILEPATH = "jeopardy.chrp";
+        public static final String BEWARE_THE_FOREST_MUSHROOMS_FILEPATH = "bewaretheforestmushrooms.chrp";
+        public static final String UNDER_PRESSURE_FILEPATH = "underpressure.chrp";
+        public static final String NATIONAL_PARK_FILEPATH = "nationalpark.chrp";
+        public static final String ENCOUNTER_FILEPATH = "encounter.chrp";
+        public static final String PIRATES_OF_THE_CARIBBEAN_FILEPATH = "piratesofthecaribbean.chrp";
+        public static final String CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH = "crazylittlethingcalledlove.chrp";
+        public static final String ANOTHER_ONE_BITES_THE_DUST_FILEPATH = "anotheronebitesthedust.chrp";
+        public static final String SWEET_CAROLINE_FILEPATH = "sweetcaroline.chrp";
+        public static final String WE_ARE_THE_CHAMPIONS_FILEPATH = "wearethechampions.chrp";
+        public static final String[] SONG_NAMES = {
+            BOH_RHAP_FILEPATH, JEOPARDY_FILEPATH, BEWARE_THE_FOREST_MUSHROOMS_FILEPATH, 
+                UNDER_PRESSURE_FILEPATH, NATIONAL_PARK_FILEPATH, ENCOUNTER_FILEPATH, PIRATES_OF_THE_CARIBBEAN_FILEPATH, 
+                CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH, ANOTHER_ONE_BITES_THE_DUST_FILEPATH, SWEET_CAROLINE_FILEPATH, WE_ARE_THE_CHAMPIONS_FILEPATH};
+        public static final List<String> SET_LIST = Arrays.asList(SONG_NAMES);
     }
 
     public class CollectorConstants { // TODO: get real
@@ -466,11 +484,12 @@ public class Constants {
             SHOT(3), 
             FINISHED_CLIMB(4), 
             SHOOTING(5), 
-            CHASING(6), 
-            CLIMBING(7),
-            HAS_PIECE(8), 
-            HAS_VISION(9),
-            OFF(10);
+            COLLECTING(6),
+            CHASING(7), 
+            CLIMBING(8),
+            HAS_PIECE(9), 
+            HAS_VISION(10),
+            OFF(11);
 
             private final int priority;
             LED_STATES(int priority) {
