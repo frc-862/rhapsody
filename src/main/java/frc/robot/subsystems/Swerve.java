@@ -125,7 +125,17 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     * @return whether the robot is tipped
     */
     public boolean isTipped() {
-        return (Math.abs(getPigeon2().getPitch().getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE || Math.abs(getPigeon2().getRoll().getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE);
+        return (Math.abs(getPigeon2().getPitch().getValueAsDouble()) > VisionConstants.TIP_DEADZONE 
+        || Math.abs(getPigeon2().getRoll().getValueAsDouble()) > VisionConstants.TIP_DEADZONE);
+    }
+
+    /**
+    * @return whether the robot is tipped
+    * @param tolerance in degrees
+    */
+    public boolean isTipped(double tolerance) {
+        return (Math.abs(getPigeon2().getPitch().getValueAsDouble()) > tolerance 
+        || Math.abs(getPigeon2().getRoll().getValueAsDouble()) > tolerance);
     }
 
     /**

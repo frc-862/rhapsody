@@ -19,11 +19,6 @@ public class CollisionDetection extends Command {
   
 public Swerve drivetrain;
 public CollisionDetector collisionDetector;
-public double pigeonAcceleration;
-public double motorAcceleration;
-public boolean collided = false;
-
-
 
   public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -41,9 +36,10 @@ public boolean collided = false;
   @Override
   public void execute() {
 
-    LightningShuffleboard.setDouble("Collision Detection", "pidgeon acc", getPigeonAcceleration());
-    LightningShuffleboard.setDouble("Collision Detection", "motor acc", getMotorAcceleration(0));
-    LightningShuffleboard.setBool("Collision Detection", "collided", checkMotorAcceleration(0));
+    LightningShuffleboard.setDouble("Collision Detection", "pidgeon acceleration", getPigeonAcceleration());
+    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration", getMotorAcceleration(0));
+    LightningShuffleboard.setBool("Collision Detection", "motor zero collided", checkMotorAcceleration(0));
+    LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
     
     if (getIfCollided()){
       // do stuff
@@ -56,24 +52,36 @@ public boolean collided = false;
 
   public double getPigeonAcceleration(){
 
-    return Math.sqrt(Math.pow(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble(), 2) 
-    + Math.pow(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble(), 2)) * 9.8;
+    return Math.hypot(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble(), 
+    drivetrain.getPigeon2().getAccelerationY().getValueAsDouble()) * 9.8;
   }
 
   public double getMotorAcceleration(int moduleNumber){
 
     return Math.abs(drivetrain.getModule(moduleNumber).getDriveMotor().getAcceleration().getValueAsDouble() 
-    * TunerConstants.kWheelRadiusInches * 2 * Math.PI / 39.36);
+    * TunerConstants.kWheelRadiusInches * 2 * Math.PI / 39.36 / TunerConstants.kDriveGearRatio);
   }
 
   public boolean checkMotorAcceleration(int moduleNumber){
-    return Math.abs(getPigeonAcceleration() - getMotorAcceleration(moduleNumber))
-    > VisionConstants.Collision_Acceleration_Tolerance;
+
+    return Math.abs(getPigeonAcceleration() - getMotorAcceleration(moduleNumber)) > getMotorAcceleration(moduleNumber) / 4;
+  }
+
+  public boolean checkMotorAcceleration(int moduleNumber, double tolerance){
+
+    return Math.abs(getPigeonAcceleration() - getMotorAcceleration(moduleNumber)) > tolerance;
   }
 
   public boolean getIfCollided(){
+    
     return checkMotorAcceleration(0) || checkMotorAcceleration(1) 
     || checkMotorAcceleration(2) || checkMotorAcceleration(3);
+  }
+
+  public boolean getIfCollided(double tolerance){
+    
+    return checkMotorAcceleration(0, tolerance) || checkMotorAcceleration(1, tolerance) 
+    || checkMotorAcceleration(2, tolerance) || checkMotorAcceleration(3, tolerance);
   }
 
   // Returns true when the command should end.

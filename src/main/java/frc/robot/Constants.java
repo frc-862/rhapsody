@@ -169,8 +169,8 @@ public class Constants {
         // This may need to be tuned to your individual robot
         private static final double kCoupleRatio = 3.5714285714285716;
 
-        private static final double kDriveGearRatio = 6.122448979591837;
-        private static final double kSteerGearRatio = 21.428571428571427;
+        public static final double kDriveGearRatio = 6.122448979591837;
+        public static final double kSteerGearRatio = 21.428571428571427;
         public static final double kWheelRadiusInches = 2;
 
         private static final boolean kSteerMotorReversed = true;
@@ -304,7 +304,7 @@ public class Constants {
                 new Translation2d(Units.feetToMeters(54.0), Units.feetToMeters(26.0));
         public static final Translation2d VISION_LIMIT =
                 new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
-        public static final double COLLISION_DEADZONE = 2d;
+        public static final double TIP_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 4d; // TODO: make this an actual value
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
