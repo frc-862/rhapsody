@@ -109,6 +109,12 @@ public class Constants {
             public static final int COLLECTOR_ENTRY_BEAMBREAK_BACK = 2;
             public static final int INDEXER_BEAMBREAK = 0;
         }
+
+        public class PWM {
+            public static final int LED_PORT = 0;
+            public static final int FIRE_SERVO_PORT = 1;
+            public static final int FLYWHEEL_SERVO_PORT = 2;
+        }
     }
 
     public static class ControllerConstants {
@@ -464,7 +470,6 @@ public class Constants {
     }
 
     public class LEDsConstants {
-        public static final int LED_PWM_PORT = 0;
         public static final int LED_LENGTH = 14;
 
         public static final int SWRIL_SEGMENT_SIZE = 5;
@@ -501,4 +506,5 @@ public class Constants {
             }
         }
     }
+    
 }
