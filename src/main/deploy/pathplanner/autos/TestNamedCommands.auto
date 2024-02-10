@@ -26,7 +26,7 @@
         {
           "type": "named",
           "data": {
-            "name": null
+            "name": "disable-Vision"
           }
         },
         {
@@ -44,6 +44,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Test Autos",
   "choreoAuto": false
 }
