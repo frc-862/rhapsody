@@ -35,20 +35,16 @@ public boolean collided = false;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    LightningShuffleboard.setDoubleSupplier("Collision Detection", "ang vel", () -> drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble());
-    LightningShuffleboard.setDoubleSupplier("Collision Detection", "motor vel", () -> drivetrain.getModule(0).getDriveMotor().getVelocity().getValueAsDouble());
-    LightningShuffleboard.setDoubleSupplier("Collision Detection", "x acc", () -> drivetrain.getPigeon2().getAccelerationX().getValueAsDouble());
-    LightningShuffleboard.setDoubleSupplier("Collision Detection", "y acc", () -> drivetrain.getPigeon2().getAccelerationY().getValueAsDouble());
-
-    LightningShuffleboard.setDoubleSupplier("Collision Detection", "pidgeon acc", () -> getPigeonAcceleration());
-    LightningShuffleboard.setDoubleSupplier("Collision Detection", "motor acc", () -> getMotorAcceleration(0));
-    LightningShuffleboard.setBoolSupplier("Collision Detection", "collided", () -> getIfCollided());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    LightningShuffleboard.setDouble("Collision Detection", "pidgeon acc", getPigeonAcceleration());
+    LightningShuffleboard.setDouble("Collision Detection", "motor acc", getMotorAcceleration(0));
+    LightningShuffleboard.setBool("Collision Detection", "collided", checkMotorAcceleration(0));
+    
     if (getIfCollided()){
       // do stuff
     }
@@ -59,21 +55,25 @@ public boolean collided = false;
   public void end(boolean interrupted) {}
 
   public double getPigeonAcceleration(){
-    
-    return Math.sqrt(Math.pow(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble() - 1, 2) 
-    + Math.pow(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() - 1, 2)) * 9.8;
+
+    return Math.sqrt(Math.pow(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble(), 2) 
+    + Math.pow(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble(), 2)) * 9.8;
   }
 
   public double getMotorAcceleration(int moduleNumber){
 
     return Math.abs(drivetrain.getModule(moduleNumber).getDriveMotor().getAcceleration().getValueAsDouble() 
-    * TunerConstants.kWheelRadiusInches * 2 * Math.PI);
+    * TunerConstants.kWheelRadiusInches * 2 * Math.PI / 39.36);
+  }
+
+  public boolean checkMotorAcceleration(int moduleNumber){
+    return Math.abs(getPigeonAcceleration() - getMotorAcceleration(moduleNumber))
+    > VisionConstants.Collision_Acceleration_Tolerance;
   }
 
   public boolean getIfCollided(){
-
-    return Math.abs(getPigeonAcceleration() - getMotorAcceleration(0)) 
-    > VisionConstants.Collision_Acceleration_Tolerance;
+    return checkMotorAcceleration(0) || checkMotorAcceleration(1) 
+    || checkMotorAcceleration(2) || checkMotorAcceleration(3);
   }
 
   // Returns true when the command should end.
