@@ -83,7 +83,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
         LightningShuffleboard.setBool("Swerve", "Robot Centric", isRobotCentricControl());
 
-        LightningShuffleboard.setBool("Sweve", "Tipped", isTipped());
+        LightningShuffleboard.setBool("Swerve", "Tipped", isTipped());
     }
 
     private void configurePathPlanner() {
