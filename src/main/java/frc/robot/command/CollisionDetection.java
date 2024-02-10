@@ -9,7 +9,6 @@ import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.CollisionDetector;
 import frc.robot.subsystems.Swerve;
-import frc.robot.Constants.TunerConstants;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
@@ -48,6 +47,30 @@ SwerveRequest.SwerveDriveBrake brake;
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
     
     if (getIfCollided()){
+      // do stuff if collided
+
+      /*idea1:
+       * find closest april tag
+       * drive to where it should be - don't drive into stage
+       * fix pose
+       * continue auton
+       * 
+       * idea2:
+       * break to mitigate effects
+       * countinue auton once we stop moving
+       * 
+       * idea3:
+       * combination of 1&2 based on difference in acceleration
+       * 
+       * idea4:
+       * just tell driver
+       * 
+       * idea5: 
+       * do nothing
+       * 
+       * idea6:
+       * doesn't matter as long as heading is correct?
+       */
       drivetrain.applyRequest(() -> brake);
     }
   }
@@ -61,9 +84,11 @@ SwerveRequest.SwerveDriveBrake brake;
    * @return acceleration from pigeon
    */
   public double getPigeonAcceleration(){  
-
-    return Math.hypot(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble(), 
-    drivetrain.getPigeon2().getAccelerationY().getValueAsDouble()) * VisionConstants.ACCELERATION_DUE_TO_GRAVITY;
+    // use pythagrean theorum to find total acceleration
+    return Math.hypot(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble()
+    - drivetrain.getPigeon2().getGravityVectorX().getValueAsDouble(), // subtract gravity from acceleration
+    drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() - drivetrain.getPigeon2().getGravityVectorY().getValueAsDouble()) 
+    * VisionConstants.ACCELERATION_DUE_TO_GRAVITY; // convert g-force to m/s^2
   }
 
   /**
@@ -72,7 +97,7 @@ SwerveRequest.SwerveDriveBrake brake;
    * @return motor acceleration
    */
   public double getMotorAcceleration(int moduleNumber){
-
+    // get acceleration and convert to m/s^2
     return Units.rotationsToRadians(Math.abs(drivetrain.getModule(moduleNumber).getDriveMotor().getAcceleration().getValueAsDouble()) 
     * Units.inchesToMeters(TunerConstants.kWheelRadiusInches) / TunerConstants.kDriveGearRatio);
   }
@@ -83,7 +108,6 @@ SwerveRequest.SwerveDriveBrake brake;
    * @return if motorAcceleration is within tolerance
    */
   public boolean checkMotorAcceleration(int moduleNumber){
-
     return Math.abs(getPigeonAcceleration() - getMotorAcceleration(moduleNumber)) 
     > getMotorAcceleration(moduleNumber) * VisionConstants.Collision_Acceleration_Tolerance_Percentage;
   }
@@ -95,7 +119,6 @@ SwerveRequest.SwerveDriveBrake brake;
    * @return if motor is within tolerance
    */
   public boolean checkMotorAcceleration(int moduleNumber, double tolerance){
-
     return Math.abs(getPigeonAcceleration() - getMotorAcceleration(moduleNumber)) > tolerance;
   }
 
@@ -103,7 +126,6 @@ SwerveRequest.SwerveDriveBrake brake;
    * @return if any motor has abnormal acceleration compared to pigeon and tolerance in constants
    */
   public boolean getIfCollided(){
-    
     return checkMotorAcceleration(0) || checkMotorAcceleration(1) 
     || checkMotorAcceleration(2) || checkMotorAcceleration(3);
   }
@@ -113,7 +135,6 @@ SwerveRequest.SwerveDriveBrake brake;
    * @return if any motor has abnormal acceleration compared to pigeon and given tolerance
    */
   public boolean getIfCollided(double tolerance){
-    
     return checkMotorAcceleration(0, tolerance) || checkMotorAcceleration(1, tolerance) 
     || checkMotorAcceleration(2, tolerance) || checkMotorAcceleration(3, tolerance);
   }
