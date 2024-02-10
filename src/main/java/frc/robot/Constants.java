@@ -51,7 +51,7 @@ public class Constants {
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
         public static final double SLOW_ROT_MULT = 0.007; // TODO Tune for Driver
-        public static final double SLOW_SPEED_MULT = 0.4; // TODO Tune for Driver
+        public static final double SLOW_SPEED_MULT = 0.01; // TODO Tune for Driver
 
         public static final double SYS_TEST_SPEED_DRIVE = 0.5;
         public static final double SYS_TEST_SPEED_TURN = 1d;
@@ -311,7 +311,7 @@ public class Constants {
         public static final Translation2d VISION_LIMIT =
                 new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
         public static final double COLLISION_DEADZONE = 2d;
-        public static final double ALIGNMENT_TOLERANCE = 4d; // TODO: make this an actual value
+        public static final double ALIGNMENT_TOLERANCE = 2d; // TODO: make this an actual value
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;

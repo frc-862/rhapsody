@@ -7,6 +7,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveDriveBrake;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ControllerConstants;
@@ -64,25 +65,39 @@ public class PointAtTag extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
+		double targetPoseX = 0;
+		double targetPoseY = 3;
+		
+		Pose2d pose = drivetrain.getPose().get();
+		targetHeading = Math.toDegrees(Math.atan2( targetPoseY - drivetrain.getPose().get().getY(), targetPoseX - drivetrain.getPose().get().getX()));
+		pidOutput = headingController.calculate((pose.getRotation().getDegrees() % 360.0), targetHeading % 360.0);
 
-		targetHeading = limelight.getTargetX();
 
-		LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
+		// targetHeading = limelight.getTargetX();
+		// pidOutput = headingController.calculate(targetHeading, 0);
+
+		LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", (pose.getRotation().getDegrees() % 360.0));
 		LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
 
-
-		pidOutput = headingController.calculate(0, targetHeading);
-
+		// drivetrain.applyRequest(() -> drive
+		// 				.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
+		// 						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
+		// 				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
+		// 						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
+		// 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
+		// 						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
+		// 						* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
+		// 		);
 		if (driver.getRightBumper()) {
 			drivetrain.setControl(slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
 				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-				.withRotationalRate(-pidOutput) // Drive counterclockwise with negative X (left)
+				.withRotationalRate(pidOutput) // Drive counterclockwise with negative X (left)
 			);
 		} else {
 			drivetrain.setControl(drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
 		  		.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-		  		.withRotationalRate(-pidOutput) // Rotate toward the desired direction
+		  		.withRotationalRate(pidOutput) // Rotate toward the desired direction
 		  	); // Drive counterclockwise with negative X (left)
 		}
 	}

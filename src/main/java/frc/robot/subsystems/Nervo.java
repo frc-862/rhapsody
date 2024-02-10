@@ -16,24 +16,26 @@ public class Nervo extends SubsystemBase {
   public Nervo() {
     fireServo = new Servo(PWM.FIRE_SERVO_PORT);
     flywheelServo = new Servo(PWM.FLYWHEEL_SERVO_PORT);
+    fireServo.set(0.5);
+    flywheelServo.set(0.5);
   }
 
   @Override
   public void periodic() {}
 
   public Command fireServo() {
-    return new StartEndCommand(() -> {
-      fireServo.set(1);}, 
+    return (new StartEndCommand(() -> {
+      fireServo.set(0.25);}, 
 			() -> {
-        fireServo.set(0);
-      });
+        fireServo.set(0.5);
+      }).ignoringDisable(true));
   }
 
   public Command flywheelServo() {
-    return new StartEndCommand(() -> {
-      flywheelServo.set(1);}, 
+    return (new StartEndCommand(() -> {
+      flywheelServo.set(0.2);}, 
 			() -> {
-        flywheelServo.set(0);
-      });
+        flywheelServo.set(0.5);
+      }).ignoringDisable(true));
   }
 }

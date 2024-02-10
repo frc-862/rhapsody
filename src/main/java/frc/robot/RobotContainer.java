@@ -168,7 +168,6 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive).alongWith(hapticDriverCommand()));
 		
 		new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
-
 		new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
