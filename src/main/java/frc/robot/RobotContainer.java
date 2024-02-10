@@ -133,19 +133,7 @@ public class RobotContainer extends LightningContainer {
 	protected void configureButtonBindings() {
 		/* driver */
 		// activates between field centric and robot centric drive + logs
-		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d).whileTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true))).whileTrue(
-			// robot centric and slow mode
-			drivetrain.inSlowMode() ?
-				drivetrain.applyRequest(() -> driveRobotCentric
-					.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
-						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
-					.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
-						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-					.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
-						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
-						* DrivetrainConstants.SLOW_ROT_MULT)) // Drive counterclockwise with negative X (left)
-			// only robot centric drive
-			:
+		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d).onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true))).whileTrue(
 				drivetrain.applyRequest(() -> driveRobotCentric
 					.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
 						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
@@ -153,23 +141,11 @@ public class RobotContainer extends LightningContainer {
 						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
 					.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
 						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
-						* DrivetrainConstants.SLOW_ROT_MULT))) // Drive counterclockwise with negative X (left)
-		.whileFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+						* DrivetrainConstants.ROT_MULT))) // Drive counterclockwise with negative X (left)
+		.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
 		// activates between regular speed and slow mode + logs
-		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d).whileTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).whileTrue(
-			// slow mode and robot centric
-			drivetrain.isRobotCentricControl() ?
-				drivetrain.applyRequest(() -> driveRobotCentric
-					.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
-						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
-					.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
-						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-					.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
-						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
-						* DrivetrainConstants.SLOW_ROT_MULT)) // Drive counterclockwise with negative X (left)
-			// only slow mode
-			:
+		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d).onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true))).whileTrue(
 				drivetrain.applyRequest(() -> drive
 					.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
 						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
@@ -178,7 +154,18 @@ public class RobotContainer extends LightningContainer {
 					.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
 						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
 						* DrivetrainConstants.SLOW_ROT_MULT))) // Drive counterclockwise with negative X (left)
-		.whileFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+		.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+
+		// activates robot centric driving and slow mode
+		new Trigger(() -> drivetrain.isRobotCentricControl() && drivetrain.inSlowMode()).whileTrue(
+				drivetrain.applyRequest(() -> driveRobotCentric
+					.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
+						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
+					.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
+						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
+					.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
+						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
+						* DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
 
 		// resets the gyro of the robot
 		new Trigger(() -> driver.getStartButton() && driver.getBackButton())
