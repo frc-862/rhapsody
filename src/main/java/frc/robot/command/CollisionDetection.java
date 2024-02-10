@@ -23,6 +23,8 @@ public class CollisionDetection extends Command {
 public Swerve drivetrain;
 public CollisionDetector collisionDetector;
 SwerveRequest.SwerveDriveBrake brake;
+public int i = 0;
+public double pigeonAnglularVelocityLog[];
 
   public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -47,30 +49,6 @@ SwerveRequest.SwerveDriveBrake brake;
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
     
     if (getIfCollided()){
-      // do stuff if collided
-
-      /*idea1:
-       * find closest april tag
-       * drive to where it should be - don't drive into stage
-       * fix pose
-       * continue auton
-       * 
-       * idea2:
-       * break to mitigate effects
-       * countinue auton once we stop moving
-       * 
-       * idea3:
-       * combination of 1&2 based on difference in acceleration
-       * 
-       * idea4:
-       * just tell driver
-       * 
-       * idea5: 
-       * do nothing
-       * 
-       * idea6:
-       * doesn't matter as long as heading is correct?
-       */
       drivetrain.applyRequest(() -> brake);
     }
   }
@@ -81,7 +59,7 @@ SwerveRequest.SwerveDriveBrake brake;
   // COLLISION DETECTION
 
   /**
-   * @return acceleration from pigeon
+   * @return acceleration from pigeon in x & y direction
    */
   public double getPigeonAcceleration(){  
     // use pythagrean theorum to find total acceleration
@@ -90,6 +68,7 @@ SwerveRequest.SwerveDriveBrake brake;
     drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() - drivetrain.getPigeon2().getGravityVectorY().getValueAsDouble()) 
     * VisionConstants.ACCELERATION_DUE_TO_GRAVITY; // convert g-force to m/s^2
   }
+
 
   /**
    * gets acceleration from a drivemotor of the specified module
