@@ -10,6 +10,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.CollisionDetector;
 import frc.robot.subsystems.Swerve;
 import frc.robot.Constants.TunerConstants;
+import edu.wpi.first.math.util.Units;
 
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
@@ -53,18 +54,19 @@ public CollisionDetector collisionDetector;
   public double getPigeonAcceleration(){
 
     return Math.hypot(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble(), 
-    drivetrain.getPigeon2().getAccelerationY().getValueAsDouble()) * 9.8;
+    drivetrain.getPigeon2().getAccelerationY().getValueAsDouble()) * VisionConstants.ACCELERATION_DUE_TO_GRAVITY;
   }
 
   public double getMotorAcceleration(int moduleNumber){
 
-    return Math.abs(drivetrain.getModule(moduleNumber).getDriveMotor().getAcceleration().getValueAsDouble() 
-    * TunerConstants.kWheelRadiusInches * 2 * Math.PI / 39.36 / TunerConstants.kDriveGearRatio);
+    return Units.rotationsToRadians(Math.abs(drivetrain.getModule(moduleNumber).getDriveMotor().getAcceleration().getValueAsDouble()) 
+    * Units.inchesToMeters(TunerConstants.kWheelRadiusInches) / TunerConstants.kDriveGearRatio);
   }
 
   public boolean checkMotorAcceleration(int moduleNumber){
 
-    return Math.abs(getPigeonAcceleration() - getMotorAcceleration(moduleNumber)) > getMotorAcceleration(moduleNumber) / 4;
+    return Math.abs(getPigeonAcceleration() - getMotorAcceleration(moduleNumber)) 
+    > getMotorAcceleration(moduleNumber) * VisionConstants.Collision_Acceleration_Tolerance_Percentage;
   }
 
   public boolean checkMotorAcceleration(int moduleNumber, double tolerance){
