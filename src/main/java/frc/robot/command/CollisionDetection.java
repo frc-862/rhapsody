@@ -48,7 +48,7 @@ public int i = 0;
   @Override
   public void execute() {
 
-    LightningShuffleboard.setDouble("Collision Detection", "pidgeon acceleration", getPigeonAccelerationXY());
+    LightningShuffleboard.setDouble("Collision Detection", "pidgeon acceleration", getTotalPigeonAccelerationMagnitude());
     LightningShuffleboard.setDouble("Collision Detection", "motor acceleration", getMotorAccelerationMagnitude(0));
     LightningShuffleboard.setBool("Collision Detection", "motor zero collided", checkMotorAcceleration(0));
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
@@ -69,25 +69,33 @@ public int i = 0;
 // GET INFO FROM PIGEON
 
   /**
-   * includes pigeon's physical angular acceleration
-   * @return acceleration from pigeon in x & y direction
+   * @return acceleration from pigeon in x direction is m/s^2
    */
-  public double getPigeonAccelerationXY(){  
+  public double getPigeonAccelerationX(){  
     // use pythagrean theorum to find total acceleration
-    return Math.hypot(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble()
-    - drivetrain.getPigeon2().getGravityVectorX().getValueAsDouble(), // subtract gravity from acceleration
-    drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() - drivetrain.getPigeon2().getGravityVectorY().getValueAsDouble()) 
-    * VisionConstants.ACCELERATION_DUE_TO_GRAVITY; // convert g-force to m/s^2
+    return drivetrain.getPigeon2().getAccelerationX().getValueAsDouble() 
+    - drivetrain.getPigeon2().getGravityVectorX().getValueAsDouble() // subtract gravity from acceleration
+    * VisionConstants.ACCELERATION_DUE_TO_GRAVITY // convert g-force to m/s^2
+    - Math.cos(Math.PI/2) * getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON;
   }
 
-  public double getPigeonAccelerationDirectionXY() {
-    return Math.tan(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble()
-    / drivetrain.getPigeon2().getAccelerationX().getValueAsDouble());
+  /**
+   * @return acceleration from pigeon in y direction is m/s^2
+   */
+  public double getPigeonAccelerationY(){  
+    // use pythagrean theorum to find total acceleration
+    return (drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() 
+    - drivetrain.getPigeon2().getGravityVectorY().getValueAsDouble() // subtract gravity from acceleration
+    * VisionConstants.ACCELERATION_DUE_TO_GRAVITY) // convert g-force to m/s^2
+    - Math.sin(Math.PI/2) * getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON; 
   }
 
   public double getPigeonAngularAcceleration(){
-    return (angularVelocityWorldLog[i-2] - angularVelocityWorldLog[i-1])
-    / (timeLog[i-2] - timeLog[i-1]);
+    return (angularVelocityWorldLog[i-2] - angularVelocityWorldLog[i-1]) / (timeLog[i-2] - timeLog[i-1]);
+  }
+
+  private double getTotalPigeonAccelerationMagnitude() {
+    return getPigeonAngularAcceleration();
   }
 
 
@@ -110,17 +118,17 @@ public int i = 0;
     - Math.floor(drivetrain.getModule(0).getSteerMotor().getPosition().getValueAsDouble()));
   }
 
+  // COMPARE MOTOR & PIGEON
+
   /**
    * compares acceleration of a specific drivemotor to pigeon and tolerance percentage in constants
    * @param moduleNumber
    * @return if motorAcceleration is within tolerance
    */
   public boolean checkMotorAcceleration(int moduleNumber){
-    return Math.abs(getPigeonAccelerationXY() - getMotorAccelerationMagnitude(moduleNumber)) 
+    return Math.abs(getTotalPigeonAccelerationMagnitude() - getMotorAccelerationMagnitude(moduleNumber)) 
     > getMotorAccelerationMagnitude(moduleNumber) * VisionConstants.COLLISION_ACCELERATION_TOLERANCE_PERCENTAGE;
   }
-
-// COMPARE MOTOR & PIGEON
 
   /**
    * compares acceleration of a specific drivemotor to pigeon and given tolerance
@@ -129,7 +137,7 @@ public int i = 0;
    * @return if motor is within tolerance
    */
   public boolean checkMotorAcceleration(int moduleNumber, double tolerance){
-    return Math.abs(getPigeonAccelerationXY() - getMotorAccelerationMagnitude(moduleNumber)) > tolerance;
+    return Math.abs(getTotalPigeonAccelerationMagnitude() - getMotorAccelerationMagnitude(moduleNumber)) > tolerance;
   }
 
   /**
