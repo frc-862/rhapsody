@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.CollectorConstants;
-import frc.thunder.config.FalconConfig;
 import frc.thunder.hardware.ThunderBird;
 
 public class Collector extends SubsystemBase {
@@ -21,7 +20,7 @@ public class Collector extends SubsystemBase {
 	public Collector() {
 		motor = new ThunderBird(CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
 				CollectorConstants.COLLECTOR_MOTOR_INVERTED, CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT, 
-				CollectorConstants.COLLECTOR_MOTOR_NEUTRAL_MODE);
+				CollectorConstants.COLLECTOR_MOTOR_COAST_MODE);
 
 		//TODO: real robot doesn't currently have a plan to have 2 beam breaks, if programming requires this they need to say so soon.
 		collectorEntryBeamBreakEntrance = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_FRONT);

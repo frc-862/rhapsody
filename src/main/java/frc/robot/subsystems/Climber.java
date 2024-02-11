@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.Constants.RobotMap.CAN;
-import frc.thunder.config.FalconConfig;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.math.Conversions;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -36,9 +35,9 @@ public class Climber extends SubsystemBase {
     public Climber(Swerve drivetrain) {
         // configure climb motors
         climbMotorR = new ThunderBird(CAN.CLIMB_RIGHT, CAN.CANBUS_FD,
-                ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, true); 
+                ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE); 
         climbMotorL = new ThunderBird(CAN.CLIMB_LEFT, CAN.CANBUS_FD, 
-            ClimbConstants.CLIMB_LEFT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, true);
+            ClimbConstants.CLIMB_LEFT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
 
         climbMotorL.configPIDF(0, ClimbConstants.EXTEND_KP, ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD);
         climbMotorL.configPIDF(1, ClimbConstants.RETRACT_KP, ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);

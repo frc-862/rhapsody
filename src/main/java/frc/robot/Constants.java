@@ -429,7 +429,7 @@ public class Constants {
         public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
         public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final boolean FLYWHEEL_MOTOR_COAST_MODE = false;
+        public static final boolean CLIMB_MOTOR_BRAKE_MODE = true;
         public static final double EXTEND_KP = 0;
         public static final double EXTEND_KI = 0;
         public static final double EXTEND_KD = 0;

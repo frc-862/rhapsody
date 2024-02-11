@@ -1,13 +1,10 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
-import frc.thunder.config.FalconConfig;
 import frc.thunder.hardware.ThunderBird;
 
 public class Indexer extends SubsystemBase {
@@ -16,7 +13,7 @@ public class Indexer extends SubsystemBase {
 
     public Indexer() {   
         indexerMotor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD, IndexerConstants.INDEXER_MOTOR_INVERTED,
-            IndexerConstants.INDEXER_MOTOR_STATOR_CURRENT_LIMIT, IndexerConstants.INDEXER_MOTOR_NEUTRAL_MODE);
+            IndexerConstants.INDEXER_MOTOR_STATOR_CURRENT_LIMIT, IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
     }
 
     public void setPower(double power) {
