@@ -4,6 +4,7 @@
 
 package frc.robot.command;
 
+import com.ctre.phoenix6.Utils;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.VisionConstants;
@@ -23,6 +24,8 @@ public class CollisionDetection extends Command {
 public Swerve drivetrain;
 public CollisionDetector collisionDetector;
 SwerveRequest.SwerveDriveBrake brake;
+public double[] angularVelocityWorldLog;
+public double[] timeLog;
 public int i = 0;
 
   public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
@@ -36,6 +39,9 @@ public int i = 0;
   @Override
   public void initialize() {
     brake = new SwerveRequest.SwerveDriveBrake();
+    angularVelocityWorldLog[i] = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble()); //TODO: test
+    timeLog[i] = Utils.getCurrentTimeSeconds();
+    i++;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -50,6 +56,10 @@ public int i = 0;
     if (getIfCollided()){
       drivetrain.applyRequest(() -> brake);
     }
+
+    angularVelocityWorldLog[i] = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble()); //TODO: test
+    timeLog[i] = Utils.getCurrentTimeSeconds();
+    i++;
   }
 
   // Called once the command ends or is interrupted.
@@ -59,6 +69,7 @@ public int i = 0;
 // GET INFO FROM PIGEON
 
   /**
+   * includes pigeon's physical angular acceleration
    * @return acceleration from pigeon in x & y direction
    */
   public double getPigeonAccelerationXY(){  
@@ -73,6 +84,12 @@ public int i = 0;
     return Math.tan(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble()
     / drivetrain.getPigeon2().getAccelerationX().getValueAsDouble());
   }
+
+  public double getPigeonAngularAcceleration(){
+    return (angularVelocityWorldLog[i-2] - angularVelocityWorldLog[i-1])
+    / (timeLog[i-2] - timeLog[i-1]);
+  }
+
 
 // GET INFO FROM MOTOR
 
@@ -100,7 +117,7 @@ public int i = 0;
    */
   public boolean checkMotorAcceleration(int moduleNumber){
     return Math.abs(getPigeonAccelerationXY() - getMotorAccelerationMagnitude(moduleNumber)) 
-    > getMotorAccelerationMagnitude(moduleNumber) * VisionConstants.Collision_Acceleration_Tolerance_Percentage;
+    > getMotorAccelerationMagnitude(moduleNumber) * VisionConstants.COLLISION_ACCELERATION_TOLERANCE_PERCENTAGE;
   }
 
 // COMPARE MOTOR & PIGEON
