@@ -310,6 +310,7 @@ public class Constants {
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
+        
         public static final double ACCELERATION_DUE_TO_GRAVITY = 9.80665;
         public static final double Collision_Acceleration_Tolerance_Percentage = 25/100; //percent of motorAcceleration
 

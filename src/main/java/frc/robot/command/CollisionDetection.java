@@ -24,7 +24,6 @@ public Swerve drivetrain;
 public CollisionDetector collisionDetector;
 SwerveRequest.SwerveDriveBrake brake;
 public int i = 0;
-public double pigeonAnglularVelocityLog[];
 
   public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -43,8 +42,8 @@ public double pigeonAnglularVelocityLog[];
   @Override
   public void execute() {
 
-    LightningShuffleboard.setDouble("Collision Detection", "pidgeon acceleration", getPigeonAcceleration());
-    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration", getMotorAcceleration(0));
+    LightningShuffleboard.setDouble("Collision Detection", "pidgeon acceleration", getPigeonAccelerationXY());
+    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration", getMotorAccelerationMagnitude(0));
     LightningShuffleboard.setBool("Collision Detection", "motor zero collided", checkMotorAcceleration(0));
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
     
@@ -56,12 +55,13 @@ public double pigeonAnglularVelocityLog[];
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
-  // COLLISION DETECTION
+  
+// GET INFO FROM PIGEON
 
   /**
    * @return acceleration from pigeon in x & y direction
    */
-  public double getPigeonAcceleration(){  
+  public double getPigeonAccelerationXY(){  
     // use pythagrean theorum to find total acceleration
     return Math.hypot(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble()
     - drivetrain.getPigeon2().getGravityVectorX().getValueAsDouble(), // subtract gravity from acceleration
@@ -69,16 +69,28 @@ public double pigeonAnglularVelocityLog[];
     * VisionConstants.ACCELERATION_DUE_TO_GRAVITY; // convert g-force to m/s^2
   }
 
+  public double getPigeonAccelerationDirectionXY() {
+    return Math.tan(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble()
+    / drivetrain.getPigeon2().getAccelerationX().getValueAsDouble());
+  }
+
+// GET INFO FROM MOTOR
 
   /**
    * gets acceleration from a drivemotor of the specified module
    * @param moduleNumber
    * @return motor acceleration
    */
-  public double getMotorAcceleration(int moduleNumber){
+  public double getMotorAccelerationMagnitude(int moduleNumber){
     // get acceleration and convert to m/s^2
     return Units.rotationsToRadians(Math.abs(drivetrain.getModule(moduleNumber).getDriveMotor().getAcceleration().getValueAsDouble()) 
     * Units.inchesToMeters(TunerConstants.kWheelRadiusInches) / TunerConstants.kDriveGearRatio);
+  }
+
+  public double getMotorAccelerationDirection() {
+
+    return Units.rotationsToRadians(drivetrain.getModule(0).getSteerMotor().getPosition().getValueAsDouble() 
+    - Math.floor(drivetrain.getModule(0).getSteerMotor().getPosition().getValueAsDouble()));
   }
 
   /**
@@ -87,9 +99,11 @@ public double pigeonAnglularVelocityLog[];
    * @return if motorAcceleration is within tolerance
    */
   public boolean checkMotorAcceleration(int moduleNumber){
-    return Math.abs(getPigeonAcceleration() - getMotorAcceleration(moduleNumber)) 
-    > getMotorAcceleration(moduleNumber) * VisionConstants.Collision_Acceleration_Tolerance_Percentage;
+    return Math.abs(getPigeonAccelerationXY() - getMotorAccelerationMagnitude(moduleNumber)) 
+    > getMotorAccelerationMagnitude(moduleNumber) * VisionConstants.Collision_Acceleration_Tolerance_Percentage;
   }
+
+// COMPARE MOTOR & PIGEON
 
   /**
    * compares acceleration of a specific drivemotor to pigeon and given tolerance
@@ -98,7 +112,7 @@ public double pigeonAnglularVelocityLog[];
    * @return if motor is within tolerance
    */
   public boolean checkMotorAcceleration(int moduleNumber, double tolerance){
-    return Math.abs(getPigeonAcceleration() - getMotorAcceleration(moduleNumber)) > tolerance;
+    return Math.abs(getPigeonAccelerationXY() - getMotorAccelerationMagnitude(moduleNumber)) > tolerance;
   }
 
   /**
