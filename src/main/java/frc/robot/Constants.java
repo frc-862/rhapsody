@@ -384,7 +384,7 @@ public class Constants {
         public static final double ENCODER_OFFSET = 0d;
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
-        public static final double ENCODER_TO_ROTOR_RATIO = 1d;
+        public static final double ENCODER_TO_ROTOR_RATIO = 150d;
 
         public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
     }
