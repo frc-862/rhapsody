@@ -319,21 +319,20 @@ public class Constants {
     public class FlywheelConstants { // TODO: get real
         public static final boolean FLYWHEEL_MOTOR_1_INVERT = false;
         public static final boolean FLYWHEEL_MOTOR_2_INVERT = false;
-        public static final int FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
-        public static final double FLYWHEEL_MOTOR_KP = 0;
+        public static final boolean FLYWHEEL_MOTOR_BEAKE_MODE = true;
+        public static final double FLYWHEEL_MOTOR_KP = .001;
         public static final double FLYWHEEL_MOTOR_KI = 0;
         public static final double FLYWHEEL_MOTOR_KD = 0;
         public static final double FLYWHEEL_MOTOR_KS = 0;
-        public static final double FLYWHEEL_MOTOR_KV = 0;
+        public static final double FLYWHEEL_MOTOR_KV = 0.0002;
 
-        public static final double RPM_TOLERANCE = 0;
+        public static final double RPM_TOLERANCE = 3;
 
         public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get amount to bias by
         public static final double COAST_VOLTAGE = 0.1;
 
-        public static final double FLYWHEEL_GEARING = 0;
+        public static final double FLYWHEEL_GEARING = 1;
     }
 
     public class IndexerConstants { // TODO: get real
@@ -358,8 +357,8 @@ public class Constants {
 
         public static final double ENCODER_OFFSET = 0d;
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
-        public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
-        public static final double ENCODER_TO_ROTOR_RATIO = 1d;
+        public static final double ENCODER_TO_MECHANISM_RATIO = 1d/1d;
+        public static final double ROTOR_TO_ENCODER_RATIO = 600d/1d; // 100 tooth, 10 pinion, 15:1 maxplanetary
 
         public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
     }

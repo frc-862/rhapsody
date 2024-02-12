@@ -1,0 +1,73 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "CANCoder (v6)[38]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[12]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[12]/Rotor Sensor": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Pose": "Field2d",
+      "/Shuffleboard/Auton/Auto Chooser": "String Chooser",
+      "/Shuffleboard/SystemTest/Azimuth Test": "Command",
+      "/Shuffleboard/SystemTest/Drive Test": "Command",
+      "/Shuffleboard/SystemTest/Singing Test": "Command",
+      "/Shuffleboard/sim/pivot": "Mechanism2d",
+      "/SmartDashboard/Module 0": "Mechanism2d",
+      "/SmartDashboard/Module 1": "Mechanism2d",
+      "/SmartDashboard/Module 2": "Mechanism2d",
+      "/SmartDashboard/Module 3": "Mechanism2d"
+    },
+    "windows": {
+      "/Pose": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/sim/pivot": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "Shuffleboard": {
+        "Flywheel": {
+          "open": true
+        },
+        "FlywheelBottom": {
+          "open": true
+        },
+        "FlywheelTop": {
+          "open": true
+        },
+        "Pivot": {
+          "open": true
+        },
+        "open": true,
+        "ur": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  }
+}
