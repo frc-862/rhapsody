@@ -2,17 +2,22 @@ package frc.robot;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.path.PathConstraints;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -23,6 +28,7 @@ import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.math.InterpolationMap;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 /** Add your docs here. */
 public class Constants {
@@ -78,8 +84,8 @@ public class Constants {
             public static final int COLLECTOR_MOTOR = 9;
             public static final int INDEXER_MOTOR = 11;
             public static final int PIVOT_ANGLE_MOTOR = 12;
-            public static final int FLYWHEEL_MOTOR_1 = 13;
-            public static final int FLYWHEEL_MOTOR_2 = 14;
+            public static final int FLYWHEEL_MOTOR_TOP = 13;
+            public static final int FLYWHEEL_MOTOR_BOTTOM = 14;
             public static final int CLIMB_RIGHT = 15;
             public static final int CLIMB_LEFT = 16;
 
@@ -89,7 +95,7 @@ public class Constants {
             public static final int CLIMB_CANCODERR = 36;
             public static final int CLIMB_CANCODERL = 37;
             public static final int PIVOT_ANGLE_CANCODER = 38;
-            
+
             public static final String CANBUS_FD = "Canivore";
             public static final String RIO_CANBUS = "rio";
         }
@@ -120,6 +126,13 @@ public class Constants {
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(19.09); // TODO check
 
         public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
+
+        //For Pathfinding
+        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(-1, 2), new Rotation2d(0d));
+        public static final double GOAL_END_VELOCITY = 0; // Goal end velocity in meters/sec
+        public static final double ROTATION_DELAY_DISTACE = 0d; // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+        
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); //TODO get constants
     }
 
     public static class TunerConstants {
@@ -308,21 +321,35 @@ public class Constants {
     public class MusicConstants {
         public static final String BOH_RHAP_FILEPATH = "bohemianrhapsody.chrp";
         public static final String JEOPARDY_FILEPATH = "jeopardy.chrp";
+        public static final String BEWARE_THE_FOREST_MUSHROOMS_FILEPATH = "bewaretheforestmushrooms.chrp";
+        public static final String UNDER_PRESSURE_FILEPATH = "underpressure.chrp";
+        public static final String NATIONAL_PARK_FILEPATH = "nationalpark.chrp";
+        public static final String ENCOUNTER_FILEPATH = "encounter.chrp";
+        public static final String PIRATES_OF_THE_CARIBBEAN_FILEPATH = "piratesofthecaribbean.chrp";
+        public static final String CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH = "crazylittlethingcalledlove.chrp";
+        public static final String ANOTHER_ONE_BITES_THE_DUST_FILEPATH = "anotheronebitesthedust.chrp";
+        public static final String SWEET_CAROLINE_FILEPATH = "sweetcaroline.chrp";
+        public static final String WE_ARE_THE_CHAMPIONS_FILEPATH = "wearethechampions.chrp";
+        public static final String[] SONG_NAMES = {
+            BOH_RHAP_FILEPATH, JEOPARDY_FILEPATH, BEWARE_THE_FOREST_MUSHROOMS_FILEPATH, 
+                UNDER_PRESSURE_FILEPATH, NATIONAL_PARK_FILEPATH, ENCOUNTER_FILEPATH, PIRATES_OF_THE_CARIBBEAN_FILEPATH, 
+                CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH, ANOTHER_ONE_BITES_THE_DUST_FILEPATH, SWEET_CAROLINE_FILEPATH, WE_ARE_THE_CHAMPIONS_FILEPATH};
+        public static final List<String> SET_LIST = Arrays.asList(SONG_NAMES);
     }
 
     public class CollectorConstants { // TODO: get real
         public static final boolean COLLECTOR_MOTOR_INVERTED = false; // TODO check once collector installed
         public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
-        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
+        public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
     }
 
     public class FlywheelConstants { // TODO: get real
-        public static final boolean FLYWHEEL_MOTOR_1_INVERT = false;
-        public static final boolean FLYWHEEL_MOTOR_2_INVERT = false;
+        public static final boolean FLYWHEEL_MOTOR_TOP_INVERT = false;
+        public static final boolean FLYWHEEL_MOTOR_BOTTOM_INVERT = false;
         public static final int FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
+        public static final boolean FLYWHEEL_MOTOR_BRAKE_MODE = false;
         public static final double FLYWHEEL_MOTOR_KP = 0;
         public static final double FLYWHEEL_MOTOR_KI = 0;
         public static final double FLYWHEEL_MOTOR_KD = 0;
@@ -339,12 +366,12 @@ public class Constants {
         public static final boolean INDEXER_MOTOR_INVERTED = false;
         public static final int INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int INDEXER_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue INDEXER_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
-        public static final double INDEXER_DEFAULT_POWER = 0.3; 
 
         public enum PIECE_STATE {
             IN_COLLECT, IN_PIVOT, IN_DEXER, NONE
         }
+        public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
+        public static final double INDEXER_DEFAULT_POWER = 0.3;
     }
 
     public class PivotConstants { // TODO: get real
@@ -369,7 +396,7 @@ public class Constants {
 
     public class ShooterConstants {
         public static final double STOW_ANGLE = 0;
-        
+
         public static final double FAR_WING_X = 3.3;
 
         // Distance in meters, angle in degrees
@@ -407,7 +434,7 @@ public class Constants {
         public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
         public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final boolean CLIMB_MOTOR_BRAKE_MODE = true;
         public static final double EXTEND_KP = 0;
         public static final double EXTEND_KI = 0;
         public static final double EXTEND_KD = 0;
@@ -461,11 +488,12 @@ public class Constants {
             SHOT(3), 
             FINISHED_CLIMB(4), 
             SHOOTING(5), 
-            CHASING(6), 
-            CLIMBING(7),
-            HAS_PIECE(8), 
-            HAS_VISION(9),
-            OFF(10);
+            COLLECTING(6),
+            CHASING(7), 
+            CLIMBING(8),
+            HAS_PIECE(9), 
+            HAS_VISION(10),
+            OFF(11);
 
             private final int priority;
             LED_STATES(int priority) {
