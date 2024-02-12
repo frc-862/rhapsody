@@ -1,34 +1,31 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.FlywheelConstants;
-import frc.thunder.config.FalconConfig;
+import frc.thunder.hardware.ThunderBird;
 
 public class Flywheel extends SubsystemBase {
-    private TalonFX shooterTopMotor; // TODO figure out which is top vs bottom
-    private TalonFX shooterBottomMotor;
+    private ThunderBird shooterTopMotor; // TODO figure out which is top vs bottom
+    private ThunderBird shooterBottomMotor;
 
     private final VelocityVoltage rpmPID = new VelocityVoltage(0).withSlot(0);
     private double targetRPM = 0;
     private double bias = 0;
 
     public Flywheel() {
-        shooterTopMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_1, CAN.CANBUS_FD,
-                FlywheelConstants.FLYWHEEL_MOTOR_1_INVERT,
-                FlywheelConstants.FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT,
-                FlywheelConstants.FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT,
-                FlywheelConstants.FLYWHEEL_MOTOR_NEUTRAL_MODE, FlywheelConstants.FLYWHEEL_MOTOR_KP,
+        shooterTopMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD, FlywheelConstants.FLYWHEEL_MOTOR_TOP_INVERT, 
+            FlywheelConstants.FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.FLYWHEEL_MOTOR_BRAKE_MODE);
+        shooterBottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD, FlywheelConstants.FLYWHEEL_MOTOR_BOTTOM_INVERT,
+            FlywheelConstants.FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.FLYWHEEL_MOTOR_BRAKE_MODE);
+            
+        shooterTopMotor.configPIDF(0,FlywheelConstants.FLYWHEEL_MOTOR_KP,
                 FlywheelConstants.FLYWHEEL_MOTOR_KI, FlywheelConstants.FLYWHEEL_MOTOR_KD,
                 FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
-        shooterBottomMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_2, CAN.CANBUS_FD,
-                FlywheelConstants.FLYWHEEL_MOTOR_2_INVERT,
-                FlywheelConstants.FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT,
-                FlywheelConstants.FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT,
-                FlywheelConstants.FLYWHEEL_MOTOR_NEUTRAL_MODE, FlywheelConstants.FLYWHEEL_MOTOR_KP,
+
+        shooterBottomMotor.configPIDF(0,FlywheelConstants.FLYWHEEL_MOTOR_KP,
                 FlywheelConstants.FLYWHEEL_MOTOR_KI, FlywheelConstants.FLYWHEEL_MOTOR_KD,
                 FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
     }
