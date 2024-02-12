@@ -340,7 +340,7 @@ public class Constants {
         public static final boolean COLLECTOR_MOTOR_INVERTED = false; // TODO check once collector installed
         public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
-        public static final boolean COLLECTOR_MOTOR_COAST_MODE = false;
+        public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
     }
 
     public class FlywheelConstants { // TODO: get real
@@ -348,7 +348,7 @@ public class Constants {
         public static final boolean FLYWHEEL_MOTOR_BOTTOM_INVERT = false;
         public static final int FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final boolean FLYWHEEL_MOTOR_COAST_MODE = false;
+        public static final boolean FLYWHEEL_MOTOR_BRAKE_MODE = false;
         public static final double FLYWHEEL_MOTOR_KP = 0;
         public static final double FLYWHEEL_MOTOR_KI = 0;
         public static final double FLYWHEEL_MOTOR_KD = 0;
