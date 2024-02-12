@@ -20,7 +20,7 @@ public class Collector extends SubsystemBase {
 	public Collector() {
 		motor = new ThunderBird(CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
 				CollectorConstants.COLLECTOR_MOTOR_INVERTED, CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT, 
-				CollectorConstants.COLLECTOR_MOTOR_COAST_MODE);
+				CollectorConstants.COLLECTOR_MOTOR_BRAKE_MODE);
 
 		//TODO: real robot doesn't currently have a plan to have 2 beam breaks, if programming requires this they need to say so soon.
 		collectorEntryBeamBreakEntrance = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
