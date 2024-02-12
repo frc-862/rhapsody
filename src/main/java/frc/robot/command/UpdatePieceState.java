@@ -3,7 +3,7 @@ package frc.robot.command;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.IndexerConstants.PIECE_STATE;
+import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Indexer;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -15,7 +15,7 @@ public class UpdatePieceState extends Command {
 	// Declares collector
 	private Collector collector;
 
-	PIECE_STATE currState;
+	PieceState currState;
 	boolean collectorBeamBreak;
 	boolean indexerEntryBeamBreak;
 	boolean indexerExitBeamBreak;
@@ -47,13 +47,13 @@ public class UpdatePieceState extends Command {
 		indexerExitBeamBreak = indexer.getExitBeamBreakState();
 		
 		if (indexerExitBeamBreak) {
-			currState = PIECE_STATE.IN_DEXER;
+			currState = PieceState.IN_DEXER;
 		} else if(indexerEntryBeamBreak) {
-			currState = PIECE_STATE.IN_PIVOT;
+			currState = PieceState.IN_PIVOT;
 		} else if(collectorBeamBreak) {
-			currState = PIECE_STATE.IN_COLLECT;
+			currState = PieceState.IN_COLLECT;
 		} else {
-			currState = PIECE_STATE.NONE;
+			currState = PieceState.NONE;
 		}
 		
 		indexer.setPieceState(currState);

@@ -52,7 +52,7 @@ public class Collector extends SubsystemBase {
 	 * @return boolean, true if collector has piece
 	 */
 	public boolean hasPiece() {
-		// Could use beam breaks and store when a piece enters until it leaves
+		// TODO: Could use beam breaks and store when a piece enters until it leaves
 		return hasPiece;
 	}
 

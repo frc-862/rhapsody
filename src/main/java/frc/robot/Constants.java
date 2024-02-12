@@ -367,9 +367,10 @@ public class Constants {
         public static final int INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int INDEXER_MOTOR_STATOR_CURRENT_LIMIT = 0;
 
-        public enum PIECE_STATE {
+        public enum PieceState {
             IN_COLLECT, IN_PIVOT, IN_DEXER, NONE
         }
+        
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
         public static final double INDEXER_DEFAULT_POWER = 0.3;
     }
