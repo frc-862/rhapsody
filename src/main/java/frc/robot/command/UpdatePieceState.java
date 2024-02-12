@@ -47,7 +47,7 @@ public class UpdatePieceState extends Command {
 		indexerExitBeamBreak = indexer.getExitBeamBreakState();
 		
 		if (indexerExitBeamBreak) {
-			currState = PieceState.IN_DEXER;
+			currState = PieceState.IN_INDEXER;
 		} else if(indexerEntryBeamBreak) {
 			currState = PieceState.IN_PIVOT;
 		} else if(collectorBeamBreak) {

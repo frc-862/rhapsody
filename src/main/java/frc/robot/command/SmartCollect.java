@@ -46,7 +46,7 @@ public class SmartCollect extends Command {
 				indexer.setPower(powerSupplier.getAsDouble());
 				break;
 
-			case IN_DEXER:
+			case IN_INDEXER:
 				collector.setPower(0);
 				indexer.setPower(0);
 				break;
