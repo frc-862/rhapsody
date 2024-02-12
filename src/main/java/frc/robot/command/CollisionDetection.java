@@ -76,7 +76,8 @@ public int i = 0;
     return drivetrain.getPigeon2().getAccelerationX().getValueAsDouble() 
     - drivetrain.getPigeon2().getGravityVectorX().getValueAsDouble() // subtract gravity from acceleration
     * VisionConstants.ACCELERATION_DUE_TO_GRAVITY // convert g-force to m/s^2
-    - Math.cos(Math.PI/2) * getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON;
+    - Math.cos(getPidgeonXYAccelerationDirection() + Math.PI/2) * getPigeonAngularAcceleration()
+     * VisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON;
   }
 
   /**
@@ -87,15 +88,21 @@ public int i = 0;
     return (drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() 
     - drivetrain.getPigeon2().getGravityVectorY().getValueAsDouble() // subtract gravity from acceleration
     * VisionConstants.ACCELERATION_DUE_TO_GRAVITY) // convert g-force to m/s^2
-    - Math.sin(Math.PI/2) * getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON; 
+    - Math.sin(getPidgeonXYAccelerationDirection() + Math.PI/2) 
+    * getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON; 
+  }
+
+  public double getPidgeonXYAccelerationDirection(){
+    return Math.tan(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() / 
+    drivetrain.getPigeon2().getAccelerationX().getValueAsDouble());
   }
 
   public double getPigeonAngularAcceleration(){
     return (angularVelocityWorldLog[i-2] - angularVelocityWorldLog[i-1]) / (timeLog[i-2] - timeLog[i-1]);
   }
 
-  private double getTotalPigeonAccelerationMagnitude() {
-    return getPigeonAngularAcceleration();
+  public double getTotalPigeonAccelerationMagnitude(){
+    return 0d;
   }
 
 
