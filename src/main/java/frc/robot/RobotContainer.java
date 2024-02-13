@@ -28,6 +28,7 @@ import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
+import frc.robot.command.OTFShoot;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Sing;
@@ -181,7 +182,7 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
 
 		// aim at amp and stage tags for the robot
-		new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
+		new Trigger(driver::getLeftBumper).whileTrue(new OTFShoot(drivetrain, driver)); // TODO: make work
 
 		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive).alongWith(hapticDriverCommand()));
 		

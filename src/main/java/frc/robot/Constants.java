@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.subsystems.Limelights;
@@ -297,6 +298,8 @@ public class Constants {
     }
 
     public class VisionConstants {
+        public static final Translation3d SPEAKER_LOCATION = new Translation3d(0,5.4, 1.2);
+
         // This is a magic number from gridlock, may need to be changed or removed entirely
         public static final double PROCESS_LATENCY = 0.0472; // TODO test
         public static final Translation2d FIELD_LIMIT =
@@ -305,7 +308,7 @@ public class Constants {
                 new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
         public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 4d; // TODO: make this an actual value
-        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.05, 0, 0);
+        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.12, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
