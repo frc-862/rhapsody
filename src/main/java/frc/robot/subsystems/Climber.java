@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.Constants.RobotMap.CAN;
-import frc.thunder.config.FalconConfig;
+import frc.thunder.hardware.ThunderBird;
 import frc.thunder.math.Conversions;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Climber extends SubsystemBase {
     // create variables
-    private TalonFX climbMotorR;
-    private TalonFX climbMotorL;
+    private ThunderBird climbMotorR;
+    private ThunderBird climbMotorL;
 
     private PositionTorqueCurrentFOC setPointR;
     private PositionTorqueCurrentFOC setPointL;
@@ -34,20 +34,17 @@ public class Climber extends SubsystemBase {
 
     public Climber(Swerve drivetrain) {
         // configure climb motors
-        climbMotorR = FalconConfig.createMotor(CAN.CLIMB_RIGHT, CAN.CANBUS_FD,
-                ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT,
-                ClimbConstants.CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT,
-                ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT,
-                ClimbConstants.FLYWHEEL_MOTOR_NEUTRAL_MODE, ClimbConstants.EXTEND_KP,
-                ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD, ClimbConstants.RETRACT_KP,
-                ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
-        climbMotorL = FalconConfig.createMotor(CAN.CLIMB_LEFT, CAN.CANBUS_FD,
-                ClimbConstants.CLIMB_LEFT_MOTOR_INVERT,
-                ClimbConstants.CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT,
-                ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT,
-                ClimbConstants.FLYWHEEL_MOTOR_NEUTRAL_MODE, ClimbConstants.EXTEND_KP,
-                ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD, ClimbConstants.RETRACT_KP,
-                ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
+        climbMotorR = new ThunderBird(CAN.CLIMB_RIGHT, CAN.CANBUS_FD,
+                ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE); 
+        climbMotorL = new ThunderBird(CAN.CLIMB_LEFT, CAN.CANBUS_FD, 
+            ClimbConstants.CLIMB_LEFT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
+
+        climbMotorL.configPIDF(0, ClimbConstants.EXTEND_KP, ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD);
+        climbMotorL.configPIDF(1, ClimbConstants.RETRACT_KP, ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
+        
+        climbMotorR.configPIDF(0, ClimbConstants.EXTEND_KP, ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD);
+        climbMotorR.configPIDF(1, ClimbConstants.RETRACT_KP, ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
+
 
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Height", () -> getHeightL());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
