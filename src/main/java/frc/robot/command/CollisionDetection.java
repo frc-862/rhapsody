@@ -93,16 +93,42 @@ public int i = 0;
   }
 
   public double getPidgeonXYAccelerationDirection(){
-    return Math.tan(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() / 
-    drivetrain.getPigeon2().getAccelerationX().getValueAsDouble());
+    if (drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() >= 0){
+      return Math.tan(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() / 
+      drivetrain.getPigeon2().getAccelerationX().getValueAsDouble());
+    } else {
+      return Math.tan(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() / 
+      drivetrain.getPigeon2().getAccelerationX().getValueAsDouble()) + Math.PI;
+    }
   }
 
   public double getPigeonAngularAcceleration(){
     return (angularVelocityWorldLog[i-2] - angularVelocityWorldLog[i-1]) / (timeLog[i-2] - timeLog[i-1]);
   }
 
-  public double getTotalPigeonAccelerationMagnitude(){
-    return 0d;
+
+  public double getPigeonTotalAccelerationX(){
+    return getPigeonAccelerationX() + getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_MODULE 
+    * Math.cos(Math.tan(getPigeonAccelerationY() / getPigeonAccelerationX()) + Math.PI / 2);
+
+  }
+
+  public double getPigeonTotalAccelerationY(){
+    return getPigeonAccelerationY() + getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_MODULE 
+    * Math.sin(Math.tan(getPigeonAccelerationY() / getPigeonAccelerationX()) + Math.PI / 2);
+  }
+
+  public double getPrimitivePigeonAccelerationMagnitude(){
+    return Math.hypot(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble(), 
+    drivetrain.getPigeon2().getAccelerationY().getValueAsDouble());
+  }
+
+  public double getTotalPigeonAccelerationMagnitude() {
+    return Math.hypot(getPigeonTotalAccelerationX(), getPigeonAccelerationY());
+  }
+
+  public double getTotalPigeonAccelerationDirection() {
+    return Math.tan(getPigeonTotalAccelerationY() / getPigeonAccelerationX());
   }
 
 
