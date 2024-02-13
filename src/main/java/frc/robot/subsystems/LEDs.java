@@ -40,20 +40,20 @@ public class LEDs extends SubsystemBase {
 		}
 
 		switch (state) {
-            case COLLECTED:
+			case COLLECTED:
 				pulse(LEDsConstants.GREEN_HUE);
 				break;
 
-            case SHOT:
+			case SHOT:
 				pulse(LEDsConstants.GREEN_HUE);
 				break;
 
-            case FINISHED_CLIMB: 
+			case FINISHED_CLIMB:
 				pulse(LEDsConstants.GREEN_HUE);
 				break;
 
-            case SHOOTING: 
-				rainbow();
+			case SHOOTING:
+				blink(LEDsConstants.YELLOW_HUE);
 				break;
 
 			case COLLECTING:
@@ -68,23 +68,24 @@ public class LEDs extends SubsystemBase {
 				blink(LEDsConstants.PURPLE_HUE);
 				break;
 
-            case HAS_PIECE: 
-			    setSolidHSV(LEDsConstants.ORANGE_HUE, 255, 255);
+			case HAS_PIECE:
+				setSolidHSV(LEDsConstants.ORANGE_HUE, 255, 255);
 				break;
 
-            case HAS_VISION: 
+			case HAS_VISION:
 				setSolidHSV(LEDsConstants.PINK_HUE, 255, 255);
 				break;
 
 			case MIXER:
 				// LightningShuffleboard.set("LEDs","Mixer Hue", 0);
-				// setSolidHSV((int)LightningShuffleboard.getDouble("LEDs", "Mixer Hue", 0), 255, 255);
+				// setSolidHSV((int)LightningShuffleboard.getDouble("LEDs", "Mixer Hue", 0),
+				// 255, 255);
 				break;
 
 			case OFF:
 				swirl(LEDsConstants.SWRIL_SEGMENT_SIZE);
 				break;
-			
+
 			case DISABLED:
 				setSolidHSV(0, 0, 0);
 				break;
@@ -96,16 +97,18 @@ public class LEDs extends SubsystemBase {
 	public Command enableState(LED_STATES state) {
 		return new StartEndCommand(() -> {
 			System.out.println("start");
-			ledStates.put(state, true);}, 
-			() -> {
-			System.out.println("end");
-			ledStates.put(state, false);
-			}).ignoringDisable(true);
+			ledStates.put(state, true);
+		},
+				() -> {
+					System.out.println("end");
+					ledStates.put(state, false);
+				}).ignoringDisable(true);
 	}
 
 	public void rainbow() {
 		for (int i = 0; i < LEDsConstants.LED_LENGTH; i++) {
-			ledBuffer.setHSV(i, (i + (int)(Timer.getFPGATimestamp() * 20)) % ledBuffer.getLength() * 180 / 14, 255, 100);
+			ledBuffer.setHSV(i, (i + (int) (Timer.getFPGATimestamp() * 20)) % ledBuffer.getLength() * 180 / 14, 255,
+					100);
 		}
 	}
 
@@ -114,7 +117,7 @@ public class LEDs extends SubsystemBase {
 	 */
 	public void swirl(int segmentSize) {
 		for (int i = 0; i < LEDsConstants.LED_LENGTH; i++) {
-			if (((i + (int)(Timer.getFPGATimestamp() * 10)) / segmentSize) % 2 == 0) {
+			if (((i + (int) (Timer.getFPGATimestamp() * 10)) / segmentSize) % 2 == 0) {
 				ledBuffer.setHSV(i, LEDsConstants.BLUE_HUE, 255, 255);
 			} else {
 				ledBuffer.setHSV(i, LEDsConstants.ORANGE_HUE, 255, 255);
@@ -126,18 +129,18 @@ public class LEDs extends SubsystemBase {
 	 * @param hue the hue to blink
 	 */
 	public void blink(int hue) {
-		if ((int)(Timer.getFPGATimestamp() * 10) % 2 == 0) {
+		if ((int) (Timer.getFPGATimestamp() * 10) % 2 == 0) {
 			setSolidHSV(hue, 255, 255);
 		} else {
 			setSolidHSV(0, 0, 0);
 		}
 	}
-	
+
 	/**
 	 * @param hue the hue to blink
 	 */
 	public void pulse(int hue) {
-		setSolidHSV(hue, 255, (int) Math.abs((Math.sin(Timer.getFPGATimestamp() * 2) * 255)));
+		setSolidHSV(hue, 255, (int) Math.abs((Math.sin(Timer.getFPGATimestamp() * 10) * 255)));
 	}
 
 	public void setSolidHSV(int h, int s, int v) {
