@@ -48,8 +48,12 @@ public int i = 0;
   @Override
   public void execute() {
 
-    LightningShuffleboard.setDouble("Collision Detection", "pidgeon acceleration", getTotalPigeonAccelerationMagnitude());
-    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration", getMotorAccelerationMagnitude(0));
+    LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", getTotalPigeonAccelerationMagnitude());
+    LightningShuffleboard.setDouble("Collision Detection", "primitive pidgeon acceleration", getPrimitivePigeonAccelerationMagnitude());
+    LightningShuffleboard.setDouble("Collision Detection", "pigeonAccelarationDirection", getTotalPigeonAccelerationDirection());
+    LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_MODULE);
+    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getMotorAccelerationMagnitude(0));
+    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration direction", getMotorAccelerationDirection());
     LightningShuffleboard.setBool("Collision Detection", "motor zero collided", checkMotorAcceleration(0));
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
     
