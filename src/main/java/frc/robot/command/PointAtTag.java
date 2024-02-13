@@ -8,6 +8,9 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveDriveBrake;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ControllerConstants;
@@ -30,7 +33,7 @@ public class PointAtTag extends Command {
 	private int limelightPrevPipeline = 0;
 	private double pidOutput;
 	private double targetHeading;
-
+	private Translation2d targetPose;
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
@@ -40,7 +43,7 @@ public class PointAtTag extends Command {
 	 * @param limelights to get the limelight from
 	 * @param driver the driver's controller, used for drive input
 	 */
-	public PointAtTag(Swerve drivetrain, Limelights limelights, XboxController driver) {
+	public PointAtTag(int targetX, int targetY, Swerve drivetrain, Limelights limelights, XboxController driver) {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
 
@@ -53,31 +56,47 @@ public class PointAtTag extends Command {
 		
 		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-		
+
+		targetPose = new Translation2d(targetX, targetY);
 	}
 	
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
+
+		// targetPose = limelight.getCamPoseTargetSpace().getTranslation().toTranslation2d();
+		headingController.enableContinuousInput(-180, 180);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		double targetPoseX = 0;
-		double targetPoseY = 3;
-		
+		headingController.setTolerance(LightningShuffleboard.getDouble("PointAtTag", "Tolarance", 4));
+		headingController.setP(LightningShuffleboard.getDouble("PointAtTag", "P", 0.1));
+		headingController.setI(LightningShuffleboard.getDouble("PointAtTag", "I", 0));
+		headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 1));
+
+
 		Pose2d pose = drivetrain.getPose().get();
-		targetHeading = Math.toDegrees(Math.atan2( targetPoseY - drivetrain.getPose().get().getY(), targetPoseX - drivetrain.getPose().get().getX()));
-		pidOutput = headingController.calculate((pose.getRotation().getDegrees() % 360.0), targetHeading % 360.0);
+		var deltaX = targetPose.getX() - pose.getX();
+		var deltaY = targetPose.getY() - pose.getY();
+
+		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
+		// targetHeading = Math.toDegrees(targetPose.getRotation().getAngle());
+		pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
+
 
 
 		// targetHeading = limelight.getTargetX();
 		// pidOutput = headingController.calculate(targetHeading, 0);
-
-		LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", (pose.getRotation().getDegrees() % 360.0));
-		LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
+		LightningShuffleboard.setDouble("PointAtTag", "Delta Y", deltaY);
+		LightningShuffleboard.setDouble("PointAtTag", "Delta X", deltaX);
+		LightningShuffleboard.setDouble("PointAtTag", "Target Heading2", targetHeading);
+		LightningShuffleboard.setDouble("PointAtTag", "Target Pose Y", targetPose.getY());
+		LightningShuffleboard.setDouble("PointAtTag", "Target Pose X", targetPose.getX());
+		LightningShuffleboard.setDouble("PointAtTag", "Current Pose Y", pose.getY());
+		LightningShuffleboard.setDouble("PointAtTag", "Current PoseX", pose.getX());
+		LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", pose.getRotation().getDegrees());
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
 
 		// drivetrain.applyRequest(() -> drive
@@ -96,9 +115,9 @@ public class PointAtTag extends Command {
 			);
 		} else {
 			drivetrain.setControl(drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-		  		.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-		  		.withRotationalRate(pidOutput) // Rotate toward the desired direction
-		  	); // Drive counterclockwise with negative X (left)
+				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
+				.withRotationalRate(pidOutput) // Rotate toward the desired direction
+			); // Drive counterclockwise with negative X (left)
 		}
 	}
 
