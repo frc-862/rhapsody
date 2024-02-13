@@ -39,19 +39,19 @@ public class Flywheel extends SubsystemBase {
     private FalconTuner flywheelTuner2;
 
     public Flywheel() {
-        shooterTopMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_1, CAN.CANBUS_FD, FlywheelConstants.FLYWHEEL_MOTOR_1_INVERT, FlywheelConstants.FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.FLYWHEEL_MOTOR_BEAKE_MODE);
-        shooterBottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_2, CAN.CANBUS_FD, FlywheelConstants.FLYWHEEL_MOTOR_2_INVERT, FlywheelConstants.FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.FLYWHEEL_MOTOR_BEAKE_MODE);
+        shooterTopMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD, FlywheelConstants.FLYWHEEL_MOTOR_TOP_INVERT, 
+            FlywheelConstants.FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.FLYWHEEL_MOTOR_BRAKE_MODE);
+        shooterBottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD, FlywheelConstants.FLYWHEEL_MOTOR_BOTTOM_INVERT,
+            FlywheelConstants.FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.FLYWHEEL_MOTOR_BRAKE_MODE);
         
         
-        shooterTopMotor.configPIDF(0, FlywheelConstants.FLYWHEEL_MOTOR_KP, FlywheelConstants.FLYWHEEL_MOTOR_KI, FlywheelConstants.FLYWHEEL_MOTOR_KD, FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
-        TalonFXConfiguration topConfig = shooterTopMotor.getConfig();
-        topConfig.Feedback.withSensorToMechanismRatio(FlywheelConstants.FLYWHEEL_GEARING / 60); //TODO: check if this is correct (whether or not you can convert RPS to RPM in this way)
-        shooterTopMotor.applyConfig(topConfig);
-        
-        shooterBottomMotor.configPIDF(0, FlywheelConstants.FLYWHEEL_MOTOR_KP, FlywheelConstants.FLYWHEEL_MOTOR_KI, FlywheelConstants.FLYWHEEL_MOTOR_KD, FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
-        TalonFXConfiguration bottomConfig = shooterBottomMotor.getConfig();
-        bottomConfig.Feedback.withSensorToMechanismRatio(FlywheelConstants.FLYWHEEL_GEARING / 60); //TODO: check if this is correct (whether or not you can convert RPS to RPM in this way`
-        shooterBottomMotor.applyConfig(bottomConfig);
+        shooterTopMotor.configPIDF(0,FlywheelConstants.FLYWHEEL_MOTOR_KP,
+            FlywheelConstants.FLYWHEEL_MOTOR_KI, FlywheelConstants.FLYWHEEL_MOTOR_KD,
+            FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
+
+        shooterBottomMotor.configPIDF(0,FlywheelConstants.FLYWHEEL_MOTOR_KP,
+            FlywheelConstants.FLYWHEEL_MOTOR_KI, FlywheelConstants.FLYWHEEL_MOTOR_KD,
+            FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
 
         // flywheelTuner1 = new FalconTuner(shooterTopMotor, "FlywheelTop", this::setTopMoterRPM, 0);
         // flywheelTuner2 = new FalconTuner(shooterBottomMotor, "FlywheelBottom", this::setBottomMoterRPM, 0);
@@ -91,20 +91,6 @@ public class Flywheel extends SubsystemBase {
         // LightningShuffleboard.setDouble("shooterSim", "voltage", topState.getMotorVoltage());
         // LightningShuffleboard.setDouble("shooterSim", "simRPM", topSim.getAngularVelocityRPM());
         // LightningShuffleboard.setDouble("shooterSim", "curent", topState.getSupplyCurrent());
-
-
-        shooterTopMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD, FlywheelConstants.FLYWHEEL_MOTOR_TOP_INVERT, 
-            FlywheelConstants.FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.FLYWHEEL_MOTOR_BRAKE_MODE);
-        shooterBottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD, FlywheelConstants.FLYWHEEL_MOTOR_BOTTOM_INVERT,
-            FlywheelConstants.FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.FLYWHEEL_MOTOR_BRAKE_MODE);
-            
-        shooterTopMotor.configPIDF(0,FlywheelConstants.FLYWHEEL_MOTOR_KP,
-                FlywheelConstants.FLYWHEEL_MOTOR_KI, FlywheelConstants.FLYWHEEL_MOTOR_KD,
-                FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
-
-        shooterBottomMotor.configPIDF(0,FlywheelConstants.FLYWHEEL_MOTOR_KP,
-                FlywheelConstants.FLYWHEEL_MOTOR_KI, FlywheelConstants.FLYWHEEL_MOTOR_KD,
-                FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
     }
 
     /**
