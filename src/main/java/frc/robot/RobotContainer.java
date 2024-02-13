@@ -133,6 +133,7 @@ public class RobotContainer extends LightningContainer {
 
 		
 	}
+	
 	@Override
 	protected void configureButtonBindings() {
 		/* driver */
@@ -215,8 +216,6 @@ public class RobotContainer extends LightningContainer {
 
 	}
 
-	
-
 	@Override
 	protected void configureDefaultCommands() {
 		/* driver */
@@ -289,9 +288,7 @@ public class RobotContainer extends LightningContainer {
 			}
 		});
 
-
 		songChooser.close();
-
 	}
 
 	public static Command hapticDriverCommand() {
