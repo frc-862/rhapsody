@@ -409,7 +409,7 @@ public class Constants {
         };
     }
 
-    public class CandConstants {
+    public class CandConstants { // TODO get real
         //Amp
         public static final double AMP_TOP_RPM = 0;
         public static final double AMP_BOTTOM_RPM = 0;
@@ -422,6 +422,24 @@ public class Constants {
         //Podium
         public static final double PODIUM_RPM = 0;
         public static final double PODIUM_ANGLE = 0;
+
+        //C1
+        public static final double C1_RPM = 0;
+        public static final double C1_ANGLE = 0;
+
+        //C2
+        public static final double C2_RPM = 0;
+        public static final double C2_ANGLE = 0;
+
+        //C3
+        public static final double C3_RPM = 0;
+        public static final double C3_ANGLE = 0;
+
+        //Line 
+        public static final double LINE_RPM = 0;
+        public static final double LINE_ANGLE = 0;
+
+        public static final double TIME_TO_SHOOT = 2d; // In seconds 
     }
 
     public class ClimbConstants { //TODO: find real values
