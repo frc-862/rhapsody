@@ -341,6 +341,8 @@ public class Constants {
         public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
+
+        public static final double COLLECTOR_SYSTEST_POWER = 0.25;
     }
 
     public class FlywheelConstants { // TODO: get real
@@ -359,6 +361,8 @@ public class Constants {
 
         public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get amount to bias by
         public static final double COAST_VOLTAGE = 0.1;
+
+        public static final double FLYWHEEL_SYSTEST_POWER = 0.5;
     }
 
     public class IndexerConstants { // TODO: get real
@@ -473,7 +477,7 @@ public class Constants {
         public static final double CLIMB_RETRACTION_TOLERANCE = 0;
         public static final double CLIMB_RETURN_TO_GROUND_MAX_POWER = 0.05;
 
-        public static final double CLIMB_TEST_POWER = .1;
+        public static final double CLIMB_SYSTEST_POWER = 0.1;
 
         public enum CLIMBER_STATES{
             CLIMBED, GROUNDED, STOW
