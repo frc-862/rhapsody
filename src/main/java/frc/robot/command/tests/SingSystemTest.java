@@ -16,7 +16,7 @@ public class SingSystemTest extends SystemTestCommand {
   private Swerve drivetrain;
   private String filepath;
 
-  /*
+  /**
    * please note that this removes all usage of the drivetrain until it is ended.
    * use with caution, and only when the drivetrain is not in use.
    * @param drivetrain used to grab the motors for the song
@@ -30,7 +30,7 @@ public class SingSystemTest extends SystemTestCommand {
   }
 
   @Override
-  public void initialize() {
+  public void initializeTest() {
     sing.clearInstruments();
     sing.stop();
 
@@ -43,7 +43,7 @@ public class SingSystemTest extends SystemTestCommand {
   }
 
   @Override
-  public void execute() {
+  public void executeTest() {
     if (!sing.isPlaying()){
       end(false);
       cancel();
@@ -51,7 +51,7 @@ public class SingSystemTest extends SystemTestCommand {
   }
 
   @Override
-  public void end(boolean interrupted) {
+  public void endTest(boolean interrupted) {
     sing.stop();
     sing.clearInstruments();
   }

@@ -35,7 +35,10 @@ import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.PodiumShot;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
+import frc.robot.command.tests.ClimbSystemTest;
+import frc.robot.command.tests.CollectorSystemTest;
 import frc.robot.command.tests.DrivetrainSystemTest;
+import frc.robot.command.tests.FlywheelSystemTest;
 import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
@@ -130,6 +133,7 @@ public class RobotContainer extends LightningContainer {
 
 		
 	}
+	
 	@Override
 	protected void configureButtonBindings() {
 		/* driver */
@@ -212,8 +216,6 @@ public class RobotContainer extends LightningContainer {
 
 	}
 
-	
-
 	@Override
 	protected void configureDefaultCommands() {
 		/* driver */
@@ -258,14 +260,20 @@ public class RobotContainer extends LightningContainer {
 	@Override
 	protected void configureSystemTests() {
 		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain, brake,
-				DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
-		SystemTest.registerTest("Azimuth Test",
-				new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
+			DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
+		SystemTest.registerTest("Azimuth Test", new TurnSystemTest(drivetrain, brake,
+			DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
-		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
-		// collector, indexer, pivot));
+		SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
+			Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+
+		// SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
+		// 	indexer, pivot, Constants.FlywheelConstants.SYS_TEST_SPEED));
+
+		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
+		// 	Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
 		
-		//Make sing appear on shuffleboard!! :)
+		// Sing chooser
 		SendableChooser<SystemTestCommand> songChooser = new SendableChooser<>();
 		songChooser.setDefaultOption(MusicConstants.BOH_RHAP_FILEPATH, new SingSystemTest(drivetrain, MusicConstants.BOH_RHAP_FILEPATH, sing));
 		for (String filepath: MusicConstants.SET_LIST){
@@ -280,9 +288,7 @@ public class RobotContainer extends LightningContainer {
 			}
 		});
 
-
 		songChooser.close();
-
 	}
 
 	public static Command hapticDriverCommand() {

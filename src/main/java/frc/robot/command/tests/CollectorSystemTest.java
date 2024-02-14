@@ -6,7 +6,7 @@ package frc.robot.command.tests;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.command.tests.testCommands.CollectorTest;
+import frc.robot.command.tests.testcmds.CollectorTest;
 import frc.robot.subsystems.Collector;
 import frc.thunder.command.TimedCommand;
 import frc.thunder.testing.SystemTestCommandGroup;
