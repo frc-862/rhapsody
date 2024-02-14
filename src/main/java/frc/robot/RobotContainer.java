@@ -68,10 +68,10 @@ public class RobotContainer extends LightningContainer {
 	private Swerve drivetrain;
 	private Limelights limelights;
 	Collector collector;
-	Flywheel flywheel;
-	Pivot pivot;
-	Indexer indexer;
-	Climber climber;
+	// Flywheel flywheel;
+	// Pivot pivot;
+	// Indexer indexer;
+	// Climber climber;
 	LEDs leds;
 	Orchestra sing;
 
@@ -95,13 +95,13 @@ public class RobotContainer extends LightningContainer {
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
-		indexer = new Indexer();
-		collector = new Collector();
-		flywheel = new Flywheel();
-		pivot = new Pivot();
-		climber = new Climber(drivetrain);
-		leds = new LEDs();
-		sing = new Orchestra();
+		// indexer = new Indexer();
+		// collector = new Collector();
+		// flywheel = new Flywheel();
+		// pivot = new Pivot();
+		// climber = new Climber(drivetrain);
+		// leds = new LEDs();
+		// sing = new Orchestra();
 
 		// field centric for the robot
 		drive = new SwerveRequest.FieldCentric()
@@ -128,19 +128,19 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("led-Shoot",
 				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
-		NamedCommands.registerCommand("Cand-Sub", new PointBlankShot(flywheel, pivot, DriverStation.isAutonomousEnabled()));
-		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-Line", new CandLine(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("AMP", new AmpShot(flywheel, pivot, DriverStation.isAutonomousEnabled()));
-		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
-		NamedCommands.registerCommand("Smart-Shoot", new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
-		NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, limelights));
-		NamedCommands.registerCommand("Collect", new Collect(() -> 1d, collector)); //TODO use smart collect
-		NamedCommands.registerCommand("Spit", new Collect(() -> -1d, collector)); //TODO use smart collect
-		NamedCommands.registerCommand("Index-Up", new Index(indexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
-		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive)); // TODO find a way to use this
+		// NamedCommands.registerCommand("Cand-Sub", new PointBlankShot(flywheel, pivot, DriverStation.isAutonomousEnabled()));
+		// NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
+		// NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
+		// NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
+		// NamedCommands.registerCommand("Cand-Line", new CandLine(flywheel, pivot, indexer));
+		// NamedCommands.registerCommand("AMP", new AmpShot(flywheel, pivot, DriverStation.isAutonomousEnabled()));
+		// NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
+		// NamedCommands.registerCommand("Smart-Shoot", new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
+		// NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, limelights));
+		// NamedCommands.registerCommand("Collect", new Collect(() -> 1d, collector)); //TODO use smart collect
+		// NamedCommands.registerCommand("Spit", new Collect(() -> -1d, collector)); //TODO use smart collect
+		// NamedCommands.registerCommand("Index-Up", new Index(indexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
+		// NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive)); // TODO find a way to use this
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -206,13 +206,10 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
 
 		// aim at amp and stage tags for the robot
-		new Trigger(driver::getLeftBumper)
-				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
+		// new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(driver::getYButton)
-				.whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive)
-						.alongWith(hapticDriverCommand()));
-
+		// new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive).alongWith(hapticDriverCommand()));
+		
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
@@ -241,11 +238,8 @@ public class RobotContainer extends LightningContainer {
 		// -IndexerConstants.INDEXER_DEFAULT_POWER));
 
 		/* Other */
-		new Trigger(
-				() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()))
-						.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		// new Trigger(() ->
-		// collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+		// new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
+		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
 	}
 
@@ -259,31 +253,9 @@ public class RobotContainer extends LightningContainer {
 		drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
 				drivetrain.applyRequest(() -> drive
 						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive
-																								// forward
-																								// with
-																								// negative
-																								// Y
-																								// (Its
-																								// worth
-																								// noting
-																								// the
-																								// field
-																								// Y
-																								// axis
-																								// differs
-																								// from
-																								// the
-																								// robot
-																								// Y
-																								// axis
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
 						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive
-																								// left
-																								// with
-																								// negative
-																								// X
-																								// (left)
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
 								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with
@@ -341,9 +313,7 @@ public class RobotContainer extends LightningContainer {
 			}
 		});
 
-
 		songChooser.close();
-
 	}
 
 	public static Command hapticDriverCommand() {
