@@ -8,7 +8,9 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -25,6 +27,7 @@ import frc.robot.Constants.MusicConstants;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
+import frc.robot.command.AlignToTag;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
@@ -186,6 +189,8 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive).alongWith(hapticDriverCommand()));
 		
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+
+		new Trigger(driver::getAButton).whileTrue(new AlignToTag(new Pose2d(new Translation2d(1.84, 7.01), new Rotation2d(Math.PI/2)), drivetrain, drive, limelights, driver));
 
 		/* copilot */
 		// cand shots for the robot
