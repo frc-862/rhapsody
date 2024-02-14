@@ -72,11 +72,13 @@ public class OTFShoot extends Command {
     double robotVelocityX = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
     double robotVelocityY = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
 
+	double shotSpeed = 31.2927;
+
     double distanceToSpeaker = Math.sqrt(Math.pow(
 	VisionConstants.SPEAKER_LOCATION.getX() - pose.getX(), 2) 
 	+ Math.pow(VisionConstants.SPEAKER_LOCATION.getY() - pose.getY(), 2) 
 	+ Math.pow(VisionConstants.SPEAKER_LOCATION.getZ() - 0.75, 2));
-    double timeToSpeaker = distanceToSpeaker / 31.2927;
+    double timeToSpeaker = distanceToSpeaker / shotSpeed;
     
     // Velocity of the robot at release point
     double robotReleaseVelocityX = (robotVelocityX + robotAccelerationX) * spinupTime;
@@ -100,10 +102,17 @@ public class OTFShoot extends Command {
 
     //getting the angle to the target
     double targetHeading = Math.toDegrees(Math.atan2(headingDeltaY, headingDeltaX));
-    
+
+	// Heading of Robot without math and its delta
+	var basicDeltaX = VisionConstants.SPEAKER_LOCATION.getX() - pose.getX();
+	var basicDeltaY = VisionConstants.SPEAKER_LOCATION.getY() - pose.getY();
+	double basicHeading = Math.toDegrees(Math.atan2(basicDeltaY, basicDeltaX));
+	double basicDelta = Math.abs(targetHeading - basicHeading);
+	
     pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
 
     LightningShuffleboard.setDouble("OTF Shooting", "Distance to Speaker", distanceToSpeaker);
+	LightningShuffleboard.setDouble("OTF Shooting", "Rotated Target Heading", (targetHeading + 360) % 360);
 	LightningShuffleboard.setDouble("OTF Shooting", "Target Heading", targetHeading);
 	LightningShuffleboard.setDouble("OTF Shooting", "Heading Delta X", headingDeltaX);
 	LightningShuffleboard.setDouble("OTF Shooting", "Heading Delta Y", headingDeltaY);
@@ -122,27 +131,30 @@ public class OTFShoot extends Command {
     LightningShuffleboard.setDouble("OTF Shooting", "Robot X", pose.getX());
     LightningShuffleboard.setDouble("OTF Shooting", "Robot Y", pose.getY());
     LightningShuffleboard.setDouble("OTF Shooting", "Robot Heading", pose.getRotation().getDegrees());
+	LightningShuffleboard.setDouble("OTF Shooting", "Basic Delta", basicDelta);
+	LightningShuffleboard.setDouble("OTF Shooting", "Rotated Basic Heading", (basicHeading + 360) % 360);
+	LightningShuffleboard.setDouble("OTF Shooting", "Basic Heading", basicHeading);
 
-	drivetrain.applyRequest(() -> drive
-						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
-						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
-								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
-				);
-	// if (driver.getRightBumper()) {
-	// 	drivetrain.setControl(slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-	// 		.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-	// 		.withRotationalRate(pidOutput) // Drive counterclockwise with negative X (left)
-	// 	);
-	// } else {
-	// 	drivetrain.setControl(drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-	// 		.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-	// 		.withRotationalRate(pidOutput) // Rotate toward the desired direction
-	// 	); // Drive counterclockwise with negative X (left)
-	// }
+	// drivetrain.applyRequest(() -> drive
+	// 					.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
+	// 							ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
+	// 					.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
+	// 							ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
+	// 					.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
+	// 							ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
+	// 							* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
+	// 			);
+	if (driver.getRightBumper()) {
+		drivetrain.setControl(slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+			.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
+			.withRotationalRate(pidOutput) // Drive counterclockwise with negative X (left)
+		);
+	} else {
+		drivetrain.setControl(drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+			.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
+			.withRotationalRate(pidOutput) // Rotate toward the desired direction
+		); // Drive counterclockwise with negative X (left)
+	}
 	}
 
 	@Override
