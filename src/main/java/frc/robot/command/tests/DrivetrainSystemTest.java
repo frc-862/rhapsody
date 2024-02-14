@@ -8,7 +8,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.command.tests.testCommands.DriveTest;
+import frc.robot.command.tests.testcmds.DriveTest;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.command.TimedCommand;
 import frc.thunder.testing.SystemTestCommandGroup;

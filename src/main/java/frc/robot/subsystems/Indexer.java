@@ -3,19 +3,32 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.thunder.hardware.ThunderBird;
 
 public class Indexer extends SubsystemBase {
+
     private ThunderBird indexerMotor;
-    private DigitalInput indexerSensor = new DigitalInput(DIO.INDEXER_BEAMBREAK);
+    private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_ENTER_BEAMBREAK);
+    private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_EXIT_BEAMBREAK);
+
+    private PieceState currentState = PieceState.NONE;
 
     public Indexer() {   
         indexerMotor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD, IndexerConstants.INDEXER_MOTOR_INVERTED,
             IndexerConstants.INDEXER_MOTOR_STATOR_CURRENT_LIMIT, IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
     }
 
+    public PieceState getPieceState() {
+        return currentState;
+    }
+    
+    public void setPieceState(PieceState state) {
+        currentState = state;
+    }
+        
     public void setPower(double power) {
         indexerMotor.set(power);
     }
@@ -28,17 +41,26 @@ public class Indexer extends SubsystemBase {
         indexerMotor.set(-IndexerConstants.INDEXER_DEFAULT_POWER);
     }
 
-    /**
-     * STOP IT GET SOME HELP
-     */
     public void stop() {
         indexerMotor.set(0d);
     }
 
-    public boolean hasPiece() {
-        return indexerSensor.get();
+    /**
+     * Gets the current beam brake state
+     * @return entry beambreak state
+     */
+    public boolean getEntryBeamBreakState() {
+        return !indexerSensorEntry.get();
     }
 
+    /**
+     * Gets the current beam brake state
+     * @return exit beambreak state
+     */
+    public boolean getExitBeamBreakState() {
+        return !indexerSensorExit.get();
+    }
+    
     public boolean hasShot() {
         return false; // TODO add actual logic
     }
