@@ -12,7 +12,6 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.path.PathConstraints;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.util.PIDConstants;
@@ -85,8 +84,8 @@ public class Constants {
             public static final int COLLECTOR_MOTOR = 9;
             public static final int INDEXER_MOTOR = 11;
             public static final int PIVOT_ANGLE_MOTOR = 12;
-            public static final int FLYWHEEL_MOTOR_1 = 13;
-            public static final int FLYWHEEL_MOTOR_2 = 14;
+            public static final int FLYWHEEL_MOTOR_TOP = 13;
+            public static final int FLYWHEEL_MOTOR_BOTTOM = 14;
             public static final int CLIMB_RIGHT = 15;
             public static final int CLIMB_LEFT = 16;
 
@@ -347,15 +346,17 @@ public class Constants {
         public static final boolean COLLECTOR_MOTOR_INVERTED = false; // TODO check once collector installed
         public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
-        public static final NeutralModeValue COLLECTOR_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
+        public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
+
+        public static final double COLLECTOR_SYSTEST_POWER = 0.25;
     }
 
     public class FlywheelConstants { // TODO: get real
-        public static final boolean FLYWHEEL_MOTOR_1_INVERT = false;
-        public static final boolean FLYWHEEL_MOTOR_2_INVERT = false;
+        public static final boolean FLYWHEEL_MOTOR_TOP_INVERT = false;
+        public static final boolean FLYWHEEL_MOTOR_BOTTOM_INVERT = false;
         public static final int FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
+        public static final boolean FLYWHEEL_MOTOR_BRAKE_MODE = false;
         public static final double FLYWHEEL_MOTOR_KP = 0;
         public static final double FLYWHEEL_MOTOR_KI = 0;
         public static final double FLYWHEEL_MOTOR_KD = 0;
@@ -366,13 +367,15 @@ public class Constants {
 
         public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get amount to bias by
         public static final double COAST_VOLTAGE = 0.1;
+
+        public static final double FLYWHEEL_SYSTEST_POWER = 0.5;
     }
 
     public class IndexerConstants { // TODO: get real
         public static final boolean INDEXER_MOTOR_INVERTED = false;
         public static final int INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int INDEXER_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue INDEXER_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
         public static final double INDEXER_DEFAULT_POWER = 0.3;
     }
 
@@ -391,7 +394,7 @@ public class Constants {
         public static final double ENCODER_OFFSET = 0d;
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
-        public static final double ENCODER_TO_ROTOR_RATIO = 1d;
+        public static final double ENCODER_TO_ROTOR_RATIO = 100d;
 
         public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
     }
@@ -436,7 +439,7 @@ public class Constants {
         public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
         public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final NeutralModeValue FLYWHEEL_MOTOR_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final boolean CLIMB_MOTOR_BRAKE_MODE = true;
         public static final double EXTEND_KP = 0;
         public static final double EXTEND_KI = 0;
         public static final double EXTEND_KD = 0;
@@ -461,7 +464,7 @@ public class Constants {
         public static final double CLIMB_RETRACTION_TOLERANCE = 0;
         public static final double CLIMB_RETURN_TO_GROUND_MAX_POWER = 0.05;
 
-        public static final double CLIMB_TEST_POWER = .1;
+        public static final double CLIMB_SYSTEST_POWER = 0.1;
 
         public enum CLIMBER_STATES{
             CLIMBED, GROUNDED, STOW

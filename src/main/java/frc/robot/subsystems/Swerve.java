@@ -80,10 +80,13 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         LightningShuffleboard.setDouble("Swerve", "Odo X", getState().Pose.getX());
         LightningShuffleboard.setDouble("Swerve", "Odo Y", getState().Pose.getY());
         
-        LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
+        LightningShuffleboard.setBool("Swerve", "Slow mode", slowMode);
         LightningShuffleboard.setBool("Swerve", "Robot Centric", isRobotCentricControl());
 
         LightningShuffleboard.setBool("Sweve", "Tipped", isTipped());
+
+        LightningShuffleboard.setDouble("Swerve", "velocity x", getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
+        LightningShuffleboard.setDouble("Swerve", "velocity y", getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
 
     }
 
