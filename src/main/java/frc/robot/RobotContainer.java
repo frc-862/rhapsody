@@ -38,11 +38,16 @@ import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.PodiumShot;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
+import frc.robot.command.tests.ClimbSystemTest;
+import frc.robot.command.tests.CollectorSystemTest;
 import frc.robot.command.tests.DrivetrainSystemTest;
+import frc.robot.command.tests.FlywheelSystemTest;
 import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
+import frc.robot.command.Collect;
 import frc.robot.subsystems.Limelights;
+import frc.robot.subsystems.Nervo;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Collector;
@@ -63,13 +68,14 @@ public class RobotContainer extends LightningContainer {
 	// Subsystems
 	private Swerve drivetrain;
 	private Limelights limelights;
-	// Collector collector;
+	Collector collector;
 	// Flywheel flywheel;
 	// Pivot pivot;
 	// Shooter shooter;
 	// Indexer indexer;
 	// Climber climber;
 	LEDs leds;
+	Nervo nervo;
 	Orchestra sing;
 
 	private SendableChooser<Command> autoChooser;
@@ -99,6 +105,7 @@ public class RobotContainer extends LightningContainer {
 		// shooter = new Shooter(pivot, flywheel, indexer, collector);
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
+		nervo = new Nervo();
 		sing = new Orchestra();
 
 		// field centric for the robot
@@ -132,6 +139,7 @@ public class RobotContainer extends LightningContainer {
 
 		
 	}
+	
 	@Override
 	protected void configureButtonBindings() {
 		/* driver */
@@ -184,10 +192,13 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
 
 		// aim at amp and stage tags for the robot
-		new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
+		// new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive).alongWith(hapticDriverCommand()));
+		// new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive).alongWith(hapticDriverCommand()));
 		
+		new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
+		new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
+
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		new Trigger(driver::getAButton).whileTrue(new AlignToTag(new Pose2d(new Translation2d(1.84, 7.01), new Rotation2d(Math.PI/2)), drivetrain, drive, limelights, driver));
@@ -211,12 +222,10 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
 
 		/* Other */
-		new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
+		// new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
 	}
-
-	
 
 	@Override
 	protected void configureDefaultCommands() {
@@ -262,14 +271,20 @@ public class RobotContainer extends LightningContainer {
 	@Override
 	protected void configureSystemTests() {
 		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain, brake,
-				DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
-		SystemTest.registerTest("Azimuth Test",
-				new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
+			DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
+		SystemTest.registerTest("Azimuth Test", new TurnSystemTest(drivetrain, brake,
+			DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
-		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
-		// collector, indexer, pivot));
+		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
+		// 	Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+
+		// SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
+		// 	indexer, pivot, Constants.FlywheelConstants.SYS_TEST_SPEED));
+
+		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
+		// 	Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
 		
-		//Make sing appear on shuffleboard!! :)
+		// Sing chooser
 		SendableChooser<SystemTestCommand> songChooser = new SendableChooser<>();
 		songChooser.setDefaultOption(MusicConstants.BOH_RHAP_FILEPATH, new SingSystemTest(drivetrain, MusicConstants.BOH_RHAP_FILEPATH, sing));
 		for (String filepath: MusicConstants.SET_LIST){
@@ -284,9 +299,7 @@ public class RobotContainer extends LightningContainer {
 			}
 		});
 
-
 		songChooser.close();
-
 	}
 
 	public static Command hapticDriverCommand() {
