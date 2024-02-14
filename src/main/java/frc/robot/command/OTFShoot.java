@@ -42,6 +42,7 @@ public class OTFShoot extends Command {
 	 * @param driver the driver's controller, used for drive input
 	 */
 	public OTFShoot(Swerve drivetrain, XboxController driver) {
+
 		this.drivetrain = drivetrain;
 		this.driver = driver;
 		
@@ -58,84 +59,90 @@ public class OTFShoot extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		Pose2d pose = drivetrain.getPose().get();
-		double deltaX = VisionConstants.SPEAKER_LOCATION.getX() - pose.getX();
-		double deltaY = VisionConstants.SPEAKER_LOCATION.getY() - pose.getY();
-    double deltaZ = VisionConstants.SPEAKER_LOCATION.getZ() - 0.75;
+	double spinupTime = 0.5;
+
+	// Robot pose
+	Pose2d pose = drivetrain.getPose().get();
     
-    // Getting robot values 
-    double xAccleration = drivetrain.getPigeon2().getAccelerationX().getValue();
-    double yAccleration = drivetrain.getPigeon2().getAccelerationY().getValue();
+    // Robot Acceleration
+    double robotAccelerationX = drivetrain.getPigeon2().getAccelerationX().getValue();
+    double robotAccelerationY = drivetrain.getPigeon2().getAccelerationY().getValue();
 
-    double xVelocity = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
-    double yVelocity = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
+	// Robot velocity
+    double robotVelocityX = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
+    double robotVelocityY = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
 
-    double distanceToTarget = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
-    double timeToTarget = distanceToTarget / 31.2927;
+    double distanceToSpeaker = Math.sqrt(Math.pow(
+	VisionConstants.SPEAKER_LOCATION.getX() - pose.getX(), 2) 
+	+ Math.pow(VisionConstants.SPEAKER_LOCATION.getY() - pose.getY(), 2) 
+	+ Math.pow(VisionConstants.SPEAKER_LOCATION.getZ() - 0.75, 2));
+    double timeToSpeaker = distanceToSpeaker / 31.2927;
     
-    // Change of final peice velocity due to final robot acceleration
-    double xVelocityFinal = xVelocity + xAccleration * timeToTarget;
-    double yVelocityFinal = yVelocity + yAccleration * timeToTarget;
+    // Velocity of the robot at release point
+    double robotReleaseVelocityX = (robotVelocityX + robotAccelerationX) * spinupTime;
+    double robotReleaseVelocityY = (robotVelocityY + robotAccelerationY) * spinupTime;
 
-    double deltaXFinalVelocity = xVelocityFinal * timeToTarget;
-    double deltaYFinalVelocity = yVelocityFinal * timeToTarget;
+	// Offset of landing peice location bassed on robot velocity at release point
+	double pieceDeltaVelocityX = robotReleaseVelocityX * timeToSpeaker;
+	double pieceDeltaVelocityY = robotReleaseVelocityY * timeToSpeaker;
 
-    // Change of target pose due to acceleration and velocity
-    double targetX = VisionConstants.SPEAKER_LOCATION.getX() + deltaXFinalVelocity;
-    double targetY = VisionConstants.SPEAKER_LOCATION.getY() + deltaYFinalVelocity;
+    // Change of target pose landing peice location bassed on robot velocity at release point
+    double targetX = VisionConstants.SPEAKER_LOCATION.getX() + pieceDeltaVelocityX;
+    double targetY = VisionConstants.SPEAKER_LOCATION.getY() + pieceDeltaVelocityY;
 
     //Change of final Robot pose due to acceleration and velocity
-    double finalX = pose.getX() + deltaXFinalVelocity + 0.5 * xAccleration * timeToTarget * timeToTarget;
-    double finalY = pose.getY() + deltaYFinalVelocity + 0.5 * yAccleration * timeToTarget * timeToTarget;
+    double releaseRobotPoseX = pose.getX() + (robotVelocityX * spinupTime) + (0.5 * robotAccelerationX * spinupTime * spinupTime);
+    double releaseRobotPoseY = pose.getY() + (robotVelocityY * spinupTime) + (0.5 * robotAccelerationY * spinupTime * spinupTime);
 
-    // Get final Delta X and Delta Y
-    double finalDeltaX = targetX - finalX;
-    double finalDeltaY = targetY - finalY;
+    // Get final Delta X and Delta Y to find the target heading of the robot
+    double headingDeltaX = targetX - releaseRobotPoseX;
+    double headingDeltaY = targetY - releaseRobotPoseY;
 
     //getting the angle to the target
-    double targetHeading = Math.toDegrees(Math.atan2(finalDeltaX, finalDeltaY));
+    double targetHeading = Math.toDegrees(Math.atan2(headingDeltaY, headingDeltaX));
     
     pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
 
-    LightningShuffleboard.setDouble("OTF Shooting", "Distance to Speaker", distanceToTarget);
-		LightningShuffleboard.setDouble("OTF Shooting", "Target Heading", targetHeading);
-		LightningShuffleboard.setDouble("OTF Shooting", "Delta X", deltaX);
-		LightningShuffleboard.setDouble("OTF Shooting", "Delta Y", deltaY);
-		LightningShuffleboard.setDouble("OTF Shooting", "Delta Z", deltaZ);
-		LightningShuffleboard.setDouble("OTF Shooting", "X Velocity", xVelocity);
-		LightningShuffleboard.setDouble("OTF Shooting", "Y Velocity", yVelocity);
-    LightningShuffleboard.setDouble("OTF Shooting", "X Accleration", xAccleration);
-    LightningShuffleboard.setDouble("OTF Shooting", "Y Accleration", yAccleration);
-    LightningShuffleboard.setDouble("OTF Shooting", "Time to Target", timeToTarget);
-    LightningShuffleboard.setDouble("OTF Shooting", "Final X", finalX);
-    LightningShuffleboard.setDouble("OTF Shooting", "Final Y", finalY);
-    LightningShuffleboard.setDouble("OTF Shooting", "Final Delta X", finalDeltaX);
-    LightningShuffleboard.setDouble("OTF Shooting", "Final Delta Y", finalDeltaY);
+    LightningShuffleboard.setDouble("OTF Shooting", "Distance to Speaker", distanceToSpeaker);
+	LightningShuffleboard.setDouble("OTF Shooting", "Target Heading", targetHeading);
+	LightningShuffleboard.setDouble("OTF Shooting", "Heading Delta X", headingDeltaX);
+	LightningShuffleboard.setDouble("OTF Shooting", "Heading Delta Y", headingDeltaY);
+	LightningShuffleboard.setDouble("OTF Shooting", "Robot X Velocity", robotVelocityX);	
+	LightningShuffleboard.setDouble("OTF Shooting", "Robot Y Velocity", robotVelocityY);
+    LightningShuffleboard.setDouble("OTF Shooting", "Robot X Accleration", robotAccelerationX);
+    LightningShuffleboard.setDouble("OTF Shooting", "Robot Y Accleration", robotAccelerationY);
+    LightningShuffleboard.setDouble("OTF Shooting", "Time to Speaker", timeToSpeaker);
+    LightningShuffleboard.setDouble("OTF Shooting", "Release Robot X", releaseRobotPoseX);
+    LightningShuffleboard.setDouble("OTF Shooting", "Release Robot Y", releaseRobotPoseY);
     LightningShuffleboard.setDouble("OTF Shooting", "Target X", targetX);
     LightningShuffleboard.setDouble("OTF Shooting", "Target Y", targetY);
-    LightningShuffleboard.setDouble("OTF Shooting", "X Velocity Final", xVelocityFinal);
-    LightningShuffleboard.setDouble("OTF Shooting", "Y Velocity Final", yVelocityFinal);
-    LightningShuffleboard.setDouble("OTF Shooting", "Delta X Final Velocity", deltaXFinalVelocity);
-    LightningShuffleboard.setDouble("OTF Shooting", "Delta Y Final Velocity", deltaYFinalVelocity);
+    LightningShuffleboard.setDouble("OTF Shooting", "Impact Location Delta X", pieceDeltaVelocityX);
+    LightningShuffleboard.setDouble("OTF Shooting", "Impact Location Delta Y", pieceDeltaVelocityY);
     LightningShuffleboard.setDouble("OTF Shooting", "PID Output", pidOutput);
     LightningShuffleboard.setDouble("OTF Shooting", "Robot X", pose.getX());
     LightningShuffleboard.setDouble("OTF Shooting", "Robot Y", pose.getY());
     LightningShuffleboard.setDouble("OTF Shooting", "Robot Heading", pose.getRotation().getDegrees());
 
-
-    
-
-		if (driver.getRightBumper()) {
-			drivetrain.setControl(slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-				.withRotationalRate(pidOutput) // Drive counterclockwise with negative X (left)
-			);
-		} else {
-			drivetrain.setControl(drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-				.withRotationalRate(pidOutput) // Rotate toward the desired direction
-			); // Drive counterclockwise with negative X (left)
-		}
+	drivetrain.applyRequest(() -> drive
+						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
+						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
+						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
+								* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
+				);
+	// if (driver.getRightBumper()) {
+	// 	drivetrain.setControl(slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+	// 		.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
+	// 		.withRotationalRate(pidOutput) // Drive counterclockwise with negative X (left)
+	// 	);
+	// } else {
+	// 	drivetrain.setControl(drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+	// 		.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
+	// 		.withRotationalRate(pidOutput) // Rotate toward the desired direction
+	// 	); // Drive counterclockwise with negative X (left)
+	// }
 	}
 
 	@Override
