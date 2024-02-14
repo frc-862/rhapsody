@@ -20,6 +20,7 @@ public class PointBlankShot extends Command {
 	 * Creates a new PointBlankShot.
 	 * @param flywheel 
 	 * @param pivot
+	 * @param isAutonomous
 	 */
 	public PointBlankShot(Flywheel flywheel, Pivot pivot, boolean isAutonomous) {
 		this.flywheel = flywheel;

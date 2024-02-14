@@ -17,14 +17,16 @@ public class AmpShot extends Command {
 
 	/**
 	 * Creates a new AmpShot.
+	 * 
 	 * @param pivot
 	 * @param flywheel
+	 * @param isAutonomous
 	 */
 	public AmpShot(Flywheel flywheel, Pivot pivot, boolean isAutonomous) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 		this.isAutonomous = isAutonomous;
-	
+
 		addRequirements(pivot, flywheel);
 	}
 
@@ -38,23 +40,24 @@ public class AmpShot extends Command {
 
 	@Override
 	public void execute() {
-		if(pivot.onTarget() && flywheel.allMotorsOnTarget()) {
+		if (pivot.onTarget() && flywheel.allMotorsOnTarget()) {
 			shot = true;
 			shotTime = Timer.getFPGATimestamp();
 		}
 	}
+
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast();
 		pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
-		//TODO add LED state
+		// TODO add LED state
 	}
 
 	@Override
 	public boolean isFinished() {
-		if(isAutonomous){
-			return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT; 
+		if (isAutonomous) {
+			return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
 		}
 		return false;
 	}
