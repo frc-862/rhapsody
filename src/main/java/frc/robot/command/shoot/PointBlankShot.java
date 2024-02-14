@@ -1,5 +1,7 @@
 package frc.robot.command.shoot;
 
+import com.fasterxml.jackson.databind.annotation.JsonAppend.Attr;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -10,15 +12,19 @@ public class PointBlankShot extends Command {
 
 	private final Flywheel flywheel;
 	private final Pivot pivot;
+	private boolean isAutonomous;
+	private boolean shot = false;
+	private double shotTime = 0;
 
 	/**
 	 * Creates a new PointBlankShot.
 	 * @param flywheel 
 	 * @param pivot
 	 */
-	public PointBlankShot(Flywheel flywheel, Pivot pivot) {
+	public PointBlankShot(Flywheel flywheel, Pivot pivot, boolean isAutonomous) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
+		this.isAutonomous = isAutonomous;
 
 		addRequirements(pivot, flywheel);
 	}
@@ -30,11 +36,27 @@ public class PointBlankShot extends Command {
 		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
 	}
 
+	@Override
+	public void execute() {
+		if(pivot.onTarget() && flywheel.allMotorsOnTarget()) {
+			shot = true;
+			shotTime = Timer.getFPGATimestamp();
+		}
+	}
+
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast();
 		pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
 		//TODO add LED state
+	}
+
+	@Override
+	public boolean isFinished() {
+		if(isAutonomous){
+			return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT; 
+		}
+		return false;
 	}
 }

@@ -57,6 +57,6 @@ public class CandC3 extends Command {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return shot && shotTime - Timer.getFPGATimestamp()>= 1d; // TODO find time to shoot
+		return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT; 
 	}
 }

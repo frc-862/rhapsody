@@ -10,6 +10,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -32,9 +33,14 @@ import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Sing;
 import frc.robot.command.shoot.AmpShot;
+import frc.robot.command.shoot.CandC1;
+import frc.robot.command.shoot.CandC2;
+import frc.robot.command.shoot.CandC3;
+import frc.robot.command.shoot.CandLine;
 import frc.robot.command.shoot.PodiumShot;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
+import frc.robot.command.shoot.Stow;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
@@ -122,25 +128,23 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("led-Shoot",
 				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
-		NamedCommands.registerCommand("Cand-Sub", new PointBlankShot(flywheel, pivot));
-		// NamedCommands.registerCommand("Cand-C1", );
-		// NamedCommands.registerCommand("Cand-C2", );
-		// NamedCommands.registerCommand("Cand-C3", );
-		// NamedCommands.registerCommand("Cand-Line", );
-		NamedCommands.registerCommand("AMP", new AmpShot(flywheel, pivot));
-		NamedCommands.registerCommand("Stow", new PointBlankShot(flywheel, pivot));
+		NamedCommands.registerCommand("Cand-Sub", new PointBlankShot(flywheel, pivot, DriverStation.isAutonomousEnabled()));
+		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("Cand-Line", new CandLine(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("AMP", new AmpShot(flywheel, pivot, DriverStation.isAutonomousEnabled()));
+		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
 		NamedCommands.registerCommand("Smart-Shoot", new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
 		NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, limelights));
-		NamedCommands.registerCommand("Collect", new Collect(() -> 1d, collector));
-		NamedCommands.registerCommand("Spit", new Collect(() -> -1d, collector).alongWith(new Index(indexer, () -> -IndexerConstants.INDEXER_DEFAULT_POWER)));
-		NamedCommands.registerCommand("Index", new Index(indexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
+		NamedCommands.registerCommand("Collect", new Collect(() -> 1d, collector)); //TODO use smart collect
+		NamedCommands.registerCommand("Spit", new Collect(() -> -1d, collector)); //TODO use smart collect
+		NamedCommands.registerCommand("Index-Up", new Index(indexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
+		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, drive)); // TODO find a way to use this
 
-
-		// make sure named commands is initialized before autobuilder!
+		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
-
-
 	}
 
 	@Override
@@ -151,31 +155,9 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
 				.whileTrue(drivetrain.applyRequest(() -> driveRobotCentric
 						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive
-																								// forward
-																								// with
-																								// negative
-																								// Y
-																								// (Its
-																								// worth
-																								// noting
-																								// the
-																								// field
-																								// Y
-																								// axis
-																								// differs
-																								// from
-																								// the
-																								// robot
-																								// Y
-																								// axis
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
 						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive
-																								// left
-																								// with
-																								// negative
-																								// X
-																								// (left)
+								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
 								* DrivetrainConstants.ROT_MULT))) // Drive counterclockwise with
@@ -188,19 +170,13 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(drivetrain.applyRequest(() -> drive
 						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed
-								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with
-																		// negative Y (Its worth
-																		// noting the field Y axis
-																		// differs from the robot Y
-																		// axis
+								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
 						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed
-								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X
-																		// (left)
+								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
-								* DrivetrainConstants.SLOW_ROT_MULT))) // Drive counterclockwise
-																		// with negative X (left)
+								* DrivetrainConstants.SLOW_ROT_MULT))) // Drive counterclockwise with negative X (left)
 				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
 		// activates robot centric driving and slow mode
@@ -208,34 +184,26 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(drivetrain.applyRequest(() -> driveRobotCentric
 						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed
-								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with
-																		// negative Y (Its worth
-																		// noting the field Y axis
-																		// differs from the robot Y
-																		// axis
+								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
 						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed
-								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X
-																		// (left)
+								* DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
 						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
 								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
-								* DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise
-																		// with negative X (left)
+								* DrivetrainConstants.SLOW_ROT_MULT))); // Drive counterclockwise with negative X (left)
 
 		// resets the gyro of the robot
 		new Trigger(() -> driver.getStartButton() && driver.getBackButton())
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector,
-		// limelights));
+		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
 		// parks the robot
 		new Trigger(driver::getXButton).whileTrue(drivetrain.applyRequest(() -> brake));
 
 		// smart shoot for the robot
-		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain,
-		// indexer, leds));
+		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
 
 		// aim at amp and stage tags for the robot
 		new Trigger(driver::getLeftBumper)
@@ -249,7 +217,7 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		// cand shots for the robot
-		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
+		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
 		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
 

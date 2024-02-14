@@ -1,5 +1,6 @@
 package frc.robot.command.shoot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.IndexerConstants;
@@ -12,6 +13,8 @@ public class CandC1 extends Command {
 	private final Flywheel flywheel;
 	private final Pivot pivot;
 	private final Indexer indexer;
+	private boolean shot = false;
+	private double shotTime = 0;
 	
 	/** Creates a new PodiumShot.
 	 * @param flywheel
@@ -37,6 +40,8 @@ public class CandC1 extends Command {
 	public void execute() {
 		if(pivot.onTarget() && flywheel.allMotorsOnTarget()) {
 			indexer.setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
+			shot = true;
+			shotTime = Timer.getFPGATimestamp();
 		}
 	}
 
@@ -51,6 +56,6 @@ public class CandC1 extends Command {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false;
+		return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT; 
 	}
 }

@@ -125,13 +125,13 @@ public class Constants {
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(19.09); // TODO check
 
         public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
-
-        //For Pathfinding
-        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(-1, 2), new Rotation2d(0d));
-        public static final double GOAL_END_VELOCITY = 0; // Goal end velocity in meters/sec
-        public static final double ROTATION_DELAY_DISTACE = 0d; // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
         
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); //TODO get constants
+        
+        //For Pathfinding
+        // TODO get real poses to pathfind to
+        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(-1, 2), new Rotation2d(0d));
+        
     }
 
     public static class TunerConstants {
@@ -439,7 +439,8 @@ public class Constants {
         public static final double LINE_RPM = 0;
         public static final double LINE_ANGLE = 0;
 
-        public static final double TIME_TO_SHOOT = 2d; // In seconds 
+        // TODO find time to shoot
+        public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer start to flywheel exit 
     }
 
     public class ClimbConstants { //TODO: find real values
