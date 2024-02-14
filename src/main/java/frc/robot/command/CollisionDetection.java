@@ -53,7 +53,7 @@ public int i = 0;
     LightningShuffleboard.setDouble("Collision Detection", "pigeonAccelarationDirection", getTotalPigeonAccelerationDirection());
     LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_MODULE);
     LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getMotorAccelerationMagnitude(0));
-    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration direction", getMotorAccelerationDirection());
+    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration direction", getMotorAccelerationDirection(0));
     LightningShuffleboard.setBool("Collision Detection", "motor zero collided", checkMotorAcceleration(0));
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
     
@@ -149,10 +149,10 @@ public int i = 0;
     * Units.inchesToMeters(TunerConstants.kWheelRadiusInches) / TunerConstants.kDriveGearRatio);
   }
 
-  public double getMotorAccelerationDirection() {
+  public double getMotorAccelerationDirection(int moduleNumber) {
 
-    return Units.rotationsToRadians(drivetrain.getModule(0).getSteerMotor().getPosition().getValueAsDouble() 
-    - Math.floor(drivetrain.getModule(0).getSteerMotor().getPosition().getValueAsDouble()));
+    return Units.rotationsToRadians(drivetrain.getModule(moduleNumber).getSteerMotor().getPosition().getValueAsDouble() 
+    - Math.floor(drivetrain.getModule(moduleNumber).getSteerMotor().getPosition().getValueAsDouble()));
   }
 
   // COMPARE MOTOR & PIGEON
@@ -164,7 +164,8 @@ public int i = 0;
    */
   public boolean checkMotorAcceleration(int moduleNumber){
     return Math.abs(getTotalPigeonAccelerationMagnitude() - getMotorAccelerationMagnitude(moduleNumber)) 
-    > getMotorAccelerationMagnitude(moduleNumber) * VisionConstants.COLLISION_ACCELERATION_TOLERANCE_PERCENTAGE;
+    > getMotorAccelerationMagnitude(moduleNumber) * VisionConstants.COLLISION_ACCELERATION_MAGNITUDE_TOLERANCE_PERCENTAGE
+    && getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) < VisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE;
   }
 
   /**
@@ -186,12 +187,12 @@ public int i = 0;
   }
 
   /**
-   * @param tolerance
+   * @param magnitudeTolerance
    * @return if any motor has abnormal acceleration compared to pigeon and given tolerance
    */
-  public boolean getIfCollided(double tolerance){
-    return checkMotorAcceleration(0, tolerance) || checkMotorAcceleration(1, tolerance) 
-    || checkMotorAcceleration(2, tolerance) || checkMotorAcceleration(3, tolerance);
+  public boolean getIfCollided(double magnitudeTolerance){
+    return checkMotorAcceleration(0, magnitudeTolerance) || checkMotorAcceleration(1, magnitudeTolerance) 
+    || checkMotorAcceleration(2, magnitudeTolerance) || checkMotorAcceleration(3, magnitudeTolerance);
   }
 
   // Returns true when the command should end.
