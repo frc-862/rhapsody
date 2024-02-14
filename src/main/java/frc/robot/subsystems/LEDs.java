@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDsConstants;
+import frc.robot.Constants.RobotMap.PWM;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 
 public class LEDs extends SubsystemBase {
@@ -20,7 +21,7 @@ public class LEDs extends SubsystemBase {
 	private Map<LED_STATES, Boolean> ledStates;
 
 	public LEDs() {
-		leds = new AddressableLED(LEDsConstants.LED_PWM_PORT);
+		leds = new AddressableLED(PWM.LED_PORT);
 		ledBuffer = new AddressableLEDBuffer(LEDsConstants.LED_LENGTH);
 		leds.setLength(ledBuffer.getLength());
 		leds.start();
