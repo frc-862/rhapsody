@@ -50,7 +50,7 @@ public class Constants {
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
         public static final double SLOW_ROT_MULT = 0.007; // TODO Tune for Driver
-        public static final double SLOW_SPEED_MULT = 0.4; // TODO Tune for Driver
+        public static final double SLOW_SPEED_MULT = 0.01; // TODO Tune for Driver
 
         public static final double SYS_TEST_SPEED_DRIVE = 0.5;
         public static final double SYS_TEST_SPEED_TURN = 1d;
@@ -104,9 +104,16 @@ public class Constants {
          * You expected a javadoc, but it was me, Dio!
          */
         public class DIO {
-            public static final int COLLECTOR_ENTRY_BEAMBREAK_FRONT = 1;
-            public static final int COLLECTOR_ENTRY_BEAMBREAK_BACK = 2;
-            public static final int INDEXER_BEAMBREAK = 0;
+            public static final int COLLECTOR_BEAMBREAK = 1;
+            public static final int INDEXER_ENTER_BEAMBREAK = 0;
+            public static final int INDEXER_EXIT_BEAMBREAK = 0;
+
+        }
+
+        public class PWM {
+            public static final int LED_PORT = 0;
+            public static final int FIRE_SERVO_PORT = 1;
+            public static final int FLYWHEEL_SERVO_PORT = 2;
         }
     }
 
@@ -304,8 +311,8 @@ public class Constants {
         public static final Translation2d VISION_LIMIT =
                 new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
         public static final double COLLISION_DEADZONE = 2d;
-        public static final double ALIGNMENT_TOLERANCE = 4d; // TODO: make this an actual value
-        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.05, 0, 0);
+        public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
+        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
@@ -369,6 +376,11 @@ public class Constants {
         public static final boolean INDEXER_MOTOR_INVERTED = false;
         public static final int INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int INDEXER_MOTOR_STATOR_CURRENT_LIMIT = 0;
+
+        public enum PieceState {
+            IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE
+        }
+
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
         public static final double INDEXER_DEFAULT_POWER = 0.3;
     }
@@ -486,7 +498,6 @@ public class Constants {
     }
 
     public class LEDsConstants {
-        public static final int LED_PWM_PORT = 0;
         public static final int LED_LENGTH = 14;
 
         public static final int SWRIL_SEGMENT_SIZE = 5;
@@ -523,4 +534,5 @@ public class Constants {
             }
         }
     }
+    
 }

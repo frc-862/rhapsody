@@ -42,6 +42,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
         this.limelights = new Limelight[]{limelightSubsystem.getStopMe()};
 
+        LightningShuffleboard.setDouble("PointAtTag", "D", 0);
+		LightningShuffleboard.setDouble("PointAtTag", "I", 0);
+		LightningShuffleboard.setDouble("PointAtTag", "P", 0.1);
+		LightningShuffleboard.setDouble("PointAtTag", "Tolarance", 4);
+
         configurePathPlanner();
     }
 
