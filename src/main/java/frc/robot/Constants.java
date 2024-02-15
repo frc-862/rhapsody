@@ -138,7 +138,10 @@ public class Constants {
         public static final double GOAL_END_VELOCITY = 0; // Goal end velocity in meters/sec
         public static final double ROTATION_DELAY_DISTACE = 0d; // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
         
+
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); //TODO get constants
+        // For AlignToTag
+        public static final Pose2d AMP_POSE = new Pose2d(new Translation2d(1.85, 6.5), new Rotation2d(0d)); 
     }
 
     public static class TunerConstants {

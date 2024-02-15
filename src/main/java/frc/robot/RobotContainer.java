@@ -201,8 +201,9 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
-		new Trigger(driver::getAButton).whileTrue(new AlignToTag(new Pose2d(new Translation2d(1.84, 7.01), new Rotation2d(Math.PI/2)), drivetrain, drive, limelights, driver));
-
+		new Trigger(driver::getAButton).whileTrue(new AlignToTag(AutonomousConstants.AMP_POSE, drivetrain, drive, driver));
+		
+		// Test auto align
 		/* copilot */
 		// cand shots for the robot
 		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
