@@ -13,8 +13,8 @@ public class Collector extends SubsystemBase {
 
 	// Declare collector hardware
 	private ThunderBird motor;
-	private DigitalInput collectorEntryBeamBreakEntrance;
-	private DigitalInput collectorEntryBeamBreakExit;
+	private DigitalInput beamBreak;
+
 	private boolean hasPiece;
 
 	public Collector() {
@@ -22,10 +22,7 @@ public class Collector extends SubsystemBase {
 				CollectorConstants.COLLECTOR_MOTOR_INVERTED, CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT, 
 				CollectorConstants.COLLECTOR_MOTOR_BRAKE_MODE);
 
-		//TODO: real robot doesn't currently have a plan to have 2 beam breaks, if programming requires this they need to say so soon.
-		collectorEntryBeamBreakEntrance = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_FRONT);
-		collectorEntryBeamBreakExit = new DigitalInput(DIO.COLLECTOR_ENTRY_BEAMBREAK_BACK);
-
+		beamBreak = new DigitalInput(DIO.COLLECTOR_BEAMBREAK);
 	}
 
 	/**
@@ -33,15 +30,7 @@ public class Collector extends SubsystemBase {
 	 * @return When an object is present, returns true, otherwise returns false
 	 */
 	public boolean getEntryBeamBreakState() {
-		return !collectorEntryBeamBreakEntrance.get();
-	}
-
-	/**
-	 * Exit of Collector Beam Break
-	 * @return When an object is present, returns true, otherwise returns false
-	 */
-	public boolean getExitBeamBreakState() {
-		return !collectorEntryBeamBreakExit.get();
+		return !beamBreak.get();
 	}
 
 	/**
@@ -55,11 +44,7 @@ public class Collector extends SubsystemBase {
 	@Override
 	public void periodic() {
 		// tells robot if we have a piece in collector
-		if (getEntryBeamBreakState()) {
-			hasPiece = true;
-		} else if (getExitBeamBreakState()){
-			hasPiece = false;
-		}
+		hasPiece = getEntryBeamBreakState();
 	}
 
 	/**
@@ -67,7 +52,7 @@ public class Collector extends SubsystemBase {
 	 * @return boolean, true if collector has piece
 	 */
 	public boolean hasPiece() {
-		// Could use beam breaks and store when a piece enters until it leaves
+		// TODO: Could use beam breaks and store when a piece enters until it leaves
 		return hasPiece;
 	}
 
