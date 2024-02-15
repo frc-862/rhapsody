@@ -43,7 +43,7 @@ public class AlignToTag extends Command {
     this.drivetrain = drivetrain;
     this.drive = drive;
     this.limelights = limelights;
-
+    this.driver=driver;
     //limelight = limelights.getStopMe();
 
 		//limelightPrevPipeline = limelight.getPipeline();
@@ -57,7 +57,7 @@ public class AlignToTag extends Command {
   @Override
   public void initialize() {
     aligning = false;
-    new PointAtTag(drivetrain, limelights, driver);
+    //pointAtTag = new PointAtTag(target ,drivetrain, drive, limelights, driver);
     // pointAtTag = new PointAtTag(drivetrain, limelights, driver);
     
   }
@@ -65,9 +65,11 @@ public class AlignToTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    new MoveToPose(target, drivetrain, drive);
+    new PointAtTag(target, drivetrain, drive, limelights, driver);
     if (!aligning) {
       if (!(new MoveToPose(target, drivetrain, drive).isFinished())) {
-        new MoveToPose(target, drivetrain, drive);
+        
       } else {
         aligning = true;
       }
