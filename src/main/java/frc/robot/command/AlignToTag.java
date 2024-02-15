@@ -55,7 +55,7 @@ public class AlignToTag extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    new MoveToPose(target, drivetrain, drive);
+      new MoveToPose(target, drivetrain, drive);
     // pointAtTag = new PointAtTag(drivetrain, limelights, driver);
     
   }
@@ -63,6 +63,8 @@ public class AlignToTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
+  
     // limelight.getTargetPoseRobotSpace();
     
   }
