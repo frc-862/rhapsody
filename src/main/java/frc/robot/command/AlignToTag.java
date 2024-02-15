@@ -57,7 +57,7 @@ public class AlignToTag extends Command {
   @Override
   public void initialize() {
     aligning = false;
-    
+    new PointAtTag(drivetrain, limelights, driver);
     // pointAtTag = new PointAtTag(drivetrain, limelights, driver);
     
   }
