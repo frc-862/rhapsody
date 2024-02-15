@@ -54,25 +54,29 @@ public class OTFShoot extends Command {
 	public void initialize() {
 
 		headingController.enableContinuousInput(-180, 180);
+
+		addRequirements(drivetrain);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-	double spinupTime = 0.5;
+	double spinupTime = 0.02;
 
 	// Robot pose
 	Pose2d pose = drivetrain.getPose().get();
     
     // Robot Acceleration
+	double accelerationScaler = 0;
     double robotAccelerationX = drivetrain.getPigeon2().getAccelerationX().getValue();
     double robotAccelerationY = drivetrain.getPigeon2().getAccelerationY().getValue();
 
 	// Robot velocity
+	double veloctiyScaler = 1;
     double robotVelocityX = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
     double robotVelocityY = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
 
-	double shotSpeed = 31.2927;
+	double shotSpeed = 31.2729;
 
     double distanceToSpeaker = Math.sqrt(Math.pow(
 	VisionConstants.SPEAKER_LOCATION.getX() - pose.getX(), 2) 
@@ -81,20 +85,20 @@ public class OTFShoot extends Command {
     double timeToSpeaker = distanceToSpeaker / shotSpeed;
     
     // Velocity of the robot at release point
-    double robotReleaseVelocityX = (robotVelocityX + robotAccelerationX) * spinupTime;
-    double robotReleaseVelocityY = (robotVelocityY + robotAccelerationY) * spinupTime;
+    double robotReleaseVelocityX = robotVelocityX * veloctiyScaler + (robotAccelerationX * accelerationScaler * spinupTime);
+    double robotReleaseVelocityY = robotVelocityY * veloctiyScaler + (robotAccelerationY * accelerationScaler * spinupTime);
 
 	// Offset of landing peice location bassed on robot velocity at release point
-	double pieceDeltaVelocityX = robotReleaseVelocityX * timeToSpeaker;
-	double pieceDeltaVelocityY = robotReleaseVelocityY * timeToSpeaker;
+	double pieceDeltaX = robotReleaseVelocityX * timeToSpeaker;
+	double pieceDeltaY = robotReleaseVelocityY * timeToSpeaker;
 
     // Change of target pose landing peice location bassed on robot velocity at release point
-    double targetX = VisionConstants.SPEAKER_LOCATION.getX() + pieceDeltaVelocityX;
-    double targetY = VisionConstants.SPEAKER_LOCATION.getY() + pieceDeltaVelocityY;
+    double targetX = VisionConstants.SPEAKER_LOCATION.getX() + pieceDeltaX;
+    double targetY = VisionConstants.SPEAKER_LOCATION.getY() + pieceDeltaY;
 
     //Change of final Robot pose due to acceleration and velocity
-    double releaseRobotPoseX = pose.getX() + (robotVelocityX * spinupTime) + (0.5 * robotAccelerationX * spinupTime * spinupTime);
-    double releaseRobotPoseY = pose.getY() + (robotVelocityY * spinupTime) + (0.5 * robotAccelerationY * spinupTime * spinupTime);
+    double releaseRobotPoseX = pose.getX() + (robotVelocityX * spinupTime  * veloctiyScaler) + (0.5 * robotAccelerationX * spinupTime * spinupTime * accelerationScaler);
+    double releaseRobotPoseY = pose.getY() + (robotVelocityY * spinupTime  * veloctiyScaler) + (0.5 * robotAccelerationY * spinupTime * spinupTime * accelerationScaler);
 
     // Get final Delta X and Delta Y to find the target heading of the robot
     double headingDeltaX = targetX - releaseRobotPoseX;
@@ -125,8 +129,8 @@ public class OTFShoot extends Command {
     LightningShuffleboard.setDouble("OTF Shooting", "Release Robot Y", releaseRobotPoseY);
     LightningShuffleboard.setDouble("OTF Shooting", "Target X", targetX);
     LightningShuffleboard.setDouble("OTF Shooting", "Target Y", targetY);
-    LightningShuffleboard.setDouble("OTF Shooting", "Impact Location Delta X", pieceDeltaVelocityX);
-    LightningShuffleboard.setDouble("OTF Shooting", "Impact Location Delta Y", pieceDeltaVelocityY);
+    LightningShuffleboard.setDouble("OTF Shooting", "Impact Location Delta X", pieceDeltaX);
+    LightningShuffleboard.setDouble("OTF Shooting", "Impact Location Delta Y", pieceDeltaY);
     LightningShuffleboard.setDouble("OTF Shooting", "PID Output", pidOutput);
     LightningShuffleboard.setDouble("OTF Shooting", "Robot X", pose.getX());
     LightningShuffleboard.setDouble("OTF Shooting", "Robot Y", pose.getY());
@@ -134,6 +138,8 @@ public class OTFShoot extends Command {
 	LightningShuffleboard.setDouble("OTF Shooting", "Basic Delta", basicDelta);
 	LightningShuffleboard.setDouble("OTF Shooting", "Rotated Basic Heading", (basicHeading + 360) % 360);
 	LightningShuffleboard.setDouble("OTF Shooting", "Basic Heading", basicHeading);
+	LightningShuffleboard.setDouble("OTF Shooting", "Driver X", driver.getLeftX() * DrivetrainConstants.MaxSpeed);
+	LightningShuffleboard.setDouble("OTF Shooting", "Driver Y", driver.getLeftY() * DrivetrainConstants.MaxSpeed);
 
 	// drivetrain.applyRequest(() -> drive
 	// 					.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
