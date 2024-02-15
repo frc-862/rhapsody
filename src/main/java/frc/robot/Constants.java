@@ -82,19 +82,19 @@ public class Constants {
 
             // TODO check
             public static final int COLLECTOR_MOTOR = 9;
-            public static final int INDEXER_MOTOR = 11;
-            public static final int PIVOT_ANGLE_MOTOR = 12;
-            public static final int FLYWHEEL_MOTOR_TOP = 13;
-            public static final int FLYWHEEL_MOTOR_BOTTOM = 14;
-            public static final int CLIMB_RIGHT = 15;
-            public static final int CLIMB_LEFT = 16;
+            public static final int INDEXER_MOTOR = 10;
+            public static final int PIVOT_ANGLE_MOTOR = 11;
+            public static final int FLYWHEEL_MOTOR_TOP = 12;
+            public static final int FLYWHEEL_MOTOR_BOTTOM = 13;
+            public static final int CLIMB_RIGHT = 14;
+            public static final int CLIMB_LEFT = 15;
 
             // TODO check
             // Cancoders
             public static final int FLYWHEEL_CANCODER = 35;
             public static final int CLIMB_CANCODERR = 36;
             public static final int CLIMB_CANCODERL = 37;
-            public static final int PIVOT_ANGLE_CANCODER = 38;
+            public static final int PIVOT_ANGLE_CANCODER = 35;
 
             public static final String CANBUS_FD = "Canivore";
             public static final String RIO_CANBUS = "rio";
