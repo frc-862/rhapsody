@@ -8,6 +8,8 @@ package frc.robot.command;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
@@ -22,12 +24,13 @@ import frc.robot.command.PointAtTag;
 
 
 public class AlignToTag extends Command {
-
+  
   public Pose2d target;
   public Swerve drivetrain;
   public MoveToPose moveToPose;
   public PointAtTag pointAtTag;
 
+  private PathPlannerPath path;
   private Limelight limelight;
 	private XboxController driver;
 	private FieldCentric drive;
@@ -43,7 +46,7 @@ public class AlignToTag extends Command {
     this.drivetrain = drivetrain;
     this.drive = drive;
     this.limelights = limelights;
-    this.driver=driver;
+
     //limelight = limelights.getStopMe();
 
 		//limelightPrevPipeline = limelight.getPipeline();
@@ -57,7 +60,7 @@ public class AlignToTag extends Command {
   @Override
   public void initialize() {
     aligning = false;
-    //pointAtTag = new PointAtTag(target ,drivetrain, drive, limelights, driver);
+    path = PathPlannerPath.fromPathFile("Amp autoalign");
     // pointAtTag = new PointAtTag(drivetrain, limelights, driver);
     
   }
@@ -65,21 +68,15 @@ public class AlignToTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    new MoveToPose(target, drivetrain, drive);
-    new PointAtTag(target, drivetrain, drive, limelights, driver);
     if (!aligning) {
       if (!(new MoveToPose(target, drivetrain, drive).isFinished())) {
-        
+        new MoveToPose(target, drivetrain, drive);
       } else {
         aligning = true;
       }
     } else {
-      
+      AutoBuilder.followPath(path);
     }
-    
-
-
-    
   }
 
   // Called once the command ends or is interrupted.
