@@ -304,7 +304,7 @@ public class Constants {
     }
 
     public class VisionConstants {
-        public static final Translation3d SPEAKER_LOCATION = new Translation3d(0,5.4, 1.2);
+        public static final Translation3d SPEAKER_LOCATION = new Translation3d(0,5.547593, 1.2);
 
         // This is a magic number from gridlock, may need to be changed or removed entirely
         public static final double PROCESS_LATENCY = 0.0472; // TODO test

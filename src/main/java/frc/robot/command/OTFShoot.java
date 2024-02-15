@@ -76,7 +76,7 @@ public class OTFShoot extends Command {
     double robotVelocityX = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
     double robotVelocityY = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
 
-	double shotSpeed = 31.2729;
+	double shotSpeed = 15;
 
     double distanceToSpeaker = Math.sqrt(Math.pow(
 	VisionConstants.SPEAKER_LOCATION.getX() - pose.getX(), 2) 
@@ -87,7 +87,7 @@ public class OTFShoot extends Command {
     // Velocity of the robot at release point
     double robotReleaseVelocityX = robotVelocityX * veloctiyScaler + (robotAccelerationX * accelerationScaler * spinupTime);
     double robotReleaseVelocityY = robotVelocityY * veloctiyScaler + (robotAccelerationY * accelerationScaler * spinupTime);
-
+ 
 	// Offset of landing peice location bassed on robot velocity at release point
 	double pieceDeltaX = robotReleaseVelocityX * timeToSpeaker;
 	double pieceDeltaY = robotReleaseVelocityY * timeToSpeaker;
