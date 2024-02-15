@@ -51,7 +51,7 @@ public class Constants {
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
         public static final double SLOW_ROT_MULT = 0.007; // TODO Tune for Driver
-        public static final double SLOW_SPEED_MULT = 0.01; // TODO Tune for Driver
+        public static final double SLOW_SPEED_MULT = 0.4; // TODO Tune for Driver
 
         public static final double SYS_TEST_SPEED_DRIVE = 0.5;
         public static final double SYS_TEST_SPEED_TURN = 1d;
@@ -83,19 +83,19 @@ public class Constants {
 
             // TODO check
             public static final int COLLECTOR_MOTOR = 9;
-            public static final int INDEXER_MOTOR = 11;
-            public static final int PIVOT_ANGLE_MOTOR = 12;
-            public static final int FLYWHEEL_MOTOR_TOP = 13;
-            public static final int FLYWHEEL_MOTOR_BOTTOM = 14;
-            public static final int CLIMB_RIGHT = 15;
-            public static final int CLIMB_LEFT = 16;
+            public static final int INDEXER_MOTOR = 10;
+            public static final int PIVOT_ANGLE_MOTOR = 11;
+            public static final int FLYWHEEL_MOTOR_TOP = 12;
+            public static final int FLYWHEEL_MOTOR_BOTTOM = 13;
+            public static final int CLIMB_RIGHT = 14;
+            public static final int CLIMB_LEFT = 15;
 
             // TODO check
             // Cancoders
             public static final int FLYWHEEL_CANCODER = 35;
             public static final int CLIMB_CANCODERR = 36;
             public static final int CLIMB_CANCODERL = 37;
-            public static final int PIVOT_ANGLE_CANCODER = 38;
+            public static final int PIVOT_ANGLE_CANCODER = 35;
 
             public static final String CANBUS_FD = "Canivore";
             public static final String RIO_CANBUS = "rio";
@@ -105,9 +105,10 @@ public class Constants {
          * You expected a javadoc, but it was me, Dio!
          */
         public class DIO {
-            public static final int COLLECTOR_ENTRY_BEAMBREAK_FRONT = 1;
-            public static final int COLLECTOR_ENTRY_BEAMBREAK_BACK = 2;
-            public static final int INDEXER_BEAMBREAK = 0;
+            public static final int COLLECTOR_BEAMBREAK = 1;
+            public static final int INDEXER_ENTER_BEAMBREAK = 0;
+            public static final int INDEXER_EXIT_BEAMBREAK = 0;
+
         }
 
         public class PWM {
@@ -378,6 +379,11 @@ public class Constants {
         public static final boolean INDEXER_MOTOR_INVERTED = false;
         public static final int INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int INDEXER_MOTOR_STATOR_CURRENT_LIMIT = 0;
+
+        public enum PieceState {
+            IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE
+        }
+
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
         public static final double INDEXER_DEFAULT_POWER = 0.3;
     }
