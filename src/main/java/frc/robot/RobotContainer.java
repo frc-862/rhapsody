@@ -105,9 +105,9 @@ public class RobotContainer extends LightningContainer {
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// climber = new Climber(drivetrain);
-		// leds = new LEDs();
+		leds = new LEDs();
 		nervo = new Nervo();
-		// sing = new Orchestra();
+		sing = new Orchestra();
 
 		// field centric for the robot
 		drive = new SwerveRequest.FieldCentric()
