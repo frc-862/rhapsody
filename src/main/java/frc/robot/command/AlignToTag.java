@@ -35,6 +35,7 @@ public class AlignToTag extends Command {
 	
 	private int limelightPrevPipeline = 0;
   
+  private boolean aligning;
   /** Creates a new AlignToTag. */
   public AlignToTag(Pose2d target, Swerve drivetrain, SwerveRequest.FieldCentric drive, Limelights limelights, XboxController driver) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -43,19 +44,20 @@ public class AlignToTag extends Command {
     this.drive = drive;
     this.limelights = limelights;
 
-    limelight = limelights.getStopMe();
+    //limelight = limelights.getStopMe();
 
-		limelightPrevPipeline = limelight.getPipeline();
+		//limelightPrevPipeline = limelight.getPipeline();
 
-		limelight.setPipeline(VisionConstants.TAG_PIPELINE);
+		//limelight.setPipeline(VisionConstants.TAG_PIPELINE);
 		
-		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+		//drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      new MoveToPose(target, drivetrain, drive);
+    aligning = false;
+    
     // pointAtTag = new PointAtTag(drivetrain, limelights, driver);
     
   }
@@ -63,9 +65,18 @@ public class AlignToTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (!aligning) {
+      if (!(new MoveToPose(target, drivetrain, drive).isFinished())) {
+        new MoveToPose(target, drivetrain, drive);
+      } else {
+        aligning = true;
+      }
+    } else {
+      
+    }
     
-  
-    // limelight.getTargetPoseRobotSpace();
+
+
     
   }
 
