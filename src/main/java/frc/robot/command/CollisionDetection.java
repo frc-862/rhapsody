@@ -58,7 +58,7 @@ public int i = 0;
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
     
     if (getIfCollided()){
-      drivetrain.applyRequest(() -> brake);
+      // drivetrain.applyRequest(() -> brake);
     }
 
     angularVelocityWorldLog[i] = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble()); //TODO: test
@@ -80,7 +80,7 @@ public int i = 0;
     return drivetrain.getPigeon2().getAccelerationX().getValueAsDouble() 
     - drivetrain.getPigeon2().getGravityVectorX().getValueAsDouble() // subtract gravity from acceleration
     * VisionConstants.ACCELERATION_DUE_TO_GRAVITY // convert g-force to m/s^2
-    - Math.cos(getPidgeonXYAccelerationDirection() + Math.PI/2) * getPigeonAngularAcceleration()
+    - Math.cos(getPidgeonXYAccelerationDirection() + Math.PI/2) * getPigeonAngularAcceleration() // subtract ang vel of pigeon on robot
      * VisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON;
   }
 
@@ -93,9 +93,12 @@ public int i = 0;
     - drivetrain.getPigeon2().getGravityVectorY().getValueAsDouble() // subtract gravity from acceleration
     * VisionConstants.ACCELERATION_DUE_TO_GRAVITY) // convert g-force to m/s^2
     - Math.sin(getPidgeonXYAccelerationDirection() + Math.PI/2) 
-    * getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON; 
+    * getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON; // subtract ang vel from of pigeon on robot
   }
 
+  /**
+   * @return direction of x/y acceleration in radians
+   */
   public double getPidgeonXYAccelerationDirection(){
     if (drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() >= 0){
       return Math.tan(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() / 
@@ -106,32 +109,51 @@ public int i = 0;
     }
   }
 
+  /**
+   * @return pigeon angular velocity in radians per second
+   */
   public double getPigeonAngularAcceleration(){
     return (angularVelocityWorldLog[i-2] - angularVelocityWorldLog[i-1]) / (timeLog[i-2] - timeLog[i-1]);
   }
 
 
+  /**
+   * add angular velocity to x acceleration
+   * @return total pigeon acceleration in x direction in m/s^2
+   */
   public double getPigeonTotalAccelerationX(){
     return getPigeonAccelerationX() + getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_MODULE 
     * Math.cos(Math.tan(getPigeonAccelerationY() / getPigeonAccelerationX()) + Math.PI / 2);
 
   }
-
+  /**
+   * add angular velocity to y acceleration
+   * @return total pigeon acceleration in y direction in m/s^2
+   */
   public double getPigeonTotalAccelerationY(){
     return getPigeonAccelerationY() + getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_MODULE 
     * Math.sin(Math.tan(getPigeonAccelerationY() / getPigeonAccelerationX()) + Math.PI / 2);
   }
 
-  public double getPrimitivePigeonAccelerationMagnitude(){
+  /**
+   * @return primitive acceleration magnitude in m/s^2
+   */
+public double getPrimitivePigeonAccelerationMagnitude(){
     return Math.hypot(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble(), 
     drivetrain.getPigeon2().getAccelerationY().getValueAsDouble());
   }
 
+  /**
+   * @return total acceleration magnitude in m/s^2
+   */
   public double getTotalPigeonAccelerationMagnitude() {
     return Math.hypot(getPigeonTotalAccelerationX(), getPigeonAccelerationY());
   }
 
-  public double getTotalPigeonAccelerationDirection() {
+  /**
+   * @return total acceleration direction in radians
+   */
+public double getTotalPigeonAccelerationDirection() {
     return Math.tan(getPigeonTotalAccelerationY() / getPigeonAccelerationX());
   }
 
@@ -139,16 +161,21 @@ public int i = 0;
 // GET INFO FROM MOTOR
 
   /**
-   * gets acceleration from a drivemotor of the specified module
+   * gets acceleration magnitude from a drivemotor of the specified module
    * @param moduleNumber
-   * @return motor acceleration
+   * @return motor acceleration magnitude
    */
   public double getMotorAccelerationMagnitude(int moduleNumber){
-    // get acceleration and convert to m/s^2
+    // get acceleration magnitude and convert to m/s^2
     return Units.rotationsToRadians(Math.abs(drivetrain.getModule(moduleNumber).getDriveMotor().getAcceleration().getValueAsDouble()) 
     * Units.inchesToMeters(TunerConstants.kWheelRadiusInches) / TunerConstants.kDriveGearRatio);
   }
 
+  /**
+   * gets acceleration direction from a drivemotor of the specified module
+   * @param moduleNumber
+   * @return motor acceleration direction
+   */
   public double getMotorAccelerationDirection(int moduleNumber) {
 
     return Units.rotationsToRadians(drivetrain.getModule(moduleNumber).getSteerMotor().getPosition().getValueAsDouble() 

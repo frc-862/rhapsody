@@ -321,7 +321,7 @@ public class Constants {
         public static final double COLLISION_ACCELERATION_MAGNITUDE_TOLERANCE_PERCENTAGE = 0.25; //percent of motorAcceleration
         public static final double DISTANCE_FROM_CENTER_TO_MODULE = Math.hypot(13.5, 13.5);
         public static final double DISTANCE_FROM_CENTER_TO_PIGEON = 0d;
-        public static final double COLLISION_ACCELERATION_DIRECTION_TOLERANCE = Math.PI/12;
+        public static final double COLLISION_ACCELERATION_DIRECTION_TOLERANCE = Math.PI/12; // 15 degrees
 
         public class Pipelines { // TODO get real
             public static final int APRIL_TAG_3d = 0;
