@@ -4,6 +4,8 @@
 
 package frc.robot.command;
 
+import java.util.Arrays;
+
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.TunerConstants;
@@ -26,7 +28,6 @@ public CollisionDetector collisionDetector;
 SwerveRequest.SwerveDriveBrake brake;
 public double[] angularVelocityWorldLog;
 public double[] timeLog;
-public int i = 0;
 
   public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -39,14 +40,29 @@ public int i = 0;
   @Override
   public void initialize() {
     brake = new SwerveRequest.SwerveDriveBrake();
-    angularVelocityWorldLog[i] = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble()); //TODO: test
-    timeLog[i] = Utils.getCurrentTimeSeconds();
-    i++;
+
+    // store ang vel and time to calc angular acceleration
+
+    angularVelocityWorldLog = Arrays.copyOf(angularVelocityWorldLog, angularVelocityWorldLog.length + 1);
+    angularVelocityWorldLog[angularVelocityWorldLog.length - 1] 
+    = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble());
+
+    timeLog = Arrays.copyOf(timeLog, timeLog.length + 1);
+    timeLog[timeLog.length - 1] = Utils.getCurrentTimeSeconds();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    // store ang vel and time to calc angular acceleration
+
+    angularVelocityWorldLog = Arrays.copyOf(angularVelocityWorldLog, angularVelocityWorldLog.length + 1);
+    angularVelocityWorldLog[angularVelocityWorldLog.length - 1] 
+    = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble());
+
+    timeLog = Arrays.copyOf(timeLog, timeLog.length + 1);
+    timeLog[timeLog.length - 1] = Utils.getCurrentTimeSeconds();
 
     LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", getTotalPigeonAccelerationMagnitude());
     LightningShuffleboard.setDouble("Collision Detection", "primitive pidgeon acceleration", getPrimitivePigeonAccelerationMagnitude());
@@ -58,12 +74,8 @@ public int i = 0;
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
     
     if (getIfCollided()){
-      // drivetrain.applyRequest(() -> brake);
+      // drivetrain.applyRequest(() -> brake);&& getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) < VisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE
     }
-
-    angularVelocityWorldLog[i] = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble()); //TODO: test
-    timeLog[i] = Utils.getCurrentTimeSeconds();
-    i++;
   }
 
   // Called once the command ends or is interrupted.
@@ -113,7 +125,8 @@ public int i = 0;
    * @return pigeon angular velocity in radians per second
    */
   public double getPigeonAngularAcceleration(){
-    return (angularVelocityWorldLog[i-2] - angularVelocityWorldLog[i-1]) / (timeLog[i-2] - timeLog[i-1]);
+    return (angularVelocityWorldLog[angularVelocityWorldLog.length - 1] - angularVelocityWorldLog[angularVelocityWorldLog.length]) 
+    / (timeLog[timeLog.length - 1] - timeLog[timeLog.length]);
   }
 
 
@@ -202,7 +215,9 @@ public double getTotalPigeonAccelerationDirection() {
    * @return if motor is within tolerance
    */
   public boolean checkMotorAcceleration(int moduleNumber, double tolerance){
-    return Math.abs(getTotalPigeonAccelerationMagnitude() - getMotorAccelerationMagnitude(moduleNumber)) > tolerance;
+    return Math.abs(getTotalPigeonAccelerationMagnitude() - getMotorAccelerationMagnitude(moduleNumber)) > tolerance
+    && getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) 
+    < VisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE;
   }
 
   /**
@@ -221,6 +236,13 @@ public double getTotalPigeonAccelerationDirection() {
     return checkMotorAcceleration(0, magnitudeTolerance) || checkMotorAcceleration(1, magnitudeTolerance) 
     || checkMotorAcceleration(2, magnitudeTolerance) || checkMotorAcceleration(3, magnitudeTolerance);
   }
+  
+// DO STUFF WHEN COLLIDED
+
+  // failsafe mode
+
+  // figure out how to reorient
+
 
   // Returns true when the command should end.
   @Override
