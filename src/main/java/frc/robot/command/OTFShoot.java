@@ -84,19 +84,19 @@ public class OTFShoot extends Command {
 	+ Math.pow(VisionConstants.SPEAKER_LOCATION.getZ() - 0.75, 2));
     double timeToSpeaker = distanceToSpeaker / shotSpeed;
     
-    // Velocity of the robot at release point
+    // Velocity of the robot at release point (Vf = Vi + AT)
     double robotReleaseVelocityX = robotVelocityX * veloctiyScaler + (robotAccelerationX * accelerationScaler * spinupTime);
     double robotReleaseVelocityY = robotVelocityY * veloctiyScaler + (robotAccelerationY * accelerationScaler * spinupTime);
  
-	// Offset of landing peice location bassed on robot velocity at release point
+	// Offset of landing peice location bassed on robot velocity at release point (D = VT)
 	double pieceDeltaX = robotReleaseVelocityX * timeToSpeaker;
 	double pieceDeltaY = robotReleaseVelocityY * timeToSpeaker;
 
-    // Change of target pose landing peice location bassed on robot velocity at release point
+    // Change of target pose landing peice location bassed on robot velocity at release point 
     double targetX = VisionConstants.SPEAKER_LOCATION.getX() + pieceDeltaX;
     double targetY = VisionConstants.SPEAKER_LOCATION.getY() + pieceDeltaY;
 
-    //Change of final Robot pose due to acceleration and velocity
+    //Change of final Robot pose due to acceleration and velocity (X = Xi + ViT + 0.5AT^2)
     double releaseRobotPoseX = pose.getX() + (robotVelocityX * spinupTime  * veloctiyScaler) + (0.5 * robotAccelerationX * spinupTime * spinupTime * accelerationScaler);
     double releaseRobotPoseY = pose.getY() + (robotVelocityY * spinupTime  * veloctiyScaler) + (0.5 * robotAccelerationY * spinupTime * spinupTime * accelerationScaler);
 
@@ -104,7 +104,7 @@ public class OTFShoot extends Command {
     double headingDeltaX = targetX - releaseRobotPoseX;
     double headingDeltaY = targetY - releaseRobotPoseY;
 
-    //getting the angle to the target
+    //getting the angle to the target (Angle = arctan(Dy, Dx))
     double targetHeading = Math.toDegrees(Math.atan2(headingDeltaY, headingDeltaX));
 
 	// Heading of Robot without math and its delta
