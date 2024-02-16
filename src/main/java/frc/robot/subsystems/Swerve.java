@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
@@ -10,7 +11,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
@@ -19,6 +20,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants.AutonomousConstants;
+import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -30,11 +33,16 @@ import frc.thunder.vision.Limelight;
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
+    private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
+    private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric();
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
+
     private Limelight[] limelights;
     private boolean slowMode = false;
     private boolean disableVision = false;
     private boolean robotCentricControl = false;
+    private double driveSlowMult = 1d;
+    private double rotSlowMult = 1d;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, Limelights limelightSubsystem,
             SwerveModuleConstants... modules) {
@@ -50,6 +58,99 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         configurePathPlanner();
     }
 
+    /**
+     * Apply a request to the drivetrain with constant deadband
+     * @param x the x velocity m/s
+     * @param y the y velocity m/s
+     * @param rot the rotational velocity in rad/s
+     * @return the request to drive for the drivetrain
+     */
+    public Command applyRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
+        if(inSlowMode()) {
+            driveSlowMult = DrivetrainConstants.SLOW_SPEED_MULT;
+            rotSlowMult = DrivetrainConstants.SLOW_ROT_MULT;
+        } else {
+            driveSlowMult = 1d;
+            rotSlowMult = 1d;
+        }
+        return run(() -> this.setControl(driveField
+            .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * driveSlowMult)
+            .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * driveSlowMult)
+            .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT * rotSlowMult)));
+    }
+
+    /**
+     * Apply a request to the drivetrain with constant deadband
+     * @param x the x velocity m/s
+     * @param y the y velocity m/s
+     * @param rot the rotational velocity in rad/s
+     * @param driveDeadband the deadband to apply to the inputs drive
+     * @param rotDeadband the deadband to apply to the rotational input
+     * @return the request to drive for the drivetrain
+     */
+    public Command applyRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, double driveDeadband, double rotDeadband) {
+        if(inSlowMode()) {
+            driveSlowMult = DrivetrainConstants.SLOW_SPEED_MULT;
+            rotSlowMult = DrivetrainConstants.SLOW_ROT_MULT;
+        } else {
+            driveSlowMult = 1d;
+            rotSlowMult = 1d;
+        }
+        return run(() -> this.setControl(driveField
+            .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * DrivetrainConstants.MaxSpeed * driveSlowMult)
+            .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * DrivetrainConstants.MaxSpeed * driveSlowMult)
+            .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), rotDeadband) * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT * rotSlowMult)));
+    }
+
+    /**
+     * Apply a request to the drivetrain with constant deadband
+     * @param x the x velocity m/s
+     * @param y the y velocity m/s
+     * @param rot the rotational velocity in rad/s
+     * @return the request to drive for the drivetrain
+     */
+    public Command applyRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
+        if(inSlowMode()) {
+            driveSlowMult = DrivetrainConstants.SLOW_SPEED_MULT;
+            rotSlowMult = DrivetrainConstants.SLOW_ROT_MULT;
+        } else {
+            driveSlowMult = 1d;
+            rotSlowMult = 1d;
+        }
+        return run(() -> this.setControl(driveRobot
+            .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * driveSlowMult)
+            .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * driveSlowMult)
+            .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT * rotSlowMult)));
+    }
+
+    /**
+     * Apply a request to the drivetrain with constant deadband
+     * @param x the x velocity m/s
+     * @param y the y velocity m/s
+     * @param rot the rotational velocity in rad/s
+     * @param driveDeadband the deadband to apply to the inputs drive
+     * @param rotDeadband the deadband to apply to the rotational input
+     * @return the request to drive for the drivetrain
+     */
+    public Command applyRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, double driveDeadband, double rotDeadband) {
+        if(inSlowMode()) {
+            driveSlowMult = DrivetrainConstants.SLOW_SPEED_MULT;
+            rotSlowMult = DrivetrainConstants.SLOW_ROT_MULT;
+        } else {
+            driveSlowMult = 1d;
+            rotSlowMult = 1d;
+        }
+        return run(() -> this.setControl(driveRobot
+            .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * DrivetrainConstants.MaxSpeed)
+            .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * DrivetrainConstants.MaxSpeed)
+            .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), rotDeadband) * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT)));
+    }
+
+    /**
+     * Apply a request to the drivetrain
+     * @param requestSupplier the SwerveRequest to apply
+     * @return the request to drive for the drivetrain
+     */
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
     }
