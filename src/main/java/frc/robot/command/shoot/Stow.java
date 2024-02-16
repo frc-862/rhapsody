@@ -15,7 +15,7 @@ public class Stow extends Command {
 	private Pivot pivot;
 	private Flywheel flywheel;
 
-	public Stow(Pivot pivot, Flywheel flywheel) {
+	public Stow(Flywheel flywheel, Pivot pivot) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 
@@ -29,9 +29,8 @@ public class Stow extends Command {
 		pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
-	public void end(boolean interrupted) {
-		//TODO add LED state
+	public boolean isFinished() {
+		return pivot.onTarget();
 	}
 }
