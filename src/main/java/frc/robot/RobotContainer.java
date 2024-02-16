@@ -91,7 +91,7 @@ public class RobotContainer extends LightningContainer {
 
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
-		
+
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
@@ -134,9 +134,9 @@ public class RobotContainer extends LightningContainer {
 		autoChooser = AutoBuilder.buildAutoChooser();
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 
-		
+
 	}
-	
+
 	@Override
 	protected void configureButtonBindings() {
 		/* driver */
@@ -196,7 +196,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
 		new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
 
-		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+		new Trigger(() -> coPilot.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
 		// cand shots for the robot
@@ -216,10 +216,15 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() -> IndexerConstants.INDEXER_DEFAULT_POWER));
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() -> -IndexerConstants.INDEXER_DEFAULT_POWER));
 
+
+
 		/* Other */
 		// new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
+		new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
+			.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
+			.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
 	}
 
 	@Override
@@ -266,28 +271,29 @@ public class RobotContainer extends LightningContainer {
 	@Override
 	protected void configureSystemTests() {
 		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain, brake,
-			DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
-		SystemTest.registerTest("Azimuth Test", new TurnSystemTest(drivetrain, brake,
-			DrivetrainConstants.SYS_TEST_SPEED_TURN));
+				DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
+		SystemTest.registerTest("Azimuth Test",
+				new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
 		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
-		// 	Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+		// Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
 		// SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
-		// 	indexer, pivot, Constants.FlywheelConstants.SYS_TEST_SPEED));
+		// indexer, pivot, Constants.FlywheelConstants.SYS_TEST_SPEED));
 
 		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
-		// 	Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
-		
+		// Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
+
 		// Sing chooser
 		SendableChooser<SystemTestCommand> songChooser = new SendableChooser<>();
-		songChooser.setDefaultOption(MusicConstants.BOH_RHAP_FILEPATH, new SingSystemTest(drivetrain, MusicConstants.BOH_RHAP_FILEPATH, sing));
-		for (String filepath: MusicConstants.SET_LIST){
+		songChooser.setDefaultOption(MusicConstants.BOH_RHAP_FILEPATH,
+				new SingSystemTest(drivetrain, MusicConstants.BOH_RHAP_FILEPATH, sing));
+		for (String filepath : MusicConstants.SET_LIST) {
 			songChooser.addOption(filepath, new SingSystemTest(drivetrain, filepath, sing));
 		}
 
 		LightningShuffleboard.set("SystemTest", "Songs List", songChooser);
-		
+
 		songChooser.onChange((SystemTestCommand command) -> {
 			if (command != null) {
 				command.schedule();

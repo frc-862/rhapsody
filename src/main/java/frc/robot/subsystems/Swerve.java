@@ -16,8 +16,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
@@ -162,6 +164,17 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public boolean isRobotCentricControl() {
         return robotCentricControl;
+    }
+
+    /**
+     * Swaps the driver and copilot controllers
+     * @param driverC the driver controller
+     * @param copilotC the copilot controller
+     */
+    public void swap(XboxController driverC, XboxController copilotC) {
+        XboxController temp = driverC;
+        RobotContainer.driver = copilotC;
+        RobotContainer.coPilot = temp;
     }
 
     /**
