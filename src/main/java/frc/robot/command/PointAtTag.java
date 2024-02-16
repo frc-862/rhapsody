@@ -101,26 +101,8 @@ public class PointAtTag extends Command {
 		LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", pose.getRotation().getDegrees());
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
 
-		// drivetrain.applyRequest(() -> drive
-		// 				.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
-		// 						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
-		// 				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
-		// 						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-		// 				.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
-		// 						ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
-		// 						* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
-		// 		);
-		if (driver.getRightBumper()) {
-			drivetrain.setControl(slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-				.withRotationalRate(pidOutput) // Drive counterclockwise with negative X (left)
-			);
-		} else {
-			drivetrain.setControl(drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-				.withRotationalRate(pidOutput) // Rotate toward the desired direction
-			); // Drive counterclockwise with negative X (left)
-		}
+		// TODO test drives and test the deadbands
+		drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> pidOutput, ControllerConstants.DEADBAND, 0d);
 	}
 
 	// Called once the command ends or is interrupted.

@@ -21,6 +21,7 @@ public class MoveToPose extends Command {
     private final Pose2d target; 
     private final Swerve drivetrain;
     private FieldCentric drive; 
+    private SwerveRequest brake;
     private boolean finished;
     private Pose2d current;
     private double dx;
@@ -34,8 +35,9 @@ public class MoveToPose extends Command {
      * @param drivetrain The drivetrain subsystem
      * @param drive The drive mode
     */
-    public MoveToPose(Pose2d target, Swerve drivetrain, SwerveRequest.FieldCentric drive) {
+    public MoveToPose(Pose2d target, Swerve drivetrain, SwerveRequest.FieldCentric drive, SwerveRequest brake) {
         this.drive = drive;
+        this.brake = brake;
         this.target = target; 
         this.drivetrain = drivetrain;
 
@@ -86,13 +88,15 @@ public class MoveToPose extends Command {
             powery = 0;
             finished = true;
         }
-        drivetrain.setControl(drive.withVelocityX(powerx).withVelocityY(powery));
+        // drivetrain.setControl(drive.withVelocityX(powerx).withVelocityY(powery)); // TODO remove if new way works
+        drivetrain.applyRequestField(() -> powerx, () -> powery, () -> 0, 0d, 0d); //TODO test
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0));
+        // drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0));
+        drivetrain.applyRequest(() -> brake); // TODO test and decide if this is the desired behavior
     }
 
     // Returns true when the command should end.

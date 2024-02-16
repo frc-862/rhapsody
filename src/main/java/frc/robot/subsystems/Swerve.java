@@ -50,16 +50,13 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
         this.limelights = new Limelight[]{limelightSubsystem.getStopMe()};
 
-        LightningShuffleboard.setDouble("PointAtTag", "D", 0);
-		LightningShuffleboard.setDouble("PointAtTag", "I", 0);
-		LightningShuffleboard.setDouble("PointAtTag", "P", 0.1);
-		LightningShuffleboard.setDouble("PointAtTag", "Tolarance", 4);
-
         configurePathPlanner();
     }
 
+    // DRIVE METHODS
+
     /**
-     * Apply a request to the drivetrain with constant deadband
+     * Apply a Field centric request to the drivetrain with constant deadband
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -80,7 +77,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
-     * Apply a request to the drivetrain with constant deadband
+     * Apply a Field centric request to the drivetrain with defined deadband
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -103,7 +100,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
-     * Apply a request to the drivetrain with constant deadband
+     * Apply a Robot centric request to the drivetrain with constant deadband
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -124,7 +121,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
-     * Apply a request to the drivetrain with constant deadband
+     * Apply a Robot centric request to the drivetrain with defined deadband
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -141,9 +138,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             rotSlowMult = 1d;
         }
         return run(() -> this.setControl(driveRobot
-            .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * DrivetrainConstants.MaxSpeed)
-            .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * DrivetrainConstants.MaxSpeed)
-            .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), rotDeadband) * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT)));
+            .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * DrivetrainConstants.MaxSpeed * driveSlowMult)
+            .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * DrivetrainConstants.MaxSpeed * driveSlowMult)
+            .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), rotDeadband) * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT * rotSlowMult)));
     }
 
     /**
@@ -158,31 +155,37 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     @Override
     public void simulationPeriodic() {
         /* Assume */
-        updateSimState(0.02, 12);
+        updateSimState(0.01, 12);
     }
 
     @Override
     public void periodic() {
         //TODO Remove the unecessary shuffleboard stuff eventually
 
+        // Updates pos using filtered vision pos
         for (Pose4d pose : Limelight.filteredPoses(limelights)) {
             if(!disableVision){
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
-                // System.out.println("Vision Updating");
             }
             
             LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
             LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
             LightningShuffleboard.setDouble("Swerve", "PoseTime", pose.getFPGATimestamp()); 
         }
-        
+
+        LightningShuffleboard.setDouble("PointAtTag", "D", 0);
+		LightningShuffleboard.setDouble("PointAtTag", "I", 0);
+		LightningShuffleboard.setDouble("PointAtTag", "P", 0.1);
+		LightningShuffleboard.setDouble("PointAtTag", "Tolarance", 4);
+
         LightningShuffleboard.setDouble("Swerve", "Timer", Timer.getFPGATimestamp());           
         LightningShuffleboard.setDouble("Swerve", "Robot Heading", getPigeon2().getAngle());
         LightningShuffleboard.setDouble("Swerve", "Odo X", getState().Pose.getX());
         LightningShuffleboard.setDouble("Swerve", "Odo Y", getState().Pose.getY());
         
-        LightningShuffleboard.setBool("Swerve", "Slow mode", slowMode);
+        LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
         LightningShuffleboard.setBool("Swerve", "Robot Centric", isRobotCentricControl());
+        LightningShuffleboard.setBool("Swerve", "Vision enabled", !disableVision);
 
         LightningShuffleboard.setBool("Sweve", "Tipped", isTipped());
 

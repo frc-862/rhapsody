@@ -156,31 +156,18 @@ public class RobotContainer extends LightningContainer {
 	@Override
 	protected void configureButtonBindings() {
 		/* driver */
-		// activates between field centric and robot centric drive + logs
-		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
-				.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
-				.whileTrue(drivetrain.applyRequest(() -> driveRobotCentric
-						.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
-						.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-						.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
-								ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
-								* DrivetrainConstants.ROT_MULT))) // Drive counterclockwise with
-																	// negative X (left)
-				.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
-
+		// field centric for the robot
 		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
 			.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
-			.whileTrue(drivetrain.applyRequestRobot(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
+			.whileTrue(drivetrain.applyRequestRobot(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()))
+			.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
+		// enables slow mode for driving
 		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
 			.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
 			.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
-		
-		
 
-		// resets the gyro of the robot
+		// sets field relative forward to the direction the robot is facing
 		new Trigger(() -> driver.getStartButton() && driver.getBackButton())
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
