@@ -219,7 +219,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
 		new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
 
-		new Trigger(() -> coPilot.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
 		// cand shots for the robot
