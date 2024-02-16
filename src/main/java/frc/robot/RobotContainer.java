@@ -215,10 +215,15 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() ->
 		// -IndexerConstants.INDEXER_DEFAULT_POWER));
 
+
+
 		/* Other */
 		// new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
+		new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
+			.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
+			.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
 	}
 
 
@@ -257,22 +262,22 @@ public class RobotContainer extends LightningContainer {
 	@Override
 	protected void configureSystemTests() {
 		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain, brake,
-			DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
-		SystemTest.registerTest("Azimuth Test", new TurnSystemTest(drivetrain, brake,
-			DrivetrainConstants.SYS_TEST_SPEED_TURN));
+				DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
+		SystemTest.registerTest("Azimuth Test",
+				new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
 		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
-		// 	Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+		// Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
 		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
 		// collector, indexer, pivot));
 
 		// SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
-		// 	indexer, pivot, Constants.FlywheelConstants.SYS_TEST_SPEED));
+		// indexer, pivot, Constants.FlywheelConstants.SYS_TEST_SPEED));
 
 		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
-		// 	Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
-		
+		// Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
+
 		// Sing chooser
 		SendableChooser<SystemTestCommand> songChooser = new SendableChooser<>();
 		songChooser.setDefaultOption(MusicConstants.BOH_RHAP_FILEPATH,
