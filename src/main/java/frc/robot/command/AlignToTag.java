@@ -45,8 +45,7 @@ public class AlignToTag extends Command {
     this.target = target;
     this.drivetrain = drivetrain;
     this.drive = drive;
-    this.limelights = limelights;
-
+    this.driver = driver;
     //limelight = limelights.getStopMe();
 
 		//limelightPrevPipeline = limelight.getPipeline();
