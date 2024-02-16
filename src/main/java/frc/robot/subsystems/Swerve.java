@@ -11,8 +11,14 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -59,6 +65,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         /* Assume */
         updateSimState(0.02, 12);
     }
+    private final Matrix<N3, N1> m_visionK = VecBuilder.fill(0.5,0.5, Units.degreesToRadians(30));
 
     @Override
     public void periodic() {
@@ -66,13 +73,28 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
         for (Pose4d pose : Limelight.filteredPoses(limelights)) {
             if(!disableVision){
-                addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
+                // High confidence => 0.3 
+                // Low confidence => 18 
+                // theta trust IMU, use 500 degrees
+
+                double confidence = 18.0;
+                if(pose.getMoreThanOneTarget() && pose.getDistance() < 3)
+                    confidence = 0.3;
+                else if (pose.getMoreThanOneTarget())
+                    confidence = 0.3 + ((pose.getDistance() - 3)/5 * 18);
+                else if (pose.getDistance() < 2)
+                    confidence = 1.0 + (pose.getDistance()/2 * 5.0);
+                
+                addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
                 // System.out.println("Vision Updating");
+                LightningShuffleboard.setDouble("Swerve", "Standard Deviation", confidence);
             }
             
             LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
             LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
             LightningShuffleboard.setDouble("Swerve", "PoseTime", pose.getFPGATimestamp()); 
+            LightningShuffleboard.setDouble("Swerve", "distance", pose.getDistance());
+            LightningShuffleboard.setBool("Swerve", "MultipleTargets", pose.getMoreThanOneTarget());
         }
         
         LightningShuffleboard.setDouble("Swerve", "Timer", Timer.getFPGATimestamp());           
