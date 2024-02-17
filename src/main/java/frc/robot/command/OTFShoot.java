@@ -161,7 +161,7 @@ public class OTFShoot extends Command {
 		// drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX());
 
 		// OTF driving
-		drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> pidOutput, ControllerConstants.DEADBAND, 0);
+		drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), pidOutput, ControllerConstants.DEADBAND);
 	}
 
 	@Override
