@@ -107,4 +107,8 @@ public class Telemetry {
             SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
         }
     }
+
+    public double getRotation() {
+        return fieldPub.;
+    }
 }
