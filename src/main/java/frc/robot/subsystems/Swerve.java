@@ -42,13 +42,14 @@ import frc.thunder.vision.Limelight;
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
+    private final Limelights limelightSubsystem;
+
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric();
     private final SwerveRequest.ApplyChassisSpeeds autoRequest =
             new SwerveRequest.ApplyChassisSpeeds();
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
-    private Limelight[] limelights;
     private boolean slowMode = false;
     private boolean disableVision = false;
     private boolean robotCentricControl = false;
@@ -60,8 +61,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             Limelights limelightSubsystem, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
 
-        this.limelights = new Limelight[] {limelightSubsystem.getStopMe()};
-
+        this.limelightSubsystem = limelightSubsystem;
         initLogging();
 
         configurePathPlanner();
@@ -250,9 +250,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     @Override
     public void periodic() {
         //TODO Remove the unecessary shuffleboard stuff eventually
-
-        for (Pose4d pose : Limelight.filteredPoses(limelights)) {
-            if(!disableVision){
+        if (!disableVision) {
+            var pose = limelightSubsystem.getPoseQueue().poll();
+            while (pose != null) {
                 // High confidence => 0.3 
                 // Low confidence => 18 
                 // theta trust IMU, use 500 degrees
@@ -267,14 +267,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 }
                 
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
-                LightningShuffleboard.setDouble("Swerve", "Standard Deviation", confidence);
+                pose = limelightSubsystem.getPoseQueue().poll();
             }
-            
-            LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
-            LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
-            LightningShuffleboard.setDouble("Swerve", "PoseTime", pose.getFPGATimestamp()); 
-            LightningShuffleboard.setDouble("Swerve", "distance", pose.getDistance());
-            LightningShuffleboard.setBool("Swerve", "MultipleTargets", pose.getMoreThanOneTarget());
         }
     }
             
