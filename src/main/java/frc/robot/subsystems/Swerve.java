@@ -101,6 +101,53 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
+     * Apply a Field centric request to the drivetrain with defined rot deadband and no drive deadband
+     * 
+     * @param x the x velocity m/s
+     * @param y the y velocity m/s
+     * @param rot the rotational velocity in rad/s
+     * @param rotDeadband the deadband to apply to the rotational input
+     * @return the request to drive for the drivetrain
+     */
+    public Command applyRequestField(double x, double y, DoubleSupplier rot, double rotDeadband) {
+        return run(() -> this.setControl(driveField
+                .withVelocityX(x)
+                .withVelocityY(y)
+                .withRotationalRate(
+                        MathUtil.applyDeadband(rot.getAsDouble(), rotDeadband) * maxAngularRate)));
+    }
+
+    /**
+     * Apply a Field centric request to the drivetrain with defined drive deadband and no rot deadband
+     * 
+     * @param x the x velocity m/s
+     * @param y the y velocity m/s
+     * @param rot the rotational velocity in rad/s
+     * @param driveDeadband the deadband to apply to the inputs drive
+     * @return the request to drive for the drivetrain
+     */
+    public Command applyRequestField(DoubleSupplier x, DoubleSupplier y, double rot, double driveDeadband) {
+        return run(() -> this.setControl(driveField
+                .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * maxSpeed)
+                .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
+                .withRotationalRate(rot)));
+    }
+
+    /**
+     * Apply a Field centric request to the drivetrain with no deadband
+     * 
+     * @param x the x velocity m/s
+     * @param y the y velocity m/s
+     * @param rot the rotational velocity in rad/s
+     */
+    public void setField(double x, double y, double rot) {
+        this.setControl(driveField
+            .withVelocityX(x)
+            .withVelocityY(y)
+            .withRotationalRate(rot));
+    }
+
+    /**
      * Apply a Robot centric request to the drivetrain with constant deadband
      * 
      * @param x the x velocity m/s
@@ -113,30 +160,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
                 .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
                 .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), ControllerConstants.DEADBAND) * maxAngularRate)));
-    }
-
-    /**
-     * Apply a Robot centric request to the drivetrain with constant deadband
-     * 
-     * @param x the x velocity m/s
-     * @param y the y velocity m/s
-     * @param rot the rotational velocity in rad/s
-     */
-    public void setRobot(double x, double y, double rot) {
-        this.setControl(driveRobot.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
-                .withRotationalRate(rot * maxAngularRate));
-    }
-
-    /**
-     * Apply a Field centric request to the drivetrain with no deadband
-     * 
-     * @param x the x velocity m/s
-     * @param y the y velocity m/s
-     * @param rot the rotational velocity in rad/s
-     */
-    public void setField(double x, double y, double rot) {
-        this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
-                .withRotationalRate(rot * maxAngularRate));
     }
 
     /**
@@ -155,6 +178,53 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
                 .withRotationalRate(
                         MathUtil.applyDeadband(rot.getAsDouble(), rotDeadband) * maxAngularRate)));
+    }
+
+    /**
+     * Apply a Robot centric request to the drivetrain with defined rot deadband and no drive deadband
+     * 
+     * @param x the x velocity m/s
+     * @param y the y velocity m/s
+     * @param rot the rotational velocity in rad/s
+     * @param rotDeadband the deadband to apply to the rotational input
+     * @return the request to drive for the drivetrain
+     */
+    public Command applyRequestRobot(double x, double y, DoubleSupplier rot, double rotDeadband) {
+        return run(() -> this.setControl(driveRobot
+                .withVelocityX(x)
+                .withVelocityY(y)
+                .withRotationalRate(
+                        MathUtil.applyDeadband(rot.getAsDouble(), rotDeadband) * maxAngularRate)));
+    }
+
+    /**
+     * Apply a Robot centric request to the drivetrain with defined drive deadband and no rot deadband
+     * 
+     * @param x the x velocity m/s
+     * @param y the y velocity m/s
+     * @param rot the rotational velocity in rad/s
+     * @param driveDeadband the deadband to apply to the inputs drive
+     * @return the request to drive for the drivetrain
+     */
+    public Command applyRequestRobot(DoubleSupplier x, DoubleSupplier y, double rot, double driveDeadband) {
+        return run(() -> this.setControl(driveRobot
+                .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * maxSpeed)
+                .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
+                .withRotationalRate(rot)));
+    }
+
+    /**
+     * Apply a Robot centric request to the drivetrain with no deadband
+     * 
+     * @param x the x velocity m/s
+     * @param y the y velocity m/s
+     * @param rot the rotational velocity in rad/s
+     */
+    public void setRobot(double x, double y, double rot) {
+        this.setControl(driveRobot
+            .withVelocityX(x)
+            .withVelocityY(y)
+            .withRotationalRate(rot));
     }
 
     public void brake() {
