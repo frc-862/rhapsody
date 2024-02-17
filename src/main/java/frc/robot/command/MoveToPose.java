@@ -20,7 +20,6 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 public class MoveToPose extends Command {
     private final Pose2d target; 
     private final Swerve drivetrain;
-    private FieldCentric drive; 
     private boolean finished;
     private Pose2d current;
     private double dx;
@@ -32,10 +31,8 @@ public class MoveToPose extends Command {
     /** 
      * @param target The target pose to move to
      * @param drivetrain The drivetrain subsystem
-     * @param drive The drive mode
     */
-    public MoveToPose(Pose2d target, Swerve drivetrain, SwerveRequest.FieldCentric drive) {
-        this.drive = drive;
+    public MoveToPose(Pose2d target, Swerve drivetrain) {
         this.target = target; 
         this.drivetrain = drivetrain;
 
@@ -86,13 +83,13 @@ public class MoveToPose extends Command {
             powery = 0;
             finished = true;
         }
-        drivetrain.setControl(drive.withVelocityX(powerx).withVelocityY(powery));
+        drivetrain.setField(powerx, powery, 0); //TODO test
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0));
+        drivetrain.brake(); // TODO test and decide if this is the desired behavior
     }
 
     // Returns true when the command should end.
