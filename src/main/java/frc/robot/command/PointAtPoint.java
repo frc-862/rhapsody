@@ -16,7 +16,7 @@ import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 
-public class PointAtTag extends Command {
+public class PointAtPoint extends Command {
 
 	private Swerve drivetrain;
 	private Limelight limelight;
@@ -31,11 +31,13 @@ public class PointAtTag extends Command {
 
 	/**
 	 * Creates a new PointAtTag.
+	 * @param targetX the x coordinate of the target
+	 * @param targetY the y coordinate of the target
 	 * @param drivetrain to request movement 
 	 * @param limelights to get the limelight from
 	 * @param driver the driver's controller, used for drive input
 	 */
-	public PointAtTag(Swerve drivetrain, Limelights limelights, XboxController driver) {
+	public PointAtPoint(int targetX, int targetY, Swerve drivetrain, Limelights limelights, XboxController driver) {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
 
@@ -46,12 +48,14 @@ public class PointAtTag extends Command {
 
 		limelight.setPipeline(VisionConstants.TAG_PIPELINE);
 
+		targetPose = new Translation2d(targetX, targetY);
 	}
 	
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
 
+		//targetPose = limelight.getCamPoseTargetSpace().getTranslation().toTranslation2d();
 		headingController.enableContinuousInput(-180, 180);
 	}
 
@@ -63,14 +67,29 @@ public class PointAtTag extends Command {
 		headingController.setI(LightningShuffleboard.getDouble("PointAtTag", "I", 0));
 		headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 1));
 
-		targetHeading = limelight.getTargetX();
-		pidOutput = headingController.calculate(targetHeading, 0);
-		
+
+		Pose2d pose = drivetrain.getPose().get();
+		var deltaX = targetPose.getX() - pose.getX();
+		var deltaY = targetPose.getY() - pose.getY();
+
+		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
+		// targetHeading = Math.toDegrees(targetPose.getRotation().getAngle());
+		pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
+
+		// targetHeading = limelight.getTargetX();
+		// pidOutput = headingController.calculate(targetHeading, 0);
+		LightningShuffleboard.setDouble("PointAtTag", "Delta Y", deltaY);
+		LightningShuffleboard.setDouble("PointAtTag", "Delta X", deltaX);
 		LightningShuffleboard.setDouble("PointAtTag", "Target Heading2", targetHeading);
+		LightningShuffleboard.setDouble("PointAtTag", "Target Pose Y", targetPose.getY());
+		LightningShuffleboard.setDouble("PointAtTag", "Target Pose X", targetPose.getX());
+		LightningShuffleboard.setDouble("PointAtTag", "Current Pose Y", pose.getY());
+		LightningShuffleboard.setDouble("PointAtTag", "Current PoseX", pose.getX());
+		LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", pose.getRotation().getDegrees());
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
 
 		// TODO test drives and test the deadbands
-		drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), pidOutput, ControllerConstants.DEADBAND);
+		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
 
 	// Called once the command ends or is interrupted.
