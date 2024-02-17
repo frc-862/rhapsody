@@ -65,7 +65,7 @@ public class Pivot extends SubsystemBase {
         motorConfig.Feedback.FeedbackRemoteSensorID = angleEncoder.getDeviceID();
         motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         motorConfig.Feedback.SensorToMechanismRatio = PivotConstants.ENCODER_TO_MECHANISM_RATIO;
-        motorConfig.Feedback.RotorToSensorRatio = 1/PivotConstants.ROTOR_TO_ENCODER_RATIO;
+        motorConfig.Feedback.RotorToSensorRatio = 1/PivotConstants.ENCODER_TO_ROTOR_RATIO;
 
         angleMotor.applyConfig(motorConfig);
 
