@@ -200,11 +200,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 LightningShuffleboard.setDouble("Swerve", "Standard Deviation", confidence);
             }
             
-            LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
-            LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
-            LightningShuffleboard.setDouble("Swerve", "PoseTime", pose.getFPGATimestamp()); 
-            LightningShuffleboard.setDouble("Swerve", "distance", pose.getDistance());
-            LightningShuffleboard.setBool("Swerve", "MultipleTargets", pose.getMoreThanOneTarget());
+            LightningShuffleboard.setDoubleSupplier("Swerve", "PoseX", () -> pose.toPose2d().getX());            
+            LightningShuffleboard.setDoubleSupplier("Swerve", "PoseY", () -> pose.toPose2d().getY());            
+            LightningShuffleboard.setDoubleSupplier("Swerve", "PoseTime", () -> pose.getFPGATimestamp()); 
+            LightningShuffleboard.setDoubleSupplier("Swerve", "distance", () -> pose.getDistance());
+            LightningShuffleboard.setBoolSupplier("Swerve", "MultipleTargets", () -> pose.getMoreThanOneTarget());
         }
     }
             

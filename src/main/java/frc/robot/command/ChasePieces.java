@@ -76,13 +76,13 @@ public class ChasePieces extends Command {
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
 		hasPiece = collector.hasPiece();
 
-		LightningShuffleboard.setBool("ChasePieces", "On Target", onTarget);
-		LightningShuffleboard.setBool("ChasePieces", "Has Target", hasTarget);
+		LightningShuffleboard.setBoolSupplier("ChasePieces", "On Target", () -> onTarget);
+		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Target", () -> hasTarget);
 
-		LightningShuffleboard.setDouble("ChasePieces", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
-		LightningShuffleboard.setDouble("ChasePieces", "Target Heading", targetHeading);
-		LightningShuffleboard.setDouble("ChasePieces", "Target Y", targetPitch);
-		LightningShuffleboard.setDouble("ChasePieces", "Pid Output", pidOutput);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Drivetrain Angle", () -> drivetrain.getPigeon2().getAngle());
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Heading", () -> targetHeading);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Y", () -> targetPitch);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Pid Output", () -> pidOutput);
 
 		// For tuning.
 		// headingController.setP(LightningShuffleboard.getDouble("ChasePieces", "Pid P", 0.05));

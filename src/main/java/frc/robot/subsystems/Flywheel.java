@@ -41,8 +41,8 @@ public class Flywheel extends SubsystemBase {
 
     @Override
     public void periodic() {
-        LightningShuffleboard.setDouble("Flywheel Top", "RPM", getTopMotorRPM());
-        LightningShuffleboard.setDouble("Flywheel Bottom", "RPM", getBottomMotorRPM());
+        LightningShuffleboard.setDoubleSupplier("Flywheel Top", "RPM", () -> getTopMotorRPM());
+        LightningShuffleboard.setDoubleSupplier("Flywheel Bottom", "RPM", () -> getBottomMotorRPM());
         topTuner.update();
         bottomTuner.update();
     }

@@ -49,10 +49,10 @@ public class MoveToPose extends Command {
     @Override
     public void execute() {
         
-        LightningShuffleboard.setDouble("MoveToPose", "dx", dx);
-        LightningShuffleboard.setDouble("MoveToPose", "dy", dy);
-        LightningShuffleboard.setDouble("MoveToPose", "targetX", target.getX());
-        LightningShuffleboard.setDouble("MoveToPose", "targetY", target.getY());
+        LightningShuffleboard.setDoubleSupplier("MoveToPose", "dx", () -> dx);
+        LightningShuffleboard.setDoubleSupplier("MoveToPose", "dy", () -> dy);
+        LightningShuffleboard.setDoubleSupplier("MoveToPose", "targetX", () -> target.getX());
+        LightningShuffleboard.setDoubleSupplier("MoveToPose", "targetY", () -> target.getY());
 
         current = drivetrain.getPose().get(); 
         dx = target.getTranslation().getX() - current.getTranslation().getX();

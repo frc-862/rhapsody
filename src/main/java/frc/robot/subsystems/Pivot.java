@@ -50,8 +50,8 @@ public class Pivot extends SubsystemBase {
     @Override
     public void periodic() {
         pivotTuner.update();
-        LightningShuffleboard.setDouble("Pivot", "Angle", getAngle());
-        LightningShuffleboard.setDouble("Pivot", "CANCoder angle", angleEncoder.getPosition().getValueAsDouble());
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Angle", () -> getAngle());
+        LightningShuffleboard.setDoubleSupplier("Pivot", "CANCoder angle", () -> getCANCoderAngle());
     }
 
     /**
@@ -69,6 +69,13 @@ public class Pivot extends SubsystemBase {
      */
     public double getAngle() {
         return angleMotor.getPosition().getValue();
+    }
+
+    /**
+     * @return The current angle of the cancoder
+     */
+    public double getCANCoderAngle(){
+        return angleEncoder.getPosition().getValueAsDouble();
     }
 
     /**
