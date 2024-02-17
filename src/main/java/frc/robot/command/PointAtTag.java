@@ -26,9 +26,7 @@ public class PointAtTag extends Command {
 	private Swerve drivetrain;
 	private Limelight limelight;
 	private XboxController driver;
-
-	private FieldCentric slow;
-	private FieldCentric drive;
+	private SwerveRequest brake;
 	
 	private int limelightPrevPipeline = 0;
 	private double pidOutput;
@@ -45,7 +43,7 @@ public class PointAtTag extends Command {
 	 * @param limelights to get the limelight from
 	 * @param driver the driver's controller, used for drive input
 	 */
-	public PointAtTag(int targetX, int targetY, Swerve drivetrain, Limelights limelights, XboxController driver) {
+	public PointAtTag(int targetX, int targetY, Swerve drivetrain, Limelights limelights, XboxController driver, SwerveRequest brake) {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
 
@@ -55,9 +53,6 @@ public class PointAtTag extends Command {
 		limelightPrevPipeline = limelight.getPipeline();
 
 		limelight.setPipeline(VisionConstants.TAG_PIPELINE);
-		
-		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
-		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
 		targetPose = new Translation2d(targetX, targetY);
 	}
@@ -87,8 +82,6 @@ public class PointAtTag extends Command {
 		// targetHeading = Math.toDegrees(targetPose.getRotation().getAngle());
 		pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
 
-
-
 		// targetHeading = limelight.getTargetX();
 		// pidOutput = headingController.calculate(targetHeading, 0);
 		LightningShuffleboard.setDouble("PointAtTag", "Delta Y", deltaY);
@@ -102,7 +95,7 @@ public class PointAtTag extends Command {
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
 
 		// TODO test drives and test the deadbands
-		drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> pidOutput, ControllerConstants.DEADBAND, 0d);
+		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
 
 	// Called once the command ends or is interrupted.
