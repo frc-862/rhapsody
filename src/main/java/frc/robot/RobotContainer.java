@@ -164,7 +164,7 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
 		// parks the robot
-		new Trigger(driver::getXButton).whileTrue(new InstantCommand (() -> drivetrain.brake()));
+		new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
 
 		// smart shoot for the robot
 		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
