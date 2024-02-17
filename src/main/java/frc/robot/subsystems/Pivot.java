@@ -10,6 +10,8 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
+import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.thunder.tuning.FalconTuner;
 import frc.robot.Constants.PivotConstants;
 
 public class Pivot extends SubsystemBase {
@@ -19,6 +21,8 @@ public class Pivot extends SubsystemBase {
     private double bias = 0;
 
     private double targetAngle = 0; // TODO: find initial target angle
+
+    private FalconTuner pivotTuner;
 
     public Pivot() { 
         
@@ -36,14 +40,18 @@ public class Pivot extends SubsystemBase {
         motorConfig.Feedback.FeedbackRemoteSensorID = angleEncoder.getDeviceID();
         motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         motorConfig.Feedback.SensorToMechanismRatio = PivotConstants.ENCODER_TO_MECHANISM_RATIO;
-        motorConfig.Feedback.RotorToSensorRatio = PivotConstants.ENCODER_TO_ROTOR_RATIO;
+        motorConfig.Feedback.RotorToSensorRatio = PivotConstants.ROTOR_TO_ENCODER_RATIO;
 
         angleMotor.applyConfig(motorConfig);
+
+        pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, targetAngle);
     }
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
+        pivotTuner.update();
+        LightningShuffleboard.setDouble("Pivot", "Angle", getAngle());
+        LightningShuffleboard.setDouble("Pivot", "CANCoder angle", angleEncoder.getPosition().getValueAsDouble());
     }
 
     /**
