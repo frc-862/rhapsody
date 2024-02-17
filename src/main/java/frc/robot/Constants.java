@@ -139,7 +139,9 @@ public class Constants {
         // TODO get real poses to pathfind to
         public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(-1, 2), new Rotation2d(0d));
         
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); //TODO get constants
+
+        // For AlignToTag      1.85, 6.5
+        public static final Pose2d AMP_POSE = new Pose2d(new Translation2d(3, 5), new Rotation2d(0d)); 
     }
 
     public static class TunerConstants {

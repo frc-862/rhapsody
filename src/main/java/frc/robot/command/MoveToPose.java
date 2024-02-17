@@ -25,8 +25,8 @@ public class MoveToPose extends Command {
     private Pose2d current;
     private double dx;
     private double dy;
-    private final double kp = 1.8; 
-    private final double minSpeed = 0.9;
+    private final double kp = 0.3; //1.8 old
+    private final double minSpeed = 0.2; //0.9 old
     private double powerx;
     private double powery;
     /** 
@@ -51,7 +51,7 @@ public class MoveToPose extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        
+        System.out.println("I'm working heheheha!!!!!################################333333!");
         LightningShuffleboard.setDouble("MoveToPose", "dx", dx);
         LightningShuffleboard.setDouble("MoveToPose", "dy", dy);
         LightningShuffleboard.setDouble("MoveToPose", "targetX", target.getX());

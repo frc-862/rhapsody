@@ -6,6 +6,9 @@ package frc.robot.command;
 
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+
+import javax.swing.plaf.TreeUI;
+
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -14,6 +17,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.vision.Limelight;
@@ -60,6 +64,7 @@ public class AlignToTag extends Command {
   public void initialize() {
     aligning = false;
     path = PathPlannerPath.fromPathFile("Amp autoalign");
+    System.out.println("STARTED!!!!!!!11");
     // pointAtTag = new PointAtTag(drivetrain, limelights, driver);
     
   }
@@ -67,20 +72,26 @@ public class AlignToTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!aligning) {
+      System.out.println("EXECUTINGINIGNIGN??????????????");
+      System.out.println(aligning);
+      //new Trigger(() -> (!(new MoveToPose(target, drivetrain, drive).isFinished())))
+      //    .whileTrue(new MoveToPose(target, drivetrain, drive).schedule());
+      //new Trigger(() -> (new MoveToPose(target, drivetrain, drive).isFinished()))
+      //    .whileTrue(AutoBuilder.followPath(path));
       if (!(new MoveToPose(target, drivetrain, drive).isFinished())) {
-        new MoveToPose(target, drivetrain, drive);
-      } else {
+        System.out.println("AHASIDHASHASID");
+        new Trigger(() -> (true))).whileTrue(new MoveToPose(target, drivetrain, drive));
+      } else if (!aligning && (new MoveToPose(target, drivetrain, drive).isFinished()) ) {
+        AutoBuilder.followPath(path);
         aligning = true;
       }
-    } else {
-      AutoBuilder.followPath(path);
-    }
-  }
 
+  }
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0));
+  }
 
   // Returns true when the command should end.
   @Override
