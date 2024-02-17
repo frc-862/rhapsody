@@ -56,6 +56,10 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private double maxAngularRate =
             DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
 
+    private double requestX;
+    private double requestY;
+    private double requestRot;
+
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             Limelights limelightSubsystem, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
@@ -82,6 +86,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
+        requestX = x.getAsDouble();
+        requestY = y.getAsDouble();
+        requestRot = rot.getAsDouble();
         return run(() -> this.setControl(driveField
                 .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
                 .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
@@ -99,6 +106,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, double driveDeadband, double rotDeadband) {
+        requestX = x.getAsDouble();
+        requestY = y.getAsDouble();
+        requestRot = rot.getAsDouble();
         return run(() -> this.setControl(driveField
                 .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * maxSpeed)
                 .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
@@ -114,6 +124,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
+        requestX = x.getAsDouble();
+        requestY = y.getAsDouble();
+        requestRot = rot.getAsDouble();
         return run(() -> this.setControl(driveRobot
                 .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
                 .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
@@ -128,6 +141,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rot the rotational velocity in rad/s
      */
     public void setRobot(double x, double y, double rot) {
+        requestX = x;
+        requestY = y;
+        requestRot = rot;
         this.setControl(driveRobot.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
                 .withRotationalRate(rot * maxAngularRate));
     }
@@ -140,6 +156,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rot the rotational velocity in rad/s
      */
     public void setField(double x, double y, double rot) {
+        requestX = x;
+        requestY = y;
+        requestRot = rot;
         this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
                 .withRotationalRate(rot * maxAngularRate));
     }
@@ -155,6 +174,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, double driveDeadband, double rotDeadband) {
+        requestX = x.getAsDouble();
+        requestY = y.getAsDouble();
+        requestRot = rot.getAsDouble();
         return run(() -> this.setControl(driveRobot
                 .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * maxSpeed)
                 .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
@@ -173,6 +195,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
+        // SwerveRequest request = requestSupplier.get();
+        // request.
+        // requestX = requestSupplier.get();
+        // requestY;
+        // requestRot;
         return run(() -> this.setControl(requestSupplier.get()));
     }
 

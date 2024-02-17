@@ -4,8 +4,6 @@
 
 package frc.robot.command;
 
-import java.util.Arrays;
-
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.TunerConstants;
@@ -91,6 +89,7 @@ Pose2d storePoseWhenCollided;
     if (getIfCollided()){
       // drivetrain.applyRequest(() -> brake);&& getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) < VisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE
     }
+    drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
   }
 
   // Called once the command ends or is interrupted.
@@ -215,6 +214,9 @@ public double getTotalPigeonAccelerationDirection() {
   public double getMotorAngularVelocity(){
     return (robotRotationFromMotor[1] - robotRotationFromMotor[0]) / (timeLog[1] - timeLog[0]);
   }
+
+  // GET RECQUESTED INFO
+
 
   // COMPARE MOTOR & PIGEON
 
