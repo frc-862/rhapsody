@@ -49,7 +49,7 @@ public class Constants {
 
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
-        public static final double SLOW_ROT_MULT = 0.007; // TODO Tune for Driver
+        public static final double SLOW_ROT_MULT = 0.3; // TODO Tune for Driver
         public static final double SLOW_SPEED_MULT = 0.4; // TODO Tune for Driver
 
         public static final double SYS_TEST_SPEED_DRIVE = 0.5;
@@ -137,7 +137,7 @@ public class Constants {
         
         //For Pathfinding
         // TODO get real poses to pathfind to
-        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(-1, 2), new Rotation2d(0d));
+        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(0, 0), new Rotation2d(0d));
         
     }
 
