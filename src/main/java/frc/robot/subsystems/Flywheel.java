@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.FlywheelConstants;
 import frc.thunder.hardware.ThunderBird;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.tuning.FalconTuner;
 
 public class Flywheel extends SubsystemBase {
@@ -40,6 +41,8 @@ public class Flywheel extends SubsystemBase {
 
     @Override
     public void periodic() {
+        LightningShuffleboard.setDouble("Flywheel Top", "RPM", getTopMotorRPM());
+        LightningShuffleboard.setDouble("Flywheel Bottom", "RPM", getBottomMotorRPM());
         topTuner.update();
         bottomTuner.update();
     }
