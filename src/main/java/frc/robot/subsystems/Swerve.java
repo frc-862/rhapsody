@@ -181,7 +181,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void periodic() {
         //TODO Remove the unecessary shuffleboard stuff eventually
         if (!disableVision) {
-            limelightSubsystem.getPoseQueue().forEach((pose) -> {
+            var pose = limelightSubsystem.getPoseQueue().poll();
+            while (pose != null) {
                 // High confidence => 0.3 
                 // Low confidence => 18 
                 // theta trust IMU, use 500 degrees
@@ -196,7 +197,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 }
                 
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
-            });            
+                pose = limelightSubsystem.getPoseQueue().poll();
+            }
         }
     }
             
