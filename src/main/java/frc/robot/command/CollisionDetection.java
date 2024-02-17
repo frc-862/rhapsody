@@ -28,6 +28,9 @@ SwerveRequest.SwerveDriveBrake brake;
 public double[] angularVelocityWorldLog = {0d, 0d};
 public double[] timeLog = {0d, 0d};
 public double[] robotRotationFromMotor = {0d, 0d};
+public double[] velocityXRequest = {0d, 0d};
+public double[] velocityYRequest = {0d, 0d};
+public double[] velocityRotRequest = {0d, 0d};
 Pose2d storePoseWhenCollided;
 
   public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
@@ -49,6 +52,11 @@ Pose2d storePoseWhenCollided;
 
     robotRotationFromMotor[1] = drivetrain.getState().Pose.getRotation().getRadians();
 
+    velocityXRequest[1] = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
+    velocityYRequest[1] = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
+    velocityRotRequest[1] = drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond;
+    
+
     LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", 0d);
     LightningShuffleboard.setDouble("Collision Detection", "primitive pidgeon acceleration", 0d);
     LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", 0d);
@@ -68,10 +76,16 @@ Pose2d storePoseWhenCollided;
     angularVelocityWorldLog[0] = angularVelocityWorldLog[1];
     timeLog[0] = timeLog[1];
     robotRotationFromMotor[0] = robotRotationFromMotor[1];
+    velocityXRequest[0] = velocityXRequest[1];
+    velocityYRequest[0] = velocityYRequest[1];
+    velocityRotRequest[0] = velocityRotRequest[1];
 
     angularVelocityWorldLog[1] = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble());
     timeLog[1] = Utils.getCurrentTimeSeconds();
     robotRotationFromMotor[1] = drivetrain.getState().Pose.getRotation().getRadians();
+    velocityXRequest[1] = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
+    velocityYRequest[1] = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
+    velocityRotRequest[1] = drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond;
 
     LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", getTotalPigeonAccelerationMagnitude());
     LightningShuffleboard.setDouble("Collision Detection", "primitive pidgeon acceleration", getPrimitivePigeonAccelerationMagnitude());
@@ -85,11 +99,11 @@ Pose2d storePoseWhenCollided;
     LightningShuffleboard.setBool("Collision Detection", "motor zero collided", checkMotorAcceleration(0));
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
     LightningShuffleboard.setDouble("Collision Detection", "time", timeLog[0] - timeLog[1]);
+    // LightningShuffleboard.setDouble("Collision Detection", "xy acceleration", )
     
     if (getIfCollided()){
       // drivetrain.applyRequest(() -> brake);&& getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) < VisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE
     }
-    drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
   }
 
   // Called once the command ends or is interrupted.
@@ -217,6 +231,17 @@ public double getTotalPigeonAccelerationDirection() {
 
   // GET RECQUESTED INFO
 
+  public double getRequestXAcceleration(){
+    return (velocityXRequest[1] - velocityXRequest[0]) / (timeLog[1] - timeLog[0]);
+  }
+
+  public double getRequestYAcceleration(){
+    return (velocityYRequest[1] - velocityYRequest[0]) / (timeLog[1] - timeLog[0]);
+  }
+
+  public double getRequestRotAcceleration(){
+    return (velocityRotRequest[1] - velocityRotRequest[0]) / (timeLog[1] - timeLog[0]);
+  }
 
   // COMPARE MOTOR & PIGEON
 
