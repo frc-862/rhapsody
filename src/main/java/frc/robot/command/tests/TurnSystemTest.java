@@ -5,7 +5,7 @@
 package frc.robot.command.tests;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.command.tests.testcmds.TurnTest;
@@ -15,7 +15,7 @@ import frc.thunder.testing.SystemTestCommandGroup;
 
 public class TurnSystemTest extends SystemTestCommandGroup {
 
-  public TurnSystemTest(Swerve drivetrain, SwerveRequest brake, double speed) {
+  public TurnSystemTest(Swerve drivetrain, double speed) {
     super(
       new SequentialCommandGroup(
         new WaitCommand(0.5),
@@ -23,7 +23,7 @@ public class TurnSystemTest extends SystemTestCommandGroup {
         new WaitCommand(1),
         new TimedCommand(new TurnTest(drivetrain, () -> -speed), 1),
         new WaitCommand(0.5),
-        drivetrain.applyRequest(() -> brake)
+        new InstantCommand(() -> drivetrain.brake())
       )
     );
   }
