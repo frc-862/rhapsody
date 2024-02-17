@@ -27,9 +27,9 @@ public class CollisionDetection extends Command {
 public Swerve drivetrain;
 public CollisionDetector collisionDetector;
 SwerveRequest.SwerveDriveBrake brake;
-public double[] angularVelocityWorldLog = {};
-public double[] timeLog = {};
-public double[] robotRotationFromMotor = {};
+public double[] angularVelocityWorldLog = {0d, 0d};
+public double[] timeLog = {0d, 0d};
+public double[] robotRotationFromMotor = {0d, 0d};
 Pose2d storePoseWhenCollided;
 
   public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
@@ -43,18 +43,13 @@ Pose2d storePoseWhenCollided;
   @Override
   public void initialize() {
     brake = new SwerveRequest.SwerveDriveBrake();
-    System.out.println("init collision");
     // store ang vel and time to calc angular acceleration
 
-    angularVelocityWorldLog = Arrays.copyOf(angularVelocityWorldLog, angularVelocityWorldLog.length + 1);
-    angularVelocityWorldLog[angularVelocityWorldLog.length - 1] 
-    = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble());
+    angularVelocityWorldLog[1] = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble());
+    
+    timeLog[1] = Utils.getCurrentTimeSeconds();
 
-    timeLog = Arrays.copyOf(timeLog, timeLog.length + 1);
-    timeLog[timeLog.length - 1] = Utils.getCurrentTimeSeconds();
-
-    robotRotationFromMotor = Arrays.copyOf(robotRotationFromMotor, robotRotationFromMotor.length + 1);
-    robotRotationFromMotor[robotRotationFromMotor.length - 1] = drivetrain.getState().Pose.getRotation().getRadians();
+    robotRotationFromMotor[1] = drivetrain.getState().Pose.getRotation().getRadians();
 
     LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", 0d);
     LightningShuffleboard.setDouble("Collision Detection", "primitive pidgeon acceleration", 0d);
@@ -69,31 +64,29 @@ Pose2d storePoseWhenCollided;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("Exec collision");
 
     // store ang vel and time to calc angular acceleration
 
-    angularVelocityWorldLog = Arrays.copyOf(angularVelocityWorldLog, angularVelocityWorldLog.length + 1);
-    angularVelocityWorldLog[angularVelocityWorldLog.length - 1] 
-    = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble());
+    angularVelocityWorldLog[0] = angularVelocityWorldLog[1];
+    timeLog[0] = timeLog[1];
+    robotRotationFromMotor[0] = robotRotationFromMotor[1];
 
-    timeLog = Arrays.copyOf(timeLog, timeLog.length + 1);
-    timeLog[timeLog.length - 1] = Utils.getCurrentTimeSeconds();
-
-    robotRotationFromMotor = Arrays.copyOf(robotRotationFromMotor, robotRotationFromMotor.length + 1);
-    robotRotationFromMotor[robotRotationFromMotor.length - 1] = drivetrain.getState().Pose.getRotation().getRadians();
+    angularVelocityWorldLog[1] = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble());
+    timeLog[1] = Utils.getCurrentTimeSeconds();
+    robotRotationFromMotor[1] = drivetrain.getState().Pose.getRotation().getRadians();
 
     LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", getTotalPigeonAccelerationMagnitude());
     LightningShuffleboard.setDouble("Collision Detection", "primitive pidgeon acceleration", getPrimitivePigeonAccelerationMagnitude());
     LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", getTotalPigeonAccelerationDirection());
     LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_MODULE);
-    LightningShuffleboard.setDouble("Collision Detection", "pigeon angular velocity", drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble());
+    LightningShuffleboard.setDouble("Collision Detection", "pigeon angular velocity", Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble()));
     LightningShuffleboard.setDouble("Collision Detection", "yaw", drivetrain.getPigeon2().getYaw().getValueAsDouble());
     LightningShuffleboard.setDouble("Collision Detection", "motor angular velocity", getMotorAngularVelocity());
     LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getMotorAccelerationMagnitude(0));
     LightningShuffleboard.setDouble("Collision Detection", "motor acceleration direction", getMotorAccelerationDirection(0));
     LightningShuffleboard.setBool("Collision Detection", "motor zero collided", checkMotorAcceleration(0));
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
+    LightningShuffleboard.setDouble("Collision Detection", "time", timeLog[0] - timeLog[1]);
     
     if (getIfCollided()){
       // drivetrain.applyRequest(() -> brake);&& getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) < VisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE
@@ -147,9 +140,7 @@ Pose2d storePoseWhenCollided;
    * @return pigeon angular velocity in radians per second
    */
   public double getPigeonAngularAcceleration(){
-    return (angularVelocityWorldLog[angularVelocityWorldLog.length - 1] 
-    - angularVelocityWorldLog[angularVelocityWorldLog.length - 2]) 
-    / (timeLog[timeLog.length - 1] - timeLog[timeLog.length - 2]);
+    return (angularVelocityWorldLog[1] - angularVelocityWorldLog[0]) / (timeLog[1] - timeLog[0]);
   }
 
 
@@ -222,9 +213,7 @@ public double getTotalPigeonAccelerationDirection() {
    * @return angular velocity from motor in radians/s
    */
   public double getMotorAngularVelocity(){
-    return (robotRotationFromMotor[robotRotationFromMotor.length - 1] 
-    - robotRotationFromMotor[robotRotationFromMotor.length - 2]) 
-    / (timeLog[timeLog.length - 1] - timeLog[timeLog.length - 2]);
+    return (robotRotationFromMotor[1] - robotRotationFromMotor[0]) / (timeLog[1] - timeLog[0]);
   }
 
   // COMPARE MOTOR & PIGEON
