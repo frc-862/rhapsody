@@ -85,7 +85,6 @@ public class RobotContainer extends LightningContainer {
 	SwerveRequest.FieldCentric slow;
 	SwerveRequest.RobotCentric driveRobotCentric;
 	SwerveRequest.RobotCentric slowRobotCentric;
-	SwerveRequest.SwerveDriveBrake brake;
 	SwerveRequest.PointWheelsAt point;
 	Telemetry logger;
 
@@ -109,7 +108,6 @@ public class RobotContainer extends LightningContainer {
 		nervo = new Nervo();
 		sing = new Orchestra();
 
-		brake = new SwerveRequest.SwerveDriveBrake();
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrainConstants.MaxSpeed);
 	}
@@ -166,15 +164,15 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
 		// parks the robot
-		new Trigger(driver::getXButton).whileTrue(drivetrain.applyRequest(() -> brake));
+		new Trigger(driver::getXButton).whileTrue(new InstantCommand (() -> drivetrain.brake()));
 
 		// smart shoot for the robot
 		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
 
 		// aim at amp and stage tags for the robot
-		new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(0, 0, drivetrain, limelights, driver, brake)); // TODO: make work
+		new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(0, 0, drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain, brake));
+		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 		
 		new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
 		new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
@@ -252,10 +250,10 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureSystemTests() {
-		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain, brake,
+		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain,
 				DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
 		SystemTest.registerTest("Azimuth Test",
-				new TurnSystemTest(drivetrain, brake, DrivetrainConstants.SYS_TEST_SPEED_TURN));
+				new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
 		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
 		// Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));

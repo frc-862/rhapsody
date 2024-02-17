@@ -20,7 +20,6 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 public class MoveToPose extends Command {
     private final Pose2d target; 
     private final Swerve drivetrain;
-    private SwerveRequest brake;
     private boolean finished;
     private Pose2d current;
     private double dx;
@@ -32,10 +31,8 @@ public class MoveToPose extends Command {
     /** 
      * @param target The target pose to move to
      * @param drivetrain The drivetrain subsystem
-     * @param brake
     */
-    public MoveToPose(Pose2d target, Swerve drivetrain, SwerveRequest brake) {
-        this.brake = brake;
+    public MoveToPose(Pose2d target, Swerve drivetrain) {
         this.target = target; 
         this.drivetrain = drivetrain;
 

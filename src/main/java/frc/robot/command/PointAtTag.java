@@ -1,10 +1,5 @@
 package frc.robot.command;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveDriveBrake;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -26,7 +21,6 @@ public class PointAtTag extends Command {
 	private Swerve drivetrain;
 	private Limelight limelight;
 	private XboxController driver;
-	private SwerveRequest brake;
 	
 	private int limelightPrevPipeline = 0;
 	private double pidOutput;
@@ -43,7 +37,7 @@ public class PointAtTag extends Command {
 	 * @param limelights to get the limelight from
 	 * @param driver the driver's controller, used for drive input
 	 */
-	public PointAtTag(int targetX, int targetY, Swerve drivetrain, Limelights limelights, XboxController driver, SwerveRequest brake) {
+	public PointAtTag(int targetX, int targetY, Swerve drivetrain, Limelights limelights, XboxController driver) {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
 
