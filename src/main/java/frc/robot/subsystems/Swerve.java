@@ -33,6 +33,7 @@ import frc.thunder.vision.Limelight;
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
+    private final Limelights limelightSubsystem;
     private Limelight[] limelights;
     private boolean slowMode = false;
     private boolean disableVision = false;
@@ -42,6 +43,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
 
+        this.limelightSubsystem = limelightSubsystem;
         this.limelights = new Limelight[]{limelightSubsystem.getStopMe()};
 
         LightningShuffleboard.setDouble("PointAtTag", "D", 0);
@@ -66,15 +68,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void periodic() {
         //TODO Remove the unecessary shuffleboard stuff eventually
 
-        for (Pose4d pose : Limelight.filteredPoses(limelights)) {
-            if(!disableVision){
-                addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
-                // System.out.println("Vision Updating");
-            }
-            
-            LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
-            LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
-            LightningShuffleboard.setDouble("Swerve", "PoseTime", pose.getFPGATimestamp()); 
+        if (!disableVision) {
+            limelightSubsystem.getPoseQueue().forEach((pose) -> addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp()));
         }
         
         LightningShuffleboard.setDouble("Swerve", "Timer", Timer.getFPGATimestamp());           
