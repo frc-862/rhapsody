@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.Utils;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class CollisionDetector extends SubsystemBase {
   /** Creates a new CollisionDetector. */
@@ -13,5 +16,6 @@ public class CollisionDetector extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    LightningShuffleboard.setDouble("Collision Detection", "time", Utils.getCurrentTimeSeconds());
   }
 }

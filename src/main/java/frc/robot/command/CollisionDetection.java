@@ -15,6 +15,7 @@ import frc.robot.subsystems.Swerve;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -26,8 +27,9 @@ public class CollisionDetection extends Command {
 public Swerve drivetrain;
 public CollisionDetector collisionDetector;
 SwerveRequest.SwerveDriveBrake brake;
-public double[] angularVelocityWorldLog;
-public double[] timeLog;
+public double[] angularVelocityWorldLog = {};
+public double[] timeLog = {};
+Pose2d storePoseWhenCollided;
 
   public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -205,7 +207,8 @@ public double getTotalPigeonAccelerationDirection() {
   public boolean checkMotorAcceleration(int moduleNumber){
     return Math.abs(getTotalPigeonAccelerationMagnitude() - getMotorAccelerationMagnitude(moduleNumber)) 
     > getMotorAccelerationMagnitude(moduleNumber) * VisionConstants.COLLISION_ACCELERATION_MAGNITUDE_TOLERANCE_PERCENTAGE
-    && getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) < VisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE;
+    && getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) 
+    < VisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE;
   }
 
   /**
@@ -214,10 +217,10 @@ public double getTotalPigeonAccelerationDirection() {
    * @param tolerance
    * @return if motor is within tolerance
    */
-  public boolean checkMotorAcceleration(int moduleNumber, double tolerance){
-    return Math.abs(getTotalPigeonAccelerationMagnitude() - getMotorAccelerationMagnitude(moduleNumber)) > tolerance
+  public boolean checkMotorAcceleration(int moduleNumber, double magnitudeTolerance, double directionTolerance){
+    return Math.abs(getTotalPigeonAccelerationMagnitude() - getMotorAccelerationMagnitude(moduleNumber)) > magnitudeTolerance
     && getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) 
-    < VisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE;
+    < directionTolerance;
   }
 
   /**
@@ -230,15 +233,21 @@ public double getTotalPigeonAccelerationDirection() {
 
   /**
    * @param magnitudeTolerance
-   * @return if any motor has abnormal acceleration compared to pigeon and given tolerance
+   * @param directionTolerance
+   * @return if any motor has abnormal acceleration compared to pigeon and given tolerances
    */
-  public boolean getIfCollided(double magnitudeTolerance){
-    return checkMotorAcceleration(0, magnitudeTolerance) || checkMotorAcceleration(1, magnitudeTolerance) 
-    || checkMotorAcceleration(2, magnitudeTolerance) || checkMotorAcceleration(3, magnitudeTolerance);
+  public boolean getIfCollided(double magnitudeTolerance, double directionTolerance){
+    return checkMotorAcceleration(0, magnitudeTolerance, directionTolerance) 
+    || checkMotorAcceleration(1, magnitudeTolerance, directionTolerance) 
+    || checkMotorAcceleration(2, magnitudeTolerance, directionTolerance) 
+    || checkMotorAcceleration(3, magnitudeTolerance, directionTolerance);
   }
   
 // DO STUFF WHEN COLLIDED
 
+  public void storePose(){
+    storePoseWhenCollided = drivetrain.getPose2d();
+  }
   // failsafe mode
 
   // figure out how to reorient

@@ -121,6 +121,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public Supplier<Pose2d> getPose() {
         return () -> getState().Pose;
     }
+    public Pose2d getPose2d() {
+        return getState().Pose;
+    }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
