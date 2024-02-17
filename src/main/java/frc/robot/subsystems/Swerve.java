@@ -79,12 +79,13 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 // theta trust IMU, use 500 degrees
 
                 double confidence = 18.0;
-                if(pose.getMoreThanOneTarget() && pose.getDistance() < 3)
+                if (pose.getMoreThanOneTarget() && pose.getDistance() < 3){
                     confidence = 0.3;
-                else if (pose.getMoreThanOneTarget())
+                } else if (pose.getMoreThanOneTarget()){
                     confidence = 0.3 + ((pose.getDistance() - 3)/5 * 18);
-                else if (pose.getDistance() < 2)
+                } else if (pose.getDistance() < 2){
                     confidence = 1.0 + (pose.getDistance()/2 * 5.0);
+                }
                 
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
                 LightningShuffleboard.setDouble("Swerve", "Standard Deviation", confidence);
