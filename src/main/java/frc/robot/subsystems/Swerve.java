@@ -37,7 +37,8 @@ import frc.thunder.vision.Limelight;
 public class Swerve extends SwerveDrivetrain implements Subsystem {
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric();
-    private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
+    private final SwerveRequest.ApplyChassisSpeeds autoRequest =
+            new SwerveRequest.ApplyChassisSpeeds();
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
     private Limelight[] limelights;
@@ -45,7 +46,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private boolean disableVision = false;
     private boolean robotCentricControl = false;
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
-    private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
+    private double maxAngularRate =
+            DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             Limelights limelightSubsystem, SwerveModuleConstants... modules) {
@@ -61,6 +63,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     // DRIVE METHODS
     /**
      * Apply a Field centric request to the drivetrain with constant deadband
+     * 
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -68,13 +71,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public Command applyRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
         return run(() -> this.setControl(driveField
-            .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
-            .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
-            .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), ControllerConstants.DEADBAND) * maxAngularRate)));
+                .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
+                .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
+                .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), ControllerConstants.DEADBAND) * maxAngularRate)));
     }
 
     /**
      * Apply a Field centric request to the drivetrain with defined deadband
+     * 
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -82,15 +86,17 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rotDeadband the deadband to apply to the rotational input
      * @return the request to drive for the drivetrain
      */
-    public Command applyRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, double driveDeadband, double rotDeadband) {
+    public Command applyRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot,
+            double driveDeadband, double rotDeadband) {
         return run(() -> this.setControl(driveField
-            .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * maxSpeed)
-            .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
-            .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), rotDeadband) * maxAngularRate)));
+                .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * maxSpeed)
+                .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
+                .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), rotDeadband) * maxAngularRate)));
     }
 
     /**
      * Apply a Robot centric request to the drivetrain with constant deadband
+     * 
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -98,41 +104,40 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public Command applyRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
         return run(() -> this.setControl(driveRobot
-            .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
-            .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
-            .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), ControllerConstants.DEADBAND) * maxAngularRate)));
+                .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
+                .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
+                .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), ControllerConstants.DEADBAND) * maxAngularRate)));
     }
 
     /**
      * Apply a Robot centric request to the drivetrain with constant deadband
+     * 
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
      * @return the request to drive for the drivetrain
      */
     public void setRobot(double x, double y, double rot) {
-        this.setControl(driveRobot
-            .withVelocityX(x * maxSpeed)
-            .withVelocityY(y * maxSpeed)
-            .withRotationalRate(rot * maxAngularRate));
+        this.setControl(driveRobot.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
+                .withRotationalRate(rot * maxAngularRate));
     }
 
     /**
      * Apply a Field centric request to the drivetrain with no deadband
+     * 
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
      * @return the request to drive for the drivetrain
      */
     public void setField(double x, double y, double rot) {
-        this.setControl(driveField
-            .withVelocityX(x * maxSpeed)
-            .withVelocityY(y * maxSpeed)
-            .withRotationalRate(rot * maxAngularRate));
+        this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
+                .withRotationalRate(rot * maxAngularRate));
     }
 
     /**
      * Apply a Robot centric request to the drivetrain with defined deadband
+     * 
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -140,19 +145,22 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rotDeadband the deadband to apply to the rotational input
      * @return the request to drive for the drivetrain
      */
-    public Command applyRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, double driveDeadband, double rotDeadband) {
+    public Command applyRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot,
+            double driveDeadband, double rotDeadband) {
         return run(() -> this.setControl(driveRobot
-            .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * maxSpeed)
-            .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
-            .withRotationalRate(MathUtil.applyDeadband(rot.getAsDouble(), rotDeadband) * maxAngularRate)));
+                .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * maxSpeed)
+                .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
+                .withRotationalRate(
+                        MathUtil.applyDeadband(rot.getAsDouble(), rotDeadband) * maxAngularRate)));
     }
 
-    public void brake () {
+    public void brake() {
         this.setControl(brake);
     }
 
     /**
      * Apply a request to the drivetrain
+     * 
      * @param requestSupplier the SwerveRequest to apply
      * @return the request to drive for the drivetrain
      */
@@ -168,31 +176,29 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
-        // TODO Remove the unecessary shuffleboard stuff eventually
-
+        
         // Updates pos using filtered vision pos
-        for (Pose4d pose : Limelight.filteredPoses(limelights)) {
-            if (!disableVision) {
-                addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
-            }
+        if (!disableVision) {
+            // for (Pose4d pose : Limelight.filteredPoses(limelights)) {
+            //     addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
+            // }
         }
     }
-
+            
     public void initLogging() {
+        // TODO Remove the unecessary shuffleboard stuff eventually
         LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading",
-                () -> getPigeon2().getAngle());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPigeon2().getAngle());
         LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getState().Pose.getX());
         LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getState().Pose.getY());
 
         LightningShuffleboard.setBoolSupplier("Swerve", "Slow mode", () -> slowMode);
-        LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric",
-                () -> isRobotCentricControl());
+        LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
 
         LightningShuffleboard.setBoolSupplier("Sweve", "Tipped", () -> isTipped());
 
         LightningShuffleboard.setDoubleSupplier("Swerve", "velocity x",
-                () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
+            () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
         LightningShuffleboard.setDoubleSupplier("Swerve", "velocity y",
                 () -> getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
     }
@@ -201,9 +207,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         AutoBuilder.configureHolonomic(() -> this.getState().Pose, // Supplier of current robot pose
                 this::seedFieldRelative, // Consumer for seeding pose against auto
                 this::getCurrentRobotChassisSpeeds,
-                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of
-                                                                             // ChassisSpeeds to
-                                                                             // drive the robot
+                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
                 new HolonomicPathFollowerConfig(AutonomousConstants.TRANSLATION_PID,
                         AutonomousConstants.ROTATION_PID, AutonomousConstants.MAX_MODULE_VELOCITY,
                         AutonomousConstants.DRIVE_BASE_RADIUS, new ReplanningConfig(),
@@ -259,9 +263,10 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param slow boolean if we are in slow mode
      */
     public void setSlowMode(boolean slow) {
-        if(slow){
+        if (slow) {
             maxSpeed = DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT;
-            maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT * DrivetrainConstants.SLOW_ROT_MULT;
+            maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT
+                    * DrivetrainConstants.SLOW_ROT_MULT;
         } else {
             maxSpeed = DrivetrainConstants.MaxSpeed;
             maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;

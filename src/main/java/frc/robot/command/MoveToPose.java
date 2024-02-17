@@ -86,14 +86,12 @@ public class MoveToPose extends Command {
             powery = 0;
             finished = true;
         }
-        // drivetrain.setControl(drive.withVelocityX(powerx).withVelocityY(powery)); // TODO remove if new way works
         drivetrain.setField(powerx, powery, 0); //TODO test
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        // drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0));
         drivetrain.brake(); // TODO test and decide if this is the desired behavior
     }
 
