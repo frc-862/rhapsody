@@ -26,6 +26,8 @@ public class PointAtTag extends Command {
 	private double pidOutput;
 	private double targetHeading;
 	private Translation2d targetPose;
+	private double deltaX;
+	private double deltaY;
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
@@ -49,6 +51,8 @@ public class PointAtTag extends Command {
 		limelight.setPipeline(VisionConstants.TAG_PIPELINE);
 
 		targetPose = new Translation2d(targetX, targetY);
+
+		initLogging();
 	}
 	
 	// Called when the command is initially scheduled.
@@ -62,6 +66,7 @@ public class PointAtTag extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
+		// TODO remove once Tuned
 		headingController.setTolerance(LightningShuffleboard.getDouble("PointAtTag", "Tolarance", 4));
 		headingController.setP(LightningShuffleboard.getDouble("PointAtTag", "P", 0.1));
 		headingController.setI(LightningShuffleboard.getDouble("PointAtTag", "I", 0));
@@ -69,8 +74,8 @@ public class PointAtTag extends Command {
 
 
 		Pose2d pose = drivetrain.getPose().get();
-		var deltaX = targetPose.getX() - pose.getX();
-		var deltaY = targetPose.getY() - pose.getY();
+		deltaX = targetPose.getX() - pose.getX();
+		deltaY = targetPose.getY() - pose.getY();
 
 		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
 		// targetHeading = Math.toDegrees(targetPose.getRotation().getAngle());
@@ -78,18 +83,20 @@ public class PointAtTag extends Command {
 
 		// targetHeading = limelight.getTargetX();
 		// pidOutput = headingController.calculate(targetHeading, 0);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Delta Y", () -> deltaY);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Delta X", () -> deltaX);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Heading2", () -> targetHeading);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose Y", () -> targetPose.getY());
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose X", () -> targetPose.getX());
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Current Pose Y", () -> pose.getY());
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Current PoseX", () -> pose.getX());
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Drivetrain Angle", () -> pose.getRotation().getDegrees());
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Pid Output", () -> pidOutput);
+		
 
 		// TODO test drives and test the deadbands
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
+	}
+
+	private void initLogging() {
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Delta Y", () -> deltaY);
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Delta X", () -> deltaX);
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Heading", () -> targetHeading);
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose Y", () -> targetPose.getY());
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose X", () -> targetPose.getX());
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Pid Output", () -> pidOutput);
+	
 	}
 
 	// Called once the command ends or is interrupted.
