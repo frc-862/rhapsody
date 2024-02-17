@@ -99,7 +99,7 @@ Pose2d storePoseWhenCollided;
     LightningShuffleboard.setBool("Collision Detection", "motor zero collided", checkMotorAcceleration(0));
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
     LightningShuffleboard.setDouble("Collision Detection", "time", timeLog[0] - timeLog[1]);
-    // LightningShuffleboard.setDouble("Collision Detection", "xy acceleration", )
+    LightningShuffleboard.setDouble("Collision Detection", "xy acceleration request", Math.hypot(getRequestXAcceleration(), getRequestYAcceleration()));
     
     if (getIfCollided()){
       // drivetrain.applyRequest(() -> brake);&& getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) < VisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE
