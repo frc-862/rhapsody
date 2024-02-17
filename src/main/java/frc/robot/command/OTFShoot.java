@@ -31,8 +31,6 @@ public class OTFShoot extends Command {
 	private Swerve drivetrain;
 	private XboxController driver;
 
-	private FieldCentric drive;
-
 	private double fireTime = Timer.getFPGATimestamp() + ShooterConstants.OTF_READY_TIME;
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
@@ -47,7 +45,6 @@ public class OTFShoot extends Command {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
 
-		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
 	}
 
 	@Override
@@ -160,29 +157,11 @@ public class OTFShoot extends Command {
 		LightningShuffleboard.setDouble("OTF Shooting", "Velocity Scaler", veloctiyScaler);
 		LightningShuffleboard.setDouble("OTF Shooting", "Acceleration Scaler", accelerationScaler);
 
-		// Normal drive, no OTF math
-		// drivetrain.applyRequest(() -> drive
-		// 					.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(),
-		// 							ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis
-		// 					.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(),
-		// 							ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-		// 					.withRotationalRate(-MathUtil.applyDeadband(driver.getRightX(),
-		// 							ControllerConstants.DEADBAND) * DrivetrainConstants.MaxAngularRate
-		// 							* DrivetrainConstants.ROT_MULT) // Drive counterclockwise with negative X (left)
-		// 			);
+		// Normal driving, no OTF or point at tags
+		// drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX());
 
-		// Drive with OTF math
-		if (driver.getRightBumper()) {
-			drivetrain.setControl(drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
-				.withRotationalRate(pidOutput) // Drive counterclockwise with negative X (left)
-			);
-		} else {
-			drivetrain.setControl(drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
-				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-				.withRotationalRate(pidOutput) // Rotate toward the desired direction
-			); // Drive counterclockwise with negative X (left)
-		}
+		// OTF driving
+		drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> pidOutput);
 	}
 
 	@Override
