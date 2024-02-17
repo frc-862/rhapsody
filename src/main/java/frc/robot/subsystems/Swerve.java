@@ -65,7 +65,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         /* Assume */
         updateSimState(0.02, 12);
     }
-    private final Matrix<N3, N1> m_visionK = VecBuilder.fill(0.5,0.5, Units.degreesToRadians(30));
 
     @Override
     public void periodic() {
@@ -86,7 +85,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                     confidence = 1.0 + (pose.getDistance()/2 * 5.0);
                 
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
-                // System.out.println("Vision Updating");
                 LightningShuffleboard.setDouble("Swerve", "Standard Deviation", confidence);
             }
             
