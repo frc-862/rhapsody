@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.FlywheelConstants;
 import frc.thunder.hardware.ThunderBird;
+import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.thunder.tuning.FalconTuner;
 
 public class Flywheel extends SubsystemBase {
     private ThunderBird shooterTopMotor; // TODO figure out which is top vs bottom
@@ -14,6 +16,9 @@ public class Flywheel extends SubsystemBase {
     private final VelocityVoltage rpmPID = new VelocityVoltage(0).withSlot(0);
     private double targetRPM = 0;
     private double bias = 0;
+
+    private FalconTuner topTuner;
+    private FalconTuner bottomTuner;
 
     public Flywheel() {
         shooterTopMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD, FlywheelConstants.FLYWHEEL_MOTOR_TOP_INVERT, 
@@ -28,6 +33,18 @@ public class Flywheel extends SubsystemBase {
         shooterBottomMotor.configPIDF(0,FlywheelConstants.FLYWHEEL_MOTOR_KP,
                 FlywheelConstants.FLYWHEEL_MOTOR_KI, FlywheelConstants.FLYWHEEL_MOTOR_KD,
                 FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
+
+        // note - if you wanna tune these together, you should be able to set the tab to the same name and it'll read the same values for both instances
+        topTuner = new FalconTuner(shooterTopMotor, "Flywheel Top", this::setTopMoterRPM, targetRPM);
+        bottomTuner = new FalconTuner(shooterBottomMotor, "Flywheel Bottom", this::setBottomMoterRPM, targetRPM);
+    }
+
+    @Override
+    public void periodic() {
+        LightningShuffleboard.setDouble("Flywheel Top", "RPM", getTopMotorRPM());
+        LightningShuffleboard.setDouble("Flywheel Bottom", "RPM", getBottomMotorRPM());
+        topTuner.update();
+        bottomTuner.update();
     }
 
     /**

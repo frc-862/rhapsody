@@ -47,13 +47,15 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
 
-    public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, Limelights limelightSubsystem,
-            SwerveModuleConstants... modules) {
+    public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
+            Limelights limelightSubsystem, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
 
-        this.limelights = new Limelight[]{limelightSubsystem.getStopMe()};
+        this.limelights = new Limelight[] {limelightSubsystem.getStopMe()};
 
-        LightningShuffleboard.setDouble(null, null, OdometryUpdateFrequency);      configurePathPlanner();
+        initLogging();
+
+        configurePathPlanner();
     }
 
     // DRIVE METHODS
@@ -166,47 +168,42 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
-        //TODO Remove the unecessary shuffleboard stuff eventually
+        // TODO Remove the unecessary shuffleboard stuff eventually
 
         // Updates pos using filtered vision pos
         for (Pose4d pose : Limelight.filteredPoses(limelights)) {
-            if(!disableVision){
+            if (!disableVision) {
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp());
             }
-            
-            LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
-            LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
-            LightningShuffleboard.setDouble("Swerve", "PoseTime", pose.getFPGATimestamp()); 
         }
+    }
 
+    public void initLogging() {
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading",
+                () -> getPigeon2().getAngle());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getState().Pose.getX());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getState().Pose.getY());
 
+        LightningShuffleboard.setBoolSupplier("Swerve", "Slow mode", () -> slowMode);
+        LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric",
+                () -> isRobotCentricControl());
 
-        LightningShuffleboard.setDouble("PointAtTag", "D", 0);
-		LightningShuffleboard.setDouble("PointAtTag", "I", 0);
-		LightningShuffleboard.setDouble("PointAtTag", "P", 0.1);
-		LightningShuffleboard.setDouble("PointAtTag", "Tolarance", 4);
+        LightningShuffleboard.setBoolSupplier("Sweve", "Tipped", () -> isTipped());
 
-        LightningShuffleboard.setDouble("Swerve", "Timer", Timer.getFPGATimestamp());           
-        LightningShuffleboard.setDouble("Swerve", "Robot Heading", getPigeon2().getAngle());
-        LightningShuffleboard.setDouble("Swerve", "Odo X", getState().Pose.getX());
-        LightningShuffleboard.setDouble("Swerve", "Odo Y", getState().Pose.getY());
-        
-        LightningShuffleboard.setBool("Swerve", "Slow mode", inSlowMode());
-        LightningShuffleboard.setBool("Swerve", "Robot Centric", isRobotCentricControl());
-        LightningShuffleboard.setBool("Swerve", "Vision enabled", !disableVision);
-
-        LightningShuffleboard.setBool("Sweve", "Tipped", isTipped());
-
-        LightningShuffleboard.setDouble("Swerve", "velocity x", getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
-        LightningShuffleboard.setDouble("Swerve", "velocity y", getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
-
+        LightningShuffleboard.setDoubleSupplier("Swerve", "velocity x",
+                () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "velocity y",
+                () -> getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
     }
 
     private void configurePathPlanner() {
         AutoBuilder.configureHolonomic(() -> this.getState().Pose, // Supplier of current robot pose
                 this::seedFieldRelative, // Consumer for seeding pose against auto
                 this::getCurrentRobotChassisSpeeds,
-                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
+                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of
+                                                                             // ChassisSpeeds to
+                                                                             // drive the robot
                 new HolonomicPathFollowerConfig(AutonomousConstants.TRANSLATION_PID,
                         AutonomousConstants.ROTATION_PID, AutonomousConstants.MAX_MODULE_VELOCITY,
                         AutonomousConstants.DRIVE_BASE_RADIUS, new ReplanningConfig(),
@@ -238,14 +235,18 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
-    * @return whether the robot is tipped
-    */
+     * @return whether the robot is tipped
+     */
     public boolean isTipped() {
-        return (Math.abs(getPigeon2().getPitch().getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE || Math.abs(getPigeon2().getRoll().getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE);
+        return (Math.abs(
+                getPigeon2().getPitch().getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE
+                || Math.abs(getPigeon2().getRoll()
+                        .getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE);
     }
 
     /**
      * gets if slow mode is enabled
+     * 
      * @return if the robot is driving in slow mode
      */
     public boolean inSlowMode() {
@@ -254,6 +255,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Set slow mode t/f
+     * 
      * @param slow boolean if we are in slow mode
      */
     public void setSlowMode(boolean slow) {
@@ -268,6 +270,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Logs if the robot is in robot centric control
+     * 
      * @param robotCentricControl boolean if the robot is in robot centric control
      */
     public void setRobotCentricControl(boolean robotCentricControl) {
@@ -276,6 +279,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Returns if the robot is in robot centric control
+     * 
      * @return boolean if the robot is in robot centric control
      */
     public boolean isRobotCentricControl() {
@@ -284,6 +288,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Swaps the driver and copilot controllers
+     * 
      * @param driverC the driver controller
      * @param copilotC the copilot controller
      */
@@ -295,11 +300,12 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Returns if the robot Pose is in Wing
+     * 
      * @return boolean if the robot is in the wing to start aiming STATE priming
      */
-    public boolean inWing(){
-		return (getPose().get().getX() < ShooterConstants.FAR_WING_X);
-	}
+    public boolean inWing() {
+        return (getPose().get().getX() < ShooterConstants.FAR_WING_X);
+    }
 
     public void disableVision() {
         disableVision = true;
