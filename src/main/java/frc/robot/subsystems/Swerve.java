@@ -123,8 +123,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rot the rotational velocity in rad/s
      */
     public void setRobot(double x, double y, double rot) {
-        this.setControl(driveRobot.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
-                .withRotationalRate(rot * maxAngularRate));
+        this.setControl(driveRobot.withVelocityX(x).withVelocityY(y)
+                .withRotationalRate(rot));
     }
 
     /**
@@ -135,8 +135,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rot the rotational velocity in rad/s
      */
     public void setField(double x, double y, double rot) {
-        this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
-                .withRotationalRate(rot * maxAngularRate));
+        this.setControl(driveField.withVelocityX(x).withVelocityY(y)
+                .withRotationalRate(rot));
     }
 
     /**

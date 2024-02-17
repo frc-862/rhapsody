@@ -47,6 +47,7 @@ import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.FlywheelSystemTest;
 import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
+import frc.robot.command.ChasePieces;
 import frc.robot.command.Climb;
 import frc.robot.command.Collect;
 import frc.robot.subsystems.Limelights;
@@ -164,7 +165,7 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
+		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
 		// parks the robot
 		new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));

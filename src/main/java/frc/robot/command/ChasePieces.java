@@ -43,21 +43,20 @@ public class ChasePieces extends Command {
 	 */
 	public ChasePieces(Swerve drivetrain, Collector collector, Limelights limelights) {
 		this.drivetrain = drivetrain;
-		this.collector = collector;
+		// this.collector = collector;
 
 		limelight = limelights.getDust();
 		limelightId = limelight.getPipeline();
 		
 
-		addRequirements(drivetrain, collector);
+		addRequirements(drivetrain);
 	}
 	
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
-		limelight.setPipeline(VisionConstants.NOTE_PIPELINE);
-		collector.setPower(1d); //TODO: get the right power
+		// collector.setPower(1d); //TODO: get the right power
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
@@ -72,7 +71,7 @@ public class ChasePieces extends Command {
 		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		hasPiece = collector.hasPiece();
+		// hasPiece = collector.hasPiece();
 
 		LightningShuffleboard.setBool("ChasePieces", "On Target", onTarget);
 		LightningShuffleboard.setBool("ChasePieces", "Has Target", hasTarget);
@@ -100,7 +99,7 @@ public class ChasePieces extends Command {
 
 			}
 		} else {
-			drivetrain.setRobot(3, 0, 0);
+			drivetrain.setRobot(-3, 0, 0);
 		}
 
 		isFinished();
@@ -110,13 +109,13 @@ public class ChasePieces extends Command {
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		limelight.setPipeline(limelightId);
-		collector.stop();
+		// limelight.setPipeline(limelightId);
+		// collector.stop();
 	}
 
 	// Makes sure that the robot isn't jerking over to a different side while chasing pieces.
 	public boolean trustValues(){
-		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6){
+		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 8){
 			return true;
 		}
 		return false;
