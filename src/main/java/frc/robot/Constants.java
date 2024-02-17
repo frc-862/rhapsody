@@ -50,7 +50,7 @@ public class Constants {
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
         public static final double SLOW_ROT_MULT = 0.007; // TODO Tune for Driver
-        public static final double SLOW_SPEED_MULT = 0.01; // TODO Tune for Driver
+        public static final double SLOW_SPEED_MULT = 0.4; // TODO Tune for Driver
 
         public static final double SYS_TEST_SPEED_DRIVE = 0.5;
         public static final double SYS_TEST_SPEED_TURN = 1d;
@@ -82,19 +82,19 @@ public class Constants {
 
             // TODO check
             public static final int COLLECTOR_MOTOR = 9;
-            public static final int INDEXER_MOTOR = 11;
-            public static final int PIVOT_ANGLE_MOTOR = 12;
-            public static final int FLYWHEEL_MOTOR_TOP = 13;
-            public static final int FLYWHEEL_MOTOR_BOTTOM = 14;
-            public static final int CLIMB_RIGHT = 15;
-            public static final int CLIMB_LEFT = 16;
+            public static final int INDEXER_MOTOR = 10;
+            public static final int PIVOT_ANGLE_MOTOR = 11;
+            public static final int FLYWHEEL_MOTOR_TOP = 12;
+            public static final int FLYWHEEL_MOTOR_BOTTOM = 13;
+            public static final int CLIMB_RIGHT = 14;
+            public static final int CLIMB_LEFT = 15;
 
             // TODO check
             // Cancoders
             public static final int FLYWHEEL_CANCODER = 35;
             public static final int CLIMB_CANCODERR = 36;
             public static final int CLIMB_CANCODERL = 37;
-            public static final int PIVOT_ANGLE_CANCODER = 38;
+            public static final int PIVOT_ANGLE_CANCODER = 35;
 
             public static final String CANBUS_FD = "Canivore";
             public static final String RIO_CANBUS = "rio";
@@ -132,13 +132,13 @@ public class Constants {
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(19.09); // TODO check
 
         public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
-
-        //For Pathfinding
-        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(-1, 2), new Rotation2d(0d));
-        public static final double GOAL_END_VELOCITY = 0; // Goal end velocity in meters/sec
-        public static final double ROTATION_DELAY_DISTACE = 0d; // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
         
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); //TODO get constants
+        
+        //For Pathfinding
+        // TODO get real poses to pathfind to
+        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(-1, 2), new Rotation2d(0d));
+        
     }
 
     public static class TunerConstants {
@@ -431,7 +431,7 @@ public class Constants {
         };
     }
 
-    public class CandConstants {
+    public class CandConstants { // TODO get real
         //Amp
         public static final double AMP_TOP_RPM = 0;
         public static final double AMP_BOTTOM_RPM = 0;
@@ -444,6 +444,25 @@ public class Constants {
         //Podium
         public static final double PODIUM_RPM = 0;
         public static final double PODIUM_ANGLE = 0;
+
+        //C1
+        public static final double C1_RPM = 0;
+        public static final double C1_ANGLE = 0;
+
+        //C2
+        public static final double C2_RPM = 0;
+        public static final double C2_ANGLE = 0;
+
+        //C3
+        public static final double C3_RPM = 0;
+        public static final double C3_ANGLE = 0;
+
+        //Line 
+        public static final double LINE_RPM = 0;
+        public static final double LINE_ANGLE = 0;
+
+        // TODO find time to shoot
+        public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer start to flywheel exit 
     }
 
     public class ClimbConstants { //TODO: find real values
