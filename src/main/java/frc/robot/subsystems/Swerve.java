@@ -274,9 +274,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public boolean isTipped() {
         return (Math.abs(
-                getPigeon2().getPitch().getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE
+                getPigeon2().getPitch().getValueAsDouble()) > VisionConstants.TIP_DEADZONE
                 || Math.abs(getPigeon2().getRoll()
-                        .getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE);
+                        .getValueAsDouble()) > VisionConstants.TIP_DEADZONE);
     }
 
     /**
