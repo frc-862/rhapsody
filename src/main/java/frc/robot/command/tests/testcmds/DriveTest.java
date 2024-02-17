@@ -30,12 +30,12 @@ public class DriveTest extends Command {
 
   @Override
   public void execute() {
-    // drivetrain.applyRequestRobot(speedX, speedY, () -> 0d, 0d ,0d);
+    drivetrain.applyPercentRequestRobot(speedX, speedY, () -> 0d);
   }
 
   @Override
   public void end(boolean interrupted) {
-    // drivetrain.applyRequestRobot(() -> 0d, () -> 0d, () -> 0d, 0d ,0d);
+    drivetrain.brake();
   }
 
   @Override

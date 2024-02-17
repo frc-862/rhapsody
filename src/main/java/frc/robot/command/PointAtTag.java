@@ -89,7 +89,7 @@ public class PointAtTag extends Command {
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
 
 		// TODO test drives and test the deadbands
-		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
+		drivetrain.setFieldDriver(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
 
 	// Called once the command ends or is interrupted.
