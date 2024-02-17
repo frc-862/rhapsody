@@ -60,6 +60,7 @@ import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
 import frc.thunder.LightningContainer;
 import frc.thunder.command.TimedCommand;
+import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
 import frc.thunder.testing.SystemTestCommand;
@@ -67,6 +68,7 @@ import frc.thunder.testing.SystemTestCommand;
 public class RobotContainer extends LightningContainer {
 	public static XboxController driver;
 	public static XboxController coPilot;
+	public static XboxControllerFilter filteredDrive;
 
 	// Subsystems
 	private Swerve drivetrain;
@@ -96,6 +98,7 @@ public class RobotContainer extends LightningContainer {
 
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
+		filteredDrive = new XboxControllerFilter(driver, Constants.ControllerConstants.DEADBAND, -1, 1, XboxControllerFilter.filterMode.SQUARED);
 
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
