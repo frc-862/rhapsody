@@ -101,6 +101,20 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
+     * Apply a Field centric request to the drivetrain with no deadband and no speed multiplier
+     * 
+     * @param x the x velocity m/s
+     * @param y the y velocity m/s
+     * @param rot the rotational velocity in rad/s
+     */
+    public void setField(double x, double y, double rot) {
+        this.setControl(driveField
+            .withVelocityX(x)
+            .withVelocityY(y)
+            .withRotationalRate(rot));
+    }
+
+    /**
      * Apply a Robot centric request to the drivetrain with constant deadband
      * 
      * @param x the x velocity m/s
@@ -116,27 +130,17 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
-     * Apply a Robot centric request to the drivetrain with constant deadband
+     * Apply a Robot centric request to the drivetrain with no deadband and no speed multiplier
      * 
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
      */
     public void setRobot(double x, double y, double rot) {
-        this.setControl(driveRobot.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
-                .withRotationalRate(rot * maxAngularRate));
-    }
-
-    /**
-     * Apply a Field centric request to the drivetrain with no deadband
-     * 
-     * @param x the x velocity m/s
-     * @param y the y velocity m/s
-     * @param rot the rotational velocity in rad/s
-     */
-    public void setField(double x, double y, double rot) {
-        this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
-                .withRotationalRate(rot * maxAngularRate));
+        this.setControl(driveRobot
+            .withVelocityX(x)
+            .withVelocityY(y)
+            .withRotationalRate(rot));
     }
 
     /**
