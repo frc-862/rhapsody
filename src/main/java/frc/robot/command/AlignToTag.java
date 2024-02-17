@@ -39,7 +39,7 @@ public class AlignToTag extends Command {
 	private XboxController driver;
 	private FieldCentric drive;
   private Limelights limelights;
-	
+	private MoveToPose move;
 	private int limelightPrevPipeline = 0;
   
   private boolean aligning;
@@ -80,7 +80,9 @@ public class AlignToTag extends Command {
       //    .whileTrue(AutoBuilder.followPath(path));
       if (!(new MoveToPose(target, drivetrain, drive).isFinished())) {
         System.out.println("AHASIDHASHASID");
-        new Trigger(() -> (true))).whileTrue(new MoveToPose(target, drivetrain, drive));
+        move = new MoveToPose(target, drivetrain, drive);
+        move.initialize();
+        move.execute();
       } else if (!aligning && (new MoveToPose(target, drivetrain, drive).isFinished()) ) {
         AutoBuilder.followPath(path);
         aligning = true;
