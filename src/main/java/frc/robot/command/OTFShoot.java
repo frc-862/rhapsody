@@ -68,7 +68,7 @@ public class OTFShoot extends Command {
 	Pose2d pose = drivetrain.getPose().get();
 
 	// Robot Acceleration
-	double accelerationScaler = 0;
+	double accelerationScaler = 1;
 	double robotAccelerationX = drivetrain.getPigeon2().getAccelerationX().getValue();
 	double robotAccelerationY = drivetrain.getPigeon2().getAccelerationY().getValue();
 
@@ -80,8 +80,13 @@ public class OTFShoot extends Command {
 	double robotVelocityY = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
 	
 	// If the robot is not moving, don't compensate for velocity
-	if ((Math.abs(robotVelocityX) < velocityDeadback && Math.abs(robotVelocityY) < velocityDeadback) ){// || (LightningShuffleboard.getBool("OTF Shooting", "Velocity Compensating", false))){
+	if ((Math.abs(robotVelocityX) < velocityDeadback && Math.abs(robotVelocityY) < velocityDeadback) || (LightningShuffleboard.getBool("OTF Shooting", "Velocity Compensating", false))){
 		veloctiyScaler = 0;
+	}
+
+	// Acceleration don't compensate for accleration
+	if (LightningShuffleboard.getBool("OTF Shooting", "Acceleration Compensating", false)) {
+		accelerationScaler = 0;
 	}
 
 	// Speed of the shot

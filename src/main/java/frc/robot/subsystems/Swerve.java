@@ -47,6 +47,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 		LightningShuffleboard.setDouble("PointAtTag", "P", 0.1);
 		LightningShuffleboard.setDouble("PointAtTag", "Tolarance", 4);
         LightningShuffleboard.setBool("OTF Shooting", "Velocity Compensating", false);
+        LightningShuffleboard.setBool("OTF Shooting", "Acceleration Compensating", false);
+
 
         configurePathPlanner();
     }
