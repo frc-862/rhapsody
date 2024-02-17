@@ -74,7 +74,7 @@ public class OTFShoot extends Command {
 
 	// Robot velocity
 	//TODO: get real value
-	double velocityDeadback = 0.3;
+	double velocityDeadback = 0.2;
 	double veloctiyScaler = 1;
 	double robotVelocityX = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
 	double robotVelocityY = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
