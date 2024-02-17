@@ -25,8 +25,8 @@ public class MoveToPose extends Command {
     private Pose2d current;
     private double dx;
     private double dy;
-    private final double kp = 0.3; //1.8 old
-    private final double minSpeed = 0.2; //0.9 old
+    private final double kp = 0.8; //1.8 old
+    private final double minSpeed = 0.4; //0.9 old
     private double powerx;
     private double powery;
     /** 
@@ -58,9 +58,11 @@ public class MoveToPose extends Command {
         LightningShuffleboard.setDouble("MoveToPose", "targetY", target.getY());
 
         current = drivetrain.getPose().get(); 
+        System.out.println(current);
         dx = target.getTranslation().getX() - current.getTranslation().getX();
         dy = target.getTranslation().getY() - current.getTranslation().getY();
-    
+        System.out.println(dx);
+        System.out.println(dy);
         powerx = dx * kp;
         powery = dy * kp;
         
@@ -81,7 +83,7 @@ public class MoveToPose extends Command {
         }
 
         var dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 0.3) {
+        if (dist < 0.4) {
             powerx = 0;
             powery = 0;
             finished = true;

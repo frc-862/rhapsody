@@ -41,7 +41,7 @@ public class AlignToTag extends Command {
   private Limelights limelights;
 	private MoveToPose move;
 	private int limelightPrevPipeline = 0;
-  
+  private boolean MoveToPoseDone;
   private boolean aligning;
   /** Creates a new AlignToTag. */
   public AlignToTag(Pose2d target, Swerve drivetrain, SwerveRequest.FieldCentric drive, XboxController driver) {
@@ -78,14 +78,20 @@ public class AlignToTag extends Command {
       //    .whileTrue(new MoveToPose(target, drivetrain, drive).schedule());
       //new Trigger(() -> (new MoveToPose(target, drivetrain, drive).isFinished()))
       //    .whileTrue(AutoBuilder.followPath(path));
-      if (!(new MoveToPose(target, drivetrain, drive).isFinished())) {
+      MoveToPoseDone = Math.sqrt((target.getTranslation().getX() - drivetrain.getPose().get().getTranslation().getX())*(target.getTranslation().getX() - drivetrain.getPose().get().getTranslation().getX()) + (target.getTranslation().getY() - drivetrain.getPose().get().getTranslation().getY())*(target.getTranslation().getY() - drivetrain.getPose().get().getTranslation().getY()))<0.4;
+      System.out.println(Math.sqrt((target.getTranslation().getX() - drivetrain.getPose().get().getTranslation().getX())*(target.getTranslation().getX() - drivetrain.getPose().get().getTranslation().getX()) + (target.getTranslation().getY() - drivetrain.getPose().get().getTranslation().getY())*(target.getTranslation().getY() - drivetrain.getPose().get().getTranslation().getY()))<0.4);
+      System.out.println(new MoveToPose(target, drivetrain, drive).isFinished());
+      if (!aligning && !MoveToPoseDone/*(new MoveToPose(target, drivetrain, drive).isFinished())*/) {
         System.out.println("AHASIDHASHASID");
         move = new MoveToPose(target, drivetrain, drive);
         move.initialize();
         move.execute();
-      } else if (!aligning && (new MoveToPose(target, drivetrain, drive).isFinished()) ) {
+      } else if (!aligning) {
+        System.out.println("IM DONEWITHMOVETOPOSE AUTOBUILDING!!!!!!!!!!!!!!!!!!!!!!!!!!1*(!*)");
         AutoBuilder.followPath(path);
         aligning = true;
+      }else{
+        System.out.println("running path");
       }
 
   }
