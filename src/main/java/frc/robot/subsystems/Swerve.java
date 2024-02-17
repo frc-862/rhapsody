@@ -86,8 +86,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rotDeadband the deadband to apply to the rotational input
      * @return the request to drive for the drivetrain
      */
-    public Command applyRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot,
-            double driveDeadband, double rotDeadband) {
+    public Command applyRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, double driveDeadband, double rotDeadband) {
         return run(() -> this.setControl(driveField
                 .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * maxSpeed)
                 .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
@@ -115,7 +114,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
-     * @return the request to drive for the drivetrain
      */
     public void setRobot(double x, double y, double rot) {
         this.setControl(driveRobot.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
@@ -128,7 +126,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
-     * @return the request to drive for the drivetrain
      */
     public void setField(double x, double y, double rot) {
         this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
@@ -145,8 +142,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rotDeadband the deadband to apply to the rotational input
      * @return the request to drive for the drivetrain
      */
-    public Command applyRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot,
-            double driveDeadband, double rotDeadband) {
+    public Command applyRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, double driveDeadband, double rotDeadband) {
         return run(() -> this.setControl(driveRobot
                 .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * maxSpeed)
                 .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
