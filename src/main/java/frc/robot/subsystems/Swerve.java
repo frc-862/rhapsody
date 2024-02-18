@@ -42,14 +42,13 @@ import frc.thunder.vision.Limelight;
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
-    private final Limelights limelightSubsystem;
-
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric();
     private final SwerveRequest.ApplyChassisSpeeds autoRequest =
             new SwerveRequest.ApplyChassisSpeeds();
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
+    private Limelight[] limelights;
     private boolean slowMode = false;
     private boolean disableVision = false;
     private boolean robotCentricControl = false;
@@ -65,7 +64,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             Limelights limelightSubsystem, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
 
-        this.limelightSubsystem = limelightSubsystem;
+        this.limelights = new Limelight[] {limelightSubsystem.getStopMe()};
+
         initLogging();
 
         configurePathPlanner();
@@ -86,9 +86,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
-        requestX = x.getAsDouble();
-        requestY = y.getAsDouble();
-        requestRot = rot.getAsDouble();
         return run(() -> this.setControl(driveField
                 .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
                 .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
@@ -106,9 +103,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, double driveDeadband, double rotDeadband) {
-        requestX = x.getAsDouble();
-        requestY = y.getAsDouble();
-        requestRot = rot.getAsDouble();
         return run(() -> this.setControl(driveField
                 .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * maxSpeed)
                 .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
@@ -124,9 +118,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
-        requestX = x.getAsDouble();
-        requestY = y.getAsDouble();
-        requestRot = rot.getAsDouble();
         return run(() -> this.setControl(driveRobot
                 .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
                 .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), ControllerConstants.DEADBAND) * maxSpeed)
@@ -144,6 +135,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         requestX = x;
         requestY = y;
         requestRot = rot;
+        System.out.println(x);
+        System.out.println(y);
+        System.out.println(rot);
         this.setControl(driveRobot.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
                 .withRotationalRate(rot * maxAngularRate));
     }
@@ -159,6 +153,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         requestX = x;
         requestY = y;
         requestRot = rot;
+        System.out.println(x);
+        System.out.println(y);
+        System.out.println(rot);
         this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
                 .withRotationalRate(rot * maxAngularRate));
     }
@@ -174,9 +171,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, double driveDeadband, double rotDeadband) {
-        requestX = x.getAsDouble();
-        requestY = y.getAsDouble();
-        requestRot = rot.getAsDouble();
         return run(() -> this.setControl(driveRobot
                 .withVelocityX(MathUtil.applyDeadband(x.getAsDouble(), driveDeadband) * maxSpeed)
                 .withVelocityY(MathUtil.applyDeadband(y.getAsDouble(), driveDeadband) * maxSpeed)
@@ -195,11 +189,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
-        // SwerveRequest request = requestSupplier.get();
-        // request.
-        // requestX = requestSupplier.get();
-        // requestY;
-        // requestRot;
+        //TODO: don't use
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
@@ -212,9 +202,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     @Override
     public void periodic() {
         //TODO Remove the unecessary shuffleboard stuff eventually
-        if (!disableVision) {
-            var pose = limelightSubsystem.getPoseQueue().poll();
-            while (pose != null) {
+
+        for (Pose4d pose : Limelight.filteredPoses(limelights)) {
+            if(!disableVision){
                 // High confidence => 0.3 
                 // Low confidence => 18 
                 // theta trust IMU, use 500 degrees
@@ -229,8 +219,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 }
                 
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
-                pose = limelightSubsystem.getPoseQueue().poll();
+                LightningShuffleboard.setDouble("Swerve", "Standard Deviation", confidence);
             }
+            
+            LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
+            LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
+            LightningShuffleboard.setDouble("Swerve", "PoseTime", pose.getFPGATimestamp()); 
+            LightningShuffleboard.setDouble("Swerve", "distance", pose.getDistance());
+            LightningShuffleboard.setBool("Swerve", "MultipleTargets", pose.getMoreThanOneTarget());
         }
     }
             
@@ -372,5 +368,17 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void enableVision() {
         disableVision = false;
         System.out.println("Vision Enabled");
+    }
+
+    public double getRequestX(){
+        return requestX;
+    }
+
+    public double getRequestY(){
+        return requestY;
+    }
+
+    public double getRequestRot(){
+        return requestRot;
     }
 }

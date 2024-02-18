@@ -52,9 +52,9 @@ Pose2d storePoseWhenCollided;
 
     robotRotationFromMotor[1] = drivetrain.getState().Pose.getRotation().getRadians();
 
-    velocityXRequest[1] = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
-    velocityYRequest[1] = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
-    velocityRotRequest[1] = drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond;
+    velocityXRequest[1] = drivetrain.getRequestX();
+    velocityYRequest[1] = drivetrain.getRequestY();
+    velocityRotRequest[1] = drivetrain.getRequestRot();
     
 
     LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", 0d);
@@ -83,9 +83,9 @@ Pose2d storePoseWhenCollided;
     angularVelocityWorldLog[1] = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble());
     timeLog[1] = Utils.getCurrentTimeSeconds();
     robotRotationFromMotor[1] = drivetrain.getState().Pose.getRotation().getRadians();
-    velocityXRequest[1] = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
-    velocityYRequest[1] = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
-    velocityRotRequest[1] = drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond;
+    velocityXRequest[1] = drivetrain.getRequestX();
+    velocityYRequest[1] = drivetrain.getRequestY();
+    velocityRotRequest[1] = drivetrain.getRequestRot();
 
     LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", getTotalPigeonAccelerationMagnitude());
     LightningShuffleboard.setDouble("Collision Detection", "primitive pidgeon acceleration", getPrimitivePigeonAccelerationMagnitude());
@@ -99,6 +99,9 @@ Pose2d storePoseWhenCollided;
     LightningShuffleboard.setBool("Collision Detection", "motor zero collided", checkMotorAcceleration(0));
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
     LightningShuffleboard.setDouble("Collision Detection", "time", timeLog[0] - timeLog[1]);
+    LightningShuffleboard.setDouble("Collision Detection", "get requested x velocity", drivetrain.getRequestX());
+    LightningShuffleboard.setDouble("Collision Detection", "get requested y velocity", drivetrain.getRequestY());
+    LightningShuffleboard.setDouble("Collision Detection", "get requested rot velocity", drivetrain.getRequestRot());
     LightningShuffleboard.setDouble("Collision Detection", "xy acceleration request", Math.hypot(getRequestXAcceleration(), getRequestYAcceleration()));
     
     if (getIfCollided()){
