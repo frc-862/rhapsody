@@ -8,8 +8,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
@@ -52,25 +50,34 @@ public class PointAtTag extends Command {
 
 		targetPose = new Translation2d(targetX, targetY);
 
-		initLogging();
 	}
 	
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-
-		// targetPose = limelight.getCamPoseTargetSpace().getTranslation().toTranslation2d();
 		headingController.enableContinuousInput(-180, 180);
+		// targetPose = limelight.getCamPoseTargetSpace().getTranslation().toTranslation2d();
+		
+		initLogging();
+	}
+
+	private void initLogging() {
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Delta Y", () -> deltaY);
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Delta X", () -> deltaX);
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Heading", () -> targetHeading);
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose Y", () -> targetPose.getY());
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose X", () -> targetPose.getX());
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Pid Output", () -> pidOutput);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 		// TODO remove once Tuned
-		headingController.setTolerance(LightningShuffleboard.getDouble("PointAtTag", "Tolarance", 4));
-		headingController.setP(LightningShuffleboard.getDouble("PointAtTag", "P", 0.1));
-		headingController.setI(LightningShuffleboard.getDouble("PointAtTag", "I", 0));
-		headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 1));
+		// headingController.setTolerance(LightningShuffleboard.getDouble("PointAtTag", "Tolarance", 4));
+		// headingController.setP(LightningShuffleboard.getDouble("PointAtTag", "P", 0.1));
+		// headingController.setI(LightningShuffleboard.getDouble("PointAtTag", "I", 0));
+		// headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 1));
 
 
 		Pose2d pose = drivetrain.getPose().get();
@@ -89,15 +96,6 @@ public class PointAtTag extends Command {
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
 
-	private void initLogging() {
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Delta Y", () -> deltaY);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Delta X", () -> deltaX);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Heading", () -> targetHeading);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose Y", () -> targetPose.getY());
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose X", () -> targetPose.getX());
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Pid Output", () -> pidOutput);
-	
-	}
 
 	// Called once the command ends or is interrupted.
 	@Override

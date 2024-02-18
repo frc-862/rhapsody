@@ -1,13 +1,7 @@
 package frc.robot.command;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Limelights;
@@ -58,11 +52,27 @@ public class ChasePieces extends Command {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 		limelight.setPipeline(VisionConstants.NOTE_PIPELINE);
 		collector.setPower(1d); //TODO: get the right power
+
+		initLogging();
+	}
+
+	private void initLogging() {
+		LightningShuffleboard.setBoolSupplier("ChasePieces", "On Target", () -> onTarget);
+		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Target", () -> hasTarget);
+
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Heading", () -> targetHeading);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Y", () -> targetPitch);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Pid Output", () -> pidOutput);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
+		// For tuning.
+		// headingController.setP(LightningShuffleboard.getDouble("ChasePieces", "Pid P", 0.05));
+		// headingController.setI(LightningShuffleboard.getDouble("ChasePieces", "Pid I", 0));
+		// headingController.setD(LightningShuffleboard.getDouble("ChasePieces", "Pid D", 0));
+
 		hasTarget = limelight.hasTarget();
 
 		if (hasTarget){
@@ -73,20 +83,6 @@ public class ChasePieces extends Command {
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
 		hasPiece = collector.hasPiece();
-
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "On Target", () -> onTarget);
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Target", () -> hasTarget);
-
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Drivetrain Angle", () -> drivetrain.getPigeon2().getAngle());
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Heading", () -> targetHeading);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Y", () -> targetPitch);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Pid Output", () -> pidOutput);
-
-		// For tuning.
-		// headingController.setP(LightningShuffleboard.getDouble("ChasePieces", "Pid P", 0.05));
-		// headingController.setI(LightningShuffleboard.getDouble("ChasePieces", "Pid I", 0));
-		// headingController.setD(LightningShuffleboard.getDouble("ChasePieces", "Pid D", 0));
-
 
 		pidOutput = headingController.calculate(0, targetHeading);
 		
@@ -102,9 +98,6 @@ public class ChasePieces extends Command {
 		} else {
 			drivetrain.setRobot(3, 0, 0);
 		}
-
-		isFinished();
-        
 	}
 
 	// Called once the command ends or is interrupted.
@@ -128,7 +121,6 @@ public class ChasePieces extends Command {
 		if (hasPiece){
 			return true;
 		}
-		
 		return false;
 	}
 }

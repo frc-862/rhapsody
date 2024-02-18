@@ -48,7 +48,7 @@ public class Climber extends SubsystemBase {
         initLogging();
     }
 
-    private void initLogging() {
+    private void initLogging() { // TODO test and fix once we have climber
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Height", () -> getHeightL());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());

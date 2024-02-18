@@ -27,9 +27,9 @@ public class Collector extends SubsystemBase {
 	}
 
 	private void initLogging() {
-		LightningShuffleboard.setDoubleSupplier("Collect", "Collector Power", () -> motor.get());
-		LightningShuffleboard.setBoolSupplier("Collect", "Beam Break", () -> getEntryBeamBreakState());
-		LightningShuffleboard.setBoolSupplier("Collect", "Has Piece", () -> hasPiece());
+		LightningShuffleboard.setDoubleSupplier("Collector", "Collector Power", () -> motor.get());
+		LightningShuffleboard.setBoolSupplier("Collector", "Beam Break", () -> getEntryBeamBreakState());
+		LightningShuffleboard.setBoolSupplier("Collector", "Has Piece", () -> hasPiece());
 	}
 
 	/**

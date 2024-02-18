@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDsConstants;
 import frc.robot.Constants.RobotMap.PWM;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 
 public class LEDs extends SubsystemBase {
@@ -93,6 +94,8 @@ public class LEDs extends SubsystemBase {
 		}
 
 		leds.setData(ledBuffer);
+
+		LightningShuffleboard.setStringSupplier("LEDs", "State",() -> state.toString());
 	}
 
 	public Command enableState(LED_STATES state) {
