@@ -20,8 +20,6 @@ public class ChasePieces extends Command {
 	private Swerve drivetrain;
 	private Collector collector;
 	private Limelight limelight;
-
-	private RobotCentric noteChase;
 	
 	private int limelightId = 0;
 
@@ -50,7 +48,6 @@ public class ChasePieces extends Command {
 		limelight = limelights.getDust();
 		limelightId = limelight.getPipeline();
 		
-		noteChase = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
 		addRequirements(drivetrain, collector);
 	}
@@ -60,6 +57,7 @@ public class ChasePieces extends Command {
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 		limelight.setPipeline(VisionConstants.NOTE_PIPELINE);
+		collector.setPower(1d); //TODO: get the right power
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
@@ -95,25 +93,14 @@ public class ChasePieces extends Command {
 		if (hasTarget){
 			if (trustValues()){
 				if (!onTarget) {
-					drivetrain.setControl(
-						noteChase.withRotationalRate(-pidOutput).withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
-					);
+					drivetrain.setRobot(-3, 0, -pidOutput);
 				} else {
-					drivetrain.setControl(
-						noteChase.withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
-					);
-				}
-
-				// Activates if the target is close to the drivetrain.
-				if (targetPitch < 0) {
-					collector.setPower(0.2); // TODO: get the proper value to set to the collector.
+					drivetrain.setRobot(-3, 0, 0);
 				}
 
 			}
 		} else {
-			drivetrain.setControl(
-				noteChase.withVelocityX(-3).withRotationalRate(0) // Should be positive for front of robot, negative for back of robot.
-			);
+			drivetrain.setRobot(3, 0, 0);
 		}
 
 		isFinished();

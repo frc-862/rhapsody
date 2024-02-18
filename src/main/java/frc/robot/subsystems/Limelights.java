@@ -1,12 +1,19 @@
 package frc.robot.subsystems;
 
+import java.util.Arrays;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.thunder.util.Pose4d;
 import frc.thunder.vision.Limelight;
 
 public class Limelights extends SubsystemBase {
     private Limelight stopMe;
     private Limelight dust;
     private Limelight champs;
+    private Thread poseProducer;
+    private ConcurrentLinkedQueue<Pose4d> poseQueue = new ConcurrentLinkedQueue<Pose4d>();
+    private double lastVisionRead = 0;
 
     public Limelights() {
         stopMe = new Limelight("limelight-stopme", "10.8.62.11");   // LL3   Back
@@ -17,6 +24,33 @@ public class Limelights extends SubsystemBase {
         stopMe.setPipeline(0);
         dust.setPipeline(0);
         champs.setPipeline(0);
+
+        this.poseProducer = new Thread(() -> {
+            while (true) {
+                try {
+                    monitor(stopMe);
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    System.err.println("Vision loop error: " + e.toString());
+                    e.printStackTrace();
+                }
+            }
+        });
+        poseProducer.start();
+    }
+
+    private void monitor(Limelight limelight) {
+        if(limelight.hasTarget()) {
+            Pose4d pose = limelight.getAlliancePose();
+            if (Limelight.trustPose(pose) && pose.getFPGATimestamp() > lastVisionRead) {
+                poseQueue.add(pose);
+                lastVisionRead = pose.getFPGATimestamp();
+            }
+        }
+    }
+
+    public ConcurrentLinkedQueue<Pose4d> getPoseQueue() {
+        return poseQueue;
     }
 
     public Limelight getStopMe() {
