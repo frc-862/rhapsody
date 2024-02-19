@@ -98,8 +98,8 @@ public class Constants {
             public static final int COLLECTOR_MOTOR = 9;
             public static final int INDEXER_MOTOR = 10;
             public static final int PIVOT_ANGLE_MOTOR = 11;
-            public static final int FLYWHEEL_MOTOR_TOP = 12;
-            public static final int FLYWHEEL_MOTOR_BOTTOM = 13;
+            public static final int FLYWHEEL_MOTOR_BOTTOM = 12;
+            public static final int FLYWHEEL_MOTOR_TOP = 13;
             public static final int CLIMB_RIGHT = 14;
             public static final int CLIMB_LEFT = 15;
 
@@ -161,8 +161,7 @@ public class Constants {
     public static class TunerConstants {
         // Both sets of gains need to be tuned to your individual robot.
 
-        // The steer motor uses any SwerveModule.SteerRequestType control request with
-        // the
+        // The steer motor uses any SwerveModule.SteerRequestType control request with the
         // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
         private static final Slot0Configs steerGains = new Slot0Configs().withKP(100).withKI(0)
                 .withKD(0.2).withKS(0).withKV(1.5).withKA(0);
@@ -247,21 +246,21 @@ public class Constants {
         private static final double kBackRightYPosInchesRh = -13.5;
 
         // OFFSETS Mercury
-        private static final double kFrontLeftEncoderOffset = -0.23876953125;
-        private static final double kFrontLeftXPosInches = 13.5;
-        private static final double kFrontLeftYPosInches = 13.5;
+        private static final double kFrontLeftEncoderOffset = -0.11572265625;
+        private static final double kFrontLeftXPosInches = 10.825;
+        private static final double kFrontLeftYPosInches = 10.825;
 
-        private static final double kFrontRightEncoderOffset = 0.391845703125;
-        private static final double kFrontRightXPosInches = 13.5;
-        private static final double kFrontRightYPosInches = -13.5;
+        private static final double kFrontRightEncoderOffset = 0.01220703125;
+        private static final double kFrontRightXPosInches = 10.825;
+        private static final double kFrontRightYPosInches = -10.825;
 
-        private static final double kBackLeftEncoderOffset = 0.13916015625;
-        private static final double kBackLeftXPosInches = -13.5;
-        private static final double kBackLeftYPosInches = 13.5;
+        private static final double kBackLeftEncoderOffset = 0.032958984375;
+        private static final double kBackLeftXPosInches = -10.825;
+        private static final double kBackLeftYPosInches = 10.825;
 
-        private static final double kBackRightEncoderOffset = -0.23388671875;
-        private static final double kBackRightXPosInches = -13.5;
-        private static final double kBackRightYPosInches = -13.5;
+        private static final double kBackRightEncoderOffset = 0.13330078125;
+        private static final double kBackRightXPosInches = -10.825;
+        private static final double kBackRightYPosInches = -10.825;
 
 
 
@@ -365,8 +364,7 @@ public class Constants {
     }
 
     public class CollectorConstants { // TODO: get real
-        public static final boolean COLLECTOR_MOTOR_INVERTED = false; // TODO check once collector
-                                                                      // installed
+        public static final boolean COLLECTOR_MOTOR_INVERTED = true;
         public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they
                                                                           // are not set to 0
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they
@@ -377,16 +375,16 @@ public class Constants {
     }
 
     public class FlywheelConstants { // TODO: get real
-        public static final boolean FLYWHEEL_MOTOR_TOP_INVERT = false;
-        public static final boolean FLYWHEEL_MOTOR_BOTTOM_INVERT = false;
-        public static final int FLYWHEEL_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final boolean FLYWHEEL_MOTOR_BRAKE_MODE = false;
-        public static final double FLYWHEEL_MOTOR_KP = 0;
-        public static final double FLYWHEEL_MOTOR_KI = 0;
-        public static final double FLYWHEEL_MOTOR_KD = 0;
-        public static final double FLYWHEEL_MOTOR_KS = 0;
-        public static final double FLYWHEEL_MOTOR_KV = 0;
+        public static final boolean MOTOR_TOP_INVERT = true;
+        public static final boolean MOTOR_BOTTOM_INVERT = false;
+        public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 0;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final boolean MOTOR_BRAKE_MODE = false;
+        public static final double MOTOR_KP = 0;
+        public static final double MOTOR_KI = 0;
+        public static final double MOTOR_KD = 0;
+        public static final double MOTOR_KS = 0;
+        public static final double MOTOR_KV = 0;
 
         public static final double RPM_TOLERANCE = 0;
 
@@ -398,9 +396,9 @@ public class Constants {
     }
 
     public class IndexerConstants { // TODO: get real
-        public static final boolean INDEXER_MOTOR_INVERTED = false;
-        public static final int INDEXER_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int INDEXER_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final boolean MOTOR_INVERT = true;
+        public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 0;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
 
         public enum PieceState {
             IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE
@@ -411,17 +409,14 @@ public class Constants {
     }
 
     public class PivotConstants { // TODO: get real
-        public static final boolean PIVOT_MOTOR_INVERT = false;
-        public static final int PIVOT_MOTOR_STATOR_CURRENT_LIMIT = 0;
-        public static final boolean PIVOT_MOTOR_BRAKE_MODE = true;
-
-        public static final double STOW_ANGLE = 0; // TODO get real
-
-        public static final double PIVOT_MOTOR_KP = 0;
-        public static final double PIVOT_MOTOR_KI = 0;
-        public static final double PIVOT_MOTOR_KD = 0;
-        public static final double PIVOT_MOTOR_KS = 0;
-        public static final double PIVOT_MOTOR_KV = 0;
+        public static final boolean MOTOR_INVERT = true; // POS power is up
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final boolean MOTOR_BRAKE_MODE = true;
+        public static final double MOTOR_KP = 0;
+        public static final double MOTOR_KI = 0;
+        public static final double MOTOR_KD = 0;
+        public static final double MOTOR_KS = 0;
+        public static final double MOTOR_KV = 0;
 
         public static final double ANGLE_TOLERANCE = 0;
 
@@ -433,6 +428,8 @@ public class Constants {
 
         public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO
                                                         // get amount to bias by
+
+        public static final double STOW_ANGLE = 0d;
     }
 
     public class ShooterConstants {

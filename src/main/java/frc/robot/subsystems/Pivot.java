@@ -24,17 +24,21 @@ public class Pivot extends SubsystemBase {
 
     private FalconTuner pivotTuner;
 
-    public Pivot() { 
-        
+    public Pivot() {
+
         CANcoderConfiguration angleConfig = new CANcoderConfiguration();
         angleConfig.MagnetSensor.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
-                .withMagnetOffset(PivotConstants.ENCODER_OFFSET).withSensorDirection(PivotConstants.ENCODER_DIRECTION);
+                .withMagnetOffset(PivotConstants.ENCODER_OFFSET)
+                .withSensorDirection(PivotConstants.ENCODER_DIRECTION);
 
         angleEncoder = new CANcoder(CAN.PIVOT_ANGLE_CANCODER, CAN.CANBUS_FD);
         angleEncoder.getConfigurator().apply(angleConfig);
 
-        angleMotor = new ThunderBird(CAN.PIVOT_ANGLE_MOTOR, CAN.CANBUS_FD, PivotConstants.PIVOT_MOTOR_INVERT, PivotConstants.PIVOT_MOTOR_STATOR_CURRENT_LIMIT, PivotConstants.PIVOT_MOTOR_BRAKE_MODE);
-        angleMotor.configPIDF(0, PivotConstants.PIVOT_MOTOR_KP, PivotConstants.PIVOT_MOTOR_KI, PivotConstants.PIVOT_MOTOR_KD, PivotConstants.PIVOT_MOTOR_KS, PivotConstants.PIVOT_MOTOR_KV);
+        angleMotor =
+                new ThunderBird(CAN.PIVOT_ANGLE_MOTOR, CAN.CANBUS_FD, PivotConstants.MOTOR_INVERT,
+                        PivotConstants.MOTOR_STATOR_CURRENT_LIMIT, PivotConstants.MOTOR_BRAKE_MODE);
+        angleMotor.configPIDF(0, PivotConstants.MOTOR_KP, PivotConstants.MOTOR_KI,
+                PivotConstants.MOTOR_KD, PivotConstants.MOTOR_KS, PivotConstants.MOTOR_KV);
         TalonFXConfiguration motorConfig = angleMotor.getConfig();
 
         motorConfig.Feedback.FeedbackRemoteSensorID = angleEncoder.getDeviceID();
