@@ -6,7 +6,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
@@ -25,7 +25,6 @@ public class Pivot extends SubsystemBase {
     private FalconTuner pivotTuner;
 
     public Pivot() {
-
         CANcoderConfiguration angleConfig = new CANcoderConfiguration();
         angleConfig.MagnetSensor.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
                 .withMagnetOffset(PivotConstants.ENCODER_OFFSET)
@@ -34,8 +33,7 @@ public class Pivot extends SubsystemBase {
         angleEncoder = new CANcoder(CAN.PIVOT_ANGLE_CANCODER, CAN.CANBUS_FD);
         angleEncoder.getConfigurator().apply(angleConfig);
 
-        angleMotor =
-                new ThunderBird(CAN.PIVOT_ANGLE_MOTOR, CAN.CANBUS_FD, PivotConstants.MOTOR_INVERT,
+        angleMotor = new ThunderBird(CAN.PIVOT_ANGLE_MOTOR, CAN.CANBUS_FD, PivotConstants.MOTOR_INVERT,
                         PivotConstants.MOTOR_STATOR_CURRENT_LIMIT, PivotConstants.MOTOR_BRAKE_MODE);
         angleMotor.configPIDF(0, PivotConstants.MOTOR_KP, PivotConstants.MOTOR_KI,
                 PivotConstants.MOTOR_KD, PivotConstants.MOTOR_KS, PivotConstants.MOTOR_KV);
@@ -50,17 +48,22 @@ public class Pivot extends SubsystemBase {
 
         pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, targetAngle);
 
+        
+
         initLogging();
     }
 
     private void initLogging() {
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Overall Angle", () -> getAngle());
-        LightningShuffleboard.setDoubleSupplier("Pivot", "CANCoder angle", () -> getCANCoderAngle());
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Current Angle", () -> getAngle());
         LightningShuffleboard.setDoubleSupplier("Pivot", "Target Angle", () -> targetAngle);
         
         LightningShuffleboard.setBoolSupplier("Pivot", "On target", () -> onTarget());
 
         LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", this::getBias);
+
+        // LightningShuffleboard.setStringSupplier("Pivot", "Forward Limit", () -> angleMotor.getForwardLimit().getValue().toString());
+        // LightningShuffleboard.setStringSupplier("Pivot", "Reverse Limit", () -> angleMotor.getReverseLimit().getValue().toString());
+
     }
 
     @Override
@@ -74,22 +77,16 @@ public class Pivot extends SubsystemBase {
      * @param angle Angle of the pivot
      */
     public void setTargetAngle(double angle) {
+        MathUtil.clamp(angle + bias, PivotConstants.MIN_ANGLE, PivotConstants.MAX_ANGLE);
         targetAngle = angle;
         angleMotor.setControl(anglePID.withPosition(angle));
     }
 
     /**
-     * @return The current angle of the pivot
+     * @return The current angle of the pivot in degrees
      */
     public double getAngle() {
-        return angleMotor.getPosition().getValue();
-    }
-
-    /**
-     * @return The current angle of the cancoder
-     */
-    public double getCANCoderAngle(){
-        return angleEncoder.getPosition().getValueAsDouble();
+        return angleMotor.getPosition().getValue() * 360;
     }
 
     /**

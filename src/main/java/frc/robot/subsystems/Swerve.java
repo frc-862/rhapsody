@@ -33,6 +33,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
 
@@ -308,8 +309,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param driverC the driver controller
      * @param copilotC the copilot controller
      */
-    public void swap(XboxController driverC, XboxController copilotC) {
-        XboxController temp = driverC;
+    public void swap(XboxControllerFilter driverC, XboxControllerFilter copilotC) {
+        XboxControllerFilter temp = driverC;
         RobotContainer.driver = copilotC;
         RobotContainer.coPilot = temp;
     }
