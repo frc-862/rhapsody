@@ -21,18 +21,18 @@ public class Flywheel extends SubsystemBase {
     private FalconTuner bottomTuner;
 
     public Flywheel() {
-        shooterTopMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD, FlywheelConstants.FLYWHEEL_MOTOR_TOP_INVERT, 
-            FlywheelConstants.FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.FLYWHEEL_MOTOR_BRAKE_MODE);
-        shooterBottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD, FlywheelConstants.FLYWHEEL_MOTOR_BOTTOM_INVERT,
-            FlywheelConstants.FLYWHEEL_MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.FLYWHEEL_MOTOR_BRAKE_MODE);
+        shooterTopMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD, FlywheelConstants.MOTOR_TOP_INVERT, 
+            FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.MOTOR_BRAKE_MODE);
+        shooterBottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD, FlywheelConstants.MOTOR_BOTTOM_INVERT,
+            FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.MOTOR_BRAKE_MODE);
             
-        shooterTopMotor.configPIDF(0,FlywheelConstants.FLYWHEEL_MOTOR_KP,
-                FlywheelConstants.FLYWHEEL_MOTOR_KI, FlywheelConstants.FLYWHEEL_MOTOR_KD,
-                FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
+        shooterTopMotor.configPIDF(0,FlywheelConstants.MOTOR_KP,
+                FlywheelConstants.MOTOR_KI, FlywheelConstants.MOTOR_KD,
+                FlywheelConstants.MOTOR_KS, FlywheelConstants.MOTOR_KV);
 
-        shooterBottomMotor.configPIDF(0,FlywheelConstants.FLYWHEEL_MOTOR_KP,
-                FlywheelConstants.FLYWHEEL_MOTOR_KI, FlywheelConstants.FLYWHEEL_MOTOR_KD,
-                FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
+        shooterBottomMotor.configPIDF(0,FlywheelConstants.MOTOR_KP,
+                FlywheelConstants.MOTOR_KI, FlywheelConstants.MOTOR_KD,
+                FlywheelConstants.MOTOR_KS, FlywheelConstants.MOTOR_KV);
 
         // note - if you wanna tune these together, you should be able to set the tab to the same name and it'll read the same values for both instances
         topTuner = new FalconTuner(shooterTopMotor, "Flywheel Top", this::setTopMoterRPM, targetRPM);

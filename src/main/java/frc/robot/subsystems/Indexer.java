@@ -16,19 +16,20 @@ public class Indexer extends SubsystemBase {
 
     private PieceState currentState = PieceState.NONE;
 
-    public Indexer() {   
-        indexerMotor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD, IndexerConstants.INDEXER_MOTOR_INVERTED,
-            IndexerConstants.INDEXER_MOTOR_STATOR_CURRENT_LIMIT, IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
+    public Indexer() {
+        indexerMotor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
+                IndexerConstants.MOTOR_INVERT, IndexerConstants.MOTOR_STATOR_CURRENT_LIMIT,
+                IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
     }
 
     public PieceState getPieceState() {
         return currentState;
     }
-    
+
     public void setPieceState(PieceState state) {
         currentState = state;
     }
-        
+
     public void setPower(double power) {
         indexerMotor.set(power);
     }
@@ -47,6 +48,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Gets the current beam brake state
+     * 
      * @return entry beambreak state
      */
     public boolean getEntryBeamBreakState() {
@@ -55,12 +57,13 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Gets the current beam brake state
+     * 
      * @return exit beambreak state
      */
     public boolean getExitBeamBreakState() {
         return !indexerSensorExit.get();
     }
-    
+
     public boolean hasShot() {
         return false; // TODO add actual logic
     }

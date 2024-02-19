@@ -73,8 +73,8 @@ public class RobotContainer extends LightningContainer {
 	// Subsystems
 	private Swerve drivetrain;
 	private Limelights limelights;
-	Collector collector;
-	// Flywheel flywheel;
+	private Collector collector;
+	// private Flywheel flywheel;
 	// Pivot pivot;
 	// Indexer indexer;
 	// Climber climber;
@@ -103,7 +103,7 @@ public class RobotContainer extends LightningContainer {
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
 		// indexer = new Indexer();
-		// collector = new Collector();
+		collector = new Collector();
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// climber = new Climber(drivetrain);
@@ -208,7 +208,6 @@ public class RobotContainer extends LightningContainer {
 		// -IndexerConstants.INDEXER_DEFAULT_POWER));
 
 
-
 		/* Other */
 		// new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
@@ -228,8 +227,8 @@ public class RobotContainer extends LightningContainer {
 
 
 		/* copilot */
-		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() -
-		// coPilot.getLeftTriggerAxis()), collector));
+		collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() -
+			coPilot.getLeftTriggerAxis()), collector));
 
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
