@@ -326,24 +326,28 @@ public class Constants {
                 new Translation2d(Units.feetToMeters(54.0), Units.feetToMeters(26.0));
         public static final Translation2d VISION_LIMIT =
                 new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
-        public static final double TIP_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
 
-        public static final double ACCELERATION_DUE_TO_GRAVITY = 9.80665;
-        public static final double COLLISION_ACCELERATION_MAGNITUDE_TOLERANCE_PERCENTAGE = 0.25; //percent of motorAcceleration
-        public static final double DISTANCE_FROM_CENTER_TO_MODULE = Math.hypot(13.5, 13.5);
-        public static final double DISTANCE_FROM_CENTER_TO_PIGEON = 0d;
-        public static final double COLLISION_ACCELERATION_DIRECTION_TOLERANCE = Math.PI/12; // 15 degrees
 
         public class Pipelines { // TODO get real
             public static final int APRIL_TAG_3d = 0;
             public static final int APRIL_TAG_2d = 1;
             public static final int CHASE_PIECE = 2; // FOR the collector
         }
+    }
+    
+    public class CollisionConstants {
+        public static final double TIP_DEADZONE = 2d;
+
+        public static final double ACCELERATION_DUE_TO_GRAVITY = 9.80665;
+        public static final double COLLISION_ACCELERATION_MAGNITUDE_TOLERANCE_PERCENTAGE = 0.25; //percent of motorAcceleration
+        public static final double DISTANCE_FROM_CENTER_TO_MODULE = Math.hypot(13.5, 13.5);
+        public static final double DISTANCE_FROM_CENTER_TO_PIGEON = 0d;
+        public static final double COLLISION_ACCELERATION_DIRECTION_TOLERANCE = Math.PI/12; // 15 degrees
     }
 
     public class MusicConstants {

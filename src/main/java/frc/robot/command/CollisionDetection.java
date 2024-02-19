@@ -7,7 +7,7 @@ package frc.robot.command;
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.TunerConstants;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.CollisionConstants;
 import frc.robot.subsystems.CollisionDetector;
 import frc.robot.subsystems.Swerve;
 
@@ -103,7 +103,7 @@ Pose2d storePoseWhenCollided;
     LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", getTotalPigeonAccelerationMagnitude());
     LightningShuffleboard.setDouble("Collision Detection", "primitive pidgeon acceleration", getPrimitivePigeonAccelerationMagnitude());
     LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", getTotalPigeonAccelerationDirection());
-    LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_MODULE);
+    LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAngularAcceleration() * CollisionConstants.DISTANCE_FROM_CENTER_TO_MODULE);
     LightningShuffleboard.setDouble("Collision Detection", "pigeon angular velocity", Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble()));
     LightningShuffleboard.setDouble("Collision Detection", "yaw", drivetrain.getPigeon2().getYaw().getValueAsDouble());
     LightningShuffleboard.setDouble("Collision Detection", "motor angular velocity", getMotorAngularVelocity());
@@ -118,7 +118,7 @@ Pose2d storePoseWhenCollided;
     LightningShuffleboard.setDouble("Collision Detection", "xy acceleration request", Math.hypot(getRequestXAcceleration(), getRequestYAcceleration()));
     
     if (getIfCollided()){
-      // drivetrain.applyRequest(() -> brake);&& getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) < VisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE
+      // drivetrain.applyRequest(() -> brake);&& getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) < CollisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE
     }
   }
 
@@ -135,9 +135,9 @@ Pose2d storePoseWhenCollided;
     // use pythagrean theorum to find total acceleration
     return drivetrain.getPigeon2().getAccelerationX().getValueAsDouble() 
     - drivetrain.getPigeon2().getGravityVectorX().getValueAsDouble() // subtract gravity from acceleration
-    * VisionConstants.ACCELERATION_DUE_TO_GRAVITY // convert g-force to m/s^2
+    * CollisionConstants.ACCELERATION_DUE_TO_GRAVITY // convert g-force to m/s^2
     - Math.cos(getPidgeonXYAccelerationDirection() + Math.PI/2) * getPigeonAngularAcceleration() // subtract ang vel of pigeon on robot
-     * VisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON;
+     * CollisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON;
   }
 
   /**
@@ -147,9 +147,9 @@ Pose2d storePoseWhenCollided;
     // use pythagrean theorum to find total acceleration
     return (drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() 
     - drivetrain.getPigeon2().getGravityVectorY().getValueAsDouble() // subtract gravity from acceleration
-    * VisionConstants.ACCELERATION_DUE_TO_GRAVITY) // convert g-force to m/s^2
+    * CollisionConstants.ACCELERATION_DUE_TO_GRAVITY) // convert g-force to m/s^2
     - Math.sin(getPidgeonXYAccelerationDirection() + Math.PI/2) 
-    * getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON; // subtract ang vel from of pigeon on robot
+    * getPigeonAngularAcceleration() * CollisionConstants.DISTANCE_FROM_CENTER_TO_PIGEON; // subtract ang vel from of pigeon on robot
   }
 
   /**
@@ -178,7 +178,7 @@ Pose2d storePoseWhenCollided;
    * @return total pigeon acceleration in x direction in m/s^2
    */
   public double getPigeonTotalAccelerationX(){
-    return getPigeonAccelerationX() + getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_MODULE 
+    return getPigeonAccelerationX() + getPigeonAngularAcceleration() * CollisionConstants.DISTANCE_FROM_CENTER_TO_MODULE 
     * Math.cos(Math.tan(getPigeonAccelerationY() / getPigeonAccelerationX()) + Math.PI / 2);
 
   }
@@ -187,7 +187,7 @@ Pose2d storePoseWhenCollided;
    * @return total pigeon acceleration in y direction in m/s^2
    */
   public double getPigeonTotalAccelerationY(){
-    return getPigeonAccelerationY() + getPigeonAngularAcceleration() * VisionConstants.DISTANCE_FROM_CENTER_TO_MODULE 
+    return getPigeonAccelerationY() + getPigeonAngularAcceleration() * CollisionConstants.DISTANCE_FROM_CENTER_TO_MODULE 
     * Math.sin(Math.tan(getPigeonAccelerationY() / getPigeonAccelerationX()) + Math.PI / 2);
   }
 
@@ -268,9 +268,9 @@ public double getTotalPigeonAccelerationDirection() {
    */
   public boolean checkMotorAcceleration(int moduleNumber){
     return Math.abs(getTotalPigeonAccelerationMagnitude() - getMotorAccelerationMagnitude(moduleNumber)) 
-    > getMotorAccelerationMagnitude(moduleNumber) * VisionConstants.COLLISION_ACCELERATION_MAGNITUDE_TOLERANCE_PERCENTAGE
+    > getMotorAccelerationMagnitude(moduleNumber) * CollisionConstants.COLLISION_ACCELERATION_MAGNITUDE_TOLERANCE_PERCENTAGE
     && getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) 
-    < VisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE;
+    < CollisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE;
   }
 
   /**
@@ -304,7 +304,7 @@ public double getTotalPigeonAccelerationDirection() {
     || checkMotorAcceleration(3, magnitudeTolerance, directionTolerance);
   }
 
-// GET CHASSIS SPEEDS FROM MOTOR
+// GET CHASSIS SPEEDS (motor probably)
 
   public double getChassisXAcceleration(){
     return velocityXChassis[1] - velocityXChassis[0] / timeLog[1] - timeLog[0];

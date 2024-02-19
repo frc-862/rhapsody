@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutonomousConstants;
+import frc.robot.Constants.CollisionConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -271,9 +272,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public boolean isTipped() {
         return (Math.abs(
-                getPigeon2().getPitch().getValueAsDouble()) > VisionConstants.TIP_DEADZONE
+                getPigeon2().getPitch().getValueAsDouble()) > CollisionConstants.TIP_DEADZONE
                 || Math.abs(getPigeon2().getRoll()
-                        .getValueAsDouble()) > VisionConstants.TIP_DEADZONE);
+                        .getValueAsDouble()) > CollisionConstants.TIP_DEADZONE);
     }
 
     /**
