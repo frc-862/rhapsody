@@ -82,6 +82,10 @@ public class Pivot extends SubsystemBase {
         angleMotor.getConfig().Slot0.kV = LightningShuffleboard.getDouble("Pivot", "kV", PivotConstants.MOTOR_KV);
         angleMotor.getConfig().Slot0.kA = LightningShuffleboard.getDouble("Pivot", "kA", PivotConstants.MOTOR_KA);
 
+        angleMotor.getConfig().MotionMagic.MotionMagicCruiseVelocity = LightningShuffleboard.getDouble("Pivot", "cruseVelocity", PivotConstants.MAGIC_CRUISE_VEL);
+        angleMotor.getConfig().MotionMagic.MotionMagicAcceleration = LightningShuffleboard.getDouble("Pivot", "acceleration", PivotConstants.MAGIC_ACCEL);
+        angleMotor.getConfig().MotionMagic.MotionMagicJerk = LightningShuffleboard.getDouble("Pivot", "jerk", PivotConstants.MAGIC_JERK);
+
         pivotTuner.update();
     }
 
