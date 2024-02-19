@@ -86,7 +86,6 @@ public class Pivot extends SubsystemBase {
     }
 
     /**
-     * @return Whether or not the pivot is on target, within PivotConstants.ANGLE_TOLERANCE
      * @return The current angle of the cancoder
      */
     public double getCANCoderAngle(){
