@@ -1,11 +1,7 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 
@@ -26,7 +22,7 @@ public class Stow extends Command {
 	@Override
 	public void initialize() {
 		flywheel.coast();
-		pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
+		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 	}
 
 	@Override

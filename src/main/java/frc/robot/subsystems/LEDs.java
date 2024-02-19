@@ -12,19 +12,25 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDsConstants;
 import frc.robot.Constants.RobotMap.PWM;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 
 public class LEDs extends SubsystemBase {
-	AddressableLED leds;
+	AddressableLED leds1;
+	AddressableLED leds2;
 	AddressableLEDBuffer ledBuffer;
 	private LED_STATES state = LED_STATES.OFF;
 	private Map<LED_STATES, Boolean> ledStates;
 
 	public LEDs() {
-		leds = new AddressableLED(PWM.LED_PORT);
+		leds1 = new AddressableLED(PWM.LED_PORT_1);
+		leds2 = new AddressableLED(PWM.LED_PORT_2);
 		ledBuffer = new AddressableLEDBuffer(LEDsConstants.LED_LENGTH);
-		leds.setLength(ledBuffer.getLength());
-		leds.start();
+
+		leds1.setLength(ledBuffer.getLength());
+		leds2.setLength(ledBuffer.getLength());
+		leds1.start();
+		leds2.start();
 
 		ledStates = new HashMap<LEDsConstants.LED_STATES, Boolean>();
 	}
@@ -92,7 +98,10 @@ public class LEDs extends SubsystemBase {
 				break;
 		}
 
-		leds.setData(ledBuffer);
+		leds1.setData(ledBuffer);
+		leds2.setData(ledBuffer);
+
+		LightningShuffleboard.setStringSupplier("LEDs", "State",() -> state.toString());
 	}
 
 	public Command enableState(LED_STATES state) {

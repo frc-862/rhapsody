@@ -6,7 +6,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
@@ -20,21 +20,23 @@ public class Pivot extends SubsystemBase {
     private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
     private double bias = 0;
 
-    private double targetAngle = 0; // TODO: find initial target angle
+    private double targetAngle = 0;
 
     private FalconTuner pivotTuner;
 
-    public Pivot() { 
-        
+    public Pivot() {
         CANcoderConfiguration angleConfig = new CANcoderConfiguration();
         angleConfig.MagnetSensor.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
-                .withMagnetOffset(PivotConstants.ENCODER_OFFSET).withSensorDirection(PivotConstants.ENCODER_DIRECTION);
+                .withMagnetOffset(PivotConstants.ENCODER_OFFSET)
+                .withSensorDirection(PivotConstants.ENCODER_DIRECTION);
 
         angleEncoder = new CANcoder(CAN.PIVOT_ANGLE_CANCODER, CAN.CANBUS_FD);
         angleEncoder.getConfigurator().apply(angleConfig);
 
-        angleMotor = new ThunderBird(CAN.PIVOT_ANGLE_MOTOR, CAN.CANBUS_FD, PivotConstants.PIVOT_MOTOR_INVERT, PivotConstants.PIVOT_MOTOR_STATOR_CURRENT_LIMIT, PivotConstants.PIVOT_MOTOR_BRAKE_MODE);
-        angleMotor.configPIDF(0, PivotConstants.PIVOT_MOTOR_KP, PivotConstants.PIVOT_MOTOR_KI, PivotConstants.PIVOT_MOTOR_KD, PivotConstants.PIVOT_MOTOR_KS, PivotConstants.PIVOT_MOTOR_KV);
+        angleMotor = new ThunderBird(CAN.PIVOT_ANGLE_MOTOR, CAN.CANBUS_FD, PivotConstants.MOTOR_INVERT,
+                        PivotConstants.MOTOR_STATOR_CURRENT_LIMIT, PivotConstants.MOTOR_BRAKE_MODE);
+        angleMotor.configPIDF(0, PivotConstants.MOTOR_KP, PivotConstants.MOTOR_KI,
+                PivotConstants.MOTOR_KD, PivotConstants.MOTOR_KS, PivotConstants.MOTOR_KV);
         TalonFXConfiguration motorConfig = angleMotor.getConfig();
 
         motorConfig.Feedback.FeedbackRemoteSensorID = angleEncoder.getDeviceID();
@@ -45,13 +47,28 @@ public class Pivot extends SubsystemBase {
         angleMotor.applyConfig(motorConfig);
 
         pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, targetAngle);
+
+        
+
+        initLogging();
+    }
+
+    private void initLogging() {
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Current Angle", () -> getAngle());
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Target Angle", () -> targetAngle);
+        
+        LightningShuffleboard.setBoolSupplier("Pivot", "On target", () -> onTarget());
+
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", this::getBias);
+
+        // LightningShuffleboard.setStringSupplier("Pivot", "Forward Limit", () -> angleMotor.getForwardLimit().getValue().toString());
+        // LightningShuffleboard.setStringSupplier("Pivot", "Reverse Limit", () -> angleMotor.getReverseLimit().getValue().toString());
+
     }
 
     @Override
     public void periodic() {
         pivotTuner.update();
-        LightningShuffleboard.setDouble("Pivot", "Angle", getAngle());
-        LightningShuffleboard.setDouble("Pivot", "CANCoder angle", angleEncoder.getPosition().getValueAsDouble());
     }
 
     /**
@@ -60,15 +77,16 @@ public class Pivot extends SubsystemBase {
      * @param angle Angle of the pivot
      */
     public void setTargetAngle(double angle) {
+        MathUtil.clamp(angle + bias, PivotConstants.MIN_ANGLE, PivotConstants.MAX_ANGLE);
         targetAngle = angle;
         angleMotor.setControl(anglePID.withPosition(angle));
     }
 
     /**
-     * @return The current angle of the pivot
+     * @return The current angle of the pivot in degrees
      */
     public double getAngle() {
-        return angleMotor.getPosition().getValue();
+        return angleMotor.getPosition().getValue() * 360;
     }
 
     /**

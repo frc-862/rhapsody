@@ -27,12 +27,12 @@ public class TurnTest extends Command {
 
   @Override
   public void execute() {
-    drivetrain.applyRequestRobot(() -> 0d, () -> 0d, speed, 0d,0d);
+    drivetrain.applyPercentRequestRobot(() -> 0d, () -> 0d, speed);
   }
 
   @Override
   public void end(boolean interrupted) {
-    drivetrain.applyRequestRobot(() -> 0d, () -> 0d, () -> 0d, 0d,0d);
+    drivetrain.brake();
   }
 
   @Override

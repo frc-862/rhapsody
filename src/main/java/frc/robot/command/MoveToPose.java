@@ -4,15 +4,8 @@
 
 package frc.robot.command;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.AutonomousConstants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
@@ -20,7 +13,7 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 public class MoveToPose extends Command {
     private final Pose2d target; 
     private final Swerve drivetrain;
-    private boolean finished;
+    private boolean finished = false;
     private Pose2d current;
     private double dx;
     private double dy;
@@ -42,17 +35,21 @@ public class MoveToPose extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        finished = false;
+        initLogging();
+    }
+
+    private void initLogging() {
+        LightningShuffleboard.setDoubleSupplier("MoveToPose", "dx", () -> dx);
+        LightningShuffleboard.setDoubleSupplier("MoveToPose", "dy", () -> dy);
+        LightningShuffleboard.setDoubleSupplier("MoveToPose", "targetX", () -> target.getX());
+        LightningShuffleboard.setDoubleSupplier("MoveToPose", "targetY", () -> target.getY());
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         
-        LightningShuffleboard.setDouble("MoveToPose", "dx", dx);
-        LightningShuffleboard.setDouble("MoveToPose", "dy", dy);
-        LightningShuffleboard.setDouble("MoveToPose", "targetX", target.getX());
-        LightningShuffleboard.setDouble("MoveToPose", "targetY", target.getY());
+        
 
         current = drivetrain.getPose().get(); 
         dx = target.getTranslation().getX() - current.getTranslation().getX();

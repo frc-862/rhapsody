@@ -3,8 +3,8 @@ package frc.robot.command.shoot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.IndexerConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LEDs;
@@ -53,7 +53,7 @@ public class SmartShoot extends Command {
 	public void end(boolean interrupted) {
 		if (hasShot) {
 			flywheel.coast();
-			pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
+			pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 			indexer.stop();
 			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
 			leds.enableState(LED_STATES.SHOT).withTimeout(2).schedule();
