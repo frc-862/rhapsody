@@ -27,29 +27,31 @@ public class AmpShot extends Command {
 		this.pivot = pivot;
 		this.isAutonomous = isAutonomous;
 
-		addRequirements(pivot, flywheel);
+		addRequirements(pivot
+		// , flywheel
+		);
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
-		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
+		// flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
+		// flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 	}
 
 	@Override
 	public void execute() {
-		if (pivot.onTarget() && flywheel.allMotorsOnTarget()) {
-			shot = true;
-			shotTime = Timer.getFPGATimestamp();
-		}
+		// if (pivot.onTarget() && flywheel.allMotorsOnTarget()) {
+		// 	shot = true;
+		// 	shotTime = Timer.getFPGATimestamp();
+		// }
 	}
 
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		flywheel.coast();
+		// flywheel.coast();
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 		// TODO add LED state
 	}

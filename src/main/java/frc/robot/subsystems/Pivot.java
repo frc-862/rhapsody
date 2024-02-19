@@ -87,6 +87,7 @@ public class Pivot extends SubsystemBase {
         angleMotor.getConfig().MotionMagic.MotionMagicJerk = LightningShuffleboard.getDouble("Pivot", "jerk", PivotConstants.MAGIC_JERK);
 
         pivotTuner.update();
+        
     }
 
     /**

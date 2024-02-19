@@ -462,7 +462,7 @@ public class Constants {
         // Amp
         public static final double AMP_TOP_RPM = 0;
         public static final double AMP_BOTTOM_RPM = 0;
-        public static final double AMP_ANGLE = 0;
+        public static final double AMP_ANGLE = 60;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 0;

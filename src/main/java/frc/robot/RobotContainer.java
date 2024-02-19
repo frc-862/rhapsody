@@ -73,7 +73,7 @@ public class RobotContainer extends LightningContainer {
 	private Swerve drivetrain;
 	private Limelights limelights;
 	private Collector collector;
-	// private Flywheel flywheel;
+	private Flywheel flywheel;
 	private Pivot pivot;
 	// Indexer indexer;
 	// Climber climber;
@@ -102,7 +102,7 @@ public class RobotContainer extends LightningContainer {
 
 		// indexer = new Indexer();
 		collector = new Collector();
-		// flywheel = new Flywheel();
+		flywheel = new Flywheel();
 		pivot = new Pivot();
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
@@ -182,7 +182,7 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		// cand shots for the robot
-		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
+		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
 		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
 
