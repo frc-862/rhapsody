@@ -48,8 +48,6 @@ public class Pivot extends SubsystemBase {
 
         pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, targetAngle);
 
-        
-
         initLogging();
     }
 
@@ -61,7 +59,7 @@ public class Pivot extends SubsystemBase {
 
         LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", this::getBias);
 
-        // LightningShuffleboard.setStringSupplier("Pivot", "Forward Limit", () -> angleMotor.getForwardLimit().getValue().toString());
+        LightningShuffleboard.setStringSupplier("Pivot", "Forward Limit", () -> angleMotor.getForwardLimit().refresh().getValue().toString());
         // LightningShuffleboard.setStringSupplier("Pivot", "Reverse Limit", () -> angleMotor.getReverseLimit().getValue().toString());
 
     }

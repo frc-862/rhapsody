@@ -13,7 +13,8 @@ public class Flywheel extends SubsystemBase {
     private ThunderBird shooterTopMotor; // TODO figure out which is top vs bottom
     private ThunderBird shooterBottomMotor;
 
-    private final VelocityVoltage rpmPID = new VelocityVoltage(0).withSlot(0);
+    // private final VelocityVoltage rpmPID = new VelocityVoltage(0, 0, false, feed, 0, fasle, false, false);
+    private final VelocityVoltage rpmPID = new VelocityVoltage(0d).withSlot(0);
     private double topTargetRPM = 0;
     private double bottomTargetRPM = 0;
     private double bias = 0;
@@ -58,6 +59,13 @@ public class Flywheel extends SubsystemBase {
     public void periodic() {
         topTuner.update();
         bottomTuner.update();
+
+    }
+
+    public void setPower() {
+        shooterBottomMotor.set(.9);
+        shooterTopMotor.set(.9);
+        
     }
 
     /**
@@ -68,8 +76,11 @@ public class Flywheel extends SubsystemBase {
     public void setAllMotorsRPM(double rpm) {
         topTargetRPM = rpm;
         bottomTargetRPM = rpm;
-        shooterTopMotor.setControl(rpmPID.withVelocity(rpm));
-        shooterBottomMotor.setControl(rpmPID.withVelocity(rpm));
+
+        double rps = rpm / 60;
+
+        shooterTopMotor.setControl(rpmPID.withVelocity(rps).withFeedForward(FlywheelConstants.MOTOR_KV * rps));
+        shooterBottomMotor.setControl(rpmPID.withVelocity(rps).withFeedForward(FlywheelConstants.MOTOR_KV * rps));
     }
 
     /**
@@ -79,7 +90,9 @@ public class Flywheel extends SubsystemBase {
      */
     public void setTopMoterRPM(double rpm) {
         topTargetRPM = rpm;
-        shooterTopMotor.setControl(rpmPID.withVelocity(rpm));
+        double rps = rpm / 60;
+
+        shooterTopMotor.setControl(rpmPID.withVelocity(rps));
     }
 
     /**
@@ -89,21 +102,22 @@ public class Flywheel extends SubsystemBase {
      */
     public void setBottomMoterRPM(double rpm) {
         bottomTargetRPM = rpm;
-        shooterBottomMotor.setControl(rpmPID.withVelocity(rpm));
+        double rps = rpm / 60;
+        shooterBottomMotor.setControl(rpmPID.withVelocity(rps));
     }
 
     /**
-     * @return The current RPM of flywheel # 1
+     * @return The current RPM of flywheel top
      */
     public double getTopMotorRPM() {
-        return (shooterTopMotor.getVelocity().getValue());
+        return (shooterTopMotor.getVelocity().getValue() * 60);
     }
 
     /**
      * @return The current RPM of flywheel # 2
      */
     public double getBottomMotorRPM() {
-        return (shooterBottomMotor.getVelocity().getValue());
+        return (shooterBottomMotor.getVelocity().getValue() * 60);
     }
 
     /**

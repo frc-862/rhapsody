@@ -73,12 +73,12 @@ public class RobotContainer extends LightningContainer {
 	private Swerve drivetrain;
 	private Limelights limelights;
 	private Collector collector;
-	// private Flywheel flywheel;
-	private Pivot pivot;
-	// Indexer indexer;
+	private Flywheel flywheel;
+	// private Pivot pivot;
+	Indexer indexer;
 	// Climber climber;
 	LEDs leds;
-	Nervo nervo;
+	// Nervo nervo;
 	Orchestra sing;
 
 	private SendableChooser<Command> autoChooser;
@@ -100,13 +100,13 @@ public class RobotContainer extends LightningContainer {
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
-		// indexer = new Indexer();
+		indexer = new Indexer();
 		collector = new Collector();
-		// flywheel = new Flywheel();
-		pivot = new Pivot();
+		flywheel = new Flywheel();
+		// pivot = new Pivot();
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
-		nervo = new Nervo();
+		// nervo = new Nervo();
 		sing = new Orchestra();
 
 		point = new SwerveRequest.PointWheelsAt();
@@ -175,8 +175,8 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 		
-		new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
-		new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
+		// new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
+		// new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
@@ -184,7 +184,7 @@ public class RobotContainer extends LightningContainer {
 		// cand shots for the robot
 		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
 		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
-		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
+		new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel));
 
 		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,
 		// drivetrain).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
@@ -200,10 +200,10 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(() -> coPilot.getPOV() == 270).onTrue(new InstantCommand(() ->
 		// flywheel.decreaseBias())); // LEFT
 
-		// new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() ->
-		// IndexerConstants.INDEXER_DEFAULT_POWER));
-		// new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() ->
-		// -IndexerConstants.INDEXER_DEFAULT_POWER));
+		new Trigger(coPilot::getRightBumper).whileTrue(new Index(indexer,() ->
+			IndexerConstants.INDEXER_DEFAULT_POWER));
+		new Trigger(coPilot::getLeftBumper).whileTrue(new Index(indexer,() ->
+			-IndexerConstants.INDEXER_DEFAULT_POWER));
 
 
 		/* Other */

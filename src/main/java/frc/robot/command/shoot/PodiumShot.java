@@ -9,31 +9,36 @@ import frc.robot.subsystems.Pivot;
 public class PodiumShot extends Command {
 	
 	private final Flywheel flywheel;
-	private final Pivot pivot;
+	// private final Pivot pivot;
 	
 	/** Creates a new PodiumShot.
 	 * @param flywheel
 	 * @param pivot
 	 */
-	public PodiumShot(Flywheel flywheel, Pivot pivot) {
+	public PodiumShot(Flywheel flywheel) {
 		this.flywheel = flywheel;
-		this.pivot = pivot;
+		// this.pivot = pivot;
 
-		addRequirements(pivot, flywheel);
+		addRequirements(flywheel);
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
 		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
-		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
+		// pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
+	}
+
+	@Override
+	public void execute () {
+		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 	}
 
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		flywheel.coast();
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		// flywheel.coast();
+		// pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 		//TODO add LED state
 	}
 }

@@ -28,8 +28,8 @@ public class Indexer extends SubsystemBase {
     private void initLogging() {
         LightningShuffleboard.setDoubleSupplier("Indexer", "Indexer Power", () -> indexerMotor.get());
 
-        LightningShuffleboard.setBoolSupplier("Indexer", "Entry Beam Break", () -> getEntryBeamBreakState());
-        LightningShuffleboard.setBoolSupplier("Indexer", "Exit Beam Break", () -> getExitBeamBreakState());
+        // LightningShuffleboard.setBoolSupplier("Indexer", "Entry Beam Break", () -> getEntryBeamBreakState());
+        // LightningShuffleboard.setBoolSupplier("Indexer", "Exit Beam Break", () -> getExitBeamBreakState());
         LightningShuffleboard.setStringSupplier("Indexer", "Piece State", () -> getPieceState().toString()); // TODO test 
         LightningShuffleboard.setBoolSupplier("Indexer", "Has shot", () -> hasShot());
     }

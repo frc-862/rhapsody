@@ -118,8 +118,8 @@ public class Constants {
          * You expected a javadoc, but it was me, Dio!
          */
         public class DIO {
-            public static final int COLLECTOR_BEAMBREAK = 1;
-            public static final int INDEXER_ENTER_BEAMBREAK = 0;
+            public static final int COLLECTOR_BEAMBREAK = 2;
+            public static final int INDEXER_ENTER_BEAMBREAK = 1;
             public static final int INDEXER_EXIT_BEAMBREAK = 0;
 
         }
@@ -384,7 +384,7 @@ public class Constants {
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
-        public static final double MOTOR_KV = 0;
+        public static final double MOTOR_KV = 0.1;
 
         public static final double RPM_TOLERANCE = 0;
 
@@ -417,7 +417,7 @@ public class Constants {
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
         public static final double MOTOR_KV = 0;
- 
+
         public static final double ANGLE_TOLERANCE = 0;
 
         public static final double ENCODER_OFFSET = .6165; // In rotations
@@ -426,7 +426,8 @@ public class Constants {
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 300d;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO
+                                                        // get amount to bias by
 
         public static final double STOW_ANGLE = 30d;
 
@@ -464,7 +465,7 @@ public class Constants {
         public static final double POINT_BLANK_ANGLE = 0;
 
         // Podium
-        public static final double PODIUM_RPM = 0;
+        public static final double PODIUM_RPM = 3000;
         public static final double PODIUM_ANGLE = 0;
 
         // C1
