@@ -97,7 +97,7 @@ public class RobotContainer extends LightningContainer {
 
 		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
-		filteredDrive = new XboxControllerFilter(driver, Constants.ControllerConstants.DEADBAND, -1, 1, XboxControllerFilter.filterMode.SQUARED);
+		filteredDrive = new XboxControllerFilter(ControllerConstants.DriverControllerPort, Constants.ControllerConstants.DEADBAND, -1, 1, XboxControllerFilter.filterMode.SQUARED);
 
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
