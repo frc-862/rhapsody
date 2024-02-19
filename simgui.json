@@ -26,6 +26,7 @@
       "/Shuffleboard/SystemTest/Azimuth Test": "Command",
       "/Shuffleboard/SystemTest/Drive Test": "Command",
       "/Shuffleboard/SystemTest/Singing Test": "Command",
+      "/Shuffleboard/SystemTest/Songs List": "String Chooser",
       "/Shuffleboard/sim/pivot": "Mechanism2d",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",
@@ -46,6 +47,12 @@
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
     "transitory": {
       "Shuffleboard": {
         "Flywheel": {

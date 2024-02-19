@@ -6,6 +6,8 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.sim.CANcoderSimState;
+import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -33,8 +35,9 @@ public class Pivot extends SubsystemBase {
 
     private double targetAngle = 0; // TODO: find initial target angle
 
-    private SingleJointedArmSim pivotSim = new SingleJointedArmSim(DCMotor.getFalcon500(1), PivotConstants.ENCODER_TO_MECHANISM_RATIO, 0.00401, 0.568, Math.toRadians(15), Math.toRadians(95), false, Math.toRadians(15)); //TODO: complete adding constants
+    private SingleJointedArmSim pivotSim = new SingleJointedArmSim(DCMotor.getFalcon500(1), PivotConstants.ENCODER_TO_MECHANISM_RATIO, 0.00401, 0.568, Math.toRadians(15), Math.toRadians(95), true, Math.toRadians(15)); //TODO: complete adding constants
     private TalonFXSimState pivotSimState;
+    private CANcoderSimState encoderSimState;
 
     private final Mechanism2d mech2d = new Mechanism2d(90, 90);
     private final MechanismRoot2d root = mech2d.getRoot("Pivot Root", 13, 5);
@@ -65,28 +68,35 @@ public class Pivot extends SubsystemBase {
         motorConfig.Feedback.FeedbackRemoteSensorID = angleEncoder.getDeviceID();
         motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         motorConfig.Feedback.SensorToMechanismRatio = PivotConstants.ENCODER_TO_MECHANISM_RATIO;
-        motorConfig.Feedback.RotorToSensorRatio = 1/PivotConstants.ROTOR_TO_ENCODER_RATIO;
+        motorConfig.Feedback.RotorToSensorRatio = PivotConstants.ROTOR_TO_ENCODER_RATIO;
 
         angleMotor.applyConfig(motorConfig);
         
-        pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, 15d);
+        pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, 0d);
         if(Robot.isSimulation()) {
             pivotSimState = angleMotor.getSimState();
+            encoderSimState = angleEncoder.getSimState();
+
+            encoderSimState.Orientation = ChassisReference.CounterClockwise_Positive;
+
         }
     }
 
     @Override
     public void simulationPeriodic() {
         pivotSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
+        encoderSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
 
         pivotSim.setInputVoltage(pivotSimState.getMotorVoltage());
         pivotSim.update(0.02);
 
-        pivotSimState.setRawRotorPosition(pivotSim.getAngleRads() * (2 * Math.PI));
+        // pivotSimState.setRawRotorPosition((pivotSim.getAngleRads() / (2 * Math.PI)) / PivotConstants.ROTOR_TO_ENCODER_RATIO);
+        encoderSimState.setRawPosition(pivotSim.getAngleRads() / (2 * Math.PI));
 
-        pivotMech.setAngle(getAngle());
+
+        pivotMech.setAngle(Math.toDegrees(pivotSim.getAngleRads()));
         LightningShuffleboard.set("sim", "pivot", mech2d);
-        pivotTuner.update();
+        LightningShuffleboard.setDouble("Pivot", "simmm", Math.toDegrees(pivotSim.getAngleRads()));
 
         LightningShuffleboard.setDouble("Pivot", "voltage", pivotSimState.getMotorVoltage());
     }
@@ -98,24 +108,23 @@ public class Pivot extends SubsystemBase {
         LightningShuffleboard.setDouble("Pivot", "Bias", bias);
         LightningShuffleboard.setBool("Pivot", "On Target", onTarget());
         LightningShuffleboard.setDouble("Pivot", "Angle", getAngle());
-        LightningShuffleboard.setDouble("Pivot", "CANCoder angle", angleEncoder.getPosition().getValueAsDouble());
     }
 
     /**
      * Sets the angle of the pivot
      * 
-     * @param angle Angle of the pivot
+     * @param angle Angle of the pivot in degrees
      */
     public void setTargetAngle(double angle) {
         targetAngle = angle;
-        angleMotor.setControl(anglePID.withPosition(angle));
+        angleMotor.setControl(anglePID.withPosition(angle / 360));
     }
 
     /**
-     * @return The current angle of the pivot
+     * @return The current angle of the pivot in degrees
      */
     public double getAngle() {
-        return angleMotor.getPosition().getValue();
+        return angleMotor.getPosition().getValue() * 360;
     }
 
     /**

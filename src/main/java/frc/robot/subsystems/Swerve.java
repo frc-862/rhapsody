@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.ControllerConstants;
@@ -250,7 +251,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     @Override
     public void periodic() {
         //TODO Remove the unecessary shuffleboard stuff eventually
-        if (!disableVision) {
+        if (!disableVision && Robot.isReal()) {
             var pose = limelightSubsystem.getPoseQueue().poll();
             while (pose != null) {
                 // High confidence => 0.3 
@@ -276,8 +277,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         // TODO Remove the unecessary shuffleboard stuff eventually
         LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
         LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPigeon2().getAngle());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getState().Pose.getX());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getState().Pose.getY());
+
+        if(Robot.isReal()) {
+            LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getState().Pose.getX());
+            LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getState().Pose.getY());
+        }
 
         LightningShuffleboard.setBoolSupplier("Swerve", "Slow mode", () -> slowMode);
         LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
