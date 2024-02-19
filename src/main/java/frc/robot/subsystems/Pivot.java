@@ -65,13 +65,13 @@ public class Pivot extends SubsystemBase {
         motorConfig.Feedback.FeedbackRemoteSensorID = angleEncoder.getDeviceID();
         motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         motorConfig.Feedback.SensorToMechanismRatio = PivotConstants.ENCODER_TO_MECHANISM_RATIO;
-        motorConfig.Feedback.RotorToSensorRatio = 1/PivotConstants.ENCODER_TO_ROTOR_RATIO;
+        motorConfig.Feedback.RotorToSensorRatio = 1/PivotConstants.ROTOR_TO_ENCODER_RATIO;
 
         angleMotor.applyConfig(motorConfig);
-
+        
+        pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, 15d);
         if(Robot.isSimulation()) {
             pivotSimState = angleMotor.getSimState();
-            pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, 15d);
         }
     }
 
@@ -93,10 +93,12 @@ public class Pivot extends SubsystemBase {
 
     @Override
     public void periodic() {
-        LightningShuffleboard.setDouble("Pivot", "Angle", getAngle());
+        pivotTuner.update();
         LightningShuffleboard.setDouble("Pivot", "Target Angle", targetAngle);
         LightningShuffleboard.setDouble("Pivot", "Bias", bias);
         LightningShuffleboard.setBool("Pivot", "On Target", onTarget());
+        LightningShuffleboard.setDouble("Pivot", "Angle", getAngle());
+        LightningShuffleboard.setDouble("Pivot", "CANCoder angle", angleEncoder.getPosition().getValueAsDouble());
     }
 
     /**

@@ -86,7 +86,7 @@ public class LEDs extends SubsystemBase {
 			case OFF:
 				swirl(LEDsConstants.SWRIL_SEGMENT_SIZE);
 				break;
-
+				
 			case DISABLED:
 				setSolidHSV(0, 0, 0);
 				break;
