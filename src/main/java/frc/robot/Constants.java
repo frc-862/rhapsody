@@ -417,19 +417,21 @@ public class Constants {
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
         public static final double MOTOR_KV = 0;
-
+ 
         public static final double ANGLE_TOLERANCE = 0;
 
-        public static final double ENCODER_OFFSET = 0d;
+        public static final double ENCODER_OFFSET = .6165; // In rotations
         public static final SensorDirectionValue ENCODER_DIRECTION =
                 SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
-        public static final double ROTOR_TO_ENCODER_RATIO = 100d;
+        public static final double ROTOR_TO_ENCODER_RATIO = 300d;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO
-                                                        // get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
 
-        public static final double STOW_ANGLE = 0d;
+        public static final double STOW_ANGLE = 30d;
+
+        public static final double MIN_ANGLE = 25d;
+        public static final double MAX_ANGLE = 100d;
     }
 
     public class ShooterConstants {

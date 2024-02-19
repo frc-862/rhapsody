@@ -26,7 +26,7 @@ import frc.robot.Constants.MusicConstants;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
-// import frc.robot.command.ChasePieces;
+import frc.robot.command.ChasePieces;
 import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
 import frc.robot.command.ManualClimb;
@@ -66,15 +66,15 @@ import frc.thunder.testing.SystemTest;
 import frc.thunder.testing.SystemTestCommand;
 
 public class RobotContainer extends LightningContainer {
-	public static XboxController driver;
-	public static XboxController coPilot;
+	public static XboxControllerFilter driver;
+	public static XboxControllerFilter coPilot;
 
 	// Subsystems
 	private Swerve drivetrain;
 	private Limelights limelights;
 	private Collector collector;
 	// private Flywheel flywheel;
-	// Pivot pivot;
+	private Pivot pivot;
 	// Indexer indexer;
 	// Climber climber;
 	LEDs leds;
@@ -95,7 +95,7 @@ public class RobotContainer extends LightningContainer {
 		SignalLogger.enableAutoLogging(true);
 
 		driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort, Constants.ControllerConstants.DEADBAND, -1, 1, XboxControllerFilter.filterMode.SQUARED); // Driver controller
-		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
+		coPilot = new XboxControllerFilter(ControllerConstants.CopilotControllerPort, Constants.ControllerConstants.DEADBAND, -1, 1, XboxControllerFilter.filterMode.SQUARED); // CoPilot controller
 
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
@@ -103,7 +103,7 @@ public class RobotContainer extends LightningContainer {
 		// indexer = new Indexer();
 		collector = new Collector();
 		// flywheel = new Flywheel();
-		// pivot = new Pivot();
+		pivot = new Pivot();
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
 		nervo = new Nervo();
