@@ -118,8 +118,8 @@ public class Constants {
          * You expected a javadoc, but it was me, Dio!
          */
         public class DIO {
-            public static final int COLLECTOR_BEAMBREAK = 1;
-            public static final int INDEXER_ENTER_BEAMBREAK = 0;
+            public static final int COLLECTOR_BEAMBREAK = 2;
+            public static final int INDEXER_ENTER_BEAMBREAK = 1;
             public static final int INDEXER_EXIT_BEAMBREAK = 0;
 
         }
@@ -417,7 +417,12 @@ public class Constants {
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
         public static final double MOTOR_KV = 0;
+        public static final double MOTOR_KA = 0;
  
+        public static final double MAGIC_CRUISE_VEL = 80; //TODO: get real value
+        public static final double MAGIC_ACCEL = 160; //TODO: get real value
+        public static final double MAGIC_JERK = 1600; //TODO: get real value
+
         public static final double ANGLE_TOLERANCE = 0;
 
         public static final double ENCODER_OFFSET = .6165; // In rotations

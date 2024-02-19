@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
@@ -17,7 +19,8 @@ import frc.robot.Constants.PivotConstants;
 public class Pivot extends SubsystemBase {
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
-    private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
+    // private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
+    final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(0);
     private double bias = 0;
 
     private double targetAngle = 0;
@@ -43,12 +46,15 @@ public class Pivot extends SubsystemBase {
         motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         motorConfig.Feedback.SensorToMechanismRatio = PivotConstants.ENCODER_TO_MECHANISM_RATIO;
         motorConfig.Feedback.RotorToSensorRatio = PivotConstants.ROTOR_TO_ENCODER_RATIO;
+        
+        MotionMagicConfigs motionMagicConfigs = motorConfig.MotionMagic;
+        motionMagicConfigs.MotionMagicCruiseVelocity = PivotConstants.MAGIC_CRUISE_VEL;
+        motionMagicConfigs.MotionMagicAcceleration = PivotConstants.MAGIC_ACCEL; 
+        motionMagicConfigs.MotionMagicJerk = PivotConstants.MAGIC_JERK;
 
         angleMotor.applyConfig(motorConfig);
 
         pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, targetAngle);
-
-        
 
         initLogging();
     }
@@ -68,6 +74,14 @@ public class Pivot extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+        angleMotor.getConfig().Slot0.kP = LightningShuffleboard.getDouble("Pivot", "kP", PivotConstants.MOTOR_KP);
+        angleMotor.getConfig().Slot0.kI = LightningShuffleboard.getDouble("Pivot", "kI", PivotConstants.MOTOR_KI);
+        angleMotor.getConfig().Slot0.kD = LightningShuffleboard.getDouble("Pivot", "kD", PivotConstants.MOTOR_KD);
+        angleMotor.getConfig().Slot0.kS = LightningShuffleboard.getDouble("Pivot", "kS", PivotConstants.MOTOR_KS);
+        angleMotor.getConfig().Slot0.kV = LightningShuffleboard.getDouble("Pivot", "kV", PivotConstants.MOTOR_KV);
+        angleMotor.getConfig().Slot0.kA = LightningShuffleboard.getDouble("Pivot", "kA", PivotConstants.MOTOR_KA);
+
         pivotTuner.update();
     }
 
@@ -79,7 +93,7 @@ public class Pivot extends SubsystemBase {
     public void setTargetAngle(double angle) {
         MathUtil.clamp(angle + bias, PivotConstants.MIN_ANGLE, PivotConstants.MAX_ANGLE);
         targetAngle = angle;
-        angleMotor.setControl(anglePID.withPosition(angle));
+        angleMotor.setControl(motionMagicPID.withPosition(angle));
     }
 
     /**

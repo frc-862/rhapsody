@@ -106,7 +106,7 @@ public class RobotContainer extends LightningContainer {
 		pivot = new Pivot();
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
-		nervo = new Nervo();
+		// nervo = new Nervo();
 		sing = new Orchestra();
 
 		point = new SwerveRequest.PointWheelsAt();
