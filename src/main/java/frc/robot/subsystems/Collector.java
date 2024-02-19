@@ -1,13 +1,15 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.CollectorConstants;
+import frc.robot.Constants.FlywheelConstants;
+import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.thunder.hardware.ThunderBird;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Collector extends SubsystemBase {
 
@@ -18,15 +20,26 @@ public class Collector extends SubsystemBase {
 	private boolean hasPiece;
 
 	public Collector() {
-		motor = new ThunderBird(CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
-				CollectorConstants.COLLECTOR_MOTOR_INVERTED, CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT, 
+		motor = new ThunderBird(
+				CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
+				CollectorConstants.COLLECTOR_MOTOR_INVERTED,
+				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT,
 				CollectorConstants.COLLECTOR_MOTOR_BRAKE_MODE);
 
 		beamBreak = new DigitalInput(DIO.COLLECTOR_BEAMBREAK);
+
+		initLogging();
+	}
+
+	private void initLogging() {
+		LightningShuffleboard.setDoubleSupplier("Collector", "Collector Power", () -> motor.get());
+		LightningShuffleboard.setBoolSupplier("Collector", "Beam Break", () -> getEntryBeamBreakState());
+		LightningShuffleboard.setBoolSupplier("Collector", "Has Piece", () -> hasPiece());
 	}
 
 	/**
 	 * Entrance of Collector Beam Break
+	 * 
 	 * @return When an object is present, returns true, otherwise returns false
 	 */
 	public boolean getEntryBeamBreakState() {
@@ -35,6 +48,7 @@ public class Collector extends SubsystemBase {
 
 	/**
 	 * Sets the power of both collector motors
+	 * 
 	 * @param power Double value from -1.0 to 1.0 (positive collects inwards)
 	 */
 	public void setPower(double power) {
@@ -49,10 +63,10 @@ public class Collector extends SubsystemBase {
 
 	/**
 	 * Has piece
+	 * 
 	 * @return boolean, true if collector has piece
 	 */
 	public boolean hasPiece() {
-		// TODO: Could use beam breaks and store when a piece enters until it leaves
 		return hasPiece;
 	}
 

@@ -26,7 +26,7 @@ import frc.robot.Constants.MusicConstants;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
-// import frc.robot.command.ChasePieces;
+import frc.robot.command.ChasePieces;
 import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
 import frc.robot.command.ManualClimb;
@@ -68,16 +68,15 @@ import frc.thunder.testing.SystemTest;
 import frc.thunder.testing.SystemTestCommand;
 
 public class RobotContainer extends LightningContainer {
-	public static XboxController driver;
-	public static XboxController coPilot;
-	public static XboxControllerFilter filteredDrive;
+	public static XboxControllerFilter driver;
+	public static XboxControllerFilter coPilot;
 
 	// Subsystems
 	private Swerve drivetrain;
 	private Limelights limelights;
-	Collector collector;
-	// Flywheel flywheel;
-	// Pivot pivot;
+	private Collector collector;
+	// private Flywheel flywheel;
+	private Pivot pivot;
 	// Indexer indexer;
 	// Climber climber;
 	CollisionDetector collisionDetector;
@@ -98,17 +97,16 @@ public class RobotContainer extends LightningContainer {
 		SignalLogger.setPath(Constants.HOOT_PATH);
 		SignalLogger.enableAutoLogging(true);
 
-		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
-		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
-		filteredDrive = new XboxControllerFilter(driver, Constants.ControllerConstants.DEADBAND, -1, 1, XboxControllerFilter.filterMode.SQUARED);
+		driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort, Constants.ControllerConstants.DEADBAND, -1, 1, XboxControllerFilter.filterMode.SQUARED); // Driver controller
+		coPilot = new XboxControllerFilter(ControllerConstants.CopilotControllerPort, Constants.ControllerConstants.DEADBAND, -1, 1, XboxControllerFilter.filterMode.SQUARED); // CoPilot controller
 
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
 		// indexer = new Indexer();
-		// collector = new Collector();
+		collector = new Collector();
 		// flywheel = new Flywheel();
-		// pivot = new Pivot();
+		pivot = new Pivot();
 		// climber = new Climber(drivetrain);
 		collisionDetector = new CollisionDetector();
 		leds = new LEDs();
@@ -155,7 +153,7 @@ public class RobotContainer extends LightningContainer {
 		// field centric for the robot
 		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
 			.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
-			.whileTrue(drivetrain.applyRequestRobot(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()))
+			.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()))
 			.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
 		// enables slow mode for driving
@@ -212,7 +210,6 @@ public class RobotContainer extends LightningContainer {
 		// -IndexerConstants.INDEXER_DEFAULT_POWER));
 
 
-
 		/* Other */
 		// new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
@@ -228,14 +225,14 @@ public class RobotContainer extends LightningContainer {
 		/* driver */
 		drivetrain.registerTelemetry(logger::telemeterize);
 
-		drivetrain.setDefaultCommand(drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
+		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
 
 
 		collisionDetector.setDefaultCommand(new CollisionDetection(drivetrain, collisionDetector));
 			
 		/* copilot */
-		// collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() -
-		// coPilot.getLeftTriggerAxis()), collector));
+		collector.setDefaultCommand(new Collect(() -> (coPilot.getRightTriggerAxis() -
+			coPilot.getLeftTriggerAxis()), collector));
 
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));

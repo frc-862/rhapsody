@@ -7,6 +7,7 @@ import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.thunder.hardware.ThunderBird;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Indexer extends SubsystemBase {
 
@@ -16,19 +17,31 @@ public class Indexer extends SubsystemBase {
 
     private PieceState currentState = PieceState.NONE;
 
-    public Indexer() {   
-        indexerMotor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD, IndexerConstants.INDEXER_MOTOR_INVERTED,
-            IndexerConstants.INDEXER_MOTOR_STATOR_CURRENT_LIMIT, IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
+    public Indexer() {
+        indexerMotor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
+                IndexerConstants.MOTOR_INVERT, IndexerConstants.MOTOR_STATOR_CURRENT_LIMIT,
+                IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
+
+        initLogging();
+    }
+
+    private void initLogging() {
+        LightningShuffleboard.setDoubleSupplier("Indexer", "Indexer Power", () -> indexerMotor.get());
+
+        LightningShuffleboard.setBoolSupplier("Indexer", "Entry Beam Break", () -> getEntryBeamBreakState());
+        LightningShuffleboard.setBoolSupplier("Indexer", "Exit Beam Break", () -> getExitBeamBreakState());
+        LightningShuffleboard.setStringSupplier("Indexer", "Piece State", () -> getPieceState().toString()); // TODO test 
+        LightningShuffleboard.setBoolSupplier("Indexer", "Has shot", () -> hasShot());
     }
 
     public PieceState getPieceState() {
         return currentState;
     }
-    
+
     public void setPieceState(PieceState state) {
         currentState = state;
     }
-        
+
     public void setPower(double power) {
         indexerMotor.set(power);
     }
@@ -47,6 +60,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Gets the current beam brake state
+     * 
      * @return entry beambreak state
      */
     public boolean getEntryBeamBreakState() {
@@ -55,12 +69,13 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Gets the current beam brake state
+     * 
      * @return exit beambreak state
      */
     public boolean getExitBeamBreakState() {
         return !indexerSensorExit.get();
     }
-    
+
     public boolean hasShot() {
         return false; // TODO add actual logic
     }
