@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.RobotMap.CAN;
@@ -11,6 +9,7 @@ import frc.robot.Constants.FlywheelConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PivotConstants;
 import frc.thunder.hardware.ThunderBird;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Collector extends SubsystemBase {
 
@@ -28,6 +27,14 @@ public class Collector extends SubsystemBase {
 				CollectorConstants.COLLECTOR_MOTOR_BRAKE_MODE);
 
 		beamBreak = new DigitalInput(DIO.COLLECTOR_BEAMBREAK);
+
+		initLogging();
+	}
+
+	private void initLogging() {
+		LightningShuffleboard.setDoubleSupplier("Collector", "Collector Power", () -> motor.get());
+		LightningShuffleboard.setBoolSupplier("Collector", "Beam Break", () -> getEntryBeamBreakState());
+		LightningShuffleboard.setBoolSupplier("Collector", "Has Piece", () -> hasPiece());
 	}
 
 	/**
@@ -60,7 +67,6 @@ public class Collector extends SubsystemBase {
 	 * @return boolean, true if collector has piece
 	 */
 	public boolean hasPiece() {
-		// TODO: Could use beam breaks and store when a piece enters until it leaves
 		return hasPiece;
 	}
 

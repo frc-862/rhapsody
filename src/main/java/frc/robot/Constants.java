@@ -43,7 +43,12 @@ public class Constants {
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x
+                                                                                         // distance
+                                                                                         // from
+                                                                                         // center
+                                                                                         // of robot
+                                                                                         // to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
         TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
 
@@ -412,11 +417,11 @@ public class Constants {
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 100d;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO
+                                                        // get amount to bias by
     }
 
     public class ShooterConstants {
-        public static final double STOW_ANGLE = 0;
 
         public static final double FAR_WING_X = 3.3;
 

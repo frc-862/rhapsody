@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.IndexerConstants;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
@@ -50,7 +50,7 @@ public class CandC2 extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast();
-		pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
+		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 		indexer.stop();
 	}
 

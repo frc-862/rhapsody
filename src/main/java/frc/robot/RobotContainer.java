@@ -68,7 +68,6 @@ import frc.thunder.testing.SystemTestCommand;
 public class RobotContainer extends LightningContainer {
 	public static XboxController driver;
 	public static XboxController coPilot;
-	public static XboxControllerFilter filteredDrive;
 
 	// Subsystems
 	private Swerve drivetrain;
@@ -95,9 +94,8 @@ public class RobotContainer extends LightningContainer {
 		SignalLogger.setPath(Constants.HOOT_PATH);
 		SignalLogger.enableAutoLogging(true);
 
-		driver = new XboxController(ControllerConstants.DriverControllerPort); // Driver controller
+		driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort, Constants.ControllerConstants.DEADBAND, -1, 1, XboxControllerFilter.filterMode.SQUARED); // Driver controller
 		coPilot = new XboxController(ControllerConstants.CopilotControllerPort); // CoPilot controller
-		filteredDrive = new XboxControllerFilter(driver, Constants.ControllerConstants.DEADBAND, -1, 1, XboxControllerFilter.filterMode.SQUARED);
 
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
@@ -151,7 +149,7 @@ public class RobotContainer extends LightningContainer {
 		// field centric for the robot
 		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
 			.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
-			.whileTrue(drivetrain.applyRequestRobot(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()))
+			.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()))
 			.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
 		// enables slow mode for driving
@@ -223,7 +221,7 @@ public class RobotContainer extends LightningContainer {
 		/* driver */
 		drivetrain.registerTelemetry(logger::telemeterize);
 
-		drivetrain.setDefaultCommand(drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
+		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
 
 
 		/* copilot */
