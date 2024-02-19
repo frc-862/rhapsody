@@ -8,8 +8,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
@@ -26,6 +24,8 @@ public class PointAtTag extends Command {
 	private double pidOutput;
 	private double targetHeading;
 	private Translation2d targetPose;
+	private double deltaX;
+	private double deltaY;
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
@@ -49,28 +49,40 @@ public class PointAtTag extends Command {
 		limelight.setPipeline(VisionConstants.TAG_PIPELINE);
 
 		targetPose = new Translation2d(targetX, targetY);
+
 	}
 	
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-
-		// targetPose = limelight.getCamPoseTargetSpace().getTranslation().toTranslation2d();
 		headingController.enableContinuousInput(-180, 180);
+		// targetPose = limelight.getCamPoseTargetSpace().getTranslation().toTranslation2d();
+		
+		initLogging();
+	}
+
+	private void initLogging() {
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Delta Y", () -> deltaY);
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Delta X", () -> deltaX);
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Heading", () -> targetHeading);
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose Y", () -> targetPose.getY());
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose X", () -> targetPose.getX());
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Pid Output", () -> pidOutput);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		headingController.setTolerance(LightningShuffleboard.getDouble("PointAtTag", "Tolarance", 4));
-		headingController.setP(LightningShuffleboard.getDouble("PointAtTag", "P", 0.1));
-		headingController.setI(LightningShuffleboard.getDouble("PointAtTag", "I", 0));
-		headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 1));
+		// TODO remove once Tuned
+		// headingController.setTolerance(LightningShuffleboard.getDouble("PointAtTag", "Tolarance", 4));
+		// headingController.setP(LightningShuffleboard.getDouble("PointAtTag", "P", 0.1));
+		// headingController.setI(LightningShuffleboard.getDouble("PointAtTag", "I", 0));
+		// headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 1));
 
 
 		Pose2d pose = drivetrain.getPose().get();
-		var deltaX = targetPose.getX() - pose.getX();
-		var deltaY = targetPose.getY() - pose.getY();
+		deltaX = targetPose.getX() - pose.getX();
+		deltaY = targetPose.getY() - pose.getY();
 
 		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
 		// targetHeading = Math.toDegrees(targetPose.getRotation().getAngle());
@@ -78,19 +90,12 @@ public class PointAtTag extends Command {
 
 		// targetHeading = limelight.getTargetX();
 		// pidOutput = headingController.calculate(targetHeading, 0);
-		LightningShuffleboard.setDouble("PointAtTag", "Delta Y", deltaY);
-		LightningShuffleboard.setDouble("PointAtTag", "Delta X", deltaX);
-		LightningShuffleboard.setDouble("PointAtTag", "Target Heading2", targetHeading);
-		LightningShuffleboard.setDouble("PointAtTag", "Target Pose Y", targetPose.getY());
-		LightningShuffleboard.setDouble("PointAtTag", "Target Pose X", targetPose.getX());
-		LightningShuffleboard.setDouble("PointAtTag", "Current Pose Y", pose.getY());
-		LightningShuffleboard.setDouble("PointAtTag", "Current PoseX", pose.getX());
-		LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", pose.getRotation().getDegrees());
-		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
+		
 
 		// TODO test drives and test the deadbands
 		drivetrain.setFieldDriver(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
+
 
 	// Called once the command ends or is interrupted.
 	@Override

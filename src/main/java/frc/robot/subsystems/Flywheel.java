@@ -14,7 +14,8 @@ public class Flywheel extends SubsystemBase {
     private ThunderBird shooterBottomMotor;
 
     private final VelocityVoltage rpmPID = new VelocityVoltage(0).withSlot(0);
-    private double targetRPM = 0;
+    private double topTargetRPM = 0;
+    private double bottomTargetRPM = 0;
     private double bias = 0;
 
     private FalconTuner topTuner;
@@ -35,14 +36,26 @@ public class Flywheel extends SubsystemBase {
                 FlywheelConstants.FLYWHEEL_MOTOR_KS, FlywheelConstants.FLYWHEEL_MOTOR_KV);
 
         // note - if you wanna tune these together, you should be able to set the tab to the same name and it'll read the same values for both instances
-        topTuner = new FalconTuner(shooterTopMotor, "Flywheel Top", this::setTopMoterRPM, targetRPM);
-        bottomTuner = new FalconTuner(shooterBottomMotor, "Flywheel Bottom", this::setBottomMoterRPM, targetRPM);
+        topTuner = new FalconTuner(shooterTopMotor, "Flywheel Top", this::setTopMoterRPM, topTargetRPM);
+        bottomTuner = new FalconTuner(shooterBottomMotor, "Flywheel Bottom", this::setBottomMoterRPM, bottomTargetRPM);
+
+        initLogging();
+    }
+
+    private void initLogging() {
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Top RPM", this::getTopMotorRPM);
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom RPM", this::getBottomMotorRPM);
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Target Top RPM", () -> topTargetRPM);
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Target Bottom RPM", () -> bottomTargetRPM);
+
+        LightningShuffleboard.setBoolSupplier("Flywheel", "Top on Target", () -> topMotorRPMOnTarget());
+        LightningShuffleboard.setBoolSupplier("Flywheel", "Bottom on Target", () -> bottomMotorRPMOnTarget());
+
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", this::getBias);
     }
 
     @Override
     public void periodic() {
-        LightningShuffleboard.setDouble("Flywheel Top", "RPM", getTopMotorRPM());
-        LightningShuffleboard.setDouble("Flywheel Bottom", "RPM", getBottomMotorRPM());
         topTuner.update();
         bottomTuner.update();
     }
@@ -53,7 +66,8 @@ public class Flywheel extends SubsystemBase {
      * @param rpm RPM of the flywheel
      */
     public void setAllMotorsRPM(double rpm) {
-        targetRPM = rpm;
+        topTargetRPM = rpm;
+        bottomTargetRPM = rpm;
         shooterTopMotor.setControl(rpmPID.withVelocity(rpm));
         shooterBottomMotor.setControl(rpmPID.withVelocity(rpm));
     }
@@ -64,7 +78,7 @@ public class Flywheel extends SubsystemBase {
      * @param rpm RPM of the flywheel
      */
     public void setTopMoterRPM(double rpm) {
-        targetRPM = rpm;
+        topTargetRPM = rpm;
         shooterTopMotor.setControl(rpmPID.withVelocity(rpm));
     }
 
@@ -74,7 +88,7 @@ public class Flywheel extends SubsystemBase {
      * @param rpm RPM of the flywheel
      */
     public void setBottomMoterRPM(double rpm) {
-        targetRPM = rpm;
+        bottomTargetRPM = rpm;
         shooterBottomMotor.setControl(rpmPID.withVelocity(rpm));
     }
 
@@ -97,7 +111,7 @@ public class Flywheel extends SubsystemBase {
      *         FlywheelConstants.RPM_TOLERANCE
      */
     public boolean topMotorRPMOnTarget() {
-        return Math.abs(getTopMotorRPM() - targetRPM) < FlywheelConstants.RPM_TOLERANCE;
+        return Math.abs(getTopMotorRPM() - topTargetRPM) < FlywheelConstants.RPM_TOLERANCE;
     }
 
     /**
@@ -105,7 +119,7 @@ public class Flywheel extends SubsystemBase {
      *         FlywheelConstants.RPM_TOLERANCE
      */
     public boolean bottomMotorRPMOnTarget() {
-        return Math.abs(getBottomMotorRPM() - targetRPM) < FlywheelConstants.RPM_TOLERANCE;
+        return Math.abs(getBottomMotorRPM() - bottomTargetRPM) < FlywheelConstants.RPM_TOLERANCE;
     }
 
     /**

@@ -3,7 +3,7 @@ package frc.robot.command.shoot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 
@@ -50,7 +50,7 @@ public class AmpShot extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast();
-		pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
+		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 		// TODO add LED state
 	}
 

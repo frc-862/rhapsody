@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Indexer;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class SmartCollect extends Command {
 

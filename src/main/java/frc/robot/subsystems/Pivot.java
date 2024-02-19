@@ -20,7 +20,7 @@ public class Pivot extends SubsystemBase {
     private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
     private double bias = 0;
 
-    private double targetAngle = 0; // TODO: find initial target angle
+    private double targetAngle = 0;
 
     private FalconTuner pivotTuner;
 
@@ -45,13 +45,23 @@ public class Pivot extends SubsystemBase {
         angleMotor.applyConfig(motorConfig);
 
         pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, targetAngle);
+
+        initLogging();
+    }
+
+    private void initLogging() {
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Overall Angle", () -> getAngle());
+        LightningShuffleboard.setDoubleSupplier("Pivot", "CANCoder angle", () -> getCANCoderAngle());
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Target Angle", () -> targetAngle);
+        
+        LightningShuffleboard.setBoolSupplier("Pivot", "On target", () -> onTarget());
+
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", this::getBias);
     }
 
     @Override
     public void periodic() {
         pivotTuner.update();
-        LightningShuffleboard.setDouble("Pivot", "Angle", getAngle());
-        LightningShuffleboard.setDouble("Pivot", "CANCoder angle", angleEncoder.getPosition().getValueAsDouble());
     }
 
     /**
@@ -69,6 +79,13 @@ public class Pivot extends SubsystemBase {
      */
     public double getAngle() {
         return angleMotor.getPosition().getValue();
+    }
+
+    /**
+     * @return The current angle of the cancoder
+     */
+    public double getCANCoderAngle(){
+        return angleEncoder.getPosition().getValueAsDouble();
     }
 
     /**

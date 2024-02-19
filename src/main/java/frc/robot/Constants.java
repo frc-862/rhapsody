@@ -43,9 +43,23 @@ public class Constants {
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x
+                                                                                         // distance
+                                                                                         // from
+                                                                                         // center
+                                                                                         // of robot
+                                                                                         // to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); //free speed / circumference of circle with radius of wheelbase
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free
+                                                                                              // speed
+                                                                                              // /
+                                                                                              // circumference
+                                                                                              // of
+                                                                                              // circle
+                                                                                              // with
+                                                                                              // radius
+                                                                                              // of
+                                                                                              // wheelbase
 
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
@@ -125,20 +139,23 @@ public class Constants {
     }
 
     public static class AutonomousConstants {
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(2.0, 0, 0); // TODO: Tune
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(2.0, 0, 0); // TODO:
+                                                                                        // Tune
         public static final PIDConstants ROTATION_PID = new PIDConstants(4, 0, 0); // TODO: Tune
 
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(17.3); // f/s to m/s
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(19.09); // TODO check
 
         public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
-        
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); //TODO get constants
-        
-        //For Pathfinding
+
+        public static final PathConstraints PATH_CONSTRAINTS =
+                new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
+
+        // For Pathfinding
         // TODO get real poses to pathfind to
-        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(0, 0), new Rotation2d(0d));
-        
+        public static final Pose2d TARGET_POSE =
+                new Pose2d(new Translation2d(0, 0), new Rotation2d(0d));
+
     }
 
     public static class TunerConstants {
@@ -293,12 +310,12 @@ public class Constants {
         public static final Swerve getDrivetrain(Limelights limelights) {
             if (Constants.isMercury()) {
                 System.out.println("IS MERCURY");
-                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeft, FrontRight, BackLeft,
-                        BackRight);
+                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeft, FrontRight,
+                        BackLeft, BackRight);
             } else {
                 System.out.println("IS RHAPSODY");
-                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeftRh, FrontRightRh, BackLeftRh,
-                        BackRightRh);
+                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeftRh, FrontRightRh,
+                        BackLeftRh, BackRightRh);
             }
         }
     }
@@ -320,33 +337,40 @@ public class Constants {
         public class Pipelines { // TODO get real
             public static final int APRIL_TAG_3d = 0;
             public static final int APRIL_TAG_2d = 1;
-            public static final int CHASE_PIECE = 2; // FOR the collector 
+            public static final int CHASE_PIECE = 2; // FOR the collector
         }
     }
 
     public class MusicConstants {
         public static final String BOH_RHAP_FILEPATH = "bohemianrhapsody.chrp";
         public static final String JEOPARDY_FILEPATH = "jeopardy.chrp";
-        public static final String BEWARE_THE_FOREST_MUSHROOMS_FILEPATH = "bewaretheforestmushrooms.chrp";
+        public static final String BEWARE_THE_FOREST_MUSHROOMS_FILEPATH =
+                "bewaretheforestmushrooms.chrp";
         public static final String UNDER_PRESSURE_FILEPATH = "underpressure.chrp";
         public static final String NATIONAL_PARK_FILEPATH = "nationalpark.chrp";
         public static final String ENCOUNTER_FILEPATH = "encounter.chrp";
         public static final String PIRATES_OF_THE_CARIBBEAN_FILEPATH = "piratesofthecaribbean.chrp";
-        public static final String CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH = "crazylittlethingcalledlove.chrp";
-        public static final String ANOTHER_ONE_BITES_THE_DUST_FILEPATH = "anotheronebitesthedust.chrp";
+        public static final String CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH =
+                "crazylittlethingcalledlove.chrp";
+        public static final String ANOTHER_ONE_BITES_THE_DUST_FILEPATH =
+                "anotheronebitesthedust.chrp";
         public static final String SWEET_CAROLINE_FILEPATH = "sweetcaroline.chrp";
         public static final String WE_ARE_THE_CHAMPIONS_FILEPATH = "wearethechampions.chrp";
-        public static final String[] SONG_NAMES = {
-            BOH_RHAP_FILEPATH, JEOPARDY_FILEPATH, BEWARE_THE_FOREST_MUSHROOMS_FILEPATH, 
-                UNDER_PRESSURE_FILEPATH, NATIONAL_PARK_FILEPATH, ENCOUNTER_FILEPATH, PIRATES_OF_THE_CARIBBEAN_FILEPATH, 
-                CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH, ANOTHER_ONE_BITES_THE_DUST_FILEPATH, SWEET_CAROLINE_FILEPATH, WE_ARE_THE_CHAMPIONS_FILEPATH};
+        public static final String[] SONG_NAMES = {BOH_RHAP_FILEPATH, JEOPARDY_FILEPATH,
+                BEWARE_THE_FOREST_MUSHROOMS_FILEPATH, UNDER_PRESSURE_FILEPATH,
+                NATIONAL_PARK_FILEPATH, ENCOUNTER_FILEPATH, PIRATES_OF_THE_CARIBBEAN_FILEPATH,
+                CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH, ANOTHER_ONE_BITES_THE_DUST_FILEPATH,
+                SWEET_CAROLINE_FILEPATH, WE_ARE_THE_CHAMPIONS_FILEPATH};
         public static final List<String> SET_LIST = Arrays.asList(SONG_NAMES);
     }
 
     public class CollectorConstants { // TODO: get real
-        public static final boolean COLLECTOR_MOTOR_INVERTED = false; // TODO check once collector installed
-        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
+        public static final boolean COLLECTOR_MOTOR_INVERTED = false; // TODO check once collector
+                                                                      // installed
+        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they
+                                                                          // are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they
+                                                                          // are not set to 0
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
@@ -366,7 +390,8 @@ public class Constants {
 
         public static final double RPM_TOLERANCE = 0;
 
-        public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get
+                                                       // amount to bias by
         public static final double COAST_VOLTAGE = 0.1;
 
         public static final double FLYWHEEL_SYSTEST_POWER = 0.5;
@@ -389,6 +414,9 @@ public class Constants {
         public static final boolean PIVOT_MOTOR_INVERT = false;
         public static final int PIVOT_MOTOR_STATOR_CURRENT_LIMIT = 0;
         public static final boolean PIVOT_MOTOR_BRAKE_MODE = true;
+
+        public static final double STOW_ANGLE = 0; // TODO get real
+
         public static final double PIVOT_MOTOR_KP = 0;
         public static final double PIVOT_MOTOR_KI = 0;
         public static final double PIVOT_MOTOR_KD = 0;
@@ -398,15 +426,16 @@ public class Constants {
         public static final double ANGLE_TOLERANCE = 0;
 
         public static final double ENCODER_OFFSET = 0d;
-        public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
+        public static final SensorDirectionValue ENCODER_DIRECTION =
+                SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 100d;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO
+                                                        // get amount to bias by
     }
 
     public class ShooterConstants {
-        public static final double STOW_ANGLE = 0;
 
         public static final double FAR_WING_X = 3.3;
 
@@ -426,40 +455,41 @@ public class Constants {
     }
 
     public class CandConstants { // TODO get real
-        //Amp
+        // Amp
         public static final double AMP_TOP_RPM = 0;
         public static final double AMP_BOTTOM_RPM = 0;
         public static final double AMP_ANGLE = 0;
 
-        //PointBlank
+        // PointBlank
         public static final double POINT_BLANK_RPM = 0;
         public static final double POINT_BLANK_ANGLE = 0;
 
-        //Podium
+        // Podium
         public static final double PODIUM_RPM = 0;
         public static final double PODIUM_ANGLE = 0;
 
-        //C1
+        // C1
         public static final double C1_RPM = 0;
         public static final double C1_ANGLE = 0;
 
-        //C2
+        // C2
         public static final double C2_RPM = 0;
         public static final double C2_ANGLE = 0;
 
-        //C3
+        // C3
         public static final double C3_RPM = 0;
         public static final double C3_ANGLE = 0;
 
-        //Line 
+        // Line
         public static final double LINE_RPM = 0;
         public static final double LINE_ANGLE = 0;
 
         // TODO find time to shoot
-        public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer start to flywheel exit 
+        public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer
+                                                       // start to flywheel exit
     }
 
-    public class ClimbConstants { //TODO: find real values
+    public class ClimbConstants { // TODO: find real values
         public static final boolean CLIMB_RIGHT_MOTOR_INVERT = false;
         public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
         public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
@@ -476,14 +506,26 @@ public class Constants {
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
         public static final double MAX_HEIGHT = 999d;
-        public static final double LOWER_LENGTH = 22d; //center of pivot-center of pivot length of lower arm in inches
-        public static final double UPPER_LENGTH = 25d; //center of pivot-center of pivot length of upper arm in inches
+        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of
+                                                       // lower arm in inches
+        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of
+                                                       // upper arm in inches
 
-        public static final Pose3d LOWER_OFFSET = new Pose3d(); //NOTE: Poses are in meters despite george washington's best efforts
-        public static final Pose3d UPPER_OFFSET = new Pose3d(); //NOTE 2: these poses should exclude side to side offset, since it gets set below
+        public static final Pose3d LOWER_OFFSET = new Pose3d(); // NOTE: Poses are in meters despite
+                                                                // george washington's best efforts
+        public static final Pose3d UPPER_OFFSET = new Pose3d(); // NOTE 2: these poses should
+                                                                // exclude side to side offset,
+                                                                // since it gets set below
 
-        public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); //NOTE 3: this is the side to side offset of the pivot point of the arms, should exclude anything but side to side values
-        public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; //TODO: find real values
+        public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); // NOTE 3: this is
+                                                                               // the side to side
+                                                                               // offset of the
+                                                                               // pivot point of the
+                                                                               // arms, should
+                                                                               // exclude anything
+                                                                               // but side to side
+                                                                               // values
+        public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; // TODO: find real values
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
         public static final double CLIMB_RETRACTION_TOLERANCE = 0;
@@ -491,7 +533,7 @@ public class Constants {
 
         public static final double CLIMB_SYSTEST_POWER = 0.1;
 
-        public enum CLIMBER_STATES{
+        public enum CLIMBER_STATES {
             CLIMBED, GROUNDED, STOW
         }
 
@@ -501,7 +543,7 @@ public class Constants {
         public static final int LED_LENGTH = 14;
 
         public static final int SWRIL_SEGMENT_SIZE = 5;
-        
+
         public static final int RED_HUE = 0;
         public static final int ORANGE_HUE = 5;
         public static final int YELLOW_HUE = 15;
@@ -510,21 +552,13 @@ public class Constants {
         public static final int PURPLE_HUE = 315;
         public static final int PINK_HUE = 355;
 
-        public enum LED_STATES{
-            DISABLED(0),
-            MIXER(1),
-            COLLECTED(2), 
-            SHOT(3), 
-            FINISHED_CLIMB(4), 
-            SHOOTING(5), 
-            COLLECTING(6),
-            CHASING(7), 
-            CLIMBING(8),
-            HAS_PIECE(9), 
-            HAS_VISION(10),
-            OFF(11);
+        public enum LED_STATES {
+            DISABLED(0), MIXER(1), COLLECTED(2), SHOT(3), FINISHED_CLIMB(4), SHOOTING(
+                    5), COLLECTING(
+                            6), CHASING(7), CLIMBING(8), HAS_PIECE(9), HAS_VISION(10), OFF(11);
 
             private final int priority;
+
             LED_STATES(int priority) {
                 this.priority = priority;
             }
@@ -534,5 +568,5 @@ public class Constants {
             }
         }
     }
-    
+
 }

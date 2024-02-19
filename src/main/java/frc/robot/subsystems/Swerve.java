@@ -35,7 +35,6 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
-import frc.thunder.vision.Limelight;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
@@ -185,11 +184,19 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
                 pose = limelightSubsystem.getPoseQueue().poll();
+
+                //TODO remove once test new vision checks on Monday
+                LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
+                LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
+                LightningShuffleboard.setDouble("Swerve", "PoseTime",  pose.getFPGATimestamp()); 
+                LightningShuffleboard.setDouble("Swerve", "distance",  pose.getDistance());
+                LightningShuffleboard.setBool("Swerve", "MultipleTargets",  pose.getMoreThanOneTarget());
             }
+            
         }
     }
             
-    public void initLogging() {
+    private void initLogging() {
         // TODO Remove the unecessary shuffleboard stuff eventually
         LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
         LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPigeon2().getAngle());
@@ -202,7 +209,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         LightningShuffleboard.setBoolSupplier("Sweve", "Tipped", () -> isTipped());
 
         LightningShuffleboard.setDoubleSupplier("Swerve", "velocity x",
-            () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
+                () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
         LightningShuffleboard.setDoubleSupplier("Swerve", "velocity y",
                 () -> getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
     }
