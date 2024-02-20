@@ -40,7 +40,7 @@ public class SmartShoot extends Command {
 	@Override
 	public void execute() {
 		pivot.setTargetAngle(calculateTargetAngle());
-		flywheel.setAllMotorsRPM(calculateTargetRPM());
+		// flywheel.setAllMotorsRPM(calculateTargetRPM());
 
 		if (onTarget()) {
 			indexer.setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
