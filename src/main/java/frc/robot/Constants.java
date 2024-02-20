@@ -125,7 +125,8 @@ public class Constants {
         }
 
         public class PWM {
-            public static final int LED_PORT = 0;
+            public static final int LED_PORT_1 = 0;
+            public static final int LED_PORT_2 = 1;
             public static final int FIRE_SERVO_PORT = 1;
             public static final int FLYWHEEL_SERVO_PORT = 2;
         }
