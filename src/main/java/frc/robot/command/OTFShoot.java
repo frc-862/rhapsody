@@ -10,6 +10,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -127,6 +128,8 @@ public class OTFShoot extends Command {
 		double basicDelta = Math.abs(targetHeading - basicHeading);
 
 		double pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
+
+		double velocityToTarget = new Translation2d(robotReleaseVelocityX, robotReleaseVelocityY).rotateBy(new Rotation2d(targetHeading - pose.getRotation().getDegrees())).getX();
 
 		LightningShuffleboard.setDouble("OTF Shooting", "Distance to Speaker", distanceToSpeaker);
 		LightningShuffleboard.setDouble("OTF Shooting", "Rotated Target Heading", (targetHeading + 360) % 360);
