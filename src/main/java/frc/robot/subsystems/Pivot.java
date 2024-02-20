@@ -20,7 +20,7 @@ public class Pivot extends SubsystemBase {
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
     // private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
-    final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(0);
+    private final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(35);
     private double bias = 0;
 
     private double targetAngle = 0;
@@ -57,6 +57,8 @@ public class Pivot extends SubsystemBase {
         pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, targetAngle);
 
         initLogging();
+
+        
     }
 
     private void initLogging() {

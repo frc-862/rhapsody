@@ -77,8 +77,8 @@ public class RobotContainer extends LightningContainer {
 	private Pivot pivot;
 	// Indexer indexer;
 	// Climber climber;
-	LEDs leds;
-	Nervo nervo;
+	// LEDs leds;
+	// Nervo nervo;
 	Orchestra sing;
 
 	private SendableChooser<Command> autoChooser;
@@ -105,7 +105,7 @@ public class RobotContainer extends LightningContainer {
 		flywheel = new Flywheel();
 		pivot = new Pivot();
 		// climber = new Climber(drivetrain);
-		leds = new LEDs();
+		// leds = new LEDs();
 		// nervo = new Nervo();
 		sing = new Orchestra();
 
@@ -119,10 +119,10 @@ public class RobotContainer extends LightningContainer {
 				new InstantCommand(() -> drivetrain.disableVision()));
 		NamedCommands.registerCommand("enable-Vision",
 				new InstantCommand(() -> drivetrain.enableVision()));
-		NamedCommands.registerCommand("led-Collect",
-				leds.enableState(LED_STATES.COLLECTED).withTimeout(0.5));
-		NamedCommands.registerCommand("led-Shoot",
-				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
+		// NamedCommands.registerCommand("led-Collect",
+				// leds.enableState(LED_STATES.COLLECTED).withTimeout(0.5));
+		// NamedCommands.registerCommand("led-Shoot",
+				// leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
 		// NamedCommands.registerCommand("Cand-Sub", new PointBlankShot(flywheel, pivot, DriverStation.isAutonomousEnabled()));
 		// NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
@@ -175,10 +175,10 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 		
-		new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
-		new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
+		// new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
+		// new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
 
-		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+		// new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
 		// cand shots for the robot

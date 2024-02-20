@@ -46,6 +46,7 @@ public class AmpShot extends Command {
 		// 	shot = true;
 		// 	shotTime = Timer.getFPGATimestamp();
 		// }
+		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 	}
 
 	// Called once the command ends or is interrupted.
