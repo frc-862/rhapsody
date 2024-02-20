@@ -84,7 +84,7 @@ public class Pivot extends SubsystemBase {
         angleMotor.getConfig().Slot0.kV = LightningShuffleboard.getDouble("Pivot", "kV", PivotConstants.MOTOR_KV);
         angleMotor.getConfig().Slot0.kA = LightningShuffleboard.getDouble("Pivot", "kA", PivotConstants.MOTOR_KA);
 
-        angleMotor.getConfig().MotionMagic.MotionMagicCruiseVelocity = LightningShuffleboard.getDouble("Pivot", "cruseVelocity", PivotConstants.MAGIC_CRUISE_VEL);
+        angleMotor.getConfig().MotionMagic.MotionMagicCruiseVelocity = LightningShuffleboard.getDouble("Pivot", "cruiseVelocity", PivotConstants.MAGIC_CRUISE_VEL);
         angleMotor.getConfig().MotionMagic.MotionMagicAcceleration = LightningShuffleboard.getDouble("Pivot", "acceleration", PivotConstants.MAGIC_ACCEL);
         angleMotor.getConfig().MotionMagic.MotionMagicJerk = LightningShuffleboard.getDouble("Pivot", "jerk", PivotConstants.MAGIC_JERK);
 
@@ -100,7 +100,7 @@ public class Pivot extends SubsystemBase {
     public void setTargetAngle(double angle) {
         MathUtil.clamp(angle + bias, PivotConstants.MIN_ANGLE, PivotConstants.MAX_ANGLE);
         targetAngle = angle;
-        angleMotor.setControl(motionMagicPID.withPosition(angle));
+        angleMotor.setControl(motionMagicPID.withPosition(targetAngle));
     }
 
     /**
