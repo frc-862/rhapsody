@@ -6,6 +6,8 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
+import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
@@ -61,14 +63,21 @@ public class Pivot extends SubsystemBase {
 
         LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", this::getBias);
 
-        // LightningShuffleboard.setStringSupplier("Pivot", "Forward Limit", () -> angleMotor.getForwardLimit().getValue().toString());
-        // LightningShuffleboard.setStringSupplier("Pivot", "Reverse Limit", () -> angleMotor.getReverseLimit().getValue().toString());
+        LightningShuffleboard.setBoolSupplier("Pivot", "Forward Limit", () -> getForwardLimit());
+        LightningShuffleboard.setBoolSupplier("Pivot", "Reverse Limit", () -> getReverseLimit());
 
     }
 
     @Override
     public void periodic() {
         pivotTuner.update();
+
+        // SETS angle to angle of limit switch on press
+        if (getForwardLimit()) { 
+            resetAngle(PivotConstants.MIN_ANGLE);
+        } else if(getReverseLimit()) {
+            resetAngle(PivotConstants.MAX_ANGLE);
+        }
     }
 
     /**
@@ -98,6 +107,23 @@ public class Pivot extends SubsystemBase {
     }
 
     /**
+     * Gets forward limit switch
+     * @return true if pressed
+     */
+    public boolean getForwardLimit() {
+        return angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
+    }
+
+    /**
+     * Gets reverse limit switch
+     * @return true if pressed
+     */
+    public boolean getReverseLimit() {
+        return angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround; 
+    }
+
+
+    /**
      * @return The bias to add to the target angle of the pivot
      */
     public double getBias() {
@@ -123,5 +149,13 @@ public class Pivot extends SubsystemBase {
      */
     public void resetBias() {
         bias = 0;
+    }
+
+    /**
+     * 
+     * @param angle angle to set the pivot angle to
+     */
+    public void resetAngle(double angle) {
+        // TODO is this neccesasry and implement
     }
 }
