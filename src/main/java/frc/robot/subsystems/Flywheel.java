@@ -58,6 +58,10 @@ public class Flywheel extends SubsystemBase {
     public void periodic() {
         topTuner.update();
         bottomTuner.update();
+
+        // if() {
+
+        // }
     }
 
     /**
