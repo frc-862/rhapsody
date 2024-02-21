@@ -50,7 +50,6 @@ import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
 import frc.robot.command.Collect;
 import frc.robot.subsystems.Limelights;
-import frc.robot.subsystems.Nervo;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Collector;
@@ -173,7 +172,8 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
+		new Trigger(driver::getRightBumper)
+				.whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
 		// parks the robot
 		new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
@@ -189,8 +189,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getYButton)
 				.whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
-		new Trigger(() -> driver.getPOV() == 0)
-			.toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
 		// cand shots for the robot
@@ -219,10 +218,12 @@ public class RobotContainer extends LightningContainer {
 
 
 		/* Other */
-		new Trigger(() -> (limelights.getStopMe().hasTarget() ||
-			limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		new Trigger(() ->
-			collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+		new Trigger(
+				() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()))
+						.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
+		new Trigger(() -> collector.hasPiece())
+				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2))
+				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
 		new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
 				.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
