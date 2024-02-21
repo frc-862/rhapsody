@@ -388,8 +388,7 @@ public class Constants {
 
         public static final double RPM_TOLERANCE = 0;
 
-        public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get
-                                                       // amount to bias by
+        public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get amount to bias by
         public static final double COAST_VOLTAGE = 0.1;
 
         public static final double FLYWHEEL_SYSTEST_POWER = 0.5;
