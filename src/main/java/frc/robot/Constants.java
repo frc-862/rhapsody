@@ -418,9 +418,9 @@ public class Constants {
         public static final double MOTOR_KV = 0.05;
         public static final double MOTOR_KA = 0;
  
-        public static final double MAGIC_CRUISE_VEL = 80; //TODO: get real value
-        public static final double MAGIC_ACCEL = 160; //TODO: get real value
-        public static final double MAGIC_JERK = 1600; //TODO: get real value
+        public static final double MAGIC_CRUISE_VEL = 0.5; //TODO: get real value
+        public static final double MAGIC_ACCEL = 2; //TODO: get real value
+        public static final double MAGIC_JERK = 4; //TODO: get real value
 
         public static final double ANGLE_TOLERANCE = 0.5;
 
