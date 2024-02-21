@@ -375,8 +375,8 @@ public class Constants {
     }
 
     public class FlywheelConstants { // TODO: get real
-        public static final boolean MOTOR_TOP_INVERT = true;
-        public static final boolean MOTOR_BOTTOM_INVERT = false;
+        public static final boolean MOTOR_TOP_INVERT = false;
+        public static final boolean MOTOR_BOTTOM_INVERT = true;
         public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 0;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
         public static final boolean MOTOR_BRAKE_MODE = false;

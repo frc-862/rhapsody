@@ -34,8 +34,8 @@ public class PodiumShot extends Command {
 
 	@Override
 	public void execute() {
-		flywheel.setPower();
-		// flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
+		// flywheel.setPower();
+		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 	}
 
 	// Called once the command ends or is interrupted.
