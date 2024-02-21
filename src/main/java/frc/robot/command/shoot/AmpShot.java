@@ -59,9 +59,9 @@ public class AmpShot extends Command {
 
 	@Override
 	public boolean isFinished() {
-		if (isAutonomous) {
-			return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
-		}
+		// if (isAutonomous) {
+		// 	return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
+		// }
 		return false;
 	}
 }

@@ -22,10 +22,10 @@ public class Pivot extends SubsystemBase {
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
     // private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
-    private final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(35);
+    private final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(PivotConstants.STOW_ANGLE);
     private double bias = 0;
 
-    private double targetAngle = 0;
+    private double targetAngle = PivotConstants.STOW_ANGLE;
 
     private FalconTuner pivotTuner;
 
@@ -109,6 +109,10 @@ public class Pivot extends SubsystemBase {
         MathUtil.clamp(angle + bias, PivotConstants.MIN_ANGLE, PivotConstants.MAX_ANGLE);
         targetAngle = angle;
         angleMotor.setControl(motionMagicPID.withPosition(targetAngle));
+    }
+
+    public void setPower(double power){
+        angleMotor.set(power * 0.25);
     }
 
     /**

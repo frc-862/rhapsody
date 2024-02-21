@@ -409,7 +409,7 @@ public class Constants {
     }
 
     public class PivotConstants { // TODO: get real
-        public static final boolean MOTOR_INVERT = true; // POS power is up
+        public static final boolean MOTOR_INVERT = false; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
         public static final boolean MOTOR_BRAKE_MODE = true;
         public static final double MOTOR_KP = 0.01;
@@ -423,17 +423,17 @@ public class Constants {
         public static final double MAGIC_ACCEL = 160; //TODO: get real value
         public static final double MAGIC_JERK = 1600; //TODO: get real value
 
-        public static final double ANGLE_TOLERANCE = 0;
+        public static final double ANGLE_TOLERANCE = 0.5;
 
-        public static final double ENCODER_OFFSET = .6165; // In rotations
+        public static final double ENCODER_OFFSET = -.207; // In rotations, was .793
         public static final SensorDirectionValue ENCODER_DIRECTION =
                 SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
-        public static final double ROTOR_TO_ENCODER_RATIO = 300d;
+        public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
 
         public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
 
-        public static final double STOW_ANGLE = 30d;
+        public static final double STOW_ANGLE = 35d;
 
         public static final double MIN_ANGLE = 25d;
         public static final double MAX_ANGLE = 100d;
@@ -462,7 +462,7 @@ public class Constants {
         // Amp
         public static final double AMP_TOP_RPM = 0;
         public static final double AMP_BOTTOM_RPM = 0;
-        public static final double AMP_ANGLE = 60;
+        public static final double AMP_ANGLE = 50;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 0;
