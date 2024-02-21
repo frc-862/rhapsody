@@ -118,8 +118,8 @@ public class Constants {
          * You expected a javadoc, but it was me, Dio!
          */
         public class DIO {
-            public static final int COLLECTOR_BEAMBREAK = 1;
-            public static final int INDEXER_ENTER_BEAMBREAK = 0;
+            public static final int COLLECTOR_BEAMBREAK = 2;
+            public static final int INDEXER_ENTER_BEAMBREAK = 1;
             public static final int INDEXER_EXIT_BEAMBREAK = 0;
 
         }
@@ -388,8 +388,7 @@ public class Constants {
 
         public static final double RPM_TOLERANCE = 0;
 
-        public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get
-                                                       // amount to bias by
+        public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get amount to bias by
         public static final double COAST_VOLTAGE = 0.1;
 
         public static final double FLYWHEEL_SYSTEST_POWER = 0.5;
@@ -417,7 +416,7 @@ public class Constants {
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
         public static final double MOTOR_KV = 0;
- 
+
         public static final double ANGLE_TOLERANCE = 0;
 
         public static final double ENCODER_OFFSET = .6165; // In rotations
