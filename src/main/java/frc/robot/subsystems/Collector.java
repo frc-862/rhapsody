@@ -18,6 +18,7 @@ public class Collector extends SubsystemBase {
 	private DigitalInput beamBreak;
 
 	private boolean hasPiece;
+	private boolean t = false;
 
 	public Collector() {
 		motor = new ThunderBird(
@@ -27,7 +28,6 @@ public class Collector extends SubsystemBase {
 				CollectorConstants.COLLECTOR_MOTOR_BRAKE_MODE);
 
 		beamBreak = new DigitalInput(DIO.COLLECTOR_BEAMBREAK);
-
 		initLogging();
 	}
 
@@ -44,6 +44,10 @@ public class Collector extends SubsystemBase {
 	 */
 	public boolean getEntryBeamBreakState() {
 		return !beamBreak.get();
+	}
+
+	public void setT(boolean b) {
+		t = b;
 	}
 
 	/**

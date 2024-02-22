@@ -11,13 +11,17 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Indexer extends SubsystemBase {
 
+    private Collector collector;
+
     private ThunderBird indexerMotor;
     private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_ENTER_BEAMBREAK);
     private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_EXIT_BEAMBREAK);
 
     private PieceState currentState = PieceState.NONE;
 
-    public Indexer() {
+    public Indexer(Collector collector) {
+        this.collector = collector;
+
         indexerMotor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
                 IndexerConstants.MOTOR_INVERT, IndexerConstants.MOTOR_STATOR_CURRENT_LIMIT,
                 IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
@@ -30,7 +34,7 @@ public class Indexer extends SubsystemBase {
 
         LightningShuffleboard.setBoolSupplier("Indexer", "Entry Beam Break", () -> getEntryBeamBreakState());
         LightningShuffleboard.setBoolSupplier("Indexer", "Exit Beam Break", () -> getExitBeamBreakState());
-        LightningShuffleboard.setStringSupplier("Indexer", "Piece State", () -> getPieceState().toString()); // TODO test 
+        LightningShuffleboard.setStringSupplier("Indexer", "Piece State", () -> getPieceState().toString());
         LightningShuffleboard.setBoolSupplier("Indexer", "Has shot", () -> hasShot());
     }
 
@@ -78,5 +82,18 @@ public class Indexer extends SubsystemBase {
 
     public boolean hasShot() {
         return false; // TODO add actual logic
+    }
+
+    @Override
+    public void periodic() {
+		if (getExitBeamBreakState()) {
+			setPieceState(PieceState.IN_INDEXER);
+		} else if (getEntryBeamBreakState()) {
+			setPieceState(PieceState.IN_PIVOT);
+		} else if (collector.getEntryBeamBreakState()) {
+			setPieceState(PieceState.IN_COLLECT);
+		} else {
+			setPieceState(PieceState.NONE);
+		}
     }
 }

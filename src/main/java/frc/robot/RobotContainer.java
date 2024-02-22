@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.ControllerConstants;
@@ -32,6 +33,7 @@ import frc.robot.command.MoveToPose;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Sing;
+import frc.robot.command.SmartCollect;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.CandC1;
 import frc.robot.command.shoot.CandC2;
@@ -74,7 +76,7 @@ public class RobotContainer extends LightningContainer {
 	private Collector collector;
 	private Indexer indexer;
 	// private Flywheel flywheel;
-	// private Pivot pivot;
+	private Pivot pivot;
 	// Climber climber;
 	LEDs leds;
 	Orchestra sing;
@@ -102,10 +104,10 @@ public class RobotContainer extends LightningContainer {
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
-		indexer = new Indexer();
 		collector = new Collector();
+		indexer = new Indexer(collector);
 		// flywheel = new Flywheel();
-		// pivot = new Pivot();
+		pivot = new Pivot();
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
 		sing = new Orchestra();
@@ -192,6 +194,8 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
+		new Trigger(coPilot::getAButton).whileTrue(new SmartCollect(() -> 0.50, () -> 0.40, collector, indexer));
+
 		// cand shots for the robot
 		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
 		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
@@ -241,11 +245,17 @@ public class RobotContainer extends LightningContainer {
 
 
 		/* copilot */
-		collector.setDefaultCommand(new Collect(
-				() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector));
+		// collector.setDefaultCommand(new Collect(
+		// 		() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector));
+		// collector.setDefaultCommand(new SmartCollect(
+		// 	() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()),
+		// 	() -> 0.2,
+		// 	collector, indexer));
 
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
+
+		pivot.setDefaultCommand(new InstantCommand(() -> pivot.setPower(0.05*(coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis())), pivot));
 	}
 
 	protected Command getAutonomousCommand() {
