@@ -63,11 +63,14 @@ public class Flywheel extends SubsystemBase {
         bottomMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD,
             FlywheelConstants.MOTOR_BOTTOM_INVERT, 0, 0, NeutralModeValue.Coast);
         
-        topRPMPID = new PIDController(FlywheelConstants.MOTOR_KP, FlywheelConstants.MOTOR_KI, FlywheelConstants.MOTOR_KD);
-        bottomRPMPID = new PIDController(FlywheelConstants.MOTOR_KP, FlywheelConstants.MOTOR_KI, FlywheelConstants.MOTOR_KD);
+        topRPMPID = new PIDController(FlywheelConstants.MOTOR_KP, FlywheelConstants.MOTOR_KI, FlywheelConstants.MOTOR_KD, 0.01);
+        bottomRPMPID = new PIDController(FlywheelConstants.MOTOR_KP, FlywheelConstants.MOTOR_KI, FlywheelConstants.MOTOR_KD, 0.01);
 
         topFeedForward = new SimpleMotorFeedforward(FlywheelConstants.MOTOR_KS, FlywheelConstants.MOTOR_KV, FlywheelConstants.MOTOR_KA);
         bottomFeedForward = new SimpleMotorFeedforward(FlywheelConstants.MOTOR_KS, FlywheelConstants.MOTOR_KV, FlywheelConstants.MOTOR_KA);
+
+        topRPMPID.disableContinuousInput();
+        bottomRPMPID.disableContinuousInput();
 
         topRPMPID.setTolerance(FlywheelConstants.RPM_TOLERANCE);
         bottomRPMPID.setTolerance(FlywheelConstants.RPM_TOLERANCE);
@@ -88,6 +91,8 @@ public class Flywheel extends SubsystemBase {
         LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Power", () -> bottomMotor.get());
 
         LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", this::getBias);
+
+
     }
     
     @Override
@@ -96,15 +101,16 @@ public class Flywheel extends SubsystemBase {
         // topTuner.update();
         // bottomTuner.update();
         
-        topMotor.set(topRPMPID.calculate(getTopMotorRPM()) + topFeedForward.calculate(topTargetRPM));
-        bottomMotor.set(bottomRPMPID.calculate(getBottomMotorRPM()) + bottomFeedForward.calculate(bottomTargetRPM));
+        topMotor.setVoltage(topRPMPID.calculate(getTopMotorRPM()) + topFeedForward.calculate(topTargetRPM));
+        bottomMotor.setVoltage(bottomRPMPID.calculate(getBottomMotorRPM()) + bottomFeedForward.calculate(bottomTargetRPM));
 
         LightningShuffleboard.setDouble("Flywheel", "top PID output", topRPMPID.calculate(getTopMotorRPM()));
         LightningShuffleboard.setDouble("Flywheel", "bottom PID output", bottomRPMPID.calculate(getBottomMotorRPM()));
         LightningShuffleboard.setDouble("Flywheel", "top Feed forward", topFeedForward.calculate(topTargetRPM));
         LightningShuffleboard.setDouble("Flywheel", "bottom Feed forward", bottomFeedForward.calculate(bottomTargetRPM));
 
-
+        LightningShuffleboard.setDouble("Flywheel", "Top velocity error", topRPMPID.getPositionError());
+        LightningShuffleboard.setDouble("Flywheel", "Bottom velocity error", bottomRPMPID.getPositionError());
 
         if (tuning) {
             topRPMPID.setP(LightningShuffleboard.getDouble("Flywheel", "Top P", topRPMPID.getP()));
