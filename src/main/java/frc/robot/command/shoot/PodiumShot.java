@@ -9,7 +9,7 @@ import frc.robot.subsystems.Pivot;
 public class PodiumShot extends Command {
 
 	private final Flywheel flywheel;
-	private final Pivot pivot;
+	// private final Pivot pivot;
 
 	/**
 	 * Creates a new PodiumShot.
