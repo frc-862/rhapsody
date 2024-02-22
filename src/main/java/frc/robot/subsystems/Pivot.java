@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
@@ -22,10 +23,11 @@ public class Pivot extends SubsystemBase {
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
     // private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
-    private final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(PivotConstants.STOW_ANGLE);
+    // private final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(0);
+    private final PIDController angleController = new PIDController(0.1, 0, 0);
     private double bias = 0;
 
-    private double targetAngle = PivotConstants.STOW_ANGLE;
+    private double targetAngle = 60;
 
     private FalconTuner pivotTuner;
 
@@ -58,8 +60,9 @@ public class Pivot extends SubsystemBase {
 
         pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, targetAngle);
 
-        initLogging();
+        angleController.setIntegratorRange(0.1, 1);
 
+        initLogging();
         
     }
 
@@ -74,17 +77,19 @@ public class Pivot extends SubsystemBase {
         LightningShuffleboard.setBoolSupplier("Pivot", "Forward Limit", () -> getForwardLimit());
         LightningShuffleboard.setBoolSupplier("Pivot", "Reverse Limit", () -> getReverseLimit());
 
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Power", () -> angleMotor.get());
+
     }
 
     @Override
     public void periodic() {
 
-        angleMotor.getConfig().Slot0.kP = LightningShuffleboard.getDouble("Pivot", "kP", PivotConstants.MOTOR_KP);
-        angleMotor.getConfig().Slot0.kI = LightningShuffleboard.getDouble("Pivot", "kI", PivotConstants.MOTOR_KI);
-        angleMotor.getConfig().Slot0.kD = LightningShuffleboard.getDouble("Pivot", "kD", PivotConstants.MOTOR_KD);
-        angleMotor.getConfig().Slot0.kS = LightningShuffleboard.getDouble("Pivot", "kS", PivotConstants.MOTOR_KS);
-        angleMotor.getConfig().Slot0.kV = LightningShuffleboard.getDouble("Pivot", "kV", PivotConstants.MOTOR_KV);
-        angleMotor.getConfig().Slot0.kA = LightningShuffleboard.getDouble("Pivot", "kA", PivotConstants.MOTOR_KA);
+        // angleMotor.getConfig().Slot0.kP = LightningShuffleboard.getDouble("Pivot", "kP", PivotConstants.MOTOR_KP);
+        // angleMotor.getConfig().Slot0.kI = LightningShuffleboard.getDouble("Pivot", "kI", PivotConstants.MOTOR_KI);
+        // angleMotor.getConfig().Slot0.kD = LightningShuffleboard.getDouble("Pivot", "kD", PivotConstants.MOTOR_KD);
+        // angleMotor.getConfig().Slot0.kS = LightningShuffleboard.getDouble("Pivot", "kS", PivotConstants.MOTOR_KS);
+        // angleMotor.getConfig().Slot0.kV = LightningShuffleboard.getDouble("Pivot", "kV", PivotConstants.MOTOR_KV);
+        // angleMotor.getConfig().Slot0.kA = LightningShuffleboard.getDouble("Pivot", "kA", PivotConstants.MOTOR_KA);
 
         angleMotor.getConfig().MotionMagic.MotionMagicCruiseVelocity = LightningShuffleboard.getDouble("Pivot", "cruiseVelocity", PivotConstants.MAGIC_CRUISE_VEL);
         angleMotor.getConfig().MotionMagic.MotionMagicAcceleration = LightningShuffleboard.getDouble("Pivot", "acceleration", PivotConstants.MAGIC_ACCEL);
@@ -106,13 +111,19 @@ public class Pivot extends SubsystemBase {
      * @param angle Angle of the pivot
      */
     public void setTargetAngle(double angle) {
-        MathUtil.clamp(angle + bias, PivotConstants.MIN_ANGLE, PivotConstants.MAX_ANGLE);
-        targetAngle = angle;
-        angleMotor.setControl(motionMagicPID.withPosition(targetAngle));
+        targetAngle = MathUtil.clamp(angle + bias, PivotConstants.MIN_ANGLE, PivotConstants.MAX_ANGLE);
+        // targetAngle = angle;
+        // angleMotor.setControl(motionMagicPID.withPosition(targetAngle / 360));
+        double pidOutput = angleController.calculate(getAngle(), targetAngle);
+        setPower(pidOutput);
+
+        if (onTarget()){
+            setPower(0d);
+        }
     }
 
     public void setPower(double power){
-        angleMotor.set(power * 0.25);
+        angleMotor.set(power);
     }
 
     /**

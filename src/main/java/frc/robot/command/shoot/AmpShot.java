@@ -53,7 +53,7 @@ public class AmpShot extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		// flywheel.coast();
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		// pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 		// TODO add LED state
 	}
 

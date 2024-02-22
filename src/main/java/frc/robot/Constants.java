@@ -408,21 +408,21 @@ public class Constants {
     }
 
     public class PivotConstants { // TODO: get real
-        public static final boolean MOTOR_INVERT = false; // POS power is up
+        public static final boolean MOTOR_INVERT = true; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
         public static final boolean MOTOR_BRAKE_MODE = true;
-        public static final double MOTOR_KP = 0.01;
+        public static final double MOTOR_KP = 0.08;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
-        public static final double MOTOR_KS = 0;
-        public static final double MOTOR_KV = 0.05;
-        public static final double MOTOR_KA = 0;
+        public static final double MOTOR_KS = 0.1;
+        public static final double MOTOR_KV = 5;
+        public static final double MOTOR_KA = 0.1;
  
-        public static final double MAGIC_CRUISE_VEL = 0.5; //TODO: get real value
-        public static final double MAGIC_ACCEL = 2; //TODO: get real value
-        public static final double MAGIC_JERK = 4; //TODO: get real value
+        public static final double MAGIC_CRUISE_VEL = 0.01; //TODO: get real value
+        public static final double MAGIC_ACCEL = 0.02; //TODO: get real value
+        public static final double MAGIC_JERK = 0.2; //TODO: get real value
 
-        public static final double ANGLE_TOLERANCE = 0.5;
+        public static final double ANGLE_TOLERANCE = 0.25d;
 
         public static final double ENCODER_OFFSET = 0.6118; // In rotations
         public static final SensorDirectionValue ENCODER_DIRECTION =

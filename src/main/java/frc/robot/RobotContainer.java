@@ -250,8 +250,8 @@ public class RobotContainer extends LightningContainer {
 
 
 		/* copilot */
-		collector.setDefaultCommand(new Collect(
-				() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector));
+		// pivot.setDefaultCommand(new Collect(
+				// () -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), pivot));
 
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
