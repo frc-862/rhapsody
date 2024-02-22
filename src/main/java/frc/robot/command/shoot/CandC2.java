@@ -10,13 +10,15 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 
 public class CandC2 extends Command {
+
 	private final Flywheel flywheel;
 	private final Pivot pivot;
 	private final Indexer indexer;
 	private boolean shot = false;
 	private double shotTime = 0;
-	
-	/** Creates a new PodiumShot.
+
+	/**
+	 * Creates a new CandC2.
 	 * @param flywheel
 	 * @param pivot
 	 * @param indexer
@@ -25,18 +27,16 @@ public class CandC2 extends Command {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 		this.indexer = indexer;
-	
+
 		addRequirements(pivot, flywheel, indexer);
 	}
 
-	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
 		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
 	}
 
-	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 		if(pivot.onTarget() && flywheel.allMotorsOnTarget()) {
@@ -46,7 +46,6 @@ public class CandC2 extends Command {
 		}
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast();
@@ -54,9 +53,8 @@ public class CandC2 extends Command {
 		indexer.stop();
 	}
 
-	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT; 
+		return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
 	}
 }

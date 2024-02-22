@@ -17,7 +17,6 @@ public class AmpShot extends Command {
 
 	/**
 	 * Creates a new AmpShot.
-	 * 
 	 * @param pivot
 	 * @param flywheel
 	 * @param isAutonomous
@@ -30,7 +29,6 @@ public class AmpShot extends Command {
 		addRequirements(pivot, flywheel);
 	}
 
-	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
 		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
@@ -46,7 +44,6 @@ public class AmpShot extends Command {
 		}
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast();

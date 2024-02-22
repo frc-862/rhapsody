@@ -14,7 +14,7 @@ public class ChasePieces extends Command {
 	private Swerve drivetrain;
 	private Collector collector;
 	private Limelight limelight;
-	
+
 	private int limelightId = 0;
 
 	private double pidOutput;
@@ -31,7 +31,7 @@ public class ChasePieces extends Command {
 
 	/**
 	 * Creates a new ChasePieces.
-	 * @param drivetrain to request movement 
+	 * @param drivetrain to request movement
 	 * @param collector to collect pieces
 	 * @param limelights to get vision data from dust
 	 */
@@ -41,12 +41,11 @@ public class ChasePieces extends Command {
 
 		limelight = limelights.getDust();
 		limelightId = limelight.getPipeline();
-		
+
 
 		addRequirements(drivetrain, collector);
 	}
-	
-	// Called when the command is initially scheduled.
+
 	@Override
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
@@ -65,7 +64,6 @@ public class ChasePieces extends Command {
 		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Pid Output", () -> pidOutput);
 	}
 
-	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 		// For tuning.
@@ -85,7 +83,7 @@ public class ChasePieces extends Command {
 		hasPiece = collector.hasPiece();
 
 		pidOutput = headingController.calculate(0, targetHeading);
-		
+
 		if (hasTarget){
 			if (trustValues()){
 				if (!onTarget) {
@@ -100,14 +98,16 @@ public class ChasePieces extends Command {
 		}
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		limelight.setPipeline(limelightId);
 		collector.stop();
 	}
 
-	// Makes sure that the robot isn't jerking over to a different side while chasing pieces.
+	/**
+	 * Makes sure that the robot isn't jerking over to a different side while chasing pieces.
+	 * @return t/f if the robot should trust the values
+	 */
 	public boolean trustValues(){
 		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6){
 			return true;
@@ -115,7 +115,6 @@ public class ChasePieces extends Command {
 		return false;
 	}
 
-	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
 		if (hasPiece){
