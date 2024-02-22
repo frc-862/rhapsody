@@ -10,6 +10,7 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 
 public class CandLine extends Command {
+
 	private final Flywheel flywheel;
 	private final Pivot pivot;
 	private final Indexer indexer;
@@ -17,7 +18,7 @@ public class CandLine extends Command {
 	private double shotTime = 0;
 
 	/**
-	 * Creates a new PodiumShot.
+	 * Creates a new CandLine.
 	 * @param flywheel
 	 * @param pivot
 	 * @param indexer
@@ -30,14 +31,12 @@ public class CandLine extends Command {
 		addRequirements(pivot, flywheel);
 	}
 
-	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
 		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
 	}
 
-	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 		if(pivot.onTarget() && flywheel.allMotorsOnTarget()) {
@@ -47,7 +46,6 @@ public class CandLine extends Command {
 		}
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast();
@@ -55,9 +53,8 @@ public class CandLine extends Command {
 		indexer.stop();
 	}
 
-	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT; 
+		return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
 	}
 }

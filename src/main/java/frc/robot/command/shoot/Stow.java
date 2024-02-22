@@ -6,7 +6,6 @@ import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 
 public class Stow extends Command {
-	/** Creates a new Stow. */
 
 	private Pivot pivot;
 	private Flywheel flywheel;
@@ -18,7 +17,6 @@ public class Stow extends Command {
 		addRequirements(pivot, flywheel);
 	}
 
-	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
 		flywheel.coast();

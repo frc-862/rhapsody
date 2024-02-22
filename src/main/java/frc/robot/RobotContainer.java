@@ -32,6 +32,7 @@ import frc.robot.command.MoveToPose;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Sing;
+import frc.robot.command.SmartCollect;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.CandC1;
 import frc.robot.command.shoot.CandC2;
@@ -75,7 +76,7 @@ public class RobotContainer extends LightningContainer {
 	private Flywheel flywheel;
 	private Pivot pivot;
 	private Indexer indexer;
-	// Climber climber;
+	// private Climber climber;
 	LEDs leds;
 	Orchestra sing;
 
@@ -102,17 +103,14 @@ public class RobotContainer extends LightningContainer {
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
-		indexer = new Indexer();
 		collector = new Collector();
 		flywheel = new Flywheel();
 		pivot = new Pivot();
-		// climber = new Climber(drivetrain);
-		// leds = new LEDs();
-		// nervo = new Nervo();
+		indexer = new Indexer(collector);
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// climber = new Climber(drivetrain);
-		leds = new LEDs();
+		// leds = new LEDs();
 		sing = new Orchestra();
 
 		point = new SwerveRequest.PointWheelsAt();
@@ -201,6 +199,8 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
+		new Trigger(coPilot::getAButton).whileTrue(new SmartCollect(() -> 0.50, () -> 0.40, collector, indexer)); // TODO: find correct button/trigger
+
 		// cand shots for the robot
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
 		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
