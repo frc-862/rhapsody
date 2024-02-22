@@ -379,7 +379,7 @@ public class Constants {
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
-        public static final double MOTOR_KV = 0.0005;
+        public static final double MOTOR_KV = 0.002;
         public static final double MOTOR_KA = 0;
 
         public static final double RPM_TOLERANCE = 50d;
@@ -481,7 +481,8 @@ public class Constants {
         public static final double LINE_ANGLE = 0;
 
         // TODO find time to shoot
-        public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer start to flywheel exit
+        public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer
+                                                       // start to flywheel exit
     }
 
     public class ClimbConstants { // TODO: find real values
