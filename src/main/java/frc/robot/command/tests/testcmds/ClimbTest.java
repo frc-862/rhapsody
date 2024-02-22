@@ -8,41 +8,37 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
 
 public class ClimbTest extends Command {
-  
-  private Climber climber;
-  private double power;
 
-  /**
-   * System test command for testing climb motors.
-   * @param climber climber subsystem 
-   * @param power power to control up or down
-   */
-  public ClimbTest(Climber climber, double power) {
-    this.climber = climber;
-    this.power = power;
+    private Climber climber;
+    private double power;
 
-    addRequirements(climber);
-  }
+    /**
+     * System test command for testing climb motors.
+     * @param climber climber subsystem 
+     * @param power power to control up or down
+     */
+    public ClimbTest(Climber climber, double power) {
+        this.climber = climber;
+        this.power = power;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
+        addRequirements(climber);
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    climber.setPower(power);
-  }
+    @Override
+    public void initialize() {}
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    climber.setPower(0);
-  }
+    @Override
+    public void execute() {
+        climber.setPower(power);
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    @Override
+    public void end(boolean interrupted) {
+        climber.stop();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

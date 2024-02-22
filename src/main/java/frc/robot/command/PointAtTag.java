@@ -33,7 +33,7 @@ public class PointAtTag extends Command {
 	 * Creates a new PointAtTag.
 	 * @param targetX the x coordinate of the target
 	 * @param targetY the y coordinate of the target
-	 * @param drivetrain to request movement 
+	 * @param drivetrain to request movement
 	 * @param limelights to get the limelight from
 	 * @param driver the driver's controller, used for drive input
 	 */
@@ -86,7 +86,7 @@ public class PointAtTag extends Command {
 
 		// targetHeading = limelight.getTargetX();
 		// pidOutput = headingController.calculate(targetHeading, 0);
-		
+
 		// TODO test drives and test the deadbands
 		drivetrain.setFieldDriver(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}

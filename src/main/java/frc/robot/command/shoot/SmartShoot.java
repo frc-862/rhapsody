@@ -13,12 +13,13 @@ import frc.robot.subsystems.Swerve;
 import frc.thunder.command.TimedCommand;
 
 public class SmartShoot extends Command {
-	/** Creates a new SmartShoot. */
+
 	final Flywheel flywheel;
 	final Pivot pivot;
 	final Swerve drivetrain;
 	final Indexer indexer;
 	final LEDs leds;
+
 	private boolean hasShot = false;
 
 	public SmartShoot(Flywheel flywheel, Pivot pivot, Swerve drivetrain, Indexer indexer, LEDs leds) {
@@ -31,12 +32,9 @@ public class SmartShoot extends Command {
 		addRequirements(pivot, flywheel, indexer);
 	}
 
-	// Called when the command is initially scheduled.
 	@Override
-	public void initialize() {
-	}
+	public void initialize() {}
 
-	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 		pivot.setTargetAngle(calculateTargetAngle());
@@ -48,7 +46,6 @@ public class SmartShoot extends Command {
 		}
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		if (hasShot) {
@@ -62,14 +59,13 @@ public class SmartShoot extends Command {
 		}
 	}
 
-	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false; //TODO add timer + piece passed through indexer
+		return false; // TODO add timer + piece passed through indexer
 	}
 
 	public boolean onTarget() {
-		return flywheel.allMotorsOnTarget() && pivot.onTarget(); //TODO add indexer sensor and drivetrain speed
+		return flywheel.allMotorsOnTarget() && pivot.onTarget(); // TODO add indexer sensor and drivetrain speed
 	}
 
 	/**
@@ -77,10 +73,10 @@ public class SmartShoot extends Command {
 	 * @return Angle to set pivot to
 	 */
 	public double calculateTargetAngle() {
-		return 45d + pivot.getBias(); //TODO Add math from Chris branch or interpolation map
+		return 45d + pivot.getBias(); // TODO Add math from Chris branch or interpolation map
 	}
 
 	public double calculateTargetRPM() {
-		return 5500 + flywheel.getBias(); // TODO test with interpolation or math 
+		return 5500 + flywheel.getBias(); // TODO test with interpolation or math
 	}
 }

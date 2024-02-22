@@ -23,7 +23,7 @@ public class Flywheel extends SubsystemBase {
     private FalconTuner bottomTuner;
 
     public Flywheel() {
-        shooterTopMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD, FlywheelConstants.MOTOR_TOP_INVERT, 
+        shooterTopMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD, FlywheelConstants.MOTOR_TOP_INVERT,
             FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.MOTOR_BRAKE_MODE);
         shooterBottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD, FlywheelConstants.MOTOR_BOTTOM_INVERT,
             FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.MOTOR_BRAKE_MODE);
@@ -63,7 +63,6 @@ public class Flywheel extends SubsystemBase {
 
     /**
      * Sets the RPM of all flywheel motors
-     * 
      * @param rpm RPM of the flywheel
      */
     public void setAllMotorsRPM(double rpm) {
@@ -75,7 +74,6 @@ public class Flywheel extends SubsystemBase {
 
     /**
      * Sets the RPM of top flywheel
-     * 
      * @param rpm RPM of the flywheel
      */
     public void setTopMoterRPM(double rpm) {
@@ -85,7 +83,6 @@ public class Flywheel extends SubsystemBase {
 
     /**
      * Sets the RPM of bottom flywheel
-     * 
      * @param rpm RPM of the flywheel
      */
     public void setBottomMoterRPM(double rpm) {

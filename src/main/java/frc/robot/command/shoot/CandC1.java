@@ -17,9 +17,9 @@ public class CandC1 extends Command {
 
 	private boolean shot = false;
 	private double shotTime = 0;
-	
+
 	/**
-	 * Creates a new PodiumShot.
+	 * Creates a new CandC1.
 	 * @param flywheel
 	 * @param pivot
 	 * @param indexer
