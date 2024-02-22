@@ -108,7 +108,6 @@ public class RobotContainer extends LightningContainer {
 		pivot = new Pivot();
 		indexer = new Indexer(collector);
 		// flywheel = new Flywheel();
-		// pivot = new Pivot();
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
 		sing = new Orchestra();
