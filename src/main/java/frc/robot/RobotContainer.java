@@ -50,7 +50,6 @@ import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
 import frc.robot.command.Collect;
 import frc.robot.subsystems.Limelights;
-import frc.robot.subsystems.Nervo;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Collector;
@@ -70,16 +69,15 @@ public class RobotContainer extends LightningContainer {
 	public static XboxControllerFilter coPilot;
 
 	// Subsystems
-	// private Swerve drivetrain;
-	// private Limelights limelights;
-	// private Collector collector;
+	private Swerve drivetrain;
+	private Limelights limelights;
+	private Collector collector;
+	private Indexer indexer;
 	private Flywheel flywheel;
 	// private Pivot pivot;
-	// Indexer indexer;
 	// Climber climber;
-	// LEDs leds;
-	// Nervo nervo;
-	// Orchestra sing;
+	LEDs leds;
+	Orchestra sing;
 
 	private SendableChooser<Command> autoChooser;
 	SwerveRequest.FieldCentric drive;
@@ -104,14 +102,13 @@ public class RobotContainer extends LightningContainer {
 		// limelights = new Limelights();
 		// drivetrain = TunerConstants.getDrivetrain(limelights);
 
-		// indexer = new Indexer();
-		// collector = new Collector();
 		flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// climber = new Climber(drivetrain);
-		// leds = new LEDs();
-		// nervo = new Nervo();
-		// sing = new Orchestra();
+		indexer = new Indexer();
+		collector = new Collector();
+		leds = new LEDs();
+		sing = new Orchestra();
 
 		// point = new SwerveRequest.PointWheelsAt();
 		// logger = new Telemetry(DrivetrainConstants.MaxSpeed);
@@ -159,16 +156,16 @@ public class RobotContainer extends LightningContainer {
 	protected void configureButtonBindings() {
 		/* driver */
 		// field centric for the robot
-		// new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
-		// 		.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
-		// 		.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(),
-		// 				() -> -driver.getLeftX(), () -> -driver.getRightX()))
-		// 		.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
+		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
+				.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
+				.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(),
+						() -> -driver.getLeftX(), () -> -driver.getRightX()))
+				.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
 		// enables slow mode for driving
-		// new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
-		// 		.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
-		// 		.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
+				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
+				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
 		// sets field relative forward to the direction the robot is facing
 		// new Trigger(() -> driver.getStartButton() && driver.getBackButton())
@@ -217,21 +214,23 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(() -> coPilot.getPOV() == 270).onTrue(new InstantCommand(() ->
 		// flywheel.decreaseBias())); // LEFT
 
-		// new Trigger(coPilot::getRightBumper)
-		// 		.whileTrue(new Index(indexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
-		// new Trigger(coPilot::getLeftBumper)
-		// 		.whileTrue(new Index(indexer, () -> -IndexerConstants.INDEXER_DEFAULT_POWER));
+		new Trigger(coPilot::getRightBumper)
+				.whileTrue(new Index(indexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
+		new Trigger(coPilot::getLeftBumper)
+				.whileTrue(new Index(indexer, () -> -IndexerConstants.INDEXER_DEFAULT_POWER));
 
 
 		/* Other */
-		// new Trigger(() -> (limelights.getStopMe().hasTarget() ||
-		// limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		// new Trigger(() ->
-		// collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+		new Trigger(
+				() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()))
+						.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
+		new Trigger(() -> collector.hasPiece())
+				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2))
+				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
-		// new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
-		// 		.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
-		// 		.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
+		new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
+				.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
+				.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
 	}
 
 
@@ -240,13 +239,13 @@ public class RobotContainer extends LightningContainer {
 		/* driver */
 		// drivetrain.registerTelemetry(logger::telemeterize);
 
-		// drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(() -> -driver.getLeftY(),
-		// 		() -> -driver.getLeftX(), () -> -driver.getRightX()));
+		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(() -> -driver.getLeftY(),
+				() -> -driver.getLeftX(), () -> -driver.getRightX()));
 
 
 		/* copilot */
-		// collector.setDefaultCommand(new Collect(
-		// 		() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector));
+		collector.setDefaultCommand(new Collect(
+				() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector));
 
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
@@ -270,10 +269,10 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureSystemTests() {
-		// SystemTest.registerTest("Drive Test",
-		// 		new DrivetrainSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
-		// SystemTest.registerTest("Azimuth Test",
-		// 		new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
+		SystemTest.registerTest("Drive Test",
+				new DrivetrainSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
+		SystemTest.registerTest("Azimuth Test",
+				new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
 		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
 		// Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));

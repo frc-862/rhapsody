@@ -22,8 +22,9 @@ public class LEDs extends SubsystemBase {
 	private Map<LED_STATES, Boolean> ledStates;
 
 	public LEDs() {
-		leds = new AddressableLED(PWM.LED_PORT);
+		leds = new AddressableLED(PWM.LED_PORT_1);
 		ledBuffer = new AddressableLEDBuffer(LEDsConstants.LED_LENGTH);
+
 		leds.setLength(ledBuffer.getLength());
 		leds.start();
 
@@ -111,7 +112,7 @@ public class LEDs extends SubsystemBase {
 
 	public void rainbow() {
 		for (int i = 0; i < LEDsConstants.LED_LENGTH; i++) {
-			ledBuffer.setHSV(i, (i + (int) (Timer.getFPGATimestamp() * 20)) % ledBuffer.getLength() * 180 / 14, 255,
+			setSingleHSV(i, (i + (int) (Timer.getFPGATimestamp() * 20)) % ledBuffer.getLength() * 180 / 14, 255,
 					100);
 		}
 	}
@@ -122,9 +123,9 @@ public class LEDs extends SubsystemBase {
 	public void swirl(int segmentSize) {
 		for (int i = 0; i < LEDsConstants.LED_LENGTH; i++) {
 			if (((i + (int) (Timer.getFPGATimestamp() * 10)) / segmentSize) % 2 == 0) {
-				ledBuffer.setHSV(i, LEDsConstants.BLUE_HUE, 255, 255);
+				setSingleHSV(i, LEDsConstants.BLUE_HUE, 255, 255);
 			} else {
-				ledBuffer.setHSV(i, LEDsConstants.ORANGE_HUE, 255, 255);
+				setSingleHSV(i, LEDsConstants.ORANGE_HUE, 255, 255);
 			}
 		}
 	}
@@ -147,9 +148,13 @@ public class LEDs extends SubsystemBase {
 		setSolidHSV(hue, 255, (int) Math.abs((Math.sin(Timer.getFPGATimestamp() * 10) * 255)));
 	}
 
+	public void setSingleHSV(int index, int h, int s, int v) {
+		ledBuffer.setHSV(index, h, s, v);
+	}
+
 	public void setSolidHSV(int h, int s, int v) {
 		for (var i = 0; i < LEDsConstants.LED_LENGTH; i++) {
-			ledBuffer.setHSV(i, h, s, v);
+			setSingleHSV(i, h, s, v);
 		}
 	}
 }
