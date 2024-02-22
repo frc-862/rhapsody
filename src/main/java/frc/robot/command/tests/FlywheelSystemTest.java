@@ -15,23 +15,22 @@ import frc.thunder.testing.SystemTestCommandGroup;
 
 public class FlywheelSystemTest extends SystemTestCommandGroup {
 
-  public FlywheelSystemTest(Flywheel flywheel, Collector collector, Indexer indexer, Pivot pivot, double speed) {
-    super(
-      new SequentialCommandGroup(
-        new WaitCommand(0.5),
-        new TimedCommand(new FlywheelTest(flywheel, speed, 0), 2), // Motor 1 out
-        new WaitCommand(1),
-        new TimedCommand(new FlywheelTest(flywheel, -speed, 0), 2), // Motor 1 in
-        new WaitCommand(1),
-        new TimedCommand(new FlywheelTest(flywheel, 0, speed), 2), // Motor 2 out
-        new WaitCommand(1),
-        new TimedCommand(new FlywheelTest(flywheel, 0, -speed), 2), // Motor 2 in
-        new WaitCommand(1),
-        new TimedCommand(new FlywheelTest(flywheel, speed, speed), 2), // Both out
-        new WaitCommand(1),
-        new TimedCommand(new FlywheelTest(flywheel, -speed, -speed), 2) // Both in
-      )
-    );
-  }
-
+    public FlywheelSystemTest(Flywheel flywheel, Collector collector, Indexer indexer, Pivot pivot, double speed) {
+        super(
+            new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new TimedCommand(new FlywheelTest(flywheel, speed, 0), 2), // Motor 1 out
+                new WaitCommand(1),
+                new TimedCommand(new FlywheelTest(flywheel, -speed, 0), 2), // Motor 1 in
+                new WaitCommand(1),
+                new TimedCommand(new FlywheelTest(flywheel, 0, speed), 2), // Motor 2 out
+                new WaitCommand(1),
+                new TimedCommand(new FlywheelTest(flywheel, 0, -speed), 2), // Motor 2 in
+                new WaitCommand(1),
+                new TimedCommand(new FlywheelTest(flywheel, speed, speed), 2), // Both out
+                new WaitCommand(1),
+                new TimedCommand(new FlywheelTest(flywheel, -speed, -speed), 2) // Both in
+            )
+        );
+    }
 }

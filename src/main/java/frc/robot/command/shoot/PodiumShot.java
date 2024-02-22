@@ -9,11 +9,10 @@ import frc.robot.subsystems.Pivot;
 public class PodiumShot extends Command {
 
 	private final Flywheel flywheel;
-	// private final Pivot pivot;
+	private final Pivot pivot;
 
 	/**
 	 * Creates a new PodiumShot.
-	 * 
 	 * @param flywheel
 	 * @param pivot
 	 */
@@ -24,7 +23,6 @@ public class PodiumShot extends Command {
 		addRequirements(flywheel);
 	}
 
-	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
 
@@ -38,7 +36,6 @@ public class PodiumShot extends Command {
 		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		// flywheel.coast();

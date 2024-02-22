@@ -17,6 +17,7 @@ import frc.thunder.tuning.FalconTuner;
 import frc.robot.Constants.PivotConstants;
 
 public class Pivot extends SubsystemBase {
+
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
     private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
@@ -56,14 +57,13 @@ public class Pivot extends SubsystemBase {
     private void initLogging() {
         LightningShuffleboard.setDoubleSupplier("Pivot", "Current Angle", () -> getAngle());
         LightningShuffleboard.setDoubleSupplier("Pivot", "Target Angle", () -> targetAngle);
-        
+
         LightningShuffleboard.setBoolSupplier("Pivot", "On target", () -> onTarget());
 
         LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", this::getBias);
 
         LightningShuffleboard.setBoolSupplier("Pivot", "Forward Limit", () -> getForwardLimit());
         LightningShuffleboard.setBoolSupplier("Pivot", "Reverse Limit", () -> getReverseLimit());
-
     }
 
     @Override
@@ -71,7 +71,7 @@ public class Pivot extends SubsystemBase {
         pivotTuner.update();
 
         // SETS angle to angle of limit switch on press
-        if (getForwardLimit()) { 
+        if (getForwardLimit()) {
             resetAngle(PivotConstants.MIN_ANGLE);
         } else if(getReverseLimit()) {
             resetAngle(PivotConstants.MAX_ANGLE);
@@ -80,7 +80,6 @@ public class Pivot extends SubsystemBase {
 
     /**
      * Sets the angle of the pivot
-     * 
      * @param angle Angle of the pivot
      */
     public void setTargetAngle(double angle) {
@@ -117,9 +116,8 @@ public class Pivot extends SubsystemBase {
      * @return true if pressed
      */
     public boolean getReverseLimit() {
-        return angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround; 
+        return angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
     }
-
 
     /**
      * @return The bias to add to the target angle of the pivot
@@ -150,10 +148,9 @@ public class Pivot extends SubsystemBase {
     }
 
     /**
-     * 
      * @param angle angle to set the pivot angle to
      */
     public void resetAngle(double angle) {
-        // TODO is this neccesasry and implement
+        // TODO is this necessary and implement
     }
 }

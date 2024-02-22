@@ -16,6 +16,7 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 
 public class LEDs extends SubsystemBase {
+
 	AddressableLED leds;
 	AddressableLEDBuffer ledBuffer;
 	private LED_STATES state = LED_STATES.OFF;
@@ -62,8 +63,8 @@ public class LEDs extends SubsystemBase {
 			case COLLECTING:
 				blink(LEDsConstants.RED_HUE);
 				break;
-				
-            case CHASING: 
+
+            case CHASING:
 				blink(LEDsConstants.RED_HUE);
 				break;
 
@@ -88,7 +89,7 @@ public class LEDs extends SubsystemBase {
 			case OFF:
 				swirl(LEDsConstants.SWRIL_SEGMENT_SIZE);
 				break;
-				
+
 			case DISABLED:
 				setSolidHSV(0, 0, 0);
 				break;

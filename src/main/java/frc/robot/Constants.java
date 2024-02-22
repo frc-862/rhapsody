@@ -2,7 +2,6 @@ package frc.robot;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,9 +27,7 @@ import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.math.InterpolationMap;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 
-/** Add your docs here. */
 public class Constants {
 
     public static final Path MERCURY_PATH = Paths.get("/home/lvuser/mercury");

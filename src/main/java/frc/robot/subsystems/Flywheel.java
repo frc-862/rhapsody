@@ -126,7 +126,6 @@ public class Flywheel extends SubsystemBase {
 
     /**
      * Sets the RPM of all flywheel motors
-     * 
      * @param rpm RPM of the flywheel
      */
     public void setAllMotorsRPM(double rpm) {
@@ -144,8 +143,7 @@ public class Flywheel extends SubsystemBase {
     }
 
     /**
-     * Sets the RPM of flywheel # 1
-     * 
+     * Sets the RPM of top flywheel
      * @param rpm RPM of the flywheel
      */
     public void setTopMoterRPM(double rpm) {
@@ -158,8 +156,7 @@ public class Flywheel extends SubsystemBase {
     }
 
     /**
-     * Sets the RPM of flywheel # 2
-     * 
+     * Sets the RPM of bottom flywheel
      * @param rpm RPM of the flywheel
      */
     public void setBottomMoterRPM(double rpm) {
