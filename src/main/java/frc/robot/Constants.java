@@ -123,8 +123,6 @@ public class Constants {
 
         public class PWM {
             public static final int LED_PORT_1 = 0;
-            public static final int FIRE_SERVO_PORT = 2;
-            public static final int FLYWHEEL_SERVO_PORT = 3;
         }
     }
 
@@ -377,16 +375,16 @@ public class Constants {
         public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 40;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
-        public static final double MOTOR_KP = 0.001;
+        public static final double MOTOR_KP = 0.00035;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
-        public static final double MOTOR_KV = 10 / 100;
+        public static final double MOTOR_KV = 0.0005;
         public static final double MOTOR_KA = 0;
 
         public static final double RPM_TOLERANCE = 50d;
 
-        public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 75d; // RPM to bias by per button press
 
         public static final double COAST_VOLTAGE = 0.1;
 

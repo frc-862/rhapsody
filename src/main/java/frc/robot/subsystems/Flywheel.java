@@ -96,13 +96,14 @@ public class Flywheel extends SubsystemBase {
         // topTuner.update();
         // bottomTuner.update();
         
-        // topMotor.set(topRPMPID.calculate(getTopMotorRPM()));
-        // bottomMotor.set(bottomRPMPID.calculate(getBottomMotorRPM()));
+        topMotor.set(topRPMPID.calculate(getTopMotorRPM()) + topFeedForward.calculate(topTargetRPM));
+        bottomMotor.set(bottomRPMPID.calculate(getBottomMotorRPM()) + bottomFeedForward.calculate(bottomTargetRPM));
 
         LightningShuffleboard.setDouble("Flywheel", "top PID output", topRPMPID.calculate(getTopMotorRPM()));
         LightningShuffleboard.setDouble("Flywheel", "bottom PID output", bottomRPMPID.calculate(getBottomMotorRPM()));
         LightningShuffleboard.setDouble("Flywheel", "top Feed forward", topFeedForward.calculate(topTargetRPM));
         LightningShuffleboard.setDouble("Flywheel", "bottom Feed forward", bottomFeedForward.calculate(bottomTargetRPM));
+
 
 
         if (tuning) {
@@ -114,8 +115,8 @@ public class Flywheel extends SubsystemBase {
             bottomRPMPID.setI(LightningShuffleboard.getDouble("Flywheel", "Bottom I", bottomRPMPID.getI()));
             bottomRPMPID.setD(LightningShuffleboard.getDouble("Flywheel", "Bottom D", bottomRPMPID.getD()));
 
-            topRPMPID.setSetpoint(LightningShuffleboard.getDouble("Flywheel", "Top Target RPM", topTargetRPM));
-            bottomRPMPID.setSetpoint(LightningShuffleboard.getDouble("Flywheel", "Bottom Target RPM", bottomTargetRPM));
+            setTopMoterRPM(LightningShuffleboard.getDouble("Flywheel", "Top Target RPM", topTargetRPM));
+            setBottomMoterRPM(LightningShuffleboard.getDouble("Flywheel", "Bottom Target RPM", bottomTargetRPM));
         }
     }
 
