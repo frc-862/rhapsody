@@ -73,9 +73,9 @@ public class RobotContainer extends LightningContainer {
 	private Swerve drivetrain;
 	private Limelights limelights;
 	private Collector collector;
-	private Indexer indexer;
 	private Flywheel flywheel;
-	// private Pivot pivot;
+	private Pivot pivot;
+	private Indexer indexer;
 	// private Climber climber;
 	LEDs leds;
 	Orchestra sing;
@@ -107,8 +107,9 @@ public class RobotContainer extends LightningContainer {
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
 		collector = new Collector();
-		indexer = new Indexer(collector);
 		flywheel = new Flywheel();
+		pivot = new Pivot();
+		indexer = new Indexer(collector);
 		// pivot = new Pivot();
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
@@ -120,14 +121,14 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeNamedCommands() {
-		// NamedCommands.registerCommand("disable-Vision",
-		// 		new InstantCommand(() -> drivetrain.disableVision()));
-		// NamedCommands.registerCommand("enable-Vision",
-		// 		new InstantCommand(() -> drivetrain.enableVision()));
+		NamedCommands.registerCommand("disable-Vision",
+				new InstantCommand(() -> drivetrain.disableVision()));
+		NamedCommands.registerCommand("enable-Vision",
+				new InstantCommand(() -> drivetrain.enableVision()));
 		// NamedCommands.registerCommand("led-Collect",
-		// 		leds.enableState(LED_STATES.COLLECTED).withTimeout(0.5));
+				// leds.enableState(LED_STATES.COLLECTED).withTimeout(0.5));
 		// NamedCommands.registerCommand("led-Shoot",
-		// 		leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
+				// leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
 		// NamedCommands.registerCommand("Cand-Sub", new PointBlankShot(flywheel, pivot,
 		// DriverStation.isAutonomousEnabled()));
@@ -172,13 +173,13 @@ public class RobotContainer extends LightningContainer {
 				.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
 		// enables slow mode for driving
-		// new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
-		// 		.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
-		// 		.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
+				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
+				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
 		// sets field relative forward to the direction the robot is facing
-		// new Trigger(() -> driver.getStartButton() && driver.getBackButton())
-		// 		.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+		new Trigger(() -> driver.getStartButton() && driver.getBackButton())
+				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
 		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector,
@@ -194,13 +195,14 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(driver::getLeftBumper)
 		// 		.whileTrue(new PointAtTag(0, 0, drivetrain, limelights, driver)); // TODO: make work
 
-		// new Trigger(driver::getYButton)
-		// 		.whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
-
+		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
+		
 		// new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
 		// new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
+		new Trigger(driver::getYButton)
+				.whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
-		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+		// new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
 		new Trigger(coPilot::getAButton)
