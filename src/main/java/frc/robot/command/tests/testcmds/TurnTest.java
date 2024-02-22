@@ -7,36 +7,36 @@ import frc.robot.subsystems.Swerve;
 
 public class TurnTest extends Command {
 
-  private Swerve drivetrain;
-  private DoubleSupplier speed;
+    private Swerve drivetrain;
+    private DoubleSupplier speed;
 
-  /**
-   * System test command for testing azimuth motors
-   * @param drivetrain swerve subsystem
-   * @param speed rotational rate
-   */
-  public TurnTest(Swerve drivetrain, DoubleSupplier speed) {
-    this.drivetrain = drivetrain;
-    this.speed = speed;
+    /**
+     * System test command for testing azimuth motors
+     * @param drivetrain swerve subsystem
+     * @param speed rotational rate
+     */
+    public TurnTest(Swerve drivetrain, DoubleSupplier speed) {
+        this.drivetrain = drivetrain;
+        this.speed = speed;
 
-    addRequirements(drivetrain);
-  }
+        addRequirements(drivetrain);
+    }
 
-  @Override
-  public void initialize() {}
+    @Override
+    public void initialize() {}
 
-  @Override
-  public void execute() {
-    drivetrain.applyPercentRequestRobot(() -> 0d, () -> 0d, speed);
-  }
+    @Override
+    public void execute() {
+        drivetrain.applyPercentRequestRobot(() -> 0d, () -> 0d, speed);
+    }
 
-  @Override
-  public void end(boolean interrupted) {
-    drivetrain.brake();
-  }
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.brake();
+    }
 
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

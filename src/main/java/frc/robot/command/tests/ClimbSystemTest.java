@@ -13,15 +13,14 @@ import frc.thunder.testing.SystemTestCommandGroup;
 
 public class ClimbSystemTest extends SystemTestCommandGroup {
 
-  public ClimbSystemTest(Climber climber, double speed) {
-    super(
-      new SequentialCommandGroup(
-        new WaitCommand(0.5),
-        new TimedCommand(new ClimbTest(climber, speed), 1), // UP
-        new WaitCommand(1),
-        new TimedCommand(new ClimbTest(climber, -speed), 1) // DOWN
-      )
-    );
-  }
-
+    public ClimbSystemTest(Climber climber, double speed) {
+        super(
+            new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new TimedCommand(new ClimbTest(climber, speed), 1), // UP
+                new WaitCommand(1),
+                new TimedCommand(new ClimbTest(climber, -speed), 1) // DOWN
+            )
+        );
+    }
 }

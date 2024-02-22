@@ -14,21 +14,20 @@ import frc.thunder.testing.SystemTestCommandGroup;
 
 public class DrivetrainSystemTest extends SystemTestCommandGroup {
 
-  public DrivetrainSystemTest(Swerve drivetrain, double speed) {
-    super(
-      new SequentialCommandGroup(
-        new WaitCommand(0.5),
-        new TimedCommand(new DriveTest(drivetrain, () -> speed, () -> 0d), 1), // Forward
-        new WaitCommand(1),
-        new TimedCommand(new DriveTest(drivetrain, () -> -speed, () -> 0d), 1), // Backward
-        new WaitCommand(1),
-        new TimedCommand(new DriveTest(drivetrain, () -> 0d, () -> speed), 1), // Left
-        new WaitCommand(1),
-        new TimedCommand(new DriveTest(drivetrain, () -> 0d, () -> -speed), 1), // Right
-        new WaitCommand(0.5),
-        new InstantCommand(() -> drivetrain.brake()) // Brake
-      )
-    );
-  }
-
+    public DrivetrainSystemTest(Swerve drivetrain, double speed) {
+        super(
+            new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new TimedCommand(new DriveTest(drivetrain, () -> speed, () -> 0d), 1), // Forward
+                new WaitCommand(1),
+                new TimedCommand(new DriveTest(drivetrain, () -> -speed, () -> 0d), 1), // Backward
+                new WaitCommand(1),
+                new TimedCommand(new DriveTest(drivetrain, () -> 0d, () -> speed), 1), // Left
+                new WaitCommand(1),
+                new TimedCommand(new DriveTest(drivetrain, () -> 0d, () -> -speed), 1), // Right
+                new WaitCommand(0.5),
+                new InstantCommand(() -> drivetrain.brake()) // Brake
+            )
+        );
+    }
 }

@@ -14,7 +14,7 @@ public class ClimbTest extends Command {
 
     /**
      * System test command for testing climb motors.
-     * @param climber climber subsystem 
+     * @param climber climber subsystem
      * @param power power to control up or down
      */
     public ClimbTest(Climber climber, double power) {

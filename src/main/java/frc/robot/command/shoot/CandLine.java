@@ -55,6 +55,6 @@ public class CandLine extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT; 
+		return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
 	}
 }

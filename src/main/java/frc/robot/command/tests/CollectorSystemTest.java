@@ -13,15 +13,14 @@ import frc.thunder.testing.SystemTestCommandGroup;
 
 public class CollectorSystemTest extends SystemTestCommandGroup {
 
-  public CollectorSystemTest(Collector collector, double speed) {
-    super(
-      new SequentialCommandGroup(
-        new WaitCommand(0.5),
-        new TimedCommand(new CollectorTest(collector, speed), 2), // Collector out
-        new WaitCommand(1),
-        new TimedCommand(new CollectorTest(collector, -speed), 2) // Collector in
-      )
-    );
-  }
-
+    public CollectorSystemTest(Collector collector, double speed) {
+        super(
+            new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new TimedCommand(new CollectorTest(collector, speed), 2), // Collector out
+                new WaitCommand(1),
+                new TimedCommand(new CollectorTest(collector, -speed), 2) // Collector in
+            )
+        );
+    }
 }

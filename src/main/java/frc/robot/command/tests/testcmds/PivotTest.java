@@ -9,30 +9,29 @@ import frc.robot.subsystems.Pivot;
 
 public class PivotTest extends Command {
 
-  private Pivot pivot;
-  private double angle;
+    private Pivot pivot;
+    private double angle;
 
-  public PivotTest(Pivot pivot, double angle) {
-    this.pivot = pivot;
-    this.angle = angle;
+    public PivotTest(Pivot pivot, double angle) {
+        this.pivot = pivot;
+        this.angle = angle;
 
-    addRequirements(pivot);
-  }
+        addRequirements(pivot);
+    }
 
-  @Override
-  public void initialize() {
-    pivot.setTargetAngle(angle);
-  }
+    @Override
+    public void initialize() {
+        pivot.setTargetAngle(angle);
+    }
 
-  @Override
-  public void execute() {}
+    @Override
+    public void execute() {}
 
-  @Override
-  public void end(boolean interrupted) {}
+    @Override
+    public void end(boolean interrupted) {}
 
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
-
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }
