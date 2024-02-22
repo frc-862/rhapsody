@@ -73,9 +73,9 @@ public class RobotContainer extends LightningContainer {
 	private Swerve drivetrain;
 	private Limelights limelights;
 	private Collector collector;
+	private Flywheel flywheel;
+	private Pivot pivot;
 	private Indexer indexer;
-	// private Flywheel flywheel;
-	// private Pivot pivot;
 	// private Climber climber;
 	LEDs leds;
 	Orchestra sing;
@@ -107,9 +107,10 @@ public class RobotContainer extends LightningContainer {
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
 		collector = new Collector();
+		flywheel = new Flywheel();
+		pivot = new Pivot();
 		indexer = new Indexer(collector);
 		// flywheel = new Flywheel();
-		// pivot = new Pivot();
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
 		sing = new Orchestra();
@@ -124,10 +125,10 @@ public class RobotContainer extends LightningContainer {
 				new InstantCommand(() -> drivetrain.disableVision()));
 		NamedCommands.registerCommand("enable-Vision",
 				new InstantCommand(() -> drivetrain.enableVision()));
-		NamedCommands.registerCommand("led-Collect",
-				leds.enableState(LED_STATES.COLLECTED).withTimeout(0.5));
-		NamedCommands.registerCommand("led-Shoot",
-				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
+		// NamedCommands.registerCommand("led-Collect",
+				// leds.enableState(LED_STATES.COLLECTED).withTimeout(0.5));
+		// NamedCommands.registerCommand("led-Shoot",
+				// leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
 		// NamedCommands.registerCommand("Cand-Sub", new PointBlankShot(flywheel, pivot,
 		// DriverStation.isAutonomousEnabled()));
@@ -194,10 +195,14 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getLeftBumper)
 				.whileTrue(new PointAtTag(0, 0, drivetrain, limelights, driver)); // TODO: make work
 
+		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
+		
+		// new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
+		// new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
 		new Trigger(driver::getYButton)
 				.whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
-		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+		// new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
 		new Trigger(coPilot::getAButton)
