@@ -36,5 +36,5 @@ public class CollectorTest extends Command {
   public boolean isFinished() {
     return false;
   }
-  
+
 }

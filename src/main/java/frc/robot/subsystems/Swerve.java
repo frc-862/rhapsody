@@ -196,7 +196,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             
         }
     }
-            
+
     private void initLogging() {
         // TODO Remove the unecessary shuffleboard stuff eventually
         LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());

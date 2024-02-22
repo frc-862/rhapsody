@@ -85,7 +85,6 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Gets the current beam brake state
-     * 
      * @return entry beambreak state
      */
     public boolean getEntryBeamBreakState() {
@@ -94,7 +93,6 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Gets the current beam brake state
-     * 
      * @return exit beambreak state
      */
     public boolean getExitBeamBreakState() {
@@ -112,14 +110,14 @@ public class Indexer extends SubsystemBase {
     @Override
     public void periodic() {
         // Update piece state based on beambreaks
-		if (getExitBeamBreakState()) {
-			setPieceState(PieceState.IN_INDEXER);
-		} else if (getEntryBeamBreakState()) {
-			setPieceState(PieceState.IN_PIVOT);
-		} else if (collector.getEntryBeamBreakState()) {
-			setPieceState(PieceState.IN_COLLECT);
-		} else {
-			setPieceState(PieceState.NONE);
-		}
+        if (getExitBeamBreakState()) {
+            setPieceState(PieceState.IN_INDEXER);
+        } else if (getEntryBeamBreakState()) {
+            setPieceState(PieceState.IN_PIVOT);
+        } else if (collector.getEntryBeamBreakState()) {
+            setPieceState(PieceState.IN_COLLECT);
+        } else {
+            setPieceState(PieceState.NONE);
+        }
     }
 }

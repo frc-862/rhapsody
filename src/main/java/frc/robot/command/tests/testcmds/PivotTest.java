@@ -34,5 +34,5 @@ public class PivotTest extends Command {
   public boolean isFinished() {
     return false;
   }
-  
+
 }

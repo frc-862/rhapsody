@@ -36,5 +36,5 @@ public class IndexerTest extends Command {
   public boolean isFinished() {
     return false;
   }
-  
+
 }

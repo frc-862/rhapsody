@@ -17,6 +17,7 @@ import frc.thunder.tuning.FalconTuner;
 import frc.robot.Constants.PivotConstants;
 
 public class Pivot extends SubsystemBase {
+
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
     private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
@@ -50,8 +51,6 @@ public class Pivot extends SubsystemBase {
 
         pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, targetAngle);
 
-        
-
         initLogging();
     }
 
@@ -82,7 +81,6 @@ public class Pivot extends SubsystemBase {
 
     /**
      * Sets the angle of the pivot
-     * 
      * @param angle Angle of the pivot
      */
     public void setTargetAngle(double angle) {
@@ -121,7 +119,6 @@ public class Pivot extends SubsystemBase {
     public boolean getReverseLimit() {
         return angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround; 
     }
-
 
     /**
      * @return The bias to add to the target angle of the pivot
