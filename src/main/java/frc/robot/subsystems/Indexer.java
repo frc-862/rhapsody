@@ -38,28 +38,49 @@ public class Indexer extends SubsystemBase {
         LightningShuffleboard.setBoolSupplier("Indexer", "Has shot", () -> hasShot());
     }
 
+    /**
+     * Get current state of piece
+     * @return current state of piece
+     */
     public PieceState getPieceState() {
         return currentState;
     }
 
+    /**
+     * Set the current state of the piece
+     * @param state new state of piece
+     */
     public void setPieceState(PieceState state) {
         currentState = state;
     }
 
+    /**
+     * Set raw power to the indexer motor
+     * @param power
+     */
     public void setPower(double power) {
         indexerMotor.set(power);
     }
 
+    /**
+     * Index in
+     */
     public void indexIn() {
-        indexerMotor.set(IndexerConstants.INDEXER_DEFAULT_POWER);
+        setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
     }
 
+    /**
+     * Index out
+     */
     public void indexOut() {
-        indexerMotor.set(-IndexerConstants.INDEXER_DEFAULT_POWER);
+        setPower(-IndexerConstants.INDEXER_DEFAULT_POWER);
     }
 
+    /**
+     * Stop the indexer
+     */
     public void stop() {
-        indexerMotor.set(0d);
+        setPower(0d);
     }
 
     /**
@@ -80,12 +101,17 @@ public class Indexer extends SubsystemBase {
         return !indexerSensorExit.get();
     }
 
+    /**
+     * TO BE IMPLEMENTED
+     * @return boolean
+     */
     public boolean hasShot() {
         return false; // TODO add actual logic
     }
 
     @Override
     public void periodic() {
+        // Update piece state based on beambreaks
 		if (getExitBeamBreakState()) {
 			setPieceState(PieceState.IN_INDEXER);
 		} else if (getEntryBeamBreakState()) {

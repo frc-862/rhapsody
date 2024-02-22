@@ -98,10 +98,6 @@ public class Pivot extends SubsystemBase {
         return angleMotor.getPosition().getValue() * 360;
     }
 
-    public void setPower(double power) {
-        angleMotor.set(power);
-    }
-
     /**
      * @return Whether or not the pivot is on target, within
      *         PivotConstants.ANGLE_TOLERANCE

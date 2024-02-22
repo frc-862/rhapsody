@@ -194,7 +194,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
-		new Trigger(coPilot::getAButton).whileTrue(new SmartCollect(() -> 0.50, () -> 0.40, collector, indexer));
+		new Trigger(coPilot::getAButton).whileTrue(new SmartCollect(() -> 0.50, () -> 0.40, collector, indexer)); // TODO: find correct button/trigger
 
 		// cand shots for the robot
 		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
@@ -245,17 +245,11 @@ public class RobotContainer extends LightningContainer {
 
 
 		/* copilot */
-		// collector.setDefaultCommand(new Collect(
-		// 		() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector));
-		// collector.setDefaultCommand(new SmartCollect(
-		// 	() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()),
-		// 	() -> 0.2,
-		// 	collector, indexer));
+		collector.setDefaultCommand(new Collect(
+				() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector));
 
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
-
-		pivot.setDefaultCommand(new InstantCommand(() -> pivot.setPower(0.05*(coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis())), pivot));
 	}
 
 	protected Command getAutonomousCommand() {
