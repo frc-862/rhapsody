@@ -424,7 +424,7 @@ public class Constants {
 
         public static final double ANGLE_TOLERANCE = 0.5;
 
-        public static final double ENCODER_OFFSET = -.207; // In rotations, was .793
+        public static final double ENCODER_OFFSET = 0.6118; // In rotations
         public static final SensorDirectionValue ENCODER_DIRECTION =
                 SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
