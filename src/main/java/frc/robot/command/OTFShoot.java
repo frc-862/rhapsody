@@ -140,14 +140,21 @@ public class OTFShoot extends Command {
 		double basicHeading = Math.toDegrees(Math.atan2(basicDeltaY, basicDeltaX));
 		double basicDelta = Math.abs(targetHeading - basicHeading);
 
+		// Get heading PID output
 		double pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
 
+		// Get the velocity of the robot in the direction of the target (speaker)
 		double velocityToTarget = new Translation2d(robotReleaseVelocityX, robotReleaseVelocityY).rotateBy(new Rotation2d(targetHeading - pose.getRotation().getDegrees())).getX();
 		double deltaPieceTarget = velocityToTarget * timeToSpeaker;
+
+		// Get the new target location based on offset due to velocity towards target
 		double pivotTargetX = VisionConstants.SPEAKER_LOCATION.getX() - deltaPieceTarget;
-		double pivotTargetY = VisionConstants.SPEAKER_LOCATION.getY();
+
+		// Get the delta X and Y to the new target (to find angle)
 		double pivotTargetDeltaX = pivotTargetX - pose.getX();
-		double pivotTargetDeltaY = pivotTargetY - pose.getY();
+		double pivotTargetDeltaY = VisionConstants.SPEAKER_LOCATION.getY() - pose.getY();
+
+		// Get the angle needed for pivot to point at new target
 		double pivotTargetAngle = Math.toDegrees(Math.atan2(pivotTargetDeltaY, pivotTargetDeltaX));
 
 		LightningShuffleboard.setDouble("OTF Shooting", "Distance to Speaker", distanceToSpeaker);
