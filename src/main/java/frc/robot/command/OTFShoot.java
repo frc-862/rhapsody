@@ -20,9 +20,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Telemetry;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Limelights;
+import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
@@ -31,6 +35,9 @@ public class OTFShoot extends Command {
 
 	private Swerve drivetrain;
 	private XboxController driver;
+	private Pivot pivot;
+	private Flywheel flywheel;
+	private Indexer indexer;
 
 	private double fireTime = Timer.getFPGATimestamp() + ShooterConstants.OTF_READY_TIME;
 
@@ -40,11 +47,17 @@ public class OTFShoot extends Command {
 	 * Creates a new PointAtTag.
 	 * @param drivetrain to request movement
 	 * @param driver the driver's controller, used for drive input
+	 * @param pivot the pivot subsystem
+	 * @param flywheel the flywheel subsystem
+	 * @param indexer the indexer subsystem
 	 */
-	public OTFShoot(Swerve drivetrain, XboxController driver) {
+	public OTFShoot(Swerve drivetrain, XboxController driver, Pivot pivot, Flywheel flywheel, Indexer indexer) {
 
 		this.drivetrain = drivetrain;
 		this.driver = driver;
+		this.pivot = pivot;
+		this.flywheel = flywheel;
+		this.indexer = indexer;
 
 	}
 
@@ -54,7 +67,7 @@ public class OTFShoot extends Command {
 		headingController.enableContinuousInput(-180, 180);
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 
-		addRequirements(drivetrain);
+		addRequirements(drivetrain, pivot, flywheel, indexer);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
@@ -130,6 +143,12 @@ public class OTFShoot extends Command {
 		double pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
 
 		double velocityToTarget = new Translation2d(robotReleaseVelocityX, robotReleaseVelocityY).rotateBy(new Rotation2d(targetHeading - pose.getRotation().getDegrees())).getX();
+		double deltaPieceTarget = velocityToTarget * timeToSpeaker;
+		double pivotTargetX = VisionConstants.SPEAKER_LOCATION.getX() - deltaPieceTarget;
+		double pivotTargetY = VisionConstants.SPEAKER_LOCATION.getY();
+		double pivotTargetDeltaX = pivotTargetX - pose.getX();
+		double pivotTargetDeltaY = pivotTargetY - pose.getY();
+		double pivotTargetAngle = Math.toDegrees(Math.atan2(pivotTargetDeltaY, pivotTargetDeltaX));
 
 		LightningShuffleboard.setDouble("OTF Shooting", "Distance to Speaker", distanceToSpeaker);
 		LightningShuffleboard.setDouble("OTF Shooting", "Rotated Target Heading", (targetHeading + 360) % 360);
@@ -163,8 +182,16 @@ public class OTFShoot extends Command {
 		// Normal driving, no OTF or point at tags
 		// drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX());
 
+
 		// OTF driving
 		drivetrain.setFieldDriver(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
+
+		pivot.setTargetAngle(pivotTargetAngle);
+		flywheel.setAllMotorsRPM(0); //TODO: get real value
+
+		if (fireTime - Timer.getFPGATimestamp() < 0) {
+			indexer.setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
+		} 
 	}
 
 	@Override

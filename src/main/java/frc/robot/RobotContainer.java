@@ -74,8 +74,8 @@ public class RobotContainer extends LightningContainer {
 	private Limelights limelights;
 	private Collector collector;
 	private Indexer indexer;
-	// private Flywheel flywheel;
-	// private Pivot pivot;
+	private Flywheel flywheel;
+	private Pivot pivot;
 	// Climber climber;
 	LEDs leds;
 	Orchestra sing;
@@ -105,8 +105,8 @@ public class RobotContainer extends LightningContainer {
 
 		indexer = new Indexer();
 		collector = new Collector();
-		// flywheel = new Flywheel();
-		// pivot = new Pivot();
+		flywheel = new Flywheel();
+		pivot = new Pivot();
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
 		sing = new Orchestra();
@@ -184,7 +184,7 @@ public class RobotContainer extends LightningContainer {
 		// indexer, leds));
 
 		// aim at amp and stage tags for the robot
-		new Trigger(driver::getLeftBumper).whileTrue(new OTFShoot(drivetrain, driver)); // TODO: make work
+		new Trigger(driver::getLeftBumper).whileTrue(new OTFShoot(drivetrain, driver, pivot, flywheel, indexer)); // TODO: make work
 		// new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
 		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
