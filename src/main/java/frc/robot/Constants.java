@@ -13,6 +13,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackTy
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.pathplanner.lib.path.PathConstraints;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -553,9 +554,18 @@ public class Constants {
         public static final int PINK_HUE = 355;
 
         public enum LED_STATES {
-            DISABLED(0), MIXER(1), COLLECTED(2), SHOT(3), FINISHED_CLIMB(4), SHOOTING(
-                    5), COLLECTING(
-                            6), CHASING(7), CLIMBING(8), HAS_PIECE(9), HAS_VISION(10), OFF(11);
+            DISABLED(0),
+            EMERGENCY(1),
+            COLLECTED(2),
+            SHOT(3),
+            FINISHED_CLIMB(4),
+            SHOOTING(5),
+            COLLECTING(6),
+            CHASING(7),
+            CLIMBING(8),
+            HAS_PIECE(9),
+            HAS_VISION(10),
+            DEFAULT(11);
 
             private final int priority;
 
