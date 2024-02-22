@@ -22,6 +22,14 @@ public class SmartShoot extends Command {
 
 	private boolean hasShot = false;
 
+	/**
+	 * SmartShoot to control flywheel, pivot, drivetrain, and indexer
+	 * @param flywheel
+	 * @param pivot
+	 * @param drivetrain
+	 * @param indexer
+	 * @param leds
+	 */
 	public SmartShoot(Flywheel flywheel, Pivot pivot, Swerve drivetrain, Indexer indexer, LEDs leds) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
