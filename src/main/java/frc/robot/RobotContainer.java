@@ -99,8 +99,8 @@ public class RobotContainer extends LightningContainer {
 				Constants.ControllerConstants.DEADBAND, -1, 1,
 				XboxControllerFilter.filterMode.SQUARED); // CoPilot controller
 
-		// limelights = new Limelights();
-		// drivetrain = TunerConstants.getDrivetrain(limelights);
+		limelights = new Limelights();
+		drivetrain = TunerConstants.getDrivetrain(limelights);
 
 		flywheel = new Flywheel();
 		// pivot = new Pivot();
@@ -156,16 +156,16 @@ public class RobotContainer extends LightningContainer {
 	protected void configureButtonBindings() {
 		/* driver */
 		// field centric for the robot
-		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
-				.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
-				.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(),
-						() -> -driver.getLeftX(), () -> -driver.getRightX()))
-				.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
+		// new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
+		// 		.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
+		// 		.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(),
+		// 				() -> -driver.getLeftX(), () -> -driver.getRightX()))
+		// 		.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
 		// enables slow mode for driving
-		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
-				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
-				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+		// new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
+		// 		.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
+		// 		.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
 		// sets field relative forward to the direction the robot is facing
 		// new Trigger(() -> driver.getStartButton() && driver.getBackButton())
@@ -192,7 +192,7 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
 		// new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
 
-		// new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
 		// cand shots for the robot

@@ -43,6 +43,7 @@ public class PodiumShot extends Command {
 	public void end(boolean interrupted) {
 		// flywheel.coast();
 		// flywheel.setAllMotorsRPM(0d);
+		flywheel.coast();
 		// pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 		// TODO add LED state
 	}
