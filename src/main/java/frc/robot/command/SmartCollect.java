@@ -5,7 +5,6 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Indexer;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class SmartCollect extends Command {
 
@@ -15,15 +14,16 @@ public class SmartCollect extends Command {
 	private DoubleSupplier indexerPower;
 
 	/**
-	 * Creates a new SmartCollect.
-	 * @param powerSupplier DoubleSupplier for power of motor (-1 to 1)
+	 * SmartCollect to control collector and indexer using beambreaks
+	 * @param collectorPower power to apply to collector
+	 * @param indexerPower power to apply to indexer
 	 * @param collector subsystem
 	 * @param indexer subsystem
 	 */
-	public SmartCollect(DoubleSupplier powerSupplier, DoubleSupplier indexerPower, Collector collector, Indexer indexer) {
+	public SmartCollect(DoubleSupplier collectorPower, DoubleSupplier indexerPower, Collector collector, Indexer indexer) {
 		this.collector = collector;
 		this.indexer = indexer;
-		this.collectorPower = powerSupplier;
+		this.collectorPower = collectorPower;
 		this.indexerPower = indexerPower;
 
 		addRequirements(collector, indexer);

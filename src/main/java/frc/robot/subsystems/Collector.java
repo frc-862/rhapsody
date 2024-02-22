@@ -5,9 +5,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.CollectorConstants;
-import frc.robot.Constants.FlywheelConstants;
-import frc.robot.Constants.IndexerConstants;
-import frc.robot.Constants.PivotConstants;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
