@@ -35,7 +35,7 @@ public class SmartCollect extends Command {
 	@Override
 	public void execute() {
 		switch (indexer.getPieceState()) {
-			case NONE, IN_COLLECT: 
+			case NONE, IN_COLLECT:
 				collector.setPower(collectorPower.getAsDouble());
 				indexer.setPower(indexerPower.getAsDouble());
 				break;
@@ -44,7 +44,7 @@ public class SmartCollect extends Command {
 				collector.stop();
 				indexer.setPower(0.8*indexerPower.getAsDouble());
 				break;
-			
+
 			case IN_INDEXER:
 				collector.stop();
 				indexer.stop();

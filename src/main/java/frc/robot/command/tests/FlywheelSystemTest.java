@@ -33,5 +33,4 @@ public class FlywheelSystemTest extends SystemTestCommandGroup {
       )
     );
   }
-
 }

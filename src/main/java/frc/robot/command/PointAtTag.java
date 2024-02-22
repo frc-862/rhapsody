@@ -19,7 +19,7 @@ public class PointAtTag extends Command {
 	private Swerve drivetrain;
 	private Limelight limelight;
 	private XboxController driver;
-	
+
 	private int limelightPrevPipeline = 0;
 	private double pidOutput;
 	private double targetHeading;
@@ -41,7 +41,7 @@ public class PointAtTag extends Command {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
 
-		//TODO Figure out which of these is the right one to use 
+		// TODO Figure out which of these is the right one to use
 		limelight = limelights.getStopMe();
 
 		limelightPrevPipeline = limelight.getPipeline();
@@ -49,15 +49,13 @@ public class PointAtTag extends Command {
 		limelight.setPipeline(VisionConstants.TAG_PIPELINE);
 
 		targetPose = new Translation2d(targetX, targetY);
-
 	}
-	
-	// Called when the command is initially scheduled.
+
 	@Override
 	public void initialize() {
 		headingController.enableContinuousInput(-180, 180);
 		// targetPose = limelight.getCamPoseTargetSpace().getTranslation().toTranslation2d();
-		
+
 		initLogging();
 	}
 
@@ -70,7 +68,6 @@ public class PointAtTag extends Command {
 		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Pid Output", () -> pidOutput);
 	}
 
-	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 		// TODO remove once Tuned
@@ -78,7 +75,6 @@ public class PointAtTag extends Command {
 		// headingController.setP(LightningShuffleboard.getDouble("PointAtTag", "P", 0.1));
 		// headingController.setI(LightningShuffleboard.getDouble("PointAtTag", "I", 0));
 		// headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 1));
-
 
 		Pose2d pose = drivetrain.getPose().get();
 		deltaX = targetPose.getX() - pose.getX();
@@ -91,19 +87,15 @@ public class PointAtTag extends Command {
 		// targetHeading = limelight.getTargetX();
 		// pidOutput = headingController.calculate(targetHeading, 0);
 		
-
 		// TODO test drives and test the deadbands
 		drivetrain.setFieldDriver(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
 
-
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		limelight.setPipeline(limelightPrevPipeline);
 	}
 
-	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
 		return false;

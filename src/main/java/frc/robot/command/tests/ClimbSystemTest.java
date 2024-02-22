@@ -12,7 +12,7 @@ import frc.thunder.command.TimedCommand;
 import frc.thunder.testing.SystemTestCommandGroup;
 
 public class ClimbSystemTest extends SystemTestCommandGroup {
-  
+
   public ClimbSystemTest(Climber climber, double speed) {
     super(
       new SequentialCommandGroup(

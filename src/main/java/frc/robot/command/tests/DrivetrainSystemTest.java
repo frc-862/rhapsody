@@ -4,7 +4,6 @@
 
 package frc.robot.command.tests;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -14,7 +13,7 @@ import frc.thunder.command.TimedCommand;
 import frc.thunder.testing.SystemTestCommandGroup;
 
 public class DrivetrainSystemTest extends SystemTestCommandGroup {
-  
+
   public DrivetrainSystemTest(Swerve drivetrain, double speed) {
     super(
       new SequentialCommandGroup(
