@@ -17,7 +17,7 @@ public class PointBlankShot extends Command {
 
 	/**
 	 * Creates a new PointBlankShot.
-	 * @param flywheel 
+	 * @param flywheel
 	 * @param pivot
 	 * @param isAutonomous
 	 */
@@ -29,7 +29,6 @@ public class PointBlankShot extends Command {
 		addRequirements(pivot, flywheel);
 	}
 
-	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
 		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
@@ -44,7 +43,6 @@ public class PointBlankShot extends Command {
 		}
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast();
@@ -55,7 +53,7 @@ public class PointBlankShot extends Command {
 	@Override
 	public boolean isFinished() {
 		if(isAutonomous){
-			return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT; 
+			return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
 		}
 		return false;
 	}

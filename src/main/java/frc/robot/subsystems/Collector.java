@@ -5,9 +5,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.CollectorConstants;
-import frc.robot.Constants.FlywheelConstants;
-import frc.robot.Constants.IndexerConstants;
-import frc.robot.Constants.PivotConstants;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
@@ -27,7 +24,6 @@ public class Collector extends SubsystemBase {
 				CollectorConstants.COLLECTOR_MOTOR_BRAKE_MODE);
 
 		beamBreak = new DigitalInput(DIO.COLLECTOR_BEAMBREAK);
-
 		initLogging();
 	}
 
@@ -39,7 +35,6 @@ public class Collector extends SubsystemBase {
 
 	/**
 	 * Entrance of Collector Beam Break
-	 * 
 	 * @return When an object is present, returns true, otherwise returns false
 	 */
 	public boolean getEntryBeamBreakState() {
@@ -48,7 +43,6 @@ public class Collector extends SubsystemBase {
 
 	/**
 	 * Sets the power of both collector motors
-	 * 
 	 * @param power Double value from -1.0 to 1.0 (positive collects inwards)
 	 */
 	public void setPower(double power) {
@@ -63,7 +57,6 @@ public class Collector extends SubsystemBase {
 
 	/**
 	 * Has piece
-	 * 
 	 * @return boolean, true if collector has piece
 	 */
 	public boolean hasPiece() {

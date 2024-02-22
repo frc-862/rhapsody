@@ -10,6 +10,7 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.tuning.FalconTuner;
 
 public class Flywheel extends SubsystemBase {
+
     private ThunderBird shooterTopMotor; // TODO figure out which is top vs bottom
     private ThunderBird shooterBottomMotor;
 
@@ -22,11 +23,11 @@ public class Flywheel extends SubsystemBase {
     private FalconTuner bottomTuner;
 
     public Flywheel() {
-        shooterTopMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD, FlywheelConstants.MOTOR_TOP_INVERT, 
+        shooterTopMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD, FlywheelConstants.MOTOR_TOP_INVERT,
             FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.MOTOR_BRAKE_MODE);
         shooterBottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD, FlywheelConstants.MOTOR_BOTTOM_INVERT,
             FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT, FlywheelConstants.MOTOR_BRAKE_MODE);
-            
+
         shooterTopMotor.configPIDF(0,FlywheelConstants.MOTOR_KP,
                 FlywheelConstants.MOTOR_KI, FlywheelConstants.MOTOR_KD,
                 FlywheelConstants.MOTOR_KS, FlywheelConstants.MOTOR_KV);
@@ -58,15 +59,10 @@ public class Flywheel extends SubsystemBase {
     public void periodic() {
         topTuner.update();
         bottomTuner.update();
-
-        // if() {
-
-        // }
     }
 
     /**
      * Sets the RPM of all flywheel motors
-     * 
      * @param rpm RPM of the flywheel
      */
     public void setAllMotorsRPM(double rpm) {
@@ -77,8 +73,7 @@ public class Flywheel extends SubsystemBase {
     }
 
     /**
-     * Sets the RPM of flywheel # 1
-     * 
+     * Sets the RPM of top flywheel
      * @param rpm RPM of the flywheel
      */
     public void setTopMoterRPM(double rpm) {
@@ -87,8 +82,7 @@ public class Flywheel extends SubsystemBase {
     }
 
     /**
-     * Sets the RPM of flywheel # 2
-     * 
+     * Sets the RPM of bottom flywheel
      * @param rpm RPM of the flywheel
      */
     public void setBottomMoterRPM(double rpm) {

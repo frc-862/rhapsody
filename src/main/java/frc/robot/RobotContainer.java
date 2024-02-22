@@ -33,6 +33,7 @@ import frc.robot.command.OTFShoot;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Sing;
+import frc.robot.command.SmartCollect;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.CandC1;
 import frc.robot.command.shoot.CandC2;
@@ -66,17 +67,17 @@ import frc.thunder.testing.SystemTest;
 import frc.thunder.testing.SystemTestCommand;
 
 public class RobotContainer extends LightningContainer {
-	public static XboxControllerFilter driver;
-	public static XboxControllerFilter coPilot;
+	public static XboxController driver;
+	public static XboxController coPilot;
 
 	// Subsystems
 	private Swerve drivetrain;
 	private Limelights limelights;
 	private Collector collector;
-	private Indexer indexer;
 	private Flywheel flywheel;
 	private Pivot pivot;
-	// Climber climber;
+	private Indexer indexer;
+	// private Climber climber;
 	LEDs leds;
 	Orchestra sing;
 
@@ -93,20 +94,24 @@ public class RobotContainer extends LightningContainer {
 		SignalLogger.setPath(Constants.HOOT_PATH);
 		SignalLogger.enableAutoLogging(true);
 
-		driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort,
-				Constants.ControllerConstants.DEADBAND, -1, 1,
-				XboxControllerFilter.filterMode.SQUARED); // Driver controller
-		coPilot = new XboxControllerFilter(ControllerConstants.CopilotControllerPort,
-				Constants.ControllerConstants.DEADBAND, -1, 1,
-				XboxControllerFilter.filterMode.SQUARED); // CoPilot controller
+		// driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort,
+		// Constants.ControllerConstants.DEADBAND, -1, 1,
+		// XboxControllerFilter.filterMode.SQUARED); // Driver controller
+		// coPilot = new XboxControllerFilter(ControllerConstants.CopilotControllerPort,
+		// Constants.ControllerConstants.DEADBAND, -1, 1,
+		// XboxControllerFilter.filterMode.SQUARED); // CoPilot controller
+
+		driver = new XboxController(ControllerConstants.DriverControllerPort);
+		coPilot = new XboxController(ControllerConstants.CopilotControllerPort);
 
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
 
-		indexer = new Indexer();
 		collector = new Collector();
 		flywheel = new Flywheel();
 		pivot = new Pivot();
+		indexer = new Indexer(collector);
+		flywheel = new Flywheel();
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
 		sing = new Orchestra();
@@ -121,10 +126,10 @@ public class RobotContainer extends LightningContainer {
 				new InstantCommand(() -> drivetrain.disableVision()));
 		NamedCommands.registerCommand("enable-Vision",
 				new InstantCommand(() -> drivetrain.enableVision()));
-		NamedCommands.registerCommand("led-Collect",
-				leds.enableState(LED_STATES.COLLECTED).withTimeout(0.5));
-		NamedCommands.registerCommand("led-Shoot",
-				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
+		// NamedCommands.registerCommand("led-Collect",
+				// leds.enableState(LED_STATES.COLLECTED).withTimeout(0.5));
+		// NamedCommands.registerCommand("led-Shoot",
+				// leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
 		// NamedCommands.registerCommand("Cand-Sub", new PointBlankShot(flywheel, pivot,
 		// DriverStation.isAutonomousEnabled()));
@@ -159,8 +164,13 @@ public class RobotContainer extends LightningContainer {
 		// field centric for the robot
 		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
 				.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
-				.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(),
-						() -> -driver.getLeftX(), () -> -driver.getRightX()))
+				.whileTrue(drivetrain.applyPercentRequestRobot(
+						() -> -MathUtil.applyDeadband(driver.getLeftY(),
+								ControllerConstants.DEADBAND),
+						() -> -MathUtil.applyDeadband(driver.getLeftX(),
+								ControllerConstants.DEADBAND),
+						() -> -MathUtil.applyDeadband(driver.getRightX(),
+								ControllerConstants.DEADBAND)))
 				.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
 		// enables slow mode for driving
@@ -180,8 +190,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
 
 		// smart shoot for the robot
-		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain,
-		// indexer, leds));
+		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
 
 		// aim at amp and stage tags for the robot
 		new Trigger(driver::getLeftBumper).whileTrue(new OTFShoot(drivetrain, driver, pivot, flywheel, indexer)); // TODO: make work
@@ -189,9 +198,12 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
-		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+		// new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
+		new Trigger(coPilot::getAButton)
+				.whileTrue(new SmartCollect(() -> 0.50, () -> 0.40, collector, indexer)); // TODO: find correct button/trigger
+
 		// cand shots for the robot
 		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
 		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
@@ -221,9 +233,9 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
-		new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
-				.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
-				.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
+		// new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
+		// .onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
+		// .onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
 	}
 
 
@@ -232,9 +244,13 @@ public class RobotContainer extends LightningContainer {
 		/* driver */
 		drivetrain.registerTelemetry(logger::telemeterize);
 
-		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(() -> -driver.getLeftY(),
-				() -> -driver.getLeftX(), () -> -driver.getRightX()));
-
+		// drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(() ->
+		// -driver.getLeftY(),
+		// () -> -driver.getLeftX(), () -> -driver.getRightX()));
+		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(
+				() -> -MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND),
+				() -> -MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND),
+				() -> -MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND)));
 
 		/* copilot */
 		collector.setDefaultCommand(new Collect(

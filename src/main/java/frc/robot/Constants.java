@@ -2,7 +2,6 @@ package frc.robot;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,9 +28,7 @@ import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.math.InterpolationMap;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 
-/** Add your docs here. */
 public class Constants {
 
     public static final Path MERCURY_PATH = Paths.get("/home/lvuser/mercury");
@@ -414,23 +411,28 @@ public class Constants {
         public static final boolean MOTOR_INVERT = true; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
         public static final boolean MOTOR_BRAKE_MODE = true;
-        public static final double MOTOR_KP = 0;
+        public static final double MOTOR_KP = 0.08;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
-        public static final double MOTOR_KV = 0;
+        public static final double MOTOR_KV = 3;
+        public static final double MOTOR_KA = 0;
+ 
+        public static final double MAGIC_CRUISE_VEL = 0.01; //TODO: get real value
+        public static final double MAGIC_ACCEL = 0.02; //TODO: get real value
+        public static final double MAGIC_JERK = 0.2; //TODO: get real value
 
-        public static final double ANGLE_TOLERANCE = 0;
+        public static final double ANGLE_TOLERANCE = 0.25d;
 
-        public static final double ENCODER_OFFSET = .6165; // In rotations
+        public static final double ENCODER_OFFSET = 0.6118; // In rotations
         public static final SensorDirectionValue ENCODER_DIRECTION =
                 SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
-        public static final double ROTOR_TO_ENCODER_RATIO = 300d;
+        public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
 
         public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
 
-        public static final double STOW_ANGLE = 30d;
+        public static final double STOW_ANGLE = 35d;
 
         public static final double MIN_ANGLE = 25d;
         public static final double MAX_ANGLE = 100d;
@@ -462,7 +464,7 @@ public class Constants {
         // Amp
         public static final double AMP_TOP_RPM = 0;
         public static final double AMP_BOTTOM_RPM = 0;
-        public static final double AMP_ANGLE = 0;
+        public static final double AMP_ANGLE = 50;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 0;
