@@ -110,7 +110,7 @@ public class RobotContainer extends LightningContainer {
 		// flywheel = new Flywheel();
 		// pivot = new Pivot();
 		// climber = new Climber(drivetrain);
-		// leds = new LEDs();
+		leds = new LEDs();
 		sing = new Orchestra();
 
 		point = new SwerveRequest.PointWheelsAt();
@@ -202,7 +202,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(coPilot::getAButton).whileTrue(new SmartCollect(() -> 0.50, () -> 0.40, collector, indexer)); // TODO: find correct button/trigger
 
 		// cand shots for the robot
-		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
+		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
 		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
 

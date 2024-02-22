@@ -28,7 +28,7 @@ public class Pivot extends SubsystemBase {
     private final PIDController angleController = new PIDController(0.1, 0, 0);
     private double bias = 0;
 
-    private double targetAngle = 60;
+    private double targetAngle = 35;
 
     private FalconTuner pivotTuner;
 
@@ -59,12 +59,13 @@ public class Pivot extends SubsystemBase {
 
         angleMotor.applyConfig(motorConfig);
 
-        pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, targetAngle);
+        // pivotTuner = new FalconTuner(angleMotor, "Pivot", this::setTargetAngle, targetAngle);
 
         angleController.setIntegratorRange(0.1, 1);
+        angleController.setTolerance(PivotConstants.ANGLE_TOLERANCE);
 
         initLogging();
-        
+        setTargetAngle(targetAngle);
     }
 
     private void initLogging() {
@@ -96,7 +97,7 @@ public class Pivot extends SubsystemBase {
         angleMotor.getConfig().MotionMagic.MotionMagicAcceleration = LightningShuffleboard.getDouble("Pivot", "acceleration", PivotConstants.MAGIC_ACCEL);
         angleMotor.getConfig().MotionMagic.MotionMagicJerk = LightningShuffleboard.getDouble("Pivot", "jerk", PivotConstants.MAGIC_JERK);
 
-        pivotTuner.update();
+        // pivotTuner.update();
 
         // SETS angle to angle of limit switch on press
         if (getForwardLimit()) {
@@ -104,22 +105,25 @@ public class Pivot extends SubsystemBase {
         } else if(getReverseLimit()) {
             resetAngle(PivotConstants.MAX_ANGLE);
         }
+
+        moveToTarget();
+
     }
 
     /**
-     * Sets the angle of the pivot
+     * Sets the target angle of the pivot
      * @param angle Angle of the pivot
      */
     public void setTargetAngle(double angle) {
         targetAngle = MathUtil.clamp(angle + bias, PivotConstants.MIN_ANGLE, PivotConstants.MAX_ANGLE);
-        // targetAngle = angle;
-        // angleMotor.setControl(motionMagicPID.withPosition(targetAngle / 360));
+    }
+
+    /*
+     * Moves pivot motor toward target angle
+     */
+    private void moveToTarget(){
         double pidOutput = angleController.calculate(getAngle(), targetAngle);
         setPower(pidOutput);
-
-        if (onTarget()){
-            setPower(0d);
-        }
     }
 
     public void setPower(double power){
