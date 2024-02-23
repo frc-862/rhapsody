@@ -16,7 +16,7 @@ public class SmartCollect extends Command {
 	private Indexer indexer;
 	private Pivot pivot;
 
-	/* Used to only collect if pivot angle is too high */
+	/* Used to prevent indexing if pivot angle is too high */
 	private boolean allowIndex;
 	
 	/* Used to check if we have already touched the exit beambreak and we need to back down */
@@ -49,7 +49,7 @@ public class SmartCollect extends Command {
 
 		switch (indexer.getPieceState()) {
 			case NONE:
-				// reversedFromExit = false;
+				reversedFromExit = false;
 				collector.setPower(collectorPower.getAsDouble());
 				if (allowIndex) indexer.setPower(indexerPower.getAsDouble());
 				break;
@@ -66,15 +66,17 @@ public class SmartCollect extends Command {
 
 			case IN_PIVOT:
 				collector.stop();
-				if (allowIndex) indexer.setPower(0.8 * indexerPower.getAsDouble());
-				// if (allowIndex && !reversedFromExit) indexer.setPower(0.8 * indexerPower.getAsDouble());
-				// reversedFromExit = false;
+				if (allowIndex && !reversedFromExit) {
+					indexer.setPower(0.8 * indexerPower.getAsDouble());
+				} else if (reversedFromExit) {
+					indexer.stop();
+				}
 				break;
 
 			case IN_INDEXER:
 				collector.stop();
 				indexer.setPower(-0.25 * indexerPower.getAsDouble());
-				// reversedFromExit = true;
+				reversedFromExit = true;
 				break;
 		}
 	}
