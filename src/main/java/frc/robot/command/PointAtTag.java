@@ -1,11 +1,12 @@
 package frc.robot.command;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveDriveBrake;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ControllerConstants;
@@ -21,11 +22,14 @@ public class PointAtTag extends Command {
 	private Swerve drivetrain;
 	private Limelight limelight;
 	private XboxController driver;
+
+	private FieldCentric slow;
+	private FieldCentric drive;
 	
 	private int limelightPrevPipeline = 0;
 	private double pidOutput;
 	private double targetHeading;
-	private Translation2d targetPose;
+
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
@@ -45,32 +49,42 @@ public class PointAtTag extends Command {
 		limelightPrevPipeline = limelight.getPipeline();
 
 		limelight.setPipeline(VisionConstants.TAG_PIPELINE);
-
+		
+		drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);//.withDeadband(DrivetrAinConstants.MaxSpeed * DrivetrAinConstants.SPEED_DB).withRotationalDeadband(DrivetrAinConstants.MaxAngularRate * DrivetrAinConstants.ROT_DB); // I want field-centric driving in closed loop
+		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+		
 	}
 	
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-
-		headingController.enableContinuousInput(-180, 180);
+		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		headingController.setTolerance(LightningShuffleboard.getDouble("PointAtTag", "Tolarance", 4));
-		headingController.setP(LightningShuffleboard.getDouble("PointAtTag", "P", 0.1));
-		headingController.setI(LightningShuffleboard.getDouble("PointAtTag", "I", 0));
-		headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 1));
 
 		targetHeading = limelight.getTargetX();
-		pidOutput = headingController.calculate(targetHeading, 0);
-		
-		LightningShuffleboard.setDouble("PointAtTag", "Target Heading2", targetHeading);
+
+		LightningShuffleboard.setDouble("PointAtTag", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
+		LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
 
-		// TODO test drives and test the deadbands
-		drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), pidOutput, ControllerConstants.DEADBAND);
+
+		pidOutput = headingController.calculate(0, targetHeading);
+
+		if (driver.getRightBumper()) {
+			drivetrain.setControl(slow.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+				.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT) // Drive left with negative X (left)
+				.withRotationalRate(-pidOutput) // Drive counterclockwise with negative X (left)
+			);
+		} else {
+			drivetrain.setControl(drive.withVelocityX(-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive forward with negative Y (Its worth noting the field Y axis differs from the robot Y axis_
+		  		.withVelocityY(-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
+		  		.withRotationalRate(-pidOutput) // Rotate toward the desired direction
+		  	); // Drive counterclockwise with negative X (left)
+		}
 	}
 
 	// Called once the command ends or is interrupted.
