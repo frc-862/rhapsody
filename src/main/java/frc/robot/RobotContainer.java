@@ -90,8 +90,8 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeSubsystems() {
-		// SignalLogger.setPath(Constants.HOOT_PATH);
-		// SignalLogger.enableAutoLogging(true);
+		SignalLogger.setPath(Constants.HOOT_PATH);
+		SignalLogger.enableAutoLogging(true);
 
 		// driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort,
 		// Constants.ControllerConstants.DEADBAND, -1, 1,
@@ -110,13 +110,13 @@ public class RobotContainer extends LightningContainer {
 		flywheel = new Flywheel();
 		pivot = new Pivot();
 		indexer = new Indexer(collector);
-		// pivot = new Pivot();
+		pivot = new Pivot();
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
 		sing = new Orchestra();
 
-		// point = new SwerveRequest.PointWheelsAt();
-		// logger = new Telemetry(DrivetrainConstants.MaxSpeed);
+		point = new SwerveRequest.PointWheelsAt();
+		logger = new Telemetry(DrivetrainConstants.MaxSpeed);
 	}
 
 	@Override
@@ -125,10 +125,10 @@ public class RobotContainer extends LightningContainer {
 				new InstantCommand(() -> drivetrain.disableVision()));
 		NamedCommands.registerCommand("enable-Vision",
 				new InstantCommand(() -> drivetrain.enableVision()));
-		// NamedCommands.registerCommand("led-Collect",
-				// leds.enableState(LED_STATES.COLLECTED).withTimeout(0.5));
-		// NamedCommands.registerCommand("led-Shoot",
-				// leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
+		NamedCommands.registerCommand("led-Collect",
+				leds.enableState(LED_STATES.COLLECTED).withTimeout(0.5));
+		NamedCommands.registerCommand("led-Shoot",
+				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
 		// NamedCommands.registerCommand("Cand-Sub", new PointBlankShot(flywheel, pivot,
 		// DriverStation.isAutonomousEnabled()));
@@ -153,8 +153,8 @@ public class RobotContainer extends LightningContainer {
 		// drivetrain, drive)); // TODO find a way to use this
 
 		// make sure named commands are initialized before autobuilder!
-		// autoChooser = AutoBuilder.buildAutoChooser();
-		// LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
+		autoChooser = AutoBuilder.buildAutoChooser();
+		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 	}
 
 	@Override
@@ -182,11 +182,10 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector,
-		// limelights));
+		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
 		// parks the robot
-		// new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
+		new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
 
 		// smart shoot for the robot
 		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
@@ -196,13 +195,8 @@ public class RobotContainer extends LightningContainer {
 		// 		.whileTrue(new PointAtTag(0, 0, drivetrain, limelights, driver)); // TODO: make work
 
 		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
-		
-		// new Trigger(driver::getBButton).whileTrue(nervo.fireServo());
-		// new Trigger(() -> driver.getPOV() == 180).toggleOnTrue(nervo.flywheelServo());
-		new Trigger(driver::getYButton)
-				.whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
-		// new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
 		new Trigger(coPilot::getAButton)
@@ -291,20 +285,18 @@ public class RobotContainer extends LightningContainer {
 		SystemTest.registerTest("Azimuth Test",
 				new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
-		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
-		// Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+		SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
+		Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
-		// SystemTest.registerTest("Shooter Test", new ShooterSystemTest(shooter, flywheel,
-		// collector, indexer, pivot));
+		// TODO make pivot system test
 
 		// SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
-		// indexer, pivot, Constants.FlywheelConstants.SYS_TEST_SPEED));
+		// 	indexer, pivot, Constants.FlywheelConstants.SYS_TEST_SPEED));
 
 		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
 		// Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
 
-		// Sing chooser
-		// SendableChooser<SystemTestCommand> songChooser = new SendableChooser<>();
+		// Sing chooser SendableChooser<SystemTestCommand> songChooser = new SendableChooser<>();
 		// songChooser.setDefaultOption(MusicConstants.BOH_RHAP_FILEPATH,
 		// 		new SingSystemTest(drivetrain, MusicConstants.BOH_RHAP_FILEPATH, sing));
 		// for (String filepath : MusicConstants.SET_LIST) {

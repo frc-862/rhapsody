@@ -1,4 +1,4 @@
- package frc.robot.command.shoot;
+package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
@@ -13,6 +13,7 @@ public class PodiumShot extends Command {
 
 	/**
 	 * Creates a new PodiumShot.
+	 * 
 	 * @param flywheel
 	 * @param pivot
 	 */
@@ -24,9 +25,8 @@ public class PodiumShot extends Command {
 	}
 
 	@Override
-	public void initialize() {
-	}
-	
+	public void initialize() {}
+
 	@Override
 	public void execute() {
 		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
