@@ -34,15 +34,6 @@ public class LEDs extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		state = LED_STATES.DEFAULT;
-		for (LED_STATES i : Arrays.asList(LED_STATES.values())) {
-			Boolean value = ledStates.get(i);
-
-			if (value != null && value && (i.getPriority() < state.getPriority())) {
-				state = i;
-			}
-		}
-
 		switch (state) {
 			case EMERGENCY:
 				blink(LEDsConstants.RED_HUE);
@@ -103,9 +94,25 @@ public class LEDs extends SubsystemBase {
 	 */
 	public Command enableState(LED_STATES state) {
 		return new StartEndCommand(() -> {
-		},
-				() -> {
-				}).ignoringDisable(true);
+			ledStates.put(state, true);
+			updateState();
+		}, 
+		() -> {
+			ledStates.put(state, false);
+			updateState();
+		}
+		).ignoringDisable(true);
+	}
+
+	public void updateState(){
+		state = LED_STATES.DEFAULT;
+		for (LED_STATES i : Arrays.asList(LED_STATES.values())) {
+			Boolean value = ledStates.get(i);
+
+			if (value != null && value && (i.getPriority() < state.getPriority())) {
+				state = i;
+			}
+		}
 	}
 
 	public void rainbow() {
