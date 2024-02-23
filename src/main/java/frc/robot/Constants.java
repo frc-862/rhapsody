@@ -543,7 +543,7 @@ public class Constants {
     public class LEDsConstants {
         public static final int LED_LENGTH = 14;
 
-        public static final int SWRIL_SEGMENT_SIZE = 5;
+        public static final int SWIRL_SEGMENT_SIZE = 5;
 
         public static final int RED_HUE = 0;
         public static final int ORANGE_HUE = 5;

@@ -117,7 +117,7 @@ public class LEDs extends SubsystemBase {
 
 	public void swirl() {
 		for (int i = 0; i < LEDsConstants.LED_LENGTH; i++) {
-			if (((i + (int) (Timer.getFPGATimestamp() * 10)) / LEDsConstants.SWRIL_SEGMENT_SIZE) % 2 == 0) {
+			if (((i + (int) (Timer.getFPGATimestamp() * 10)) / LEDsConstants.SWIRL_SEGMENT_SIZE) % 2 == 0) {
 				setSingleHSV(i, LEDsConstants.BLUE_HUE, 255, 255);
 			} else {
 				setSingleHSV(i, LEDsConstants.ORANGE_HUE, 255, 255);
