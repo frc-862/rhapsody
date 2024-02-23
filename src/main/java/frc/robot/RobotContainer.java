@@ -249,7 +249,7 @@ public class RobotContainer extends LightningContainer {
 	@Override
 	protected void configureDefaultCommands() {
 		/* driver */
-		// drivetrain.registerTelemetry(logger::telemeterize);
+		drivetrain.registerTelemetry(logger::telemeterize);
 
 		// drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(() ->
 		// -driver.getLeftY(),
