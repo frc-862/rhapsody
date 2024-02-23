@@ -201,10 +201,13 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		new Trigger(coPilot::getAButton)
-				.whileTrue(new SmartCollect(() -> 0.50, () -> 0.55, collector, indexer)); // TODO: find correct button/trigger
+				.whileTrue(new SmartCollect(() -> 0.50, () -> 0.55, collector, indexer)); // TODO:
+																							// find
+																							// correct
+																							// button/trigger
 
 		// cand shots for the robot
-		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, indexer, false));
+		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
 		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
 		new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
 
@@ -287,7 +290,7 @@ public class RobotContainer extends LightningContainer {
 				new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
 		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
-		// 		Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+		// Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
 		// TODO make pivot system test
 
