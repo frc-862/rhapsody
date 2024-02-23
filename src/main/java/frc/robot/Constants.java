@@ -441,9 +441,9 @@ public class Constants {
 
     public class CandConstants { // TODO get real
         // Amp
-        public static final double AMP_TOP_RPM = 0;
-        public static final double AMP_BOTTOM_RPM = 0;
-        public static final double AMP_ANGLE = 50;
+        public static final double AMP_TOP_RPM = 300; // 250?
+        public static final double AMP_BOTTOM_RPM = 450;
+        public static final double AMP_ANGLE = 103.5; 
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 0;
@@ -468,6 +468,10 @@ public class Constants {
         // Line
         public static final double LINE_RPM = 0;
         public static final double LINE_ANGLE = 0;
+
+        //Source
+        public static final double SOURCE_RPM = -300d; // TODO test
+        public static final double SOURCE_ANGLE = 45d; // TODO test
 
         // TODO find time to shoot
         public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer start to flywheel exit
