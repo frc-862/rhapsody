@@ -375,11 +375,11 @@ public class Constants {
         public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 40;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
-        public static final double MOTOR_KP = 0.00035;
+        public static final double MOTOR_KP = 0.00314;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
-        public static final double MOTOR_KV = 0.002;
+        public static final double MOTOR_KV = 0.00195;
         public static final double MOTOR_KA = 0;
 
         public static final double RPM_TOLERANCE = 50d;
@@ -414,10 +414,10 @@ public class Constants {
         public static final double MOTOR_KS = 0;
         public static final double MOTOR_KV = 3;
         public static final double MOTOR_KA = 0;
- 
-        public static final double MAGIC_CRUISE_VEL = 0.01; //TODO: get real value
-        public static final double MAGIC_ACCEL = 0.02; //TODO: get real value
-        public static final double MAGIC_JERK = 0.2; //TODO: get real value
+
+        public static final double MAGIC_CRUISE_VEL = 0.01; // TODO: get real value
+        public static final double MAGIC_ACCEL = 0.02; // TODO: get real value
+        public static final double MAGIC_JERK = 0.2; // TODO: get real value
 
         public static final double ANGLE_TOLERANCE = 0.25d;
 
@@ -467,7 +467,7 @@ public class Constants {
 
         // Podium
         public static final double PODIUM_RPM = 3000;
-        public static final double PODIUM_ANGLE = 0;
+        public static final double PODIUM_ANGLE = 90;
 
         // C1
         public static final double C1_RPM = 0;

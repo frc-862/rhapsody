@@ -33,6 +33,7 @@ public class Flywheel extends SubsystemBase {
     private double bottomTargetRPM = 0;
     private double bias = 0;
     private boolean tuning = false;
+    private boolean coast = false;
     
     // private FalconTuner topTuner;
     // private FalconTuner bottomTuner;
@@ -100,9 +101,6 @@ public class Flywheel extends SubsystemBase {
         tuning = LightningShuffleboard.getBool("Flywheel", "Tuning", false);
         // topTuner.update();
         // bottomTuner.update();
-        
-        topMotor.setVoltage(topRPMPID.calculate(getTopMotorRPM()) + topFeedForward.calculate(topTargetRPM));
-        bottomMotor.setVoltage(bottomRPMPID.calculate(getBottomMotorRPM()) + bottomFeedForward.calculate(bottomTargetRPM));
 
         LightningShuffleboard.setDouble("Flywheel", "top PID output", topRPMPID.calculate(getTopMotorRPM()));
         LightningShuffleboard.setDouble("Flywheel", "bottom PID output", bottomRPMPID.calculate(getBottomMotorRPM()));
@@ -124,18 +122,22 @@ public class Flywheel extends SubsystemBase {
             setTopMoterRPM(LightningShuffleboard.getDouble("Flywheel", "Top Target RPM", topTargetRPM));
             setBottomMoterRPM(LightningShuffleboard.getDouble("Flywheel", "Bottom Target RPM", bottomTargetRPM));
         }
-    }
 
-    // public void setPower() {
-    //     shooterBottomMotor.set(.9);
-    //     shooterTopMotor.set(.9);
-    // }
+        if(coast){
+            bottomMotor.setVoltage(FlywheelConstants.COAST_VOLTAGE);
+            topMotor.setVoltage(FlywheelConstants.COAST_VOLTAGE);
+        } else {
+            topMotor.setVoltage(topRPMPID.calculate(getTopMotorRPM()) + topFeedForward.calculate(topTargetRPM));
+            bottomMotor.setVoltage(bottomRPMPID.calculate(getBottomMotorRPM()) + bottomFeedForward.calculate(bottomTargetRPM));
+        }
+    }
 
     /**
      * Sets the RPM of all flywheel motors
      * @param rpm RPM of the flywheel
      */
     public void setAllMotorsRPM(double rpm) {
+        coast(false);
         topTargetRPM = rpm;
         bottomTargetRPM = rpm;
         
@@ -154,6 +156,7 @@ public class Flywheel extends SubsystemBase {
      * @param rpm RPM of the flywheel
      */
     public void setTopMoterRPM(double rpm) {
+        coast(false);
         topTargetRPM = rpm;
         topRPMPID.setSetpoint(rpm);
 
@@ -167,6 +170,7 @@ public class Flywheel extends SubsystemBase {
      * @param rpm RPM of the flywheel
      */
     public void setBottomMoterRPM(double rpm) {
+        coast(false);
         bottomTargetRPM = rpm;
         bottomRPMPID.setSetpoint(rpm);
         
@@ -214,9 +218,8 @@ public class Flywheel extends SubsystemBase {
     /**
      * Sets the voltage to a small amount so the flywheel coasts to a stop
      */
-    public void coast() {
-        bottomMotor.setVoltage(FlywheelConstants.COAST_VOLTAGE);
-        topMotor.setVoltage(FlywheelConstants.COAST_VOLTAGE);
+    public void coast(boolean coast) {
+        this.coast = coast;
     }
 
     /**
