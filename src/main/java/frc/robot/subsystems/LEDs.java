@@ -19,7 +19,7 @@ public class LEDs extends SubsystemBase {
 
 	AddressableLED leds;
 	AddressableLEDBuffer ledBuffer;
-	private LED_STATES state = LED_STATES.OFF;
+	private LED_STATES state;
 	private Map<LED_STATES, Boolean> ledStates;
 
 	public LEDs() {
@@ -34,7 +34,7 @@ public class LEDs extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		state = LED_STATES.OFF;
+		state = LED_STATES.DEFAULT;
 		for (LED_STATES i : Arrays.asList(LED_STATES.values())) {
 			Boolean value = ledStates.get(i);
 
@@ -44,6 +44,10 @@ public class LEDs extends SubsystemBase {
 		}
 
 		switch (state) {
+			case EMERGENCY:
+				blink(LEDsConstants.RED_HUE);
+				break;
+
 			case COLLECTED:
 				pulse(LEDsConstants.GREEN_HUE);
 				break;
@@ -61,11 +65,11 @@ public class LEDs extends SubsystemBase {
 				break;
 
 			case COLLECTING:
-				blink(LEDsConstants.RED_HUE);
+				pulse(LEDsConstants.RED_HUE);
 				break;
 
             case CHASING:
-				blink(LEDsConstants.RED_HUE);
+				pulse(LEDsConstants.RED_HUE);
 				break;
 
 			case CLIMBING:
@@ -80,19 +84,12 @@ public class LEDs extends SubsystemBase {
 				setSolidHSV(LEDsConstants.PINK_HUE, 255, 255);
 				break;
 
-			case MIXER:
-				// LightningShuffleboard.set("LEDs","Mixer Hue", 0);
-				// setSolidHSV((int)LightningShuffleboard.getDouble("LEDs", "Mixer Hue", 0),
-				// 255, 255);
-				break;
-
-			case OFF:
-				swirl(LEDsConstants.SWRIL_SEGMENT_SIZE);
-				break;
-
 			case DISABLED:
 				setSolidHSV(0, 0, 0);
 				break;
+
+			default:
+				swirl();
 		}
 
 		leds.setData(ledBuffer);
@@ -100,14 +97,14 @@ public class LEDs extends SubsystemBase {
 		LightningShuffleboard.setStringSupplier("LEDs", "State",() -> state.toString());
 	}
 
+	/**
+	 * @param state the state to enable
+	 * @return the command to enable the state
+	 */
 	public Command enableState(LED_STATES state) {
 		return new StartEndCommand(() -> {
-			System.out.println("start");
-			ledStates.put(state, true);
 		},
 				() -> {
-					System.out.println("end");
-					ledStates.put(state, false);
 				}).ignoringDisable(true);
 	}
 
@@ -118,12 +115,9 @@ public class LEDs extends SubsystemBase {
 		}
 	}
 
-	/**
-	 * @param segmentSize size of each color segment
-	 */
-	public void swirl(int segmentSize) {
+	public void swirl() {
 		for (int i = 0; i < LEDsConstants.LED_LENGTH; i++) {
-			if (((i + (int) (Timer.getFPGATimestamp() * 10)) / segmentSize) % 2 == 0) {
+			if (((i + (int) (Timer.getFPGATimestamp() * 10)) / LEDsConstants.SWIRL_SEGMENT_SIZE) % 2 == 0) {
 				setSingleHSV(i, LEDsConstants.BLUE_HUE, 255, 255);
 			} else {
 				setSingleHSV(i, LEDsConstants.ORANGE_HUE, 255, 255);
@@ -149,10 +143,21 @@ public class LEDs extends SubsystemBase {
 		setSolidHSV(hue, 255, (int) Math.abs((Math.sin(Timer.getFPGATimestamp() * 10) * 255)));
 	}
 
+	/**
+	 * @param index What LED to set
+	 * @param h Hue
+	 * @param s Saturation
+	 * @param v Value
+	 */
 	public void setSingleHSV(int index, int h, int s, int v) {
 		ledBuffer.setHSV(index, h, s, v);
 	}
 
+	/**
+	 * @param h Hue
+	 * @param s Saturation
+	 * @param v Value
+	 */
 	public void setSolidHSV(int h, int s, int v) {
 		for (var i = 0; i < LEDsConstants.LED_LENGTH; i++) {
 			setSingleHSV(i, h, s, v);
