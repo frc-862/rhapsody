@@ -431,6 +431,8 @@ public class Constants {
 
         public static final double STOW_ANGLE = 35d;
 
+        public static final double MAX_INDEX_ANGLE = 40d;
+
         public static final double MIN_ANGLE = 25d;
         public static final double MAX_ANGLE = 100d;
     }
