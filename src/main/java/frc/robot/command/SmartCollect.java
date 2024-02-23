@@ -48,7 +48,7 @@ public class SmartCollect extends Command {
 		allowIndex = pivot.getAngle() < Constants.PivotConstants.MAX_INDEX_ANGLE;
 
 		switch (indexer.getPieceState()) {
-			case NONE:
+			case NONE: /* Note not passing any beambreaks */
 				reversedFromExit = false;
 				collector.setPower(collectorPower.getAsDouble());
 				if (allowIndex) {
@@ -56,17 +56,19 @@ public class SmartCollect extends Command {
 				}
 				break;
 
-			case IN_COLLECT:
+			case IN_COLLECT: /* Note has passed beambreak past collector */
 				if (allowIndex) {
+					// Slow down collector to prevent jamming
 					collector.setPower(0.65 * collectorPower.getAsDouble());
 					indexer.setPower(indexerPower.getAsDouble());
 				} else {
+					// Stop collecting since pivot is not in right place
 					collector.stop();
 					indexer.stop();
 				}
 				break;
 
-			case IN_PIVOT:
+			case IN_PIVOT: /* Note has touched entry indexer beambreak */
 				collector.stop();
 				if (allowIndex && !reversedFromExit) {
 					indexer.setPower(0.8 * indexerPower.getAsDouble());
@@ -75,7 +77,7 @@ public class SmartCollect extends Command {
 				}
 				break;
 
-			case IN_INDEXER:
+			case IN_INDEXER: /* Note has touched exit indexer beambreak */
 				collector.stop();
 				indexer.setPower(-0.25 * indexerPower.getAsDouble());
 				reversedFromExit = true;
