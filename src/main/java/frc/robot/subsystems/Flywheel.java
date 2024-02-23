@@ -98,7 +98,6 @@ public class Flywheel extends SubsystemBase {
     
     @Override
     public void periodic() {
-        tuning = LightningShuffleboard.getBool("Flywheel", "Tuning", false);
         // topTuner.update();
         // bottomTuner.update();
 
@@ -109,19 +108,6 @@ public class Flywheel extends SubsystemBase {
 
         LightningShuffleboard.setDouble("Flywheel", "Top velocity error", topRPMPID.getPositionError());
         LightningShuffleboard.setDouble("Flywheel", "Bottom velocity error", bottomRPMPID.getPositionError());
-
-        if (tuning) {
-            topRPMPID.setP(LightningShuffleboard.getDouble("Flywheel", "Top P", topRPMPID.getP()));
-            topRPMPID.setI(LightningShuffleboard.getDouble("Flywheel", "Top I", topRPMPID.getI()));
-            topRPMPID.setD(LightningShuffleboard.getDouble("Flywheel", "Top D", topRPMPID.getD()));
-
-            bottomRPMPID.setP(LightningShuffleboard.getDouble("Flywheel", "Bottom P", bottomRPMPID.getP()));
-            bottomRPMPID.setI(LightningShuffleboard.getDouble("Flywheel", "Bottom I", bottomRPMPID.getI()));
-            bottomRPMPID.setD(LightningShuffleboard.getDouble("Flywheel", "Bottom D", bottomRPMPID.getD()));
-
-            setTopMoterRPM(LightningShuffleboard.getDouble("Flywheel", "Top Target RPM", topTargetRPM));
-            setBottomMoterRPM(LightningShuffleboard.getDouble("Flywheel", "Bottom Target RPM", bottomTargetRPM));
-        }
 
         if(coast){
             bottomMotor.setVoltage(FlywheelConstants.COAST_VOLTAGE);
