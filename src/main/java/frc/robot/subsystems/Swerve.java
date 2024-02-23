@@ -178,13 +178,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
                 pose = limelightSubsystem.getPoseQueue().poll();
-
-                // TODO remove once test new vision checks on Monday
-                LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());
-                LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());
-                LightningShuffleboard.setDouble("Swerve", "PoseTime",  pose.getFPGATimestamp());
-                LightningShuffleboard.setDouble("Swerve", "distance",  pose.getDistance());
-                LightningShuffleboard.setBool("Swerve", "MultipleTargets",  pose.getMoreThanOneTarget());
             }
         }
     }
