@@ -18,7 +18,7 @@ public class SmartCollect extends Command {
 
 	/* Used to prevent indexing if pivot angle is too high */
 	private boolean allowIndex;
-	
+
 	/* Used to check if we have already touched the exit beambreak and we need to back down */
 	private boolean reversedFromExit = false;
 
@@ -51,7 +51,9 @@ public class SmartCollect extends Command {
 			case NONE:
 				reversedFromExit = false;
 				collector.setPower(collectorPower.getAsDouble());
-				if (allowIndex) indexer.setPower(indexerPower.getAsDouble());
+				if (allowIndex) {
+					indexer.setPower(indexerPower.getAsDouble());
+				}
 				break;
 
 			case IN_COLLECT:
