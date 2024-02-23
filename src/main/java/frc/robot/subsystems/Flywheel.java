@@ -203,6 +203,7 @@ public class Flywheel extends SubsystemBase {
 
     /**
      * Sets the voltage to a small amount so the flywheel coasts to a stop
+     * @param coast Whether or not to coast the flywheel
      */
     public void coast(boolean coast) {
         this.coast = coast;
