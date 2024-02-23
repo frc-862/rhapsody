@@ -33,7 +33,7 @@ public class FlywheelTest extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        flywheel.setAllMotorsRPM(0);
+        flywheel.coast(true);
     }
 
     @Override

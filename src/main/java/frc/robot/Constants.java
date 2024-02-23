@@ -13,6 +13,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackTy
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.pathplanner.lib.path.PathConstraints;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -40,23 +41,9 @@ public class Constants {
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x
-                                                                                         // distance
-                                                                                         // from
-                                                                                         // center
-                                                                                         // of robot
-                                                                                         // to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free
-                                                                                              // speed
-                                                                                              // /
-                                                                                              // circumference
-                                                                                              // of
-                                                                                              // circle
-                                                                                              // with
-                                                                                              // radius
-                                                                                              // of
-                                                                                              // wheelbase
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
 
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
@@ -123,8 +110,6 @@ public class Constants {
 
         public class PWM {
             public static final int LED_PORT_1 = 0;
-            public static final int FIRE_SERVO_PORT = 2;
-            public static final int FLYWHEEL_SERVO_PORT = 3;
         }
     }
 
@@ -372,10 +357,8 @@ public class Constants {
 
     public class CollectorConstants { // TODO: get real
         public static final boolean COLLECTOR_MOTOR_INVERTED = true;
-        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they
-                                                                          // are not set to 0
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they
-                                                                          // are not set to 0
+        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
@@ -384,18 +367,20 @@ public class Constants {
     public class FlywheelConstants { // TODO: get real
         public static final boolean MOTOR_TOP_INVERT = true;
         public static final boolean MOTOR_BOTTOM_INVERT = false;
-        public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 40;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
-        public static final double MOTOR_KP = 0;
+        public static final double MOTOR_KP = 0.00314;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
-        public static final double MOTOR_KV = 0;
+        public static final double MOTOR_KV = 0.00195;
+        public static final double MOTOR_KA = 0;
 
-        public static final double RPM_TOLERANCE = 0;
+        public static final double RPM_TOLERANCE = 50d;
 
-        public static final double BIAS_INCREMENT = 0; // RPM to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 75d; // RPM to bias by per button press
+
         public static final double COAST_VOLTAGE = 0.1;
 
         public static final double FLYWHEEL_SYSTEST_POWER = 0.5;
@@ -424,10 +409,10 @@ public class Constants {
         public static final double MOTOR_KS = 0;
         public static final double MOTOR_KV = 3;
         public static final double MOTOR_KA = 0;
- 
-        public static final double MAGIC_CRUISE_VEL = 0.01; //TODO: get real value
-        public static final double MAGIC_ACCEL = 0.02; //TODO: get real value
-        public static final double MAGIC_JERK = 0.2; //TODO: get real value
+
+        public static final double MAGIC_CRUISE_VEL = 0.01; // TODO: get real value
+        public static final double MAGIC_ACCEL = 0.02; // TODO: get real value
+        public static final double MAGIC_JERK = 0.2; // TODO: get real value
 
         public static final double ANGLE_TOLERANCE = 0.25d;
 
@@ -475,8 +460,8 @@ public class Constants {
         public static final double POINT_BLANK_ANGLE = 0;
 
         // Podium
-        public static final double PODIUM_RPM = 0;
-        public static final double PODIUM_ANGLE = 0;
+        public static final double PODIUM_RPM = 3000;
+        public static final double PODIUM_ANGLE = 90;
 
         // C1
         public static final double C1_RPM = 0;
@@ -495,8 +480,7 @@ public class Constants {
         public static final double LINE_ANGLE = 0;
 
         // TODO find time to shoot
-        public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer
-                                                       // start to flywheel exit
+        public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer start to flywheel exit
     }
 
     public class ClimbConstants { // TODO: find real values
@@ -516,25 +500,13 @@ public class Constants {
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
         public static final double MAX_HEIGHT = 999d;
-        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of
-                                                       // lower arm in inches
-        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of
-                                                       // upper arm in inches
+        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of lower arm in inches
+        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
 
-        public static final Pose3d LOWER_OFFSET = new Pose3d(); // NOTE: Poses are in meters despite
-                                                                // george washington's best efforts
-        public static final Pose3d UPPER_OFFSET = new Pose3d(); // NOTE 2: these poses should
-                                                                // exclude side to side offset,
-                                                                // since it gets set below
+        public static final Pose3d LOWER_OFFSET = new Pose3d(); // NOTE: Poses are in meters despite george washington's best efforts
+        public static final Pose3d UPPER_OFFSET = new Pose3d(); // NOTE 2: these poses should exclude side to side offset, since it gets set below
 
-        public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); // NOTE 3: this is
-                                                                               // the side to side
-                                                                               // offset of the
-                                                                               // pivot point of the
-                                                                               // arms, should
-                                                                               // exclude anything
-                                                                               // but side to side
-                                                                               // values
+        public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); // NOTE 3: this is the side to side offset of the pivot point of the arms, should exclude anything but side to side values
         public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; // TODO: find real values
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
@@ -546,13 +518,12 @@ public class Constants {
         public enum CLIMBER_STATES {
             CLIMBED, GROUNDED, STOW
         }
-
     }
 
     public class LEDsConstants {
         public static final int LED_LENGTH = 14;
 
-        public static final int SWRIL_SEGMENT_SIZE = 5;
+        public static final int SWIRL_SEGMENT_SIZE = 5;
 
         public static final int RED_HUE = 0;
         public static final int ORANGE_HUE = 5;
@@ -563,9 +534,18 @@ public class Constants {
         public static final int PINK_HUE = 355;
 
         public enum LED_STATES {
-            DISABLED(0), MIXER(1), COLLECTED(2), SHOT(3), FINISHED_CLIMB(4), SHOOTING(
-                    5), COLLECTING(
-                            6), CHASING(7), CLIMBING(8), HAS_PIECE(9), HAS_VISION(10), OFF(11);
+            DISABLED(0),
+            EMERGENCY(1),
+            COLLECTED(2),
+            SHOT(3),
+            FINISHED_CLIMB(4),
+            SHOOTING(5),
+            COLLECTING(6),
+            CHASING(7),
+            CLIMBING(8),
+            HAS_PIECE(9),
+            HAS_VISION(10),
+            DEFAULT(11);
 
             private final int priority;
 
