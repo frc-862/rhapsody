@@ -24,6 +24,11 @@ public class Stow extends Command {
 	}
 
 	@Override
+	public void execute() {
+		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+	}
+
+	@Override
 	public boolean isFinished() {
 		return pivot.onTarget();
 	}
