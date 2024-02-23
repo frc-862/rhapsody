@@ -110,7 +110,6 @@ public class RobotContainer extends LightningContainer {
 		flywheel = new Flywheel();
 		pivot = new Pivot();
 		indexer = new Indexer(collector);
-		pivot = new Pivot();
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
 		sing = new Orchestra();
@@ -182,25 +181,31 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
+		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector,
+		// limelights));
 
 		// parks the robot
 		new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
 
 		// smart shoot for the robot
-		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds));
+		// new Trigger(driver::getAButton).whileTrue(new SmartShoot(flywheel, pivot, drivetrain,
+		// indexer, leds));
 
 		// aim at amp and stage tags for the robot
 		// new Trigger(driver::getLeftBumper)
-		// 		.whileTrue(new PointAtTag(0, 0, drivetrain, limelights, driver)); // TODO: make work
+		// .whileTrue(new PointAtTag(0, 0, drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
+		new Trigger(driver::getYButton)
+				.whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
 		new Trigger(coPilot::getAButton)
-				.whileTrue(new SmartCollect(() -> 0.50, () -> 0.55, collector, indexer)); // TODO: find correct button/trigger
+				.whileTrue(new SmartCollect(() -> 0.50, () -> 0.55, collector, indexer)); // TODO:
+																							// find
+																							// correct
+																							// button/trigger
 
 		// cand shots for the robot
 		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
@@ -286,29 +291,29 @@ public class RobotContainer extends LightningContainer {
 				new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
 		SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
-		Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+				Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
 		// TODO make pivot system test
 
 		// SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
-		// 	indexer, pivot, Constants.FlywheelConstants.SYS_TEST_SPEED));
+		// indexer, pivot, Constants.FlywheelConstants.SYS_TEST_SPEED));
 
 		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
 		// Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
 
 		// Sing chooser SendableChooser<SystemTestCommand> songChooser = new SendableChooser<>();
 		// songChooser.setDefaultOption(MusicConstants.BOH_RHAP_FILEPATH,
-		// 		new SingSystemTest(drivetrain, MusicConstants.BOH_RHAP_FILEPATH, sing));
+		// new SingSystemTest(drivetrain, MusicConstants.BOH_RHAP_FILEPATH, sing));
 		// for (String filepath : MusicConstants.SET_LIST) {
-		// 	songChooser.addOption(filepath, new SingSystemTest(drivetrain, filepath, sing));
+		// songChooser.addOption(filepath, new SingSystemTest(drivetrain, filepath, sing));
 		// }
 
 		// LightningShuffleboard.set("SystemTest", "Songs List", songChooser);
 
 		// songChooser.onChange((SystemTestCommand command) -> {
-		// 	if (command != null) {
-		// 		command.schedule();
-		// 	}
+		// if (command != null) {
+		// command.schedule();
+		// }
 		// });
 
 		// songChooser.close();
