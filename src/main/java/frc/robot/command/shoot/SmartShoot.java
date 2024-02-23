@@ -46,7 +46,7 @@ public class SmartShoot extends Command {
 	@Override
 	public void execute() {
 		pivot.setTargetAngle(calculateTargetAngle());
-		flywheel.setAllMotorsRPM(calculateTargetRPM());
+		// flywheel.setAllMotorsRPM(calculateTargetRPM());
 
 		if (onTarget()) {
 			indexer.setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
@@ -57,13 +57,13 @@ public class SmartShoot extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		if (hasShot) {
-			flywheel.coast();
+			flywheel.coast(true);
 			pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 			indexer.stop();
 			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
 			leds.enableState(LED_STATES.SHOT).withTimeout(2).schedule();
 		} else {
-			flywheel.coast();
+			flywheel.coast(true);
 		}
 	}
 

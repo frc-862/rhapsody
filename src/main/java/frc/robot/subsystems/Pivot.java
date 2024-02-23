@@ -99,7 +99,7 @@ public class Pivot extends SubsystemBase {
 
         // pivotTuner.update();
 
-        setTargetAngle(LightningShuffleboard.getDouble("Pivot", "settargetAngle", targetAngle));
+        // setTargetAngle(LightningShuffleboard.getDouble("Pivot", "settargetAngle", targetAngle));
 
         // SETS angle to angle of limit switch on press
         if (getForwardLimit()) {

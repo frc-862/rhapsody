@@ -45,7 +45,7 @@ public class PointBlankShot extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		flywheel.coast();
+		flywheel.coast(true);
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 		//TODO add LED state
 	}
