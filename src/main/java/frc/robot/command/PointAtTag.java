@@ -9,8 +9,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
@@ -43,7 +41,7 @@ public class PointAtTag extends Command {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
 
-		//TODO Figure out which of these is the right one to use 
+		// TODO Figure out which of these is the right one to use
 		limelight = limelights.getStopMe();
 
 		limelightPrevPipeline = limelight.getPipeline();
@@ -54,14 +52,12 @@ public class PointAtTag extends Command {
 		slow = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 		
 	}
-	
-	// Called when the command is initially scheduled.
+
 	@Override
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 	}
 
-	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 
@@ -87,13 +83,11 @@ public class PointAtTag extends Command {
 		}
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		limelight.setPipeline(limelightPrevPipeline);
 	}
 
-	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
 		return false;

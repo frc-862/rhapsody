@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BF-SB"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LEDShoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SB-BL"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Mobility Auton",
+  "choreoAuto": false
+}

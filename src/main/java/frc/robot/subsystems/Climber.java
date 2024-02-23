@@ -17,7 +17,7 @@ import frc.thunder.math.Conversions;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Climber extends SubsystemBase {
-    // create variables
+
     private ThunderBird climbMotorR;
     private ThunderBird climbMotorL;
 
@@ -35,17 +35,20 @@ public class Climber extends SubsystemBase {
     public Climber(Swerve drivetrain) {
         // configure climb motors
         climbMotorR = new ThunderBird(CAN.CLIMB_RIGHT, CAN.CANBUS_FD,
-                ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE); 
-        climbMotorL = new ThunderBird(CAN.CLIMB_LEFT, CAN.CANBUS_FD, 
+                ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
+        climbMotorL = new ThunderBird(CAN.CLIMB_LEFT, CAN.CANBUS_FD,
             ClimbConstants.CLIMB_LEFT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
 
         climbMotorL.configPIDF(0, ClimbConstants.EXTEND_KP, ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD);
         climbMotorL.configPIDF(1, ClimbConstants.RETRACT_KP, ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
-        
+
         climbMotorR.configPIDF(0, ClimbConstants.EXTEND_KP, ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD);
         climbMotorR.configPIDF(1, ClimbConstants.RETRACT_KP, ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
 
+        initLogging();
+    }
 
+    private void initLogging() { // TODO test and fix once we have climber
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Height", () -> getHeightL());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
@@ -69,8 +72,15 @@ public class Climber extends SubsystemBase {
     }
 
     /**
-     * sets power to climb motors
-     * 
+     * Sets power to both climb motors
+     * @param power the power to set both climb motors to
+     */
+    public void setPower(double power) {
+        setPower(power, power);
+    }
+
+    /**
+     * Sets power to climb motors
      * @param powerR the power to set the right climb motor to
      * @param powerL the power to set the left climb motor to
      */
@@ -79,26 +89,32 @@ public class Climber extends SubsystemBase {
         climbMotorL.set(powerL);
     }
 
-    public void setPowerL(double powerL) {
-        climbMotorL.set(powerL);
-    }
-
-    public void setPowerR(double powerR) {
-        climbMotorL.set(powerR);
+    /**
+     * Set power to left climb motor
+     * @param power power
+     */
+    public void setPowerL(double power) {
+        climbMotorL.set(power);
     }
 
     /**
-     * sets power to both climb motors
-     * 
-     * @param power the power to set both climb motors to
+     * Set power to right climb motor
+     * @param power power
      */
-    public void setPower(double power) {
-        setPower(power, power);
+    public void setPowerR(double power) {
+        climbMotorL.set(power);
+    }
+
+    /**
+     * sets the setpoint of both climb motors
+     * @param setPoint setpoint for both climb motors in inches
+     */
+    public void setSetpoint(double setPoint) {
+        setSetpoint(setPoint, setPoint);
     }
 
     /**
      * sets the setpoint of the climb motors
-     * 
      * @param leftInches setpoint for left climb motor in inches
      * @param rightInches setpoint for right climb motor in inches
      */
@@ -113,16 +129,7 @@ public class Climber extends SubsystemBase {
     }
 
     /**
-     * sets the setpoint of both climb motors
-     * 
-     * @param setPoint setpoint for both climb motors in inches
-     */
-    public void setSetpoint(double setPoint) {
-        setSetpoint(setPoint, setPoint);
-    }
-
-    /**
-     * stops all climb motors
+     * Stops all climb motors
      */
     public void stop() {
         setPower(0d);
@@ -217,7 +224,6 @@ public class Climber extends SubsystemBase {
 
     /**
      * stores state value for climber
-     * 
      * @param state
      */
     public void setState(CLIMBER_STATES state) {
@@ -242,7 +248,6 @@ public class Climber extends SubsystemBase {
     /**
      * tell climber if the right arm has been fully extended (robot should have returned to ground
      * after climb)
-     * 
      * @param hasGroundedR
      */
     public void setHasGroundedR(boolean hasGroundedR) {
@@ -252,7 +257,6 @@ public class Climber extends SubsystemBase {
     /**
      * tell climber if the left arm has been fully extended (robot should have returned to ground
      * after climb)
-     * 
      * @param hasGroundedL
      */
     public void setHasGroundedL(boolean hasGroundedL) {
@@ -261,7 +265,6 @@ public class Climber extends SubsystemBase {
 
     /**
      * tell climber if both arms have been retracted after returning to gound
-     * 
      * @param hasStowed
      */
     public void setHasStowed(boolean hasStowed) {

@@ -1,13 +1,7 @@
 package frc.robot.command;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Limelights;
@@ -20,7 +14,7 @@ public class ChasePieces extends Command {
 	private Swerve drivetrain;
 	private Collector collector;
 	private Limelight limelight;
-	
+
 	private int limelightId = 0;
 
 	private double pidOutput;
@@ -37,7 +31,7 @@ public class ChasePieces extends Command {
 
 	/**
 	 * Creates a new ChasePieces.
-	 * @param drivetrain to request movement 
+	 * @param drivetrain to request movement
 	 * @param collector to collect pieces
 	 * @param limelights to get vision data from dust
 	 */
@@ -47,22 +41,36 @@ public class ChasePieces extends Command {
 
 		limelight = limelights.getDust();
 		limelightId = limelight.getPipeline();
-		
+
 
 		addRequirements(drivetrain, collector);
 	}
-	
-	// Called when the command is initially scheduled.
+
 	@Override
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 		limelight.setPipeline(VisionConstants.NOTE_PIPELINE);
 		collector.setPower(1d); //TODO: get the right power
+
+		initLogging();
 	}
 
-	// Called every time the scheduler runs while the command is scheduled.
+	private void initLogging() {
+		LightningShuffleboard.setBoolSupplier("ChasePieces", "On Target", () -> onTarget);
+		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Target", () -> hasTarget);
+
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Heading", () -> targetHeading);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Y", () -> targetPitch);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Pid Output", () -> pidOutput);
+	}
+
 	@Override
 	public void execute() {
+		// For tuning.
+		// headingController.setP(LightningShuffleboard.getDouble("ChasePieces", "Pid P", 0.05));
+		// headingController.setI(LightningShuffleboard.getDouble("ChasePieces", "Pid I", 0));
+		// headingController.setD(LightningShuffleboard.getDouble("ChasePieces", "Pid D", 0));
+
 		hasTarget = limelight.hasTarget();
 
 		if (hasTarget){
@@ -74,22 +82,8 @@ public class ChasePieces extends Command {
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
 		hasPiece = collector.hasPiece();
 
-		LightningShuffleboard.setBool("ChasePieces", "On Target", onTarget);
-		LightningShuffleboard.setBool("ChasePieces", "Has Target", hasTarget);
-
-		LightningShuffleboard.setDouble("ChasePieces", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
-		LightningShuffleboard.setDouble("ChasePieces", "Target Heading", targetHeading);
-		LightningShuffleboard.setDouble("ChasePieces", "Target Y", targetPitch);
-		LightningShuffleboard.setDouble("ChasePieces", "Pid Output", pidOutput);
-
-		// For tuning.
-		// headingController.setP(LightningShuffleboard.getDouble("ChasePieces", "Pid P", 0.05));
-		// headingController.setI(LightningShuffleboard.getDouble("ChasePieces", "Pid I", 0));
-		// headingController.setD(LightningShuffleboard.getDouble("ChasePieces", "Pid D", 0));
-
-
 		pidOutput = headingController.calculate(0, targetHeading);
-		
+
 		if (hasTarget){
 			if (trustValues()){
 				if (!onTarget) {
@@ -102,19 +96,18 @@ public class ChasePieces extends Command {
 		} else {
 			drivetrain.setRobot(3, 0, 0);
 		}
-
-		isFinished();
-        
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		limelight.setPipeline(limelightId);
 		collector.stop();
 	}
 
-	// Makes sure that the robot isn't jerking over to a different side while chasing pieces.
+	/**
+	 * Makes sure that the robot isn't jerking over to a different side while chasing pieces.
+	 * @return t/f if the robot should trust the values
+	 */
 	public boolean trustValues(){
 		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6){
 			return true;
@@ -122,13 +115,11 @@ public class ChasePieces extends Command {
 		return false;
 	}
 
-	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
 		if (hasPiece){
 			return true;
 		}
-		
 		return false;
 	}
 }

@@ -13,15 +13,14 @@ import frc.thunder.testing.SystemTestCommandGroup;
 
 public class PivotSystemTest extends SystemTestCommandGroup {
 
-  public PivotSystemTest(Pivot pivot, double speed) {
-    super(
-      new SequentialCommandGroup(
-        new WaitCommand(0.5),
-        new TimedCommand(new PivotTest(pivot, speed), 0.5), // Pivot up
-        new WaitCommand(1),
-        new TimedCommand(new PivotTest(pivot, -speed), 0.5) // Pivot down
-      )
-    );
-  }
-
+    public PivotSystemTest(Pivot pivot, double speed) {
+        super(
+            new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new TimedCommand(new PivotTest(pivot, speed), 0.5), // Pivot up
+                new WaitCommand(1),
+                new TimedCommand(new PivotTest(pivot, -speed), 0.5) // Pivot down
+            )
+        );
+    }
 }
