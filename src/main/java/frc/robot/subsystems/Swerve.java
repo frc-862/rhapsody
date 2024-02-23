@@ -24,7 +24,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotContainer;
@@ -44,7 +43,6 @@ import frc.thunder.vision.Limelight;
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
-    
     private final Limelights limelightSubsystem;
 
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
@@ -58,10 +56,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private boolean robotCentricControl = false;
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
-
-    private double requestX;
-    private double requestY;
-    private double requestRot;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             Limelights limelightSubsystem, SwerveModuleConstants... modules) {
@@ -79,11 +73,10 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         // LightningShuffleboard.setDoubleSupplier("Collision Detection", "y acc", () -> getPigeon2().getAccelerationY().getValueAsDouble());
     }
 
-    // DRIVE METHODS
+    /* DRIVE METHODS */
 
     /**
      * Apply a percentage Field centric request to the drivetrain
-     * 
      * @param x the x, percent of max velocity (-1,1)
      * @param y the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity (-1,1)
@@ -98,7 +91,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a Field centric request to the drivetrain run in periodic
-     * 
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -113,10 +105,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     /**
      * Apply a Field centric request to the drivetrain run in periodic,
      * Allows driving normally and pid control of rotation
-     * 
      * @param x the x, percent of max velocity (-1,1)
      * @param y the y, percent of max velocity (-1,1)
-     * @param rot the rotational, percent of max velocity  rad/s
+     * @param rot the rotational, percent of max velocity rad/s
      */
     public void setFieldDriver(double x, double y, double rot) {
         this.setControl(driveField
@@ -127,7 +118,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a percentage Robot centric request to the drivetrain
-     * 
      * @param x the x, percent of max velocity (-1,1)
      * @param y the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity (-1,1)
@@ -142,7 +132,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a Robot centric request to the drivetrain run in periodic
-     * 
      * @param x the x velocity m/s
      * @param y the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -163,7 +152,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a request to the drivetrain
-     * 
      * @param requestSupplier the SwerveRequest to apply
      * @return the request to drive for the drivetrain
      */
@@ -180,37 +168,36 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
-        //TODO Remove the unecessary shuffleboard stuff eventually
-
-        for (Pose4d pose : Limelight.filteredPoses(limelights)) {
-            if(!disableVision){
+        // TODO Remove the unecessary shuffleboard stuff eventually
+        if (!disableVision) {
+            var pose = limelightSubsystem.getPoseQueue().poll();
+            while (pose != null) {
                 // High confidence => 0.3 
                 // Low confidence => 18 
                 // theta trust IMU, use 500 degrees
 
                 double confidence = 18.0;
-                if (pose.getMoreThanOneTarget() && pose.getDistance() < 3){
+                if (pose.getMoreThanOneTarget() && pose.getDistance() < 3) {
                     confidence = 0.3;
-                } else if (pose.getMoreThanOneTarget()){
+                } else if (pose.getMoreThanOneTarget()) {
                     confidence = 0.3 + ((pose.getDistance() - 3)/5 * 18);
-                } else if (pose.getDistance() < 2){
+                } else if (pose.getDistance() < 2) {
                     confidence = 1.0 + (pose.getDistance()/2 * 5.0);
                 }
                 
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
                 pose = limelightSubsystem.getPoseQueue().poll();
 
-                //TODO remove once test new vision checks on Monday
-                LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());            
-                LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());            
-                LightningShuffleboard.setDouble("Swerve", "PoseTime",  pose.getFPGATimestamp()); 
+                // TODO remove once test new vision checks on Monday
+                LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());
+                LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());
+                LightningShuffleboard.setDouble("Swerve", "PoseTime",  pose.getFPGATimestamp());
                 LightningShuffleboard.setDouble("Swerve", "distance",  pose.getDistance());
                 LightningShuffleboard.setBool("Swerve", "MultipleTargets",  pose.getMoreThanOneTarget());
             }
-            
         }
     }
-            
+
     private void initLogging() {
         // TODO Remove the unecessary shuffleboard stuff eventually
         LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
@@ -279,7 +266,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * gets if slow mode is enabled
-     * 
      * @return if the robot is driving in slow mode
      */
     public boolean inSlowMode() {
@@ -288,7 +274,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Set slow mode t/f
-     * 
      * @param slow boolean if we are in slow mode
      */
     public void setSlowMode(boolean slow) {
@@ -304,7 +289,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Logs if the robot is in robot centric control
-     * 
      * @param robotCentricControl boolean if the robot is in robot centric control
      */
     public void setRobotCentricControl(boolean robotCentricControl) {
@@ -313,7 +297,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Returns if the robot is in robot centric control
-     * 
      * @return boolean if the robot is in robot centric control
      */
     public boolean isRobotCentricControl() {
@@ -322,7 +305,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Swaps the driver and copilot controllers
-     * 
      * @param driverC the driver controller
      * @param copilotC the copilot controller
      */
@@ -334,7 +316,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Returns if the robot Pose is in Wing
-     * 
      * @return boolean if the robot is in the wing to start aiming STATE priming
      */
     public boolean inWing() {
@@ -349,17 +330,5 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void enableVision() {
         disableVision = false;
         System.out.println("Vision Enabled");
-    }
-
-    public double getRequestX(){
-        return requestX;
-    }
-
-    public double getRequestY(){
-        return requestY;
-    }
-
-    public double getRequestRot(){
-        return requestRot;
     }
 }
