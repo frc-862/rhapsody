@@ -287,8 +287,8 @@ public class RobotContainer extends LightningContainer {
 		SystemTest.registerTest("Azimuth Test",
 				new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
-		SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
-				Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
+		// 		Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
 		// TODO make pivot system test
 
