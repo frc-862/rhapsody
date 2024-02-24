@@ -19,7 +19,7 @@ public class LEDs extends SubsystemBase {
 
 	AddressableLED leds;
 	AddressableLEDBuffer ledBuffer;
-	private LED_STATES state;
+	private LED_STATES state = LED_STATES.DEFAULT;
 	private Map<LED_STATES, Boolean> ledStates;
 
 	public LEDs() {
@@ -59,7 +59,7 @@ public class LEDs extends SubsystemBase {
 				pulse(LEDsConstants.RED_HUE);
 				break;
 
-            case CHASING:
+			case CHASING:
 				pulse(LEDsConstants.RED_HUE);
 				break;
 
@@ -85,7 +85,7 @@ public class LEDs extends SubsystemBase {
 
 		leds.setData(ledBuffer);
 
-		LightningShuffleboard.setStringSupplier("LEDs", "State",() -> state.toString());
+		LightningShuffleboard.setStringSupplier("LEDs", "State", () -> state.toString());
 	}
 
 	/**
@@ -96,15 +96,14 @@ public class LEDs extends SubsystemBase {
 		return new StartEndCommand(() -> {
 			ledStates.put(state, true);
 			updateState();
-		}, 
-		() -> {
-			ledStates.put(state, false);
-			updateState();
-		}
-		).ignoringDisable(true);
+		},
+				() -> {
+					ledStates.put(state, false);
+					updateState();
+				}).ignoringDisable(true);
 	}
 
-	public void updateState(){
+	public void updateState() {
 		state = LED_STATES.DEFAULT;
 		for (LED_STATES i : Arrays.asList(LED_STATES.values())) {
 			Boolean value = ledStates.get(i);
@@ -152,9 +151,9 @@ public class LEDs extends SubsystemBase {
 
 	/**
 	 * @param index What LED to set
-	 * @param h Hue
-	 * @param s Saturation
-	 * @param v Value
+	 * @param h     Hue
+	 * @param s     Saturation
+	 * @param v     Value
 	 */
 	public void setSingleHSV(int index, int h, int s, int v) {
 		ledBuffer.setHSV(index, h, s, v);

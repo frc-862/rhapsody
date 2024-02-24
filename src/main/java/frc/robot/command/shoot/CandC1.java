@@ -49,7 +49,7 @@ public class CandC1 extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		flywheel.coast();
+		flywheel.coast(true);
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 		indexer.stop();
 	}
