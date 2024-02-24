@@ -160,7 +160,19 @@ public double[] velocityRotChassis = {0d, 0d};
   // COMPARE CHASIS AND PIGEON
 
   public boolean getIfCollided(){
-    return Math.abs(getPigeonAccelerationX() - getChassisXAcceleration()) > getPigeonAccelerationX() * CollisionConstants.ACCELERATION_TOLERANCE();
+    double differenceX = Math.abs(getPigeonAccelerationX() - getChassisXAcceleration());
+    boolean xCollided = differenceX > getPigeonAccelerationX() * CollisionConstants.ACCELERATION_TOLERANCE 
+    || differenceX > CollisionConstants.ACCELERATION_TOLERANCE;
+
+    double differenceY = Math.abs(getPigeonAccelerationY() - getChassisYAcceleration());
+    boolean yCollided = differenceY > getPigeonAccelerationY() * CollisionConstants.ACCELERATION_TOLERANCE 
+    || differenceY > CollisionConstants.ACCELERATION_TOLERANCE;
+
+    double differenceRot = Math.abs(getPigeonAngularAcceleration() - getChassisRotAcceleration());
+    boolean rotCollided = differenceRot > getPigeonAngularAcceleration() * CollisionConstants.ACCELERATION_TOLERANCE 
+    || differenceX > CollisionConstants.ACCELERATION_TOLERANCE;
+
+    return xCollided || yCollided || rotCollided;
   }
 
   // Returns true when the command should end.
