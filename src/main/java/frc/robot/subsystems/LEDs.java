@@ -19,7 +19,7 @@ public class LEDs extends SubsystemBase {
 
 	AddressableLED leds;
 	AddressableLEDBuffer ledBuffer;
-	private LED_STATES state = LED_STATES.DEFAULT;
+	private LED_STATES state = LED_STATES.START;
 	private Map<LED_STATES, Boolean> ledStates;
 
 	public LEDs() {
@@ -30,6 +30,10 @@ public class LEDs extends SubsystemBase {
 		leds.start();
 
 		ledStates = new HashMap<LEDsConstants.LED_STATES, Boolean>();
+
+		LightningShuffleboard.setString("LEDs", "State", state.toString());
+
+		enableState(LED_STATES.START).withTimeout(6).schedule();
 	}
 
 	@Override
@@ -37,6 +41,10 @@ public class LEDs extends SubsystemBase {
 		switch (state) {
 			case EMERGENCY:
 				blink(LEDsConstants.RED_HUE);
+				break;
+
+			case START:
+				rainbow();
 				break;
 
 			case COLLECTED:
@@ -84,8 +92,6 @@ public class LEDs extends SubsystemBase {
 		}
 
 		leds.setData(ledBuffer);
-
-		LightningShuffleboard.setStringSupplier("LEDs", "State", () -> state.toString());
 	}
 
 	/**

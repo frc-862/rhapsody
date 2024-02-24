@@ -178,7 +178,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 }
                 
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
-
                 pose = limelightSubsystem.getPoseQueue().poll();
             }
         }
