@@ -17,7 +17,7 @@ import edu.wpi.first.math.util.Units;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 
-public class CollisionDetection extends Command {
+public class CollisionDetectionWithMotor extends Command {
   /** Creates a new CollisionDetection. */
   
 public Swerve drivetrain;
@@ -29,7 +29,7 @@ public double[] velocityXChassis = {0d, 0d};
 public double[] velocityYChassis = {0d, 0d};
 public double[] velocityRotChassis = {0d, 0d};
 
-  public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
+  public CollisionDetectionWithMotor(Swerve drivetrain, CollisionDetector collisionDetector) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
     this.collisionDetector = collisionDetector;
@@ -69,14 +69,18 @@ public double[] velocityRotChassis = {0d, 0d};
     velocityYChassis[1] = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
     velocityRotChassis[1] = drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond;
 
-    LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", getPigeonAccelerationXYMagnitude());
-    LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", getPidgeonXYAccelerationDirection().getDegrees());
+    LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", getTotalPigeonAccelerationMagnitude());
+    LightningShuffleboard.setDouble("Collision Detection", "primitive pidgeon acceleration", getPrimitivePigeonAccelerationMagnitude());
+    LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", getTotalPigeonAccelerationDirection());
     LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAngularAcceleration() * CollisionConstants.DISTANCE_FROM_CENTER_TO_MODULE);
     LightningShuffleboard.setDouble("Collision Detection", "pigeon angular velocity", Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble()));
     LightningShuffleboard.setDouble("Collision Detection", "yaw", drivetrain.getPigeon2().getYaw().getValueAsDouble());
-    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getChassisXYAcceleration());
-    LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration", getChassisRotAcceleration());
+    LightningShuffleboard.setDouble("Collision Detection", "motor angular velocity", getMotorAngularVelocity());
+    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getMotorAccelerationMagnitude(0));
+    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration direction", getMotorAccelerationDirection(0));
+    LightningShuffleboard.setBool("Collision Detection", "motor zero collided", checkMotorAcceleration(0));
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
+    LightningShuffleboard.setDouble("Collision Detection", "time", timeLog[0] - timeLog[1]);
   }
 
   // Called once the command ends or is interrupted.
@@ -106,13 +110,6 @@ public double[] velocityRotChassis = {0d, 0d};
   }
 
   /**
-   * @return pigeon xy acceleration magnitude
-   */
-  public double getPigeonAccelerationXYMagnitude(){
-    return Math.hypot(getPigeonAccelerationX(), getPigeonAccelerationY());
-  }
-
-  /**
    * @return direction of x/y acceleration in radians
    */
   public Rotation2d getPidgeonXYAccelerationDirection(){
@@ -125,6 +122,125 @@ public double[] velocityRotChassis = {0d, 0d};
    */
   public double getPigeonAngularAcceleration(){
     return (angularVelocityWorldLog[1] - angularVelocityWorldLog[0]) / (timeLog[1] - timeLog[0]);
+  }
+
+
+  /**
+   * add angular velocity to x acceleration
+   * @return total pigeon acceleration in x direction in m/s^2
+   */
+  public double getPigeonTotalAccelerationX(){
+    return getPigeonAccelerationX() + getPigeonAngularAcceleration() * CollisionConstants.DISTANCE_FROM_CENTER_TO_MODULE 
+    * Math.cos(Math.atan2(getPigeonAccelerationY(), getPigeonAccelerationX()) + Math.PI / 2);
+
+  }
+  /**
+   * add angular velocity to y acceleration
+   * @return total pigeon acceleration in y direction in m/s^2
+   */
+  public double getPigeonTotalAccelerationY(){
+    return getPigeonAccelerationY() + getPigeonAngularAcceleration() * CollisionConstants.DISTANCE_FROM_CENTER_TO_MODULE 
+    * Math.sin(Math.atan2(getPigeonAccelerationY(), getPigeonAccelerationX()) + Math.PI / 2);
+  }
+
+  /**
+   * @return primitive acceleration magnitude in m/s^2
+   */
+public double getPrimitivePigeonAccelerationMagnitude(){
+    return Math.hypot(drivetrain.getPigeon2().getAccelerationX().getValueAsDouble(), 
+    drivetrain.getPigeon2().getAccelerationY().getValueAsDouble());
+  }
+
+  /**
+   * @return total acceleration magnitude in m/s^2
+   */
+  public double getTotalPigeonAccelerationMagnitude() {
+    return Math.hypot(getPigeonTotalAccelerationX(), getPigeonAccelerationY());
+  }
+
+  /**
+   * @return total acceleration direction in radians
+   */
+public double getTotalPigeonAccelerationDirection() {
+    return Math.atan2(getPigeonTotalAccelerationY(), getPigeonAccelerationX());
+  }
+
+
+// GET INFO FROM MOTOR
+
+  /**
+   * gets acceleration magnitude from a drivemotor of the specified module
+   * @param moduleNumber
+   * @return motor acceleration magnitude
+   */
+  public double getMotorAccelerationMagnitude(int moduleNumber){
+    // get acceleration magnitude and convert to m/s^2
+    return Units.rotationsToRadians(Math.abs(drivetrain.getModule(moduleNumber).getDriveMotor().getAcceleration().getValueAsDouble()) 
+    * Units.inchesToMeters(TunerConstants.kWheelRadiusInches) / TunerConstants.kDriveGearRatio);
+  }
+
+  /**
+   * gets acceleration direction from a drivemotor of the specified module
+   * @param moduleNumber
+   * @return motor acceleration direction
+   */
+  public double getMotorAccelerationDirection(int moduleNumber) {
+
+    return Units.rotationsToRadians(drivetrain.getModule(moduleNumber).getSteerMotor().getPosition().getValueAsDouble() 
+    - Math.floor(drivetrain.getModule(moduleNumber).getSteerMotor().getPosition().getValueAsDouble()));
+  }
+
+  /**
+   * @return angular velocity from motor in radians/s
+   */
+  public double getMotorAngularVelocity(){
+    return (robotRotationFromMotor[1] - robotRotationFromMotor[0]) / (timeLog[1] - timeLog[0]);
+  }
+
+
+  // COMPARE MOTOR & PIGEON
+
+  /**
+   * compares acceleration of a specific drivemotor to pigeon and tolerance percentage in constants
+   * @param moduleNumber
+   * @return if motorAcceleration is within tolerance
+   */
+  public boolean checkMotorAcceleration(int moduleNumber){
+    return Math.abs(getTotalPigeonAccelerationMagnitude() - getMotorAccelerationMagnitude(moduleNumber)) 
+    > getMotorAccelerationMagnitude(moduleNumber) * CollisionConstants.ACCELERATION_TOLERANCE
+    && getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) 
+    < CollisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE;
+  }
+
+  /**
+   * compares acceleration of a specific drivemotor to pigeon and given tolerance
+   * @param moduleNumber
+   * @return if motor is within tolerance
+   */
+  public boolean checkMotorAcceleration(int moduleNumber, double magnitudeTolerance, double directionTolerance){
+    return Math.abs(getTotalPigeonAccelerationMagnitude() - getMotorAccelerationMagnitude(moduleNumber)) > magnitudeTolerance
+    && getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) 
+    < directionTolerance;
+  }
+
+  /**
+   * @return if any motor has abnormal acceleration compared to pigeon and tolerance in constants
+   */
+  public boolean getIfCollided(){
+    return checkMotorAcceleration(0) || checkMotorAcceleration(1) 
+    || checkMotorAcceleration(2) || checkMotorAcceleration(3);
+  }
+
+  /**
+   * @param magnitudeTolerance
+   * @param directionTolerance
+   * @return if any motor has abnormal acceleration compared to pigeon and given tolerances
+   */
+  public boolean getIfCollided(double magnitudeTolerance, double directionTolerance){
+    return checkMotorAcceleration(0, magnitudeTolerance, directionTolerance) 
+    || checkMotorAcceleration(1, magnitudeTolerance, directionTolerance) 
+    || checkMotorAcceleration(2, magnitudeTolerance, directionTolerance) 
+    || checkMotorAcceleration(3, magnitudeTolerance, directionTolerance);
   }
 
 // GET CHASSIS SPEEDS (motor probably)
@@ -155,12 +271,6 @@ public double[] velocityRotChassis = {0d, 0d};
    */
   public double getChassisXYAcceleration(){
     return Math.hypot(getChassisXAcceleration(), getChassisYAcceleration());
-  }
-
-  // COMPARE CHASIS AND PIGEON
-
-  public boolean getIfCollided(){
-    return Math.abs(getPigeonAccelerationX() - getChassisXAcceleration()) > getPigeonAccelerationX() * CollisionConstants.ACCELERATION_TOLERANCE();
   }
 
   // Returns true when the command should end.
