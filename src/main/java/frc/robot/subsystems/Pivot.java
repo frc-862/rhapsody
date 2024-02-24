@@ -140,8 +140,7 @@ public class Pivot extends SubsystemBase {
     }
 
     /**
-     * @return Whether or not the pivot is on target, within
-     *         PivotConstants.ANGLE_TOLERANCE
+     * @return Whether or not the pivot is on target, within Angle tolerance
      */
     public boolean onTarget() {
         return Math.abs(getAngle() - targetAngle) < PivotConstants.ANGLE_TOLERANCE;

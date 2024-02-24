@@ -52,6 +52,8 @@ public class Constants {
 
         public static final double SYS_TEST_SPEED_DRIVE = 0.5;
         public static final double SYS_TEST_SPEED_TURN = 1d;
+
+        public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
     }
 
     public class RobotMap {
@@ -426,17 +428,24 @@ public class Constants {
 
         // Distance in meters, angle in degrees
         public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {
-            {
-                put(0d, 0d);
+            { 
+                // As distance gets smaller angle goes up
+                put(0d, 60d);
+                put(20d, 40d);
             }
         };
 
         // Distance in meters, speed in RPM
         public static final InterpolationMap SPEED_MAP = new InterpolationMap() {
             {
+                // As distance get smaller RPM gets smaller
                 put(0d, 0d);
             }
         };
+
+        public static enum ShootingState {
+            AIM, SHOOT, SHOT
+        }
     }
 
     public class CandConstants { // TODO get real

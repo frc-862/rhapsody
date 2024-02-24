@@ -19,7 +19,7 @@ public class LEDs extends SubsystemBase {
 
 	AddressableLED leds;
 	AddressableLEDBuffer ledBuffer;
-	private LED_STATES state;
+	private LED_STATES state = LED_STATES.DEFAULT;
 	private Map<LED_STATES, Boolean> ledStates;
 
 	public LEDs() {
