@@ -180,22 +180,21 @@ public class Flywheel extends SubsystemBase {
     }
 
     /**
-     * @return Whether or not flywheel # 1 is on target, within FlywheelConstants.RPM_TOLERANCE
+     * @return Whether or not top flywheel is on target, within FlywheelConstants.RPM_TOLERANCE
      */
     public boolean topMotorRPMOnTarget() {
         return Math.abs(getTopMotorRPM() - topTargetRPM) < FlywheelConstants.RPM_TOLERANCE;
     }
 
     /**
-     * @return Whether or not flywheel # 2 is on target, within FlywheelConstants.RPM_TOLERANCE
+     * @return Whether or not bottom flywheel is on target, within FlywheelConstants.RPM_TOLERANCE
      */
     public boolean bottomMotorRPMOnTarget() {
         return Math.abs(getBottomMotorRPM() - bottomTargetRPM) < FlywheelConstants.RPM_TOLERANCE;
     }
 
     /**
-     * @return Whether or not all flywheel motors are on target, within
-     *         FlywheelConstants.RPM_TOLERANCE
+     * @return Whether or not all flywheel motors are on target, within RPM tolerance
      */
     public boolean allMotorsOnTarget() {
         return (topMotorRPMOnTarget() && bottomMotorRPMOnTarget());
