@@ -304,16 +304,17 @@ public class Constants {
     }
 
     public class VisionConstants {
-        // This is a magic number from gridlock, may need to be changed or removed
-        // entirely
+        public static final Translation3d SPEAKER_LOCATION = new Translation3d(0,5.547593, 1.2);
+
+        // This is a magic number from gridlock, may need to be changed or removed entirely
         public static final double PROCESS_LATENCY = 0.0472; // TODO test
         public static final Translation2d FIELD_LIMIT = new Translation2d(Units.feetToMeters(54.0),
                 Units.feetToMeters(26.0));
         public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
                 Units.feetToMeters(5));
         public static final double COLLISION_DEADZONE = 2d;
-        public static final double ALIGNMENT_TOLERANCE = 4d; // TODO: make this an actual value
-        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.05, 0, 0);
+        public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
+        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int NOTE_PIPELINE = 2;
@@ -426,9 +427,6 @@ public class Constants {
 
         public static final double FAR_WING_X = 3.3;
 
-        // TODO get real values
-        public static final double OTF_READY_TIME = 0.5;
-
         // Distance in meters, angle in degrees
         public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {
             { 
@@ -445,6 +443,8 @@ public class Constants {
                 put(0d, 0d);
             }
         };
+
+        public static final double OTF_READY_TIME = 0.5;
 
         public enum ShootingState {
             AIM, SHOOT, SHOT
