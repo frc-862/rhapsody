@@ -329,7 +329,7 @@ public class Constants {
         public static final double TIP_DEADZONE = 2d;
 
         public static final double ACCELERATION_DUE_TO_GRAVITY = 9.80665;
-        public static final double ACCELERATION_TOLERANCE = 0.25; //percent of pigeonAcceleration
+        public static final double ACCELERATION_TOLERANCE = 2.00; //percent of pigeonAcceleration
         public static final double DISTANCE_FROM_CENTER_TO_MODULE = Math.hypot(13.5, 13.5);
         public static final double DISTANCE_FROM_CENTER_TO_PIGEON = 0d;
         public static final double COLLISION_ACCELERATION_DIRECTION_TOLERANCE = Math.PI/12; // 15 degrees

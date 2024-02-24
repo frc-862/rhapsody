@@ -25,13 +25,9 @@ public double[] xVelC = {0d, 0d};
 public double[] xVelY = {0d, 0d};
 public double[] rotVelC = {0d, 0d};
 
-public LinearFilter xAccCFilter;
-public LinearFilter yAccCFilter;
-public LinearFilter rotAccCFilter;
-
-public LinearFilter xAccC2Filter;
-public LinearFilter yAccC2Filter;
-public LinearFilter rotAccC2Filter;
+public LinearFilter xAccCFilter = LinearFilter.movingAverage(50);
+public LinearFilter yAccCFilter = LinearFilter.movingAverage(50);
+public LinearFilter rotAccCFilter = LinearFilter.movingAverage(50);;
 
   public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -44,13 +40,6 @@ public LinearFilter rotAccC2Filter;
   @Override
   public void initialize() {
     storeVelocities();
-    xAccCFilter = LinearFilter.singlePoleIIR(0.1, 0.01);
-    yAccCFilter = LinearFilter.singlePoleIIR(0.1, 0.01);
-    rotAccCFilter = LinearFilter.singlePoleIIR(0.1, 0.01);
-
-    xAccC2Filter = LinearFilter.movingAverage(5);
-    yAccC2Filter = LinearFilter.movingAverage(5);
-    rotAccC2Filter = LinearFilter.movingAverage(5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,8 +54,6 @@ public LinearFilter rotAccC2Filter;
     LightningShuffleboard.setDouble("Collision Detection", "yaw", drivetrain.getPigeon2().getYaw().getValueAsDouble());
     LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude(exp filter)", getChassisAcceleration()[2]);
     LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration(exp filter)", getChassisAcceleration()[4]);
-    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude(avg filter)", getChassisAcceleration2()[2]);
-    LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration(avg filter)", getChassisAcceleration2()[4]);
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided()[3]);
   }
 
@@ -132,31 +119,26 @@ public LinearFilter rotAccC2Filter;
     return new double[] {accX, accY, accMag, accDirection, accRot};
   }
 
-  public double[] getChassisAcceleration2(){
-    double accX = xAccC2Filter.calculate((xVelC[1] - xVelC[0]) / (time[1] - time[0]));
-    double accY = yAccC2Filter.calculate((xVelY[1] - xVelY[0]) / (time[1] - time[0]));
-    double accMag = Math.hypot(accX, accY);
-    double accDirection = Math.atan2(accY, accX);
-    double accRot = rotAccC2Filter.calculate((rotVelC[1] - rotVelC[0]) / (time[1] - time[0]));
-    return new double[] {accX, accY, accMag, accDirection, accRot};
-  }
-
   /**
    * Compare Pigeon and Chassis Acceleraiton
-   * @return array
+   * @return boolean array
+   * 0 - check x
+   * 1 - check y
+   * 2 - check rot
+   * 3 - check all
    */
   public boolean[] getIfCollided(){
     double differenceX = Math.abs(getPigeonAcceleration()[0] - getChassisAcceleration()[0]);
     boolean xCollided = differenceX > getPigeonAcceleration()[0] * CollisionConstants.ACCELERATION_TOLERANCE 
-    || differenceX > CollisionConstants.ACCELERATION_TOLERANCE;
+    && differenceX > CollisionConstants.ACCELERATION_TOLERANCE;
 
     double differenceY = Math.abs(getPigeonAcceleration()[1] - getChassisAcceleration()[1]);
     boolean yCollided = differenceY > getPigeonAcceleration()[1] * CollisionConstants.ACCELERATION_TOLERANCE 
-    || differenceY > CollisionConstants.ACCELERATION_TOLERANCE;
+    && differenceY > CollisionConstants.ACCELERATION_TOLERANCE;
 
     double differenceRot = Math.abs(getPigeonAcceleration()[4] - getChassisAcceleration()[4]);
     boolean rotCollided = differenceRot > getPigeonAcceleration()[4] * CollisionConstants.ACCELERATION_TOLERANCE 
-    || differenceX > CollisionConstants.ACCELERATION_TOLERANCE;
+    && differenceX > CollisionConstants.ACCELERATION_TOLERANCE;
 
     boolean collided = xCollided || yCollided || rotCollided;
 
