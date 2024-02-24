@@ -13,6 +13,7 @@ public class PodiumShot extends Command {
 
 	/**
 	 * Creates a new PodiumShot.
+	 * 
 	 * @param flywheel
 	 * @param pivot
 	 */
@@ -20,19 +21,21 @@ public class PodiumShot extends Command {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 
-		addRequirements(pivot, flywheel);
+		addRequirements(flywheel);
 	}
 
 	@Override
-	public void initialize() {
+	public void initialize() {}
+
+	@Override
+	public void execute() {
 		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		flywheel.coast();
+		flywheel.coast(true);
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
-		//TODO add LED state
 	}
 }
