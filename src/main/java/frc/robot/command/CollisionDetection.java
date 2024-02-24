@@ -85,76 +85,28 @@ public double[] velocityRotChassis = {0d, 0d};
   
 // GET INFO FROM PIGEON
 
-  /**
-   * @return acceleration from pigeon in x direction is m/s^2
-   */
-  public double getPigeonAccelerationX(){  
-    // use pythagrean theorum to find total acceleration
-    return drivetrain.getPigeon2().getAccelerationX().getValueAsDouble() 
+  public double[] getPigeonAcceleration(){
+    double accX = drivetrain.getPigeon2().getAccelerationX().getValueAsDouble() 
     - drivetrain.getPigeon2().getGravityVectorX().getValueAsDouble() // subtract gravity from acceleration
     * CollisionConstants.ACCELERATION_DUE_TO_GRAVITY; // convert g-force to m/s^2
-  }
-
-  /**
-   * @return acceleration from pigeon in y direction is m/s^2
-   */
-  public double getPigeonAccelerationY(){  
-    // use pythagrean theorum to find total acceleration
-    return (drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() 
+    double accY = drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() 
     - drivetrain.getPigeon2().getGravityVectorY().getValueAsDouble() // subtract gravity from acceleration
-    * CollisionConstants.ACCELERATION_DUE_TO_GRAVITY); // convert g-force to m/s^2
-  }
-
-  /**
-   * @return pigeon xy acceleration magnitude
-   */
-  public double getPigeonAccelerationXYMagnitude(){
-    return Math.hypot(getPigeonAccelerationX(), getPigeonAccelerationY());
-  }
-
-  /**
-   * @return direction of x/y acceleration in radians
-   */
-  public Rotation2d getPidgeonXYAccelerationDirection(){
-    return Rotation2d.fromRadians(Math.atan2(drivetrain.getPigeon2().getAccelerationY().getValueAsDouble(),
-    drivetrain.getPigeon2().getAccelerationX().getValueAsDouble()));
-  }
-
-  /**
-   * @return pigeon angular velocity in radians per second
-   */
-  public double getPigeonAngularAcceleration(){
-    return (angularVelocityWorldLog[1] - angularVelocityWorldLog[0]) / (timeLog[1] - timeLog[0]);
+    * CollisionConstants.ACCELERATION_DUE_TO_GRAVITY; // convert g-force to m/s^2
+    double accMag = Math.hypot(accX, accY);
+    double accDirection = Math.atan2(accY, accX);
+    double accRot = (angularVelocityWorldLog[1] - angularVelocityWorldLog[0]) / (timeLog[1] - timeLog[0]);
+    return new double[] {accX, accY, accMag, accDirection, accRot};
   }
 
 // GET CHASSIS SPEEDS (motor probably)
 
-  /**
-   * @return acceleration of chasis in x direction
-   */
-  public double getChassisXAcceleration(){
-    return velocityXChassis[1] - velocityXChassis[0] / timeLog[1] - timeLog[0];
-  }
-
-  /**
-   * @return acceleration of chasis in y direction
-   */
-  public double getChassisYAcceleration(){
-    return velocityYChassis[1] - velocityYChassis[0] / timeLog[1] - timeLog[0];
-  }
-
-  /**
-   * @return acceleration of chasis rotations
-   */
-  public double getChassisRotAcceleration(){
-      return velocityRotChassis[1] - velocityRotChassis[0] / timeLog[1] - timeLog[0];
-  }
-
-  /**
-   * @return magnitude of chasis x and y acceleration
-   */
-  public double getChassisXYAcceleration(){
-    return Math.hypot(getChassisXAcceleration(), getChassisYAcceleration());
+  public double[] getChassisAcceleration(){
+    double accX = (velocityXChassis[1] - velocityXChassis[0]) / (timeLog[1] - timeLog[0]);
+    double accY = (velocityYChassis[1] - velocityYChassis[0] / timeLog[1] - timeLog[0]);
+    double accMag = Math.hypot(accX, accY);
+    double accDirection = Math.atan2(accY, accX);
+    double accRot = (velocityRotChassis[1] - velocityRotChassis[0] / timeLog[1] - timeLog[0]);
+    return new double[] {accX, accY, accMag, accDirection, accRot};
   }
 
   // COMPARE CHASIS AND PIGEON
