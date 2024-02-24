@@ -6,12 +6,9 @@ package frc.robot.command;
 
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.CollisionConstants;
 import frc.robot.subsystems.CollisionDetector;
 import frc.robot.subsystems.Swerve;
-
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -69,14 +66,14 @@ public double[] velocityRotChassis = {0d, 0d};
     velocityYChassis[1] = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
     velocityRotChassis[1] = drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond;
 
-    LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", getPigeonAccelerationXYMagnitude());
-    LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", getPidgeonXYAccelerationDirection().getDegrees());
-    LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAngularAcceleration() * CollisionConstants.DISTANCE_FROM_CENTER_TO_MODULE);
+    LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", getPigeonAcceleration()[2]);
+    LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", getPigeonAcceleration()[3]);
+    LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAcceleration()[4]);
     LightningShuffleboard.setDouble("Collision Detection", "pigeon angular velocity", Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble()));
     LightningShuffleboard.setDouble("Collision Detection", "yaw", drivetrain.getPigeon2().getYaw().getValueAsDouble());
-    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getChassisXYAcceleration());
-    LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration", getChassisRotAcceleration());
-    LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
+    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getChassisAcceleration()[2]);
+    LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration", getChassisAcceleration()[4]);
+    LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided()[3]);
   }
 
   // Called once the command ends or is interrupted.
@@ -111,20 +108,22 @@ public double[] velocityRotChassis = {0d, 0d};
 
   // COMPARE CHASIS AND PIGEON
 
-  public boolean getIfCollided(){
-    double differenceX = Math.abs(getPigeonAccelerationX() - getChassisXAcceleration());
-    boolean xCollided = differenceX > getPigeonAccelerationX() * CollisionConstants.ACCELERATION_TOLERANCE 
+  public boolean[] getIfCollided(){
+    double differenceX = Math.abs(getPigeonAcceleration()[0] - getChassisAcceleration()[0]);
+    boolean xCollided = differenceX > getPigeonAcceleration()[0] * CollisionConstants.ACCELERATION_TOLERANCE 
     || differenceX > CollisionConstants.ACCELERATION_TOLERANCE;
 
-    double differenceY = Math.abs(getPigeonAccelerationY() - getChassisYAcceleration());
-    boolean yCollided = differenceY > getPigeonAccelerationY() * CollisionConstants.ACCELERATION_TOLERANCE 
+    double differenceY = Math.abs(getPigeonAcceleration()[1] - getChassisAcceleration()[1]);
+    boolean yCollided = differenceY > getPigeonAcceleration()[1] * CollisionConstants.ACCELERATION_TOLERANCE 
     || differenceY > CollisionConstants.ACCELERATION_TOLERANCE;
 
-    double differenceRot = Math.abs(getPigeonAngularAcceleration() - getChassisRotAcceleration());
-    boolean rotCollided = differenceRot > getPigeonAngularAcceleration() * CollisionConstants.ACCELERATION_TOLERANCE 
+    double differenceRot = Math.abs(getPigeonAcceleration()[4] - getChassisAcceleration()[4]);
+    boolean rotCollided = differenceRot > getPigeonAcceleration()[4] * CollisionConstants.ACCELERATION_TOLERANCE 
     || differenceX > CollisionConstants.ACCELERATION_TOLERANCE;
 
-    return xCollided || yCollided || rotCollided;
+    boolean collided = xCollided || yCollided || rotCollided;
+
+    return new boolean[] {xCollided, yCollided, rotCollided, collided};
   }
 
   // Returns true when the command should end.
