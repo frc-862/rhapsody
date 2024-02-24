@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -41,6 +40,7 @@ import frc.robot.command.shoot.CandLine;
 import frc.robot.command.shoot.PodiumShot;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
+import frc.robot.command.shoot.SourceCollect;
 import frc.robot.command.shoot.Stow;
 import frc.robot.command.tests.ClimbSystemTest;
 import frc.robot.command.tests.CollectorSystemTest;
@@ -205,8 +205,9 @@ public class RobotContainer extends LightningContainer {
 			() -> 0.50, () -> 0.60, collector, indexer, pivot)); // TODO: find correct button/trigger
 
 		// cand shots for the robot
-		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, false));
-		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
+		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, indexer, false));
+		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot, indexer, false));
+		new Trigger(coPilot::getAButton).whileTrue(new SourceCollect(flywheel, pivot));
 		new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
 
 		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,
@@ -288,7 +289,7 @@ public class RobotContainer extends LightningContainer {
 				new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
 		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
-		// 		Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+		// Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
 		// TODO make pivot system test
 
