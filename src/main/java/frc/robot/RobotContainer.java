@@ -44,8 +44,10 @@ import frc.robot.command.shoot.SourceCollect;
 import frc.robot.command.shoot.Stow;
 import frc.robot.command.tests.ClimbSystemTest;
 import frc.robot.command.tests.CollectorSystemTest;
+import frc.robot.command.tests.CycleSytemTest;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.FlywheelSystemTest;
+import frc.robot.command.tests.PivotAngleTest;
 import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
@@ -225,9 +227,9 @@ public class RobotContainer extends LightningContainer {
 		// flywheel.decreaseBias())); // LEFT
 
 		new Trigger(coPilot::getRightBumper)
-				.whileTrue(new Index(indexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
+				.whileTrue(new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		new Trigger(coPilot::getLeftBumper)
-				.whileTrue(new Index(indexer, () -> -IndexerConstants.INDEXER_DEFAULT_POWER));
+				.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 
 
 		/* Other */
@@ -288,10 +290,13 @@ public class RobotContainer extends LightningContainer {
 		SystemTest.registerTest("Azimuth Test",
 				new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
+		SystemTest.registerTest("Single Note Cycle",
+				new CycleSytemTest(collector, indexer, pivot, flywheel, () -> 0.5d, () -> 0.6d, () -> 250));
+
 		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
 		// Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
-		// TODO make pivot system test
+		// SystemTest.registerTest("Pivot 90 Degrees", new PivotAngleTest(pivot, 90d));
 
 		// SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
 		// indexer, pivot, Constants.FlywheelConstants.SYS_TEST_SPEED));
