@@ -178,7 +178,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 }
                 
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
-
                 pose = limelightSubsystem.getPoseQueue().poll();
             }
         }
@@ -200,6 +199,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
         LightningShuffleboard.setDoubleSupplier("Swerve", "velocity y",
                 () -> getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Distance to Speaker", () -> distanceToSpeaker()); 
     }
 
     private void configurePathPlanner() {

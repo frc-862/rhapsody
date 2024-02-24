@@ -48,8 +48,8 @@ public class PointBlankShot extends Command {
 			indexer.indexUp();
 		}
 
-		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
-		pivot.setTargetAngle(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
+		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());
+		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + flywheel.getBias());
 	}
 
 	@Override
