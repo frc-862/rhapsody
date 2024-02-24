@@ -129,7 +129,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public void setPower(double power){
-        // angleMotor.set(power);
+        angleMotor.set(power);
     }
 
     /**
