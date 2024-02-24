@@ -11,7 +11,6 @@ import frc.robot.subsystems.CollisionDetector;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
-
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 
@@ -49,9 +48,9 @@ public LinearFilter rotAccC2Filter;
     yAccCFilter = LinearFilter.singlePoleIIR(0.1, 0.01);
     rotAccCFilter = LinearFilter.singlePoleIIR(0.1, 0.01);
 
-    LinearFilter xAccC2Filter = LinearFilter.movingAverage(5);
-    LinearFilter yAccC2Filter = LinearFilter.movingAverage(5);
-    LinearFilter rotAccC2Filter = LinearFilter.movingAverage(5);
+    xAccC2Filter = LinearFilter.movingAverage(5);
+    yAccC2Filter = LinearFilter.movingAverage(5);
+    rotAccC2Filter = LinearFilter.movingAverage(5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -124,11 +123,12 @@ public LinearFilter rotAccC2Filter;
    * 4 - Rotational Acceleration
    */
   public double[] getChassisAcceleration(){
-    double accX = xAccCFilter.calculate((xVelC[1] - xVelC[0]) / (time[1] - time[0]));
-    double accY = yAccCFilter.calculate((xVelY[1] - xVelY[0]) / (time[1] - time[0]));
+    double timeDelta = time[1] - time[0];
+    double accX = xAccCFilter.calculate((xVelC[1] - xVelC[0]) / timeDelta); // calculate acceleration in x direction and filter
+    double accY = yAccCFilter.calculate((xVelY[1] - xVelY[0]) / timeDelta); // calculate acceleration in y direction and filter
     double accMag = Math.hypot(accX, accY);
     double accDirection = Math.atan2(accY, accX);
-    double accRot = rotAccCFilter.calculate((rotVelC[1] - rotVelC[0]) / (time[1] - time[0]));
+    double accRot = rotAccCFilter.calculate((rotVelC[1] - rotVelC[0]) / timeDelta); // calculate rot acceleration and filter
     return new double[] {accX, accY, accMag, accDirection, accRot};
   }
 
