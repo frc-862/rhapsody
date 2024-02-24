@@ -11,8 +11,6 @@ import frc.robot.Constants.CollisionConstants;
 import frc.robot.subsystems.CollisionDetector;
 import frc.robot.subsystems.Swerve;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -32,7 +30,6 @@ public double[] robotRotationFromMotor = {0d, 0d};
 public double[] velocityXChassis = {0d, 0d};
 public double[] velocityYChassis = {0d, 0d};
 public double[] velocityRotChassis = {0d, 0d};
-Pose2d storePoseWhenCollided;
 
   public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -44,28 +41,14 @@ Pose2d storePoseWhenCollided;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    brake = new SwerveRequest.SwerveDriveBrake();
     // store ang vel and time to calc angular acceleration
 
     angularVelocityWorldLog[1] = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble());
-    
     timeLog[1] = Utils.getCurrentTimeSeconds();
-
     robotRotationFromMotor[1] = drivetrain.getState().Pose.getRotation().getRadians();
-
     velocityXChassis[1] = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
     velocityYChassis[1] = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
     velocityRotChassis[1] = drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond;
-    
-
-    LightningShuffleboard.setDouble("Collision Detection", "total pidgeon acceleration", 0d);
-    LightningShuffleboard.setDouble("Collision Detection", "primitive pidgeon acceleration", 0d);
-    LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", 0d);
-    LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", 0d);
-    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", 0d);
-    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration direction", 0d);
-    LightningShuffleboard.setBool("Collision Detection", "motor zero collided", false);
-    LightningShuffleboard.setBool("Collision Detection", "collided", false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -100,12 +83,6 @@ Pose2d storePoseWhenCollided;
     LightningShuffleboard.setBool("Collision Detection", "motor zero collided", checkMotorAcceleration(0));
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided());
     LightningShuffleboard.setDouble("Collision Detection", "time", timeLog[0] - timeLog[1]);
-    // LightningShuffleboard.setDouble("Collision Detection", "get requested rot velocity", drivetrain.getRequestRot());
-    // LightningShuffleboard.setDouble("Collision Detection", "xy acceleration request", Math.hypot(getRequestXAcceleration(), getRequestYAcceleration()));
-    
-    if (getIfCollided()){
-      // drivetrain.applyRequest(() -> brake);&& getTotalPigeonAccelerationDirection() - getMotorAccelerationDirection(moduleNumber) < CollisionConstants.COLLISION_ACCELERATION_DIRECTION_TOLERANCE
-    }
   }
 
   // Called once the command ends or is interrupted.
@@ -270,31 +247,33 @@ public double getTotalPigeonAccelerationDirection() {
 
 // GET CHASSIS SPEEDS (motor probably)
 
+  /**
+   * @return acceleration of chasis in x direction
+   */
   public double getChassisXAcceleration(){
     return velocityXChassis[1] - velocityXChassis[0] / timeLog[1] - timeLog[0];
   }
 
+  /**
+   * @return acceleration of chasis in y direction
+   */
   public double getChassisYAcceleration(){
     return velocityYChassis[1] - velocityYChassis[0] / timeLog[1] - timeLog[0];
   }
 
+  /**
+   * @return acceleration of chasis rotations
+   */
   public double getChassisRotAcceleration(){
       return velocityRotChassis[1] - velocityRotChassis[0] / timeLog[1] - timeLog[0];
   }
 
+  /**
+   * @return magnitude of chasis x and y acceleration
+   */
   public double getChassisXYAcceleration(){
     return Math.hypot(getChassisXAcceleration(), getChassisYAcceleration());
   }
-  
-// DO STUFF WHEN COLLIDED
-
-  public void storePose(){
-    storePoseWhenCollided = drivetrain.getPose2d();
-  }
-  // failsafe mode
-
-  // figure out how to reorient
-
 
   // Returns true when the command should end.
   @Override

@@ -4,10 +4,8 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.Utils;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class CollisionDetector extends SubsystemBase {
   /** Creates a new CollisionDetector. */
