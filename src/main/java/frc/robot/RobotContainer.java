@@ -207,7 +207,7 @@ public class RobotContainer extends LightningContainer {
 		// cand shots for the robot
 		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, indexer, false));
 		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot, indexer, false));
-		new Trigger(coPilot::getAButton).whileTrue(new SourceCollect(flywheel, pivot));
+		// new Trigger(coPilot::getAButton).whileTrue(new SourceCollect(flywheel, pivot));
 		new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
 
 		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,
