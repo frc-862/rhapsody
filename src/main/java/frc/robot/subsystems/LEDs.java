@@ -31,17 +31,9 @@ public class LEDs extends SubsystemBase {
 
 		ledStates = new HashMap<LEDsConstants.LED_STATES, Boolean>();
 
-		LightningShuffleboard.setString()
+		LightningShuffleboard.setString("LEDs", "State", state.toString());
 
-		new StartEndCommand(() -> {
-			ledStates.put(LED_STATES.START, true);
-			updateState();
-		}, 
-		() -> {
-			ledStates.put(LED_STATES.START, false);
-			updateState();
-		}
-		);
+		enableState(LED_STATES.START).withTimeout(6).schedule();
 	}
 
 	@Override
@@ -100,8 +92,6 @@ public class LEDs extends SubsystemBase {
 		}
 
 		leds.setData(ledBuffer);
-
-		LightningShuffleboard.setStringSupplier("LEDs", "State", () -> state.toString());
 	}
 
 	/**
