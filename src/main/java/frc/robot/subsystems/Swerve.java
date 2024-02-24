@@ -15,6 +15,8 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -175,14 +177,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 }
                 
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
-                pose = limelightSubsystem.getPoseQueue().poll();
 
-                // TODO remove once test new vision checks on Monday
-                LightningShuffleboard.setDouble("Swerve", "PoseX", pose.toPose2d().getX());
-                LightningShuffleboard.setDouble("Swerve", "PoseY", pose.toPose2d().getY());
-                LightningShuffleboard.setDouble("Swerve", "PoseTime",  pose.getFPGATimestamp());
-                LightningShuffleboard.setDouble("Swerve", "distance",  pose.getDistance());
-                LightningShuffleboard.setBool("Swerve", "MultipleTargets",  pose.getMoreThanOneTarget());
+                pose = limelightSubsystem.getPoseQueue().poll();
             }
         }
     }
@@ -316,5 +312,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void enableVision() {
         disableVision = false;
         System.out.println("Vision Enabled");
+    }
+
+    public double distanceToSpeaker() {
+        return DrivetrainConstants.SPEAKER_POSE.getDistance(getPose().get().getTranslation());
     }
 }
