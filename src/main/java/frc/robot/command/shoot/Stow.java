@@ -19,7 +19,12 @@ public class Stow extends Command {
 
 	@Override
 	public void initialize() {
-		flywheel.coast();
+		flywheel.coast(true);
+		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+	}
+
+	@Override
+	public void execute() {
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 	}
 
