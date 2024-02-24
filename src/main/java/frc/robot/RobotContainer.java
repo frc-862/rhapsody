@@ -90,7 +90,7 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeSubsystems() {
-		SignalLogger.setPath(Constants.HOOT_PATH);
+		// SignalLogger.setPath(Constants.HOOT_PATH);
 		// SignalLogger.enableAutoLogging(true);
 
 		// driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort,
