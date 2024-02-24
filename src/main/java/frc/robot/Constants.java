@@ -443,7 +443,7 @@ public class Constants {
             }
         };
 
-        public static enum ShootingState {
+        public enum ShootingState {
             AIM, SHOOT, SHOT
         }
     }
