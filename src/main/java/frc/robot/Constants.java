@@ -329,6 +329,7 @@ public class Constants {
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
+        public static final int SPEAKER_PIPELINE = 1;
         public static final int NOTE_PIPELINE = 2;
 
         public class Pipelines { // TODO get real
@@ -402,7 +403,8 @@ public class Constants {
         }
 
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
-        public static final double INDEXER_DEFAULT_POWER = 0.3;
+        public static final double INDEXER_DEFAULT_POWER = 0.3d;
+        public static final double INDEXER_MANUAL_POWER = 0.5d;
     }
 
     public class PivotConstants { // TODO: get real
@@ -486,7 +488,7 @@ public class Constants {
 
         // Podium
         public static final double PODIUM_RPM = 3000;
-        public static final double PODIUM_ANGLE = 90;
+        public static final double PODIUM_ANGLE = 45;
 
         // C1
         public static final double C1_RPM = 0;

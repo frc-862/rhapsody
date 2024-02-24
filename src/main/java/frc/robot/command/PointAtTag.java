@@ -46,13 +46,14 @@ public class PointAtTag extends Command {
 
 		limelightPrevPipeline = limelight.getPipeline();
 
-		limelight.setPipeline(VisionConstants.TAG_PIPELINE);
+		limelight.setPipeline(VisionConstants.SPEAKER_PIPELINE);
 
 		targetPose = new Translation2d(targetX, targetY);
 	}
 
 	@Override
 	public void initialize() {
+
 		headingController.enableContinuousInput(-180, 180);
 		// targetPose = limelight.getCamPoseTargetSpace().getTranslation().toTranslation2d();
 
@@ -76,24 +77,24 @@ public class PointAtTag extends Command {
 		// headingController.setI(LightningShuffleboard.getDouble("PointAtTag", "I", 0));
 		// headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 1));
 
-		Pose2d pose = drivetrain.getPose().get();
-		deltaX = targetPose.getX() - pose.getX();
-		deltaY = targetPose.getY() - pose.getY();
+		// Pose2d pose = drivetrain.getPose().get();
+		// deltaX = targetPose.getX() - pose.getX();
+		// deltaY = targetPose.getY() - pose.getY();
 
-		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
+		// targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
 		// targetHeading = Math.toDegrees(targetPose.getRotation().getAngle());
-		pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
+		// pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
 
-		// targetHeading = limelight.getTargetX();
-		// pidOutput = headingController.calculate(targetHeading, 0);
+		targetHeading = limelight.getTargetX();
+		pidOutput = headingController.calculate(targetHeading, 0);
 
 		// TODO test drives and test the deadbands
-		drivetrain.setFieldDriver(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
+		drivetrain.setFieldDriver(-driver.getLeftY(), -driver.getLeftX(), -pidOutput);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		limelight.setPipeline(limelightPrevPipeline);
+		// limelight.setPipeline(limelightPrevPipeline);
 	}
 
 	@Override

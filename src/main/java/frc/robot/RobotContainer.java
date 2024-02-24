@@ -181,8 +181,7 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector,
-		// limelights));
+		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
 		// parks the robot
 		new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
@@ -192,8 +191,8 @@ public class RobotContainer extends LightningContainer {
 			.alongWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// aim at amp and stage tags for the robot
-		// new Trigger(driver::getLeftBumper)
-		// 		.whileTrue(new PointAtTag(0, 0, drivetrain, limelights, driver)); // TODO: make work
+		new Trigger(driver::getLeftBumper)
+				.whileTrue(new PointAtTag(0, 0, drivetrain, limelights, driver)); // TODO: make work
 
 		// new Trigger(driver::getYButton)
 		// 		.whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
@@ -201,14 +200,14 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
-		new Trigger(coPilot::getAButton).whileTrue(new SmartCollect(
+		new Trigger(coPilot::getBButton).whileTrue(new SmartCollect(
 			() -> 0.50, () -> 0.60, collector, indexer, pivot)); // TODO: find correct button/trigger
 
 		// cand shots for the robot
-		new Trigger(coPilot::getBButton).whileTrue(new AmpShot(flywheel, pivot, indexer, false));
+		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, indexer, false));
 		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot, indexer, false));
-		new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
-		// new Trigger(coPilot::getAButton).whileTrue(new SourceCollect(flywheel, pivot));
+		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
+		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
 		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,
 		// drivetrain).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
@@ -225,9 +224,9 @@ public class RobotContainer extends LightningContainer {
 			flywheel.decreaseBias())); // LEFT
 
 		new Trigger(coPilot::getRightBumper)
-				.whileTrue(new Index(indexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
+				.whileTrue(new Index(indexer, () -> IndexerConstants.INDEXER_MANUAL_POWER));
 		new Trigger(coPilot::getLeftBumper)
-				.whileTrue(new Index(indexer, () -> -IndexerConstants.INDEXER_DEFAULT_POWER));
+				.whileTrue(new Index(indexer, () -> -IndexerConstants.INDEXER_MANUAL_POWER));
 
 
 		/* Other */
@@ -259,7 +258,7 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		collector.setDefaultCommand(new Collect(
-				() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector));
+				() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector, indexer));
 
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
