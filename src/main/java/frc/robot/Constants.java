@@ -56,6 +56,8 @@ public class Constants {
 
         public static final double SYS_TEST_SPEED_DRIVE = 0.5;
         public static final double SYS_TEST_SPEED_TURN = 1d;
+
+        public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
     }
 
     public class RobotMap {
@@ -424,6 +426,8 @@ public class Constants {
 
         public static final double STOW_ANGLE = 35d;
 
+        public static final double MAX_INDEX_ANGLE = 40d;
+
         public static final double MIN_ANGLE = 25d;
         public static final double MAX_ANGLE = 100d;
     }
@@ -434,24 +438,31 @@ public class Constants {
 
         // Distance in meters, angle in degrees
         public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {
-            {
-                put(0d, 0d);
+            { 
+                // As distance gets smaller angle goes up
+                put(0d, 60d);
+                put(20d, 40d);
             }
         };
 
         // Distance in meters, speed in RPM
         public static final InterpolationMap SPEED_MAP = new InterpolationMap() {
             {
+                // As distance get smaller RPM gets smaller
                 put(0d, 0d);
             }
         };
+
+        public enum ShootingState {
+            AIM, SHOOT, SHOT
+        }
     }
 
     public class CandConstants { // TODO get real
         // Amp
-        public static final double AMP_TOP_RPM = 0;
-        public static final double AMP_BOTTOM_RPM = 0;
-        public static final double AMP_ANGLE = 50;
+        public static final double AMP_TOP_RPM = 300; // 250?
+        public static final double AMP_BOTTOM_RPM = 450;
+        public static final double AMP_ANGLE = 103.5; 
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 0;
@@ -476,6 +487,10 @@ public class Constants {
         // Line
         public static final double LINE_RPM = 0;
         public static final double LINE_ANGLE = 0;
+
+        //Source
+        public static final double SOURCE_RPM = -300d; // TODO test
+        public static final double SOURCE_ANGLE = 45d; // TODO test
 
         // TODO find time to shoot
         public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer start to flywheel exit

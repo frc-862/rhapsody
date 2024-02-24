@@ -63,16 +63,16 @@ public class Indexer extends SubsystemBase {
     }
 
     /**
-     * Index in
+     * Index up
      */
-    public void indexIn() {
+    public void indexUp() {
         setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
     }
 
     /**
-     * Index out
+     * Index down
      */
-    public void indexOut() {
+    public void indexDown() {
         setPower(-IndexerConstants.INDEXER_DEFAULT_POWER);
     }
 
