@@ -364,8 +364,7 @@ public class Constants {
 
     public class CollectorConstants { // TODO: get real
         public static final boolean COLLECTOR_MOTOR_INVERTED = true;
-        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 60; // TODO: make sure they are not set to 0
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
@@ -374,7 +373,6 @@ public class Constants {
     public class FlywheelConstants { // TODO: get real
         public static final boolean MOTOR_TOP_INVERT = true;
         public static final boolean MOTOR_BOTTOM_INVERT = false;
-        public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 40;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
         public static final double MOTOR_KP = 0.00314;
@@ -395,8 +393,7 @@ public class Constants {
 
     public class IndexerConstants { // TODO: get real
         public static final boolean MOTOR_INVERT = true;
-        public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
 
         public enum PieceState {
             IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE
@@ -409,7 +406,7 @@ public class Constants {
 
     public class PivotConstants { // TODO: get real
         public static final boolean MOTOR_INVERT = true; // POS power is up
-        public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
         public static final double MOTOR_KP = 0.08;
         public static final double MOTOR_KI = 0;
