@@ -17,9 +17,6 @@ public class PointBlankShot extends Command {
 	private boolean shot = false;
 	private double shotTime = 0;
 
-	double RPMtarget = 0;
-	double Angletarget = PivotConstants.STOW_ANGLE;
-
 	/**
 	 * Creates a new PointBlankShot.
 	 * @param flywheel subsystem
@@ -38,24 +35,21 @@ public class PointBlankShot extends Command {
 
 	@Override
 	public void initialize() {
-		// flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
-		// pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
+		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
+		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
 	}
 
 	@Override
 	public void execute() {
 		// Checks if autonomous and if the pivot and flywheel are on target then shoots
-		// if(isAutonomous && pivot.onTarget() && flywheel.allMotorsOnTarget()) {
-		// 	shot = true;
-		// 	shotTime = Timer.getFPGATimestamp();
-		// 	indexer.indexUp();
-		// }
+		if(isAutonomous && pivot.onTarget() && flywheel.allMotorsOnTarget()) {
+			shot = true;
+			shotTime = Timer.getFPGATimestamp();
+			indexer.indexUp();
+		}
 
-		RPMtarget = LightningShuffleboard.getDouble("PointBlank", "target RPM", RPMtarget);
-		Angletarget = LightningShuffleboard.getDouble("PointBlank", "target angle", Angletarget);
-
-		flywheel.setAllMotorsRPM(RPMtarget);   //CandConstants.POINT_BLANK_RPM + flywheel.getBias());
-		pivot.setTargetAngle(Angletarget);     //CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
+		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());
+		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + flywheel.getBias());
 	}
 
 	@Override
@@ -67,9 +61,9 @@ public class PointBlankShot extends Command {
 
 	@Override
 	public boolean isFinished() {
-		// if(isAutonomous){
-		// 	return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
-		// }
+		if(isAutonomous){
+			return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
+		}
 		return false;
 	}
 }
