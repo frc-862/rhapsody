@@ -196,7 +196,8 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getLeftBumper).whileTrue(new OTFShoot(drivetrain, driver, pivot, flywheel, indexer)); // TODO: make work
 		// new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(driver::getYButton).whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
+		// new Trigger(driver::getYButton)
+		// 		.whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
@@ -205,24 +206,24 @@ public class RobotContainer extends LightningContainer {
 			() -> 0.50, () -> 0.60, collector, indexer, pivot)); // TODO: find correct button/trigger
 
 		// cand shots for the robot
-		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, indexer, false));
+		new Trigger(coPilot::getBButton).whileTrue(new AmpShot(flywheel, pivot, indexer, false));
 		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot, indexer, false));
-		// new Trigger(coPilot::getAButton).whileTrue(new SourceCollect(flywheel, pivot));
 		new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
+		// new Trigger(coPilot::getAButton).whileTrue(new SourceCollect(flywheel, pivot));
 
 		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,
 		// drivetrain).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
 		/* BIAS */
-		// new Trigger(() -> coPilot.getPOV() == 0).onTrue(new InstantCommand(() ->
-		// pivot.increaseBias())); // UP
-		// new Trigger(() -> coPilot.getPOV() == 180).onTrue(new InstantCommand(() ->
-		// pivot.decreaseBias())); // DOWN
+		new Trigger(() -> coPilot.getPOV() == 0).onTrue(new InstantCommand(() ->
+			pivot.increaseBias())); // UP
+		new Trigger(() -> coPilot.getPOV() == 180).onTrue(new InstantCommand(() ->
+			pivot.decreaseBias())); // DOWN
 
-		// new Trigger(() -> coPilot.getPOV() == 90).onTrue(new InstantCommand(() ->
-		// flywheel.increaseBias())); // RIGHT
-		// new Trigger(() -> coPilot.getPOV() == 270).onTrue(new InstantCommand(() ->
-		// flywheel.decreaseBias())); // LEFT
+		new Trigger(() -> coPilot.getPOV() == 90).onTrue(new InstantCommand(() ->
+			flywheel.increaseBias())); // RIGHT
+		new Trigger(() -> coPilot.getPOV() == 270).onTrue(new InstantCommand(() ->
+			flywheel.decreaseBias())); // LEFT
 
 		new Trigger(coPilot::getRightBumper)
 				.whileTrue(new Index(indexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
