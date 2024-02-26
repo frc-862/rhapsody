@@ -51,10 +51,10 @@ public class Pivot extends SubsystemBase {
         motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         motorConfig.Feedback.SensorToMechanismRatio = PivotConstants.ENCODER_TO_MECHANISM_RATIO;
         motorConfig.Feedback.RotorToSensorRatio = PivotConstants.ROTOR_TO_ENCODER_RATIO;
-        
+
         MotionMagicConfigs motionMagicConfigs = motorConfig.MotionMagic;
         motionMagicConfigs.MotionMagicCruiseVelocity = PivotConstants.MAGIC_CRUISE_VEL;
-        motionMagicConfigs.MotionMagicAcceleration = PivotConstants.MAGIC_ACCEL; 
+        motionMagicConfigs.MotionMagicAcceleration = PivotConstants.MAGIC_ACCEL;
         motionMagicConfigs.MotionMagicJerk = PivotConstants.MAGIC_JERK;
 
         angleMotor.applyConfig(motorConfig);
