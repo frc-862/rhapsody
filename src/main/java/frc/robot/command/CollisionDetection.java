@@ -7,9 +7,11 @@ package frc.robot.command;
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CollisionConstants;
+import frc.robot.Constants.TunerConstants;
 import frc.robot.subsystems.CollisionDetector;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
@@ -19,6 +21,8 @@ public class CollisionDetection extends Command {
   
 public Swerve drivetrain;
 public CollisionDetector collisionDetector;
+public Rotation2d collisionDirection;
+
 public double[] rotVelP = {0d, 0d};
 public double[] time = {0d, 0d};
 public double[] xVelC = {0d, 0d};
@@ -27,7 +31,7 @@ public double[] rotVelC = {0d, 0d};
 
 public LinearFilter xAccCFilter = LinearFilter.movingAverage(50);
 public LinearFilter yAccCFilter = LinearFilter.movingAverage(50);
-public LinearFilter rotAccCFilter = LinearFilter.movingAverage(50);;
+public LinearFilter rotAccCFilter = LinearFilter.movingAverage(50);
 
   public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -50,8 +54,6 @@ public LinearFilter rotAccCFilter = LinearFilter.movingAverage(50);;
     LightningShuffleboard.setDouble("Collision Detection", "pidgeon acceleration magnitude", getPigeonAcceleration()[2]);
     LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", getPigeonAcceleration()[3]);
     LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAcceleration()[4]);
-    LightningShuffleboard.setDouble("Collision Detection", "pigeon angular velocity", Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble()));
-    LightningShuffleboard.setDouble("Collision Detection", "yaw", drivetrain.getPigeon2().getYaw().getValueAsDouble());
     LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude(exp filter)", getChassisAcceleration()[2]);
     LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration(exp filter)", getChassisAcceleration()[4]);
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided()[3]);
@@ -73,18 +75,18 @@ public LinearFilter rotAccCFilter = LinearFilter.movingAverage(50);;
 
     rotVelP[1] = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble());
     time[1] = Utils.getCurrentTimeSeconds();
-    xVelC[1] = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
-    xVelY[1] = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
-    rotVelC[1] = drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond;
+    xVelC[1] = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond / TunerConstants.kDriveGearRatio;
+    xVelY[1] = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond / TunerConstants.kDriveGearRatio;
+    rotVelC[1] = drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond / TunerConstants.kDriveGearRatio;
   }
 
   /**
    * @return array with pigeon acceleration 
-   * 0 - Acceleration in X direction
-   * 1 - Acceleration in Y direction
-   * 2 - Magnitude of X and Y Acceleration
-   * 3 - Direction of X and Y Acceleration
-   * 4 - Rotational Acceleration
+   * <li> 0 - Acceleration in X direction
+   * <li> 1 - Acceleration in Y direction
+   * <li> 2 - Magnitude of X and Y Acceleration
+   * <li> 3 - Direction of X and Y Acceleration
+   * <li> 4 - Rotational Acceleration
    */
   public double[] getPigeonAcceleration(){
     double accX = drivetrain.getPigeon2().getAccelerationX().getValueAsDouble() 
@@ -103,29 +105,29 @@ public LinearFilter rotAccCFilter = LinearFilter.movingAverage(50);;
 
   /**
    * @return array with chassis acceleration 
-   * 0 - Acceleration in X direction
-   * 1 - Acceleration in Y direction
-   * 2 - Magnitude of X and Y Acceleration
-   * 3 - Direction of X and Y Acceleration
-   * 4 - Rotational Acceleration
+   * <li> 0 - Acceleration in X direction
+   * <li> 1 - Acceleration in Y direction
+   * <li> 2 - Magnitude of X and Y Acceleration
+   * <li> 3 - Direction of X and Y Acceleration
+   * <li> 4 - Rotational Acceleration
    */
   public double[] getChassisAcceleration(){
-    double timeDelta = time[1] - time[0];
-    double accX = xAccCFilter.calculate((xVelC[1] - xVelC[0]) / timeDelta); // calculate acceleration in x direction and filter
-    double accY = yAccCFilter.calculate((xVelY[1] - xVelY[0]) / timeDelta); // calculate acceleration in y direction and filter
+    double deltaTime = time[1] - time[0];
+    double accX = xAccCFilter.calculate((xVelC[1] - xVelC[0]) / deltaTime); // calculate acceleration in x direction and filter
+    double accY = yAccCFilter.calculate((xVelY[1] - xVelY[0]) / deltaTime); // calculate acceleration in y direction and filter
     double accMag = Math.hypot(accX, accY);
     double accDirection = Math.atan2(accY, accX);
-    double accRot = rotAccCFilter.calculate((rotVelC[1] - rotVelC[0]) / timeDelta); // calculate rot acceleration and filter
+    double accRot = rotAccCFilter.calculate((rotVelC[1] - rotVelC[0]) / deltaTime); // calculate rot acceleration and filter
     return new double[] {accX, accY, accMag, accDirection, accRot};
   }
 
   /**
    * Compare Pigeon and Chassis Acceleraiton
    * @return boolean array
-   * 0 - check x
-   * 1 - check y
-   * 2 - check rot
-   * 3 - check all
+   * <li> 0 - check x
+   * <li> 1 - check y
+   * <li> 2 - check rot
+   * <li> 3 - check all
    */
   public boolean[] getIfCollided(){
     double differenceX = Math.abs(getPigeonAcceleration()[0] - getChassisAcceleration()[0]);
@@ -140,6 +142,7 @@ public LinearFilter rotAccCFilter = LinearFilter.movingAverage(50);;
     boolean rotCollided = differenceRot > getPigeonAcceleration()[4] * CollisionConstants.ACCELERATION_TOLERANCE 
     && differenceX > CollisionConstants.ACCELERATION_TOLERANCE;
 
+    collisionDirection = new Rotation2d(Math.atan2(differenceY, differenceX));
     boolean collided = xCollided || yCollided || rotCollided;
 
     return new boolean[] {xCollided, yCollided, rotCollided, collided};
