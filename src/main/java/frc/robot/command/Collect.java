@@ -31,16 +31,16 @@ public class Collect extends Command {
 	@Override
 	public void initialize() {
 		collector.setPower(powerSupplier.getAsDouble());
-		LightningShuffleboard.setDoubleSupplier("Collector", "Power", () -> powerSupplier.getAsDouble());
+		LightningShuffleboard.setDoubleSupplier("Collector", "Power", powerSupplier);
 	}
 
 	@Override
 	public void execute() {
 		collector.setPower(powerSupplier.getAsDouble());
-		if(powerSupplier.getAsDouble() > 0d) {
+		if (powerSupplier.getAsDouble() > 0d) {
 			indexer.setPower(1d);
 		} else {
-			indexer.setPower(0d);
+			indexer.stop();
 		}
 	}
 
