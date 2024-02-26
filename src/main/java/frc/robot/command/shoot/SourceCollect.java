@@ -9,36 +9,31 @@ import frc.robot.subsystems.Pivot;
 public class SourceCollect extends Command {
 
 	private final Flywheel flywheel;
-	private final Pivot pivot;
 
+	// TODO add pivot after Kettering
 	/**
 	 * Creates a new SourceCollect.
 	 * @param flywheel subsystem
-	 * @param pivot subsystem
 	 */
-	public SourceCollect(Flywheel flywheel, Pivot pivot) {
+	public SourceCollect(Flywheel flywheel) {
 		this.flywheel = flywheel;
-		this.pivot = pivot;
 
-		addRequirements(pivot, flywheel);
+		addRequirements( flywheel);
 	}
 
 	@Override
 	public void initialize() {
 		flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
-		// pivot.setTargetAngle(CandConstants.SOURCE_ANGLE + pivot.getBias()); // TODO get angle for now no movement
 	}
 
 	@Override
 	public void execute() {
 		flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
-		// pivot.setTargetAngle(CandConstants.SOURCE_ANGLE + pivot.getBias()); // TODO get angle for now no movement
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 	}
 
 	@Override

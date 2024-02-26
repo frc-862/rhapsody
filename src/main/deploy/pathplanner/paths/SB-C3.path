@@ -44,6 +44,9 @@
   },
   "reversed": false,
   "folder": "Top side paths",
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": -61.48875370589127,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }
