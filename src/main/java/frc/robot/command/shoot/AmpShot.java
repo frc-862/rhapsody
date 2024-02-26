@@ -19,11 +19,10 @@ public class AmpShot extends Command {
 
 	/**
 	 * Creates a new AmpShot
-	 * 
 	 * @param pivot subsystem
 	 * @param flywheel subsystem
-	 * @param indexer subsystem
-	 * @param isAutonomous boolean if robot is in autonomous
+	 * indexer subsystem
+	 * isAutonomous boolean if robot is in autonomous
 	 */
 	public AmpShot(Flywheel flywheel, Pivot pivot) {// , Indexer indexer, boolean isAutonomous) {
 		this.flywheel = flywheel;

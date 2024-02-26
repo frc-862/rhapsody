@@ -18,6 +18,7 @@ public class Collect extends Command {
 	 * Creates a new Collect.
 	 * @param powerSupplier DoubleSupplier for power of motor (-1 to 1)
 	 * @param collector subsystem
+	 * @param indexer subsystem
 	 */
 	public Collect(DoubleSupplier powerSupplier, Collector collector, Indexer indexer) {
 		this.collector = collector;

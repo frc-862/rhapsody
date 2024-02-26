@@ -56,13 +56,13 @@ public class SmartShoot extends Command {
 	public void execute() {
 		// Distance from current pose to speaker pose
 		double distance = drivetrain.distanceToSpeaker();
-		
+
 		// Logging
 		LightningShuffleboard.setDouble("Smart-Shoot", "Distance", distance);
 		LightningShuffleboard.setString("Smart-Shoot", "State", state.toString());
 
 		switch(state) {
-			case AIM:  
+			case AIM:
 				// Default state remains here until pivot + Flywheel are on target
 				pivot.setTargetAngle(calculateTargetAngle(distance));
 				flywheel.setAllMotorsRPM(calculateTargetRPM(distance));
@@ -81,7 +81,7 @@ public class SmartShoot extends Command {
 					state = ShootingState.SHOT;
 				}
 			break;
-			case SHOT: 
+			case SHOT:
 				// Provides driver feed back and ends command
 				new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
 				leds.enableState(LED_STATES.SHOT).withTimeout(2).schedule();
@@ -106,7 +106,7 @@ public class SmartShoot extends Command {
 	 * @return boolean on Target
 	 */
 	public boolean onTarget() {
-		return flywheel.allMotorsOnTarget() && pivot.onTarget(); 
+		return flywheel.allMotorsOnTarget() && pivot.onTarget();
 	}
 
 	/**
