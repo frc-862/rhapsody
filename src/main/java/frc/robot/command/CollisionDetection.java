@@ -8,7 +8,6 @@ import com.ctre.phoenix6.Utils;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CollisionConstants;
 import frc.robot.Constants.TunerConstants;
-import frc.robot.subsystems.CollisionDetector;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,27 +17,23 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class CollisionDetection extends Command {
   /** Creates a new CollisionDetection. */
-  
-public Swerve drivetrain;
-public CollisionDetector collisionDetector;
-public Rotation2d collisionDirection;
 
+  public Swerve drivetrain;
+  public Rotation2d collisionDirection;
+  // init arrays for calculating accelerations
+  public double[] rotVelP = {0d, 0d};
+  public double[] time = {0d, 0d};
+  public double[] xVelC = {0d, 0d};
+  public double[] xVelY = {0d, 0d};
+  public double[] rotVelC = {0d, 0d};
+  // filters for filtering acceleration values
+  public LinearFilter xAccCFilter = LinearFilter.movingAverage(50);
+  public LinearFilter yAccCFilter = LinearFilter.movingAverage(50);
+  public LinearFilter rotAccCFilter = LinearFilter.movingAverage(50);
 
-public double[] rotVelP = {0d, 0d};
-public double[] time = {0d, 0d};
-public double[] xVelC = {0d, 0d};
-public double[] xVelY = {0d, 0d};
-public double[] rotVelC = {0d, 0d};
-
-public LinearFilter xAccCFilter = LinearFilter.movingAverage(50);
-public LinearFilter yAccCFilter = LinearFilter.movingAverage(50);
-public LinearFilter rotAccCFilter = LinearFilter.movingAverage(50);
-
-  public CollisionDetection(Swerve drivetrain, CollisionDetector collisionDetector) {
+  public CollisionDetection(Swerve drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
-    this.collisionDetector = collisionDetector;
-    addRequirements(collisionDetector);
   }
 
   // Called when the command is initially scheduled.

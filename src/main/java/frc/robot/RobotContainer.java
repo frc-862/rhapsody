@@ -59,7 +59,6 @@ import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.CollisionDetector;
 import frc.thunder.LightningContainer;
 import frc.thunder.command.TimedCommand;
 import frc.thunder.filter.XboxControllerFilter;
@@ -79,7 +78,6 @@ public class RobotContainer extends LightningContainer {
 	private Pivot pivot;
 	Indexer indexer;
 	// Climber climber;
-	CollisionDetector collisionDetector;
 	LEDs leds;
 	Orchestra sing;
 
@@ -114,7 +112,6 @@ public class RobotContainer extends LightningContainer {
 		pivot = new Pivot();
 		indexer = new Indexer(collector);
 		// climber = new Climber(drivetrain);
-		collisionDetector = new CollisionDetector();
 		leds = new LEDs();
 		sing = new Orchestra();
 
@@ -243,11 +240,12 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
+		// new Trigger(() -> true).whileTrue(new CollisionDetection(drivetrain));
+
 		// new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
 		// .onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
 		// .onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
 	}
-
 
 	@Override
 	protected void configureDefaultCommands() {
@@ -260,9 +258,8 @@ public class RobotContainer extends LightningContainer {
 		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(
 				() -> -MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND),
 				() -> -MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND),
-				() -> -MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND)));
-
-		collisionDetector.setDefaultCommand(new CollisionDetection(drivetrain, collisionDetector));
+				() -> -MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND))
+				.alongWith(new CollisionDetection(drivetrain)));
 			
 		/* copilot */
 		collector.setDefaultCommand(
