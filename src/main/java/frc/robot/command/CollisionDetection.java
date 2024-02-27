@@ -24,7 +24,7 @@ public class CollisionDetection extends Command {
   public double[] rotVelP = {0d, 0d};
   public double[] time = {0d, 0d};
   public double[] xVelC = {0d, 0d};
-  public double[] xVelY = {0d, 0d};
+  public double[] yVelC = {0d, 0d};
   public double[] rotVelC = {0d, 0d};
   // filters for filtering acceleration values
   public LinearFilter xAccCFilter = LinearFilter.movingAverage(50);
@@ -39,14 +39,14 @@ public class CollisionDetection extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    storeVelocities();
+    storeVelocities(); // store initial velocities to avoid null values
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     storeVelocities();
-
+    // log values to shuffleboard
     LightningShuffleboard.setDouble("Collision Detection", "pidgeon acceleration magnitude", getPigeonAcceleration()[2]);
     LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", getPigeonAcceleration()[3]);
     LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAcceleration()[4]);
@@ -66,13 +66,13 @@ public class CollisionDetection extends Command {
     rotVelP[0] = rotVelP[1];
     time[0] = time[1];
     xVelC[0] = xVelC[1];
-    xVelY[0] = xVelY[1];
+    yVelC[0] = yVelC[1];
     rotVelC[0] = rotVelC[1];
-
+    // store velocities to calculate acceleration
     rotVelP[1] = Units.degreesToRadians(drivetrain.getPigeon2().getAngularVelocityZDevice().getValueAsDouble());
     time[1] = Utils.getCurrentTimeSeconds();
     xVelC[1] = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond / TunerConstants.kDriveGearRatio;
-    xVelY[1] = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond / TunerConstants.kDriveGearRatio;
+    yVelC[1] = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond / TunerConstants.kDriveGearRatio;
     rotVelC[1] = drivetrain.getCurrentRobotChassisSpeeds().omegaRadiansPerSecond / TunerConstants.kDriveGearRatio;
   }
 
@@ -93,9 +93,9 @@ public class CollisionDetection extends Command {
     - drivetrain.getPigeon2().getGravityVectorY().getValueAsDouble() // subtract gravity from acceleration
     * CollisionConstants.ACCELERATION_DUE_TO_GRAVITY; // convert g-force to m/s^2
 
-    double accMag = Math.hypot(accX, accY);
-    double accDirection = Math.atan2(accY, accX);
-    double accRot = (rotVelP[1] - rotVelP[0]) / (time[1] - time[0]);
+    double accMag = Math.hypot(accX, accY); // calculate magnitude of acceleration
+    double accDirection = Math.atan2(accY, accX); // calculate direction of acceleration
+    double accRot = (rotVelP[1] - rotVelP[0]) / (time[1] - time[0]); // calculate rotational acceleration
     return new double[] {accX, accY, accMag, accDirection, accRot};
   }
 
@@ -110,9 +110,9 @@ public class CollisionDetection extends Command {
   public double[] getChassisAcceleration(){
     double deltaTime = time[1] - time[0];
     double accX = xAccCFilter.calculate((xVelC[1] - xVelC[0]) / deltaTime); // calculate acceleration in x direction and filter
-    double accY = yAccCFilter.calculate((xVelY[1] - xVelY[0]) / deltaTime); // calculate acceleration in y direction and filter
-    double accMag = Math.hypot(accX, accY);
-    double accDirection = Math.atan2(accY, accX);
+    double accY = yAccCFilter.calculate((yVelC[1] - yVelC[0]) / deltaTime); // calculate acceleration in y direction and filter
+    double accMag = Math.hypot(accX, accY); // calculate magnitude of acceleration
+    double accDirection = Math.atan2(accY, accX); // calculate direction of acceleration
     double accRot = rotAccCFilter.calculate((rotVelC[1] - rotVelC[0]) / deltaTime); // calculate rot acceleration and filter
     return new double[] {accX, accY, accMag, accDirection, accRot};
   }
@@ -126,9 +126,9 @@ public class CollisionDetection extends Command {
    * <li> 3 - check all
    */
   public boolean[] getIfCollided(){
-    double differenceX = Math.abs(getPigeonAcceleration()[0] - getChassisAcceleration()[0]);
+    double differenceX = Math.abs(getPigeonAcceleration()[0] - getChassisAcceleration()[0]); // calculate difference in x acceleration
     boolean xCollided = differenceX > getPigeonAcceleration()[0] * CollisionConstants.ACCELERATION_TOLERANCE 
-    && differenceX > CollisionConstants.MIN_ACCELERATION_DIFF;
+    && differenceX > CollisionConstants.MIN_ACCELERATION_DIFF; // check if difference is greater than tolerance and min difference
 
     double differenceY = Math.abs(getPigeonAcceleration()[1] - getChassisAcceleration()[1]);
     boolean yCollided = differenceY > getPigeonAcceleration()[1] * CollisionConstants.ACCELERATION_TOLERANCE 
