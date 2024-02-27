@@ -106,15 +106,21 @@ public class CollisionDetection extends Command {
    * <li> 2 - Magnitude of X and Y Acceleration
    * <li> 3 - Direction of X and Y Acceleration
    * <li> 4 - Rotational Acceleration
+   * <li> 5 - Raw X Acceleration (w/o rotational acceleration)
+   * <li> 6 - Raw Y Acceleration (w/o rotational acceleration)
+   * <li> 7 - Raw Direction of Acceleration (w/o rotational acceleration)
    */
   public double[] getChassisAcceleration(){
     double deltaTime = time[1] - time[0];
-    double accX = xAccCFilter.calculate((xVelC[1] - xVelC[0]) / deltaTime); // calculate acceleration in x direction and filter
-    double accY = yAccCFilter.calculate((yVelC[1] - yVelC[0]) / deltaTime); // calculate acceleration in y direction and filter
+    double accXRaw = xAccCFilter.calculate((xVelC[1] - xVelC[0]) / deltaTime); // calculate acceleration in x direction and filter
+    double accYRaw = yAccCFilter.calculate((yVelC[1] - yVelC[0]) / deltaTime); // calculate acceleration in y direction and filter
+    double accRot = rotAccCFilter.calculate((rotVelC[1] - rotVelC[0]) / deltaTime); // calculate rot acceleration and filter
+    double accDirectionRaw = Math.atan2(accYRaw, accXRaw); // calculate direction of acceleration
+    double accX = accXRaw - accRot * Math.cos(accDirectionRaw + Math.PI/2); // calculate x acceleration
+    double accY = accYRaw - accRot * Math.sin(accDirectionRaw + Math.PI/2); // calculate y acceleration
     double accMag = Math.hypot(accX, accY); // calculate magnitude of acceleration
     double accDirection = Math.atan2(accY, accX); // calculate direction of acceleration
-    double accRot = rotAccCFilter.calculate((rotVelC[1] - rotVelC[0]) / deltaTime); // calculate rot acceleration and filter
-    return new double[] {accX, accY, accMag, accDirection, accRot};
+    return new double[] {accX, accY, accMag, accDirection, accRot, accXRaw, accYRaw, accDirectionRaw};
   }
 
   /**
