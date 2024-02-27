@@ -324,7 +324,6 @@ public class Constants {
                 new Translation2d(Units.feetToMeters(54.0), Units.feetToMeters(26.0));
         public static final Translation2d VISION_LIMIT =
                 new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
-        public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
@@ -344,10 +343,8 @@ public class Constants {
         public static final double TIP_DEADZONE = 2d;
 
         public static final double ACCELERATION_DUE_TO_GRAVITY = 9.80665;
-        public static final double ACCELERATION_TOLERANCE = 2.00; //percent of pigeonAcceleration
-        public static final double DISTANCE_FROM_CENTER_TO_MODULE = Math.hypot(13.5, 13.5);
-        public static final double DISTANCE_FROM_CENTER_TO_PIGEON = 0d;
-        public static final double COLLISION_ACCELERATION_DIRECTION_TOLERANCE = Math.PI/12; // 15 degrees
+        public static final double ACCELERATION_TOLERANCE = 1.00; //percent of pigeonAcceleration
+        public static final double MIN_ACCELERATION_DIFF = 0.50; // TODO: get real
     }
 
     public class MusicConstants {

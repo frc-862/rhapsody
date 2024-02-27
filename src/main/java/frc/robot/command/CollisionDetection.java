@@ -23,6 +23,7 @@ public Swerve drivetrain;
 public CollisionDetector collisionDetector;
 public Rotation2d collisionDirection;
 
+
 public double[] rotVelP = {0d, 0d};
 public double[] time = {0d, 0d};
 public double[] xVelC = {0d, 0d};
@@ -54,8 +55,8 @@ public LinearFilter rotAccCFilter = LinearFilter.movingAverage(50);
     LightningShuffleboard.setDouble("Collision Detection", "pidgeon acceleration magnitude", getPigeonAcceleration()[2]);
     LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", getPigeonAcceleration()[3]);
     LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAcceleration()[4]);
-    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude(exp filter)", getChassisAcceleration()[2]);
-    LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration(exp filter)", getChassisAcceleration()[4]);
+    LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getChassisAcceleration()[2]);
+    LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration", getChassisAcceleration()[4]);
     LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided()[3]);
   }
 
@@ -132,15 +133,15 @@ public LinearFilter rotAccCFilter = LinearFilter.movingAverage(50);
   public boolean[] getIfCollided(){
     double differenceX = Math.abs(getPigeonAcceleration()[0] - getChassisAcceleration()[0]);
     boolean xCollided = differenceX > getPigeonAcceleration()[0] * CollisionConstants.ACCELERATION_TOLERANCE 
-    && differenceX > CollisionConstants.ACCELERATION_TOLERANCE;
+    && differenceX > CollisionConstants.MIN_ACCELERATION_DIFF;
 
     double differenceY = Math.abs(getPigeonAcceleration()[1] - getChassisAcceleration()[1]);
     boolean yCollided = differenceY > getPigeonAcceleration()[1] * CollisionConstants.ACCELERATION_TOLERANCE 
-    && differenceY > CollisionConstants.ACCELERATION_TOLERANCE;
+    && differenceY > CollisionConstants.MIN_ACCELERATION_DIFF;
 
     double differenceRot = Math.abs(getPigeonAcceleration()[4] - getChassisAcceleration()[4]);
     boolean rotCollided = differenceRot > getPigeonAcceleration()[4] * CollisionConstants.ACCELERATION_TOLERANCE 
-    && differenceX > CollisionConstants.ACCELERATION_TOLERANCE;
+    && differenceX > CollisionConstants.MIN_ACCELERATION_DIFF;
 
     collisionDirection = new Rotation2d(Math.atan2(differenceY, differenceX));
     boolean collided = xCollided || yCollided || rotCollided;
