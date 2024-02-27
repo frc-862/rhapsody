@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0,
-        "y": 1.0
+        "x": 5.892323323108186,
+        "y": 6.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.118033988749896,
-        "y": 1.0
+        "x": 6.642450260649451,
+        "y": 7.0733452736520315
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "TopLine"
     },
     {
       "anchor": {
-        "x": 3.0,
-        "y": 1.0
+        "x": 8.281967377058862,
+        "y": 7.436381206571257
       },
       "prevControl": {
-        "x": 1.8552645268833428,
-        "y": 1.0
-      },
-      "nextControl": {
-        "x": 4.414213562373096,
-        "y": 1.0
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.5,
-        "y": 1.0
-      },
-      "prevControl": {
-        "x": 4.304633011390607,
-        "y": 1.0
+        "x": 6.689293606832576,
+        "y": 7.436381206571257
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "F1"
     }
   ],
   "rotationTargets": [],
@@ -55,11 +39,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 0.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Test paths",
-  "previewStartingState": null,
+  "folder": "Top side paths",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }

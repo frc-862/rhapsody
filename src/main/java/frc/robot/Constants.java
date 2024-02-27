@@ -229,21 +229,21 @@ public class Constants {
                         .withSteerMotorInverted(kSteerMotorReversed);
 
         // OFFSETS Rhapsody
-        private static final double kFrontLeftEncoderOffsetRh = -0.03564453125;
-        private static final double kFrontLeftXPosInchesRh = 13.5;
-        private static final double kFrontLeftYPosInchesRh = 13.5;
+        private static final double kFrontLeftEncoderOffsetRh = 0.0546875;
+        private static final double kFrontLeftXPosInchesRh = 10.825;
+        private static final double kFrontLeftYPosInchesRh = 10.825;
 
-        private static final double kFrontRightEncoderOffsetRh = 0.2978515625;
-        private static final double kFrontRightXPosInchesRh = 13.5;
-        private static final double kFrontRightYPosInchesRh = -13.5;
+        private static final double kFrontRightEncoderOffsetRh = 0.287353515625;
+        private static final double kFrontRightXPosInchesRh = 10.825;
+        private static final double kFrontRightYPosInchesRh = -10.825;
 
-        private static final double kBackLeftEncoderOffsetRh = 0.245361328125;
-        private static final double kBackLeftXPosInchesRh = -13.5;
-        private static final double kBackLeftYPosInchesRh = 13.5;
+        private static final double kBackLeftEncoderOffsetRh = 0.243408203125;
+        private static final double kBackLeftXPosInchesRh = -10.825;
+        private static final double kBackLeftYPosInchesRh = 10.825;
 
-        private static final double kBackRightEncoderOffsetRh = 0.044189453125;
-        private static final double kBackRightXPosInchesRh = -13.5;
-        private static final double kBackRightYPosInchesRh = -13.5;
+        private static final double kBackRightEncoderOffsetRh = -0.052734375;
+        private static final double kBackRightXPosInchesRh = -10.825;
+        private static final double kBackRightYPosInchesRh = -10.825;
 
         // OFFSETS Mercury
         private static final double kFrontLeftEncoderOffset = -0.11572265625;
@@ -329,6 +329,7 @@ public class Constants {
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
+        public static final int SPEAKER_PIPELINE = 1;
         public static final int NOTE_PIPELINE = 2;
 
         public class Pipelines { // TODO get real
@@ -363,8 +364,7 @@ public class Constants {
 
     public class CollectorConstants { // TODO: get real
         public static final boolean COLLECTOR_MOTOR_INVERTED = true;
-        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 60; // TODO: make sure they are not set to 0
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
@@ -373,7 +373,6 @@ public class Constants {
     public class FlywheelConstants { // TODO: get real
         public static final boolean MOTOR_TOP_INVERT = true;
         public static final boolean MOTOR_BOTTOM_INVERT = false;
-        public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 40;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
         public static final double MOTOR_KP = 0.00314;
@@ -394,20 +393,20 @@ public class Constants {
 
     public class IndexerConstants { // TODO: get real
         public static final boolean MOTOR_INVERT = true;
-        public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
 
         public enum PieceState {
             IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE
         }
 
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
-        public static final double INDEXER_DEFAULT_POWER = 0.3;
+        public static final double INDEXER_DEFAULT_POWER = 0.3d;
+        public static final double INDEXER_MANUAL_POWER = 0.5d;
     }
 
     public class PivotConstants { // TODO: get real
         public static final boolean MOTOR_INVERT = true; // POS power is up
-        public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
         public static final double MOTOR_KP = 0.08;
         public static final double MOTOR_KI = 0;
@@ -486,7 +485,7 @@ public class Constants {
 
         // Podium
         public static final double PODIUM_RPM = 3000;
-        public static final double PODIUM_ANGLE = 90;
+        public static final double PODIUM_ANGLE = 45;
 
         // C1
         public static final double C1_RPM = 0;

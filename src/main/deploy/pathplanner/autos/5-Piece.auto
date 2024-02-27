@@ -1,18 +1,37 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.734,
+      "y": 4.41
+    },
+    "rotation": -61.5
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "led-Shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Cand-Sub"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
+                }
+              }
+            ]
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -24,33 +43,33 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "led-Collect"
+                  "name": "Collect"
                 }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              },
               {
                 "type": "wait",
                 "data": {
                   "waitTime": 1.0
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "led-Shoot"
-                }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -62,20 +81,20 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "led-Collect"
+                  "name": "Collect"
                 }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "led-Shoot"
+                  "name": "Smart-Shoot"
                 }
               },
               {
@@ -88,7 +107,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -100,20 +119,20 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "led-Collect"
+                  "name": "Collect"
                 }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "led-Shoot"
+                  "name": "Smart-Shoot"
                 }
               },
               {
@@ -126,7 +145,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -138,7 +157,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "led-Collect"
+                  "name": "Collect"
                 }
               }
             ]

@@ -13,7 +13,6 @@ public class PodiumShot extends Command {
 
 	/**
 	 * Creates a new PodiumShot.
-	 * 
 	 * @param flywheel
 	 * @param pivot
 	 */
