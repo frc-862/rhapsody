@@ -12,6 +12,12 @@ public class PivotAngleTest extends SystemTestCommand {
   private Pivot pivot;
   private double angle;
 
+/**
+     * Pivot Angle System test
+     * @param pivot used to get access to pivot
+     * @param angle angle to set pivot to
+     */
+
   public PivotAngleTest(Pivot pivot, double angle) {
     this.pivot = pivot;
     this.angle = angle;
@@ -21,7 +27,7 @@ public class PivotAngleTest extends SystemTestCommand {
 
   @Override
   public void initializeTest() {
-    pivot.setTargetAngle(angle);
+    pivot.setTargetAngle(angle); // Gives pivot an angle to move to
   }
 
   @Override
@@ -29,7 +35,7 @@ public class PivotAngleTest extends SystemTestCommand {
 
   @Override
   public void endTest(boolean interrupted) {
-    pivot.setPower(0d);
+    pivot.setPower(0d); // Stops giving pivot power
   }
 
   @Override

@@ -18,11 +18,11 @@ public class TurnSystemTest extends SystemTestCommandGroup {
         super(
             new SequentialCommandGroup(
                 new WaitCommand(0.5),
-                new TimedCommand(new TurnTest(drivetrain, () -> speed), 1),
+                new TimedCommand(new TurnTest(drivetrain, () -> speed), 1), // Rotates at speed (-1, 1) for 1 second
                 new WaitCommand(1),
-                new TimedCommand(new TurnTest(drivetrain, () -> -speed), 1),
+                new TimedCommand(new TurnTest(drivetrain, () -> -speed), 1), // Rotates at the opposite speed for 1 second
                 new WaitCommand(0.5),
-                new InstantCommand(() -> drivetrain.brake())
+                new InstantCommand(() -> drivetrain.brake()) // Brakes the robot robot
             )
         );
     }
