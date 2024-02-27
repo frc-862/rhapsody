@@ -14,6 +14,7 @@ public class PointBlankShot extends Command {
 	private final Pivot pivot;
 	private final Indexer indexer;
 	private boolean isAutonomous;
+	private boolean firstRun;
 	private boolean shot = false;
 	private double shotTime = 0;
 
@@ -30,7 +31,7 @@ public class PointBlankShot extends Command {
 		this.indexer = indexer;
 		this.isAutonomous = isAutonomous;
 
-		addRequirements(pivot, flywheel);
+		addRequirements(pivot, flywheel, indexer);
 	}
 
 	@Override

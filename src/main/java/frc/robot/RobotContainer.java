@@ -128,7 +128,7 @@ public class RobotContainer extends LightningContainer {
 				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
 		NamedCommands.registerCommand("Cand-Sub",
-				new PointBlankShot(flywheel, pivot, indexer, DriverStation.isAutonomousEnabled())
+				new PointBlankShot(flywheel, pivot, indexer, true)
 					.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
 		// NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
 		// NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
