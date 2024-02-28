@@ -79,17 +79,18 @@ public class ChasePieces extends Command {
 
 		pidOutput = headingController.calculate(0, targetHeading);
 
-		if (hasTarget){
-			if (trustValues()){
-				if (!onTarget) {
-					drivetrain.setRobot(3, 0, -pidOutput);
-				} else {
-					drivetrain.setRobot(3, 0, 0);
+		if (!hasPiece){
+			if (hasTarget){
+				if (trustValues()){
+					if (!onTarget) {
+						drivetrain.setRobot(3, 0, -pidOutput);
+					} else {
+						drivetrain.setRobot(3, 0, 0);
+					}
 				}
-
+			} else {
+				drivetrain.setRobot(3, 0, 0);
 			}
-		} else {
-			drivetrain.setRobot(3, 0, 0);
 		}
 	}
 
