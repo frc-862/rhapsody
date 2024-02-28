@@ -408,7 +408,7 @@ public class Constants {
         public static final boolean MOTOR_INVERT = true; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
-        public static final double MOTOR_KP = 0.08;
+        public static final double MOTOR_KP = 0;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
@@ -434,7 +434,7 @@ public class Constants {
         public static final double MAX_INDEX_ANGLE = 40d;
 
         public static final double MIN_ANGLE = 25d;
-        public static final double MAX_ANGLE = 100d;
+        public static final double MAX_ANGLE = 108d;
     }
 
     public class ShooterConstants {
