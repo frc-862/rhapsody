@@ -38,7 +38,7 @@ public class Collector extends SubsystemBase {
 	 * @return When an object is present, returns true, otherwise returns false
 	 */
 	public boolean getEntryBeamBreakState() {
-		return !beamBreak.get();
+		return beamBreak.get();
 	}
 
 	/**

@@ -180,8 +180,8 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector,
-		// limelights));
+		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights)
+			.deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
 		// parks the robot
 		new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
@@ -236,7 +236,7 @@ public class RobotContainer extends LightningContainer {
 				() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()))
 						.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		new Trigger(() -> collector.hasPiece())
-				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2))
+				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
 		// new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))

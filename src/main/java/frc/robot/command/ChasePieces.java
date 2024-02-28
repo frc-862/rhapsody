@@ -15,8 +15,6 @@ public class ChasePieces extends Command {
 	private Collector collector;
 	private Limelight limelight;
 
-	private int limelightId = 0;
-
 	private double pidOutput;
 	private double targetHeading;
 	private double previousTargetHeading;
@@ -40,8 +38,6 @@ public class ChasePieces extends Command {
 		this.collector = collector;
 
 		limelight = limelights.getDust();
-		limelightId = limelight.getPipeline();
-
 
 		addRequirements(drivetrain, collector);
 	}
@@ -49,7 +45,6 @@ public class ChasePieces extends Command {
 	@Override
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
-		limelight.setPipeline(VisionConstants.NOTE_PIPELINE);
 		collector.setPower(1d); //TODO: get the right power
 
 		initLogging();
@@ -87,9 +82,9 @@ public class ChasePieces extends Command {
 		if (hasTarget){
 			if (trustValues()){
 				if (!onTarget) {
-					drivetrain.setRobot(-3, 0, -pidOutput);
+					drivetrain.setRobot(3, 0, -pidOutput);
 				} else {
-					drivetrain.setRobot(-3, 0, 0);
+					drivetrain.setRobot(3, 0, 0);
 				}
 
 			}
@@ -100,7 +95,6 @@ public class ChasePieces extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		limelight.setPipeline(limelightId);
 		collector.stop();
 	}
 
