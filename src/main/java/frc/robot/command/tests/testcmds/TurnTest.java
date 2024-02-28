@@ -27,12 +27,14 @@ public class TurnTest extends Command {
 
     @Override
     public void execute() {
-        drivetrain.applyPercentRequestRobot(() -> 0d, () -> 0d, speed);
+        drivetrain.applyPercentRequestRobot(() -> 0d, () -> 0d, speed);//speed);
+        System.out.println("ExecutingTurntest");
     }
 
     @Override
     public void end(boolean interrupted) {
         drivetrain.brake();
+        System.out.println("Ending");
     }
 
     @Override

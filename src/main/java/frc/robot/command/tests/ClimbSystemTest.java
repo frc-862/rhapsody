@@ -20,7 +20,7 @@ public class ClimbSystemTest extends SystemTestCommandGroup {
                 new TimedCommand(new ClimbTest(climber, speed), 1), // UP
                 new WaitCommand(1),
                 new TimedCommand(new ClimbTest(climber, -speed), 1) // DOWN
-            )
+            ) 
         );
     }
 }

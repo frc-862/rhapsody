@@ -13,7 +13,8 @@ public class PivotAngleTest extends SystemTestCommand {
   private double angle;
 
 /**
-     * Pivot Angle System test
+     * please note that this removes all usage of the drivetrain until it is ended.
+     * use with caution, and only when the drivetrain is not in use.
      * @param pivot used to get access to pivot
      * @param angle angle to set pivot to
      */
