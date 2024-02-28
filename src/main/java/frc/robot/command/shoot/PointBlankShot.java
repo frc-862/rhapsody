@@ -2,11 +2,14 @@ package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.CandConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
+import frc.robot.command.Index;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PointBlankShot extends Command {
@@ -14,7 +17,7 @@ public class PointBlankShot extends Command {
 	private final Pivot pivot;
 	private final Indexer indexer;
 	private boolean isAutonomous;
-	private boolean firstRun;
+	private boolean goShoot = false;
 	private boolean shot = false;
 	private double shotTime = 0;
 
@@ -44,9 +47,13 @@ public class PointBlankShot extends Command {
 	public void execute() {
 		// Checks if autonomous and if the pivot and flywheel are on target then shoots
 		if(isAutonomous && pivot.onTarget() && flywheel.allMotorsOnTarget()) {
+			goShoot = true;
+		}
+
+		if(goShoot){
 			shot = true;
 			shotTime = Timer.getFPGATimestamp();
-			indexer.indexUp();
+			indexer.setPower(0.6);
 		}
 
 		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());

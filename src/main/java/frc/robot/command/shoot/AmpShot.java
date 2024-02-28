@@ -3,7 +3,9 @@ package frc.robot.command.shoot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PivotConstants;
+import frc.robot.command.Index;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
@@ -14,6 +16,7 @@ public class AmpShot extends Command {
 	private Flywheel flywheel;
 	private Indexer indexer;
 	private boolean isAutonomous;
+	private boolean goShoot = false;
 	private boolean shot = false;
 	private double shotTime = 0;
 
@@ -21,14 +24,14 @@ public class AmpShot extends Command {
 	 * Creates a new AmpShot
 	 * @param pivot subsystem
 	 * @param flywheel subsystem
-	 * indexer subsystem
-	 * isAutonomous boolean if robot is in autonomous
+	 * @param indexer subsystem
+	 * @param isAutonomous boolean if robot is in autonomous
 	 */
-	public AmpShot(Flywheel flywheel, Pivot pivot) {// , Indexer indexer, boolean isAutonomous) {
+	public AmpShot(Flywheel flywheel, Pivot pivot, Indexer indexer, boolean isAutonomous) {// , Indexer indexer, boolean isAutonomous) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
-		// this.indexer = indexer;
-		// this.isAutonomous = isAutonomous;
+		this.indexer = indexer;
+		this.isAutonomous = isAutonomous;
 
 		addRequirements(flywheel, pivot);
 	}
@@ -43,11 +46,16 @@ public class AmpShot extends Command {
 	@Override
 	public void execute() {
 		// Checks if autonomous and if the pivot and flywheel are on target then shoots
-		// if (isAutonomous && pivot.onTarget() && flywheel.allMotorsOnTarget()) {
-		// shot = true;
-		// shotTime = Timer.getFPGATimestamp();
-		// indexer.indexUp();
-		// }
+		if(isAutonomous && pivot.onTarget() && flywheel.allMotorsOnTarget()) {
+			goShoot = true;
+		}
+
+		if(goShoot){
+			shot = true;
+			shotTime = Timer.getFPGATimestamp();
+			indexer.indexUp();
+			// alongWith(new Index(indiexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
+		}
 
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());

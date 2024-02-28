@@ -205,7 +205,7 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer, pivot)); // TODO: find correct button/trigger
 
 		// cand shots for the robot
-		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
+		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, indexer, false));
 		new Trigger(coPilot::getXButton)
 				.whileTrue(new PointBlankShot(flywheel, pivot, indexer, false));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
@@ -242,6 +242,8 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
 		// .onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
 		// .onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
+
+
 	}
 
 
