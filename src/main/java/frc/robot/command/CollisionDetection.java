@@ -8,6 +8,7 @@ import com.ctre.phoenix6.Utils;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CollisionConstants;
 import frc.robot.Constants.TunerConstants;
+import frc.robot.Constants.CollisionConstants.CollisionType;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -27,19 +28,25 @@ public class CollisionDetection extends Command {
   public double[] yVelC = {0d, 0d};
   public double[] rotVelC = {0d, 0d};
   // filters for filtering acceleration values
-  public LinearFilter xAccCFilter = LinearFilter.movingAverage(50);
-  public LinearFilter yAccCFilter = LinearFilter.movingAverage(50);
-  public LinearFilter rotAccCFilter = LinearFilter.movingAverage(50);
+  public LinearFilter xAccCFilter = LinearFilter.singlePoleIIR(0.1, 0.01);
+  public LinearFilter yAccCFilter = LinearFilter.singlePoleIIR(0.1, 0.01);
+  public LinearFilter rotAccCFilter = LinearFilter.singlePoleIIR(0.1, 0.01);
 
-  public CollisionDetection(Swerve drivetrain) {
+  double accelerationTolerance;
+  double minAccelerationDiff;
+  CollisionType type;
+
+  public CollisionDetection(Swerve drivetrain, CollisionType type) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
+    this.type = type;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     storeVelocities(); // store initial velocities to avoid null values
+    setDisplayAccelerationTolerance(type); // set acceleration tolerance based on type
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -52,7 +59,7 @@ public class CollisionDetection extends Command {
     LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAcceleration()[4]);
     LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getChassisAcceleration()[2]);
     LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration", getChassisAcceleration()[4]);
-    LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided()[3]);
+    LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided(accelerationTolerance, minAccelerationDiff)[3]);
   }
 
   // Called once the command ends or is interrupted.
@@ -106,43 +113,61 @@ public class CollisionDetection extends Command {
    * <li> 2 - Magnitude of X and Y Acceleration
    * <li> 3 - Direction of X and Y Acceleration
    * <li> 4 - Rotational Acceleration
-   * <li> 5 - Raw X Acceleration (w/o rotational acceleration)
-   * <li> 6 - Raw Y Acceleration (w/o rotational acceleration)
-   * <li> 7 - Raw Direction of Acceleration (w/o rotational acceleration)
+   * <li> 5 - Raw X Acceleration (without rotational acceleration)
+   * <li> 6 - Raw Y Acceleration (without rotational acceleration)
+   * <li> 7 - Raw Direction of Acceleration (without rotational acceleration)
    */
   public double[] getChassisAcceleration(){
     double deltaTime = time[1] - time[0];
-    double accXRaw = xAccCFilter.calculate((xVelC[1] - xVelC[0]) / deltaTime); // calculate acceleration in x direction and filter
-    double accYRaw = yAccCFilter.calculate((yVelC[1] - yVelC[0]) / deltaTime); // calculate acceleration in y direction and filter
+    double accX = xAccCFilter.calculate((xVelC[1] - xVelC[0]) / deltaTime); // calculate acceleration in x direction and filter
+    double accY = yAccCFilter.calculate((yVelC[1] - yVelC[0]) / deltaTime); // calculate acceleration in y direction and filter
     double accRot = rotAccCFilter.calculate((rotVelC[1] - rotVelC[0]) / deltaTime); // calculate rot acceleration and filter
-    double accDirectionRaw = Math.atan2(accYRaw, accXRaw); // calculate direction of acceleration
-    double accX = accXRaw - accRot * Math.cos(accDirectionRaw + Math.PI/2); // calculate x acceleration
-    double accY = accYRaw - accRot * Math.sin(accDirectionRaw + Math.PI/2); // calculate y acceleration
-    double accMag = Math.hypot(accX, accY); // calculate magnitude of acceleration
     double accDirection = Math.atan2(accY, accX); // calculate direction of acceleration
-    return new double[] {accX, accY, accMag, accDirection, accRot, accXRaw, accYRaw, accDirectionRaw};
+    double accMag = Math.hypot(accX, accY); // calculate magnitude of acceleration
+    return new double[] {accX, accY, accMag, accDirection, accRot};
+  }
+
+  /**
+   * sets main acceleration tolerance and minimum acceleration difference
+   * the getIfCollided method can be used seperately with different values
+   * @param accelerationTolerance
+   * @param minAccelerationDiff
+   */
+  public void setDisplayAccelerationTolerance(CollisionType type){
+    if (type == CollisionType.AUTON){
+      accelerationTolerance = CollisionConstants.ACCELERATION_TOLERANCE_TELEOP; 
+      minAccelerationDiff = CollisionConstants.MIN_ACCELERATION_DIFF_TELEOP;
+    } else if (type == CollisionType.AUTON){
+      accelerationTolerance = CollisionConstants.ACCELERATION_TOLERANCE_AUTON; 
+      minAccelerationDiff = CollisionConstants.MIN_ACCELERATION_DIFF_AUTON;
+    } else if (type == CollisionType.SHOOTER){
+      accelerationTolerance = CollisionConstants.ACCELERATION_TOLERANCE_SHOOTER; 
+      minAccelerationDiff = CollisionConstants.MIN_ACCELERATION_DIFF_SHOOTER;
+    }
   }
 
   /**
    * Compare Pigeon and Chassis Acceleraiton
+   * @param accelerationTolerance percentage of pigeon acceleration to compare to
+   * @param minAccelerationDiff if the difference in acceleration is less than this value, it in not considered a collision
    * @return boolean array
    * <li> 0 - check x
    * <li> 1 - check y
    * <li> 2 - check rot
    * <li> 3 - check all
    */
-  public boolean[] getIfCollided(){
+  public boolean[] getIfCollided(double accelerationTolerance, double minAccelerationDiff){
     double differenceX = Math.abs(getPigeonAcceleration()[0] - getChassisAcceleration()[0]); // calculate difference in x acceleration
-    boolean xCollided = differenceX > getPigeonAcceleration()[0] * CollisionConstants.ACCELERATION_TOLERANCE 
-    && differenceX > CollisionConstants.MIN_ACCELERATION_DIFF; // check if difference is greater than tolerance and min difference
+    boolean xCollided = differenceX > getPigeonAcceleration()[0] * accelerationTolerance
+    && differenceX > minAccelerationDiff; // check if difference is greater than tolerance and min difference
 
     double differenceY = Math.abs(getPigeonAcceleration()[1] - getChassisAcceleration()[1]);
-    boolean yCollided = differenceY > getPigeonAcceleration()[1] * CollisionConstants.ACCELERATION_TOLERANCE 
-    && differenceY > CollisionConstants.MIN_ACCELERATION_DIFF;
+    boolean yCollided = differenceY > getPigeonAcceleration()[1] * accelerationTolerance
+    && differenceY > minAccelerationDiff;
 
     double differenceRot = Math.abs(getPigeonAcceleration()[4] - getChassisAcceleration()[4]);
-    boolean rotCollided = differenceRot > getPigeonAcceleration()[4] * CollisionConstants.ACCELERATION_TOLERANCE 
-    && differenceX > CollisionConstants.MIN_ACCELERATION_DIFF;
+    boolean rotCollided = differenceRot > getPigeonAcceleration()[4] * accelerationTolerance 
+    && differenceX > minAccelerationDiff;
 
     collisionDirection = new Rotation2d(Math.atan2(differenceY, differenceX));
     boolean collided = xCollided || yCollided || rotCollided;

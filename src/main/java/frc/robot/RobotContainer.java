@@ -24,6 +24,7 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.MusicConstants;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.TunerConstants;
+import frc.robot.Constants.CollisionConstants.CollisionType;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Index;
@@ -259,7 +260,7 @@ public class RobotContainer extends LightningContainer {
 				() -> -MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND),
 				() -> -MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND),
 				() -> -MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND))
-				.alongWith(new CollisionDetection(drivetrain)));
+				.alongWith(new CollisionDetection(drivetrain, CollisionType.TELEOP)));
 			
 		/* copilot */
 		collector.setDefaultCommand(
