@@ -17,9 +17,9 @@ public class CollectorSystemTest extends SystemTestCommandGroup {
         super(
             new SequentialCommandGroup(
                 new WaitCommand(0.5),
-                new TimedCommand(new CollectorTest(collector, speed), 2), // Collector out
+                new TimedCommand(new CollectorTest(collector, speed), 4), // Collector out
                 new WaitCommand(1),
-                new TimedCommand(new CollectorTest(collector, -speed), 2) // Collector in
+                new TimedCommand(new CollectorTest(collector, -speed), 4) // Collector in
             )
         );
     }

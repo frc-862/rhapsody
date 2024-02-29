@@ -18,12 +18,12 @@ public class TurnSystemTest extends SystemTestCommandGroup {
         super(
                 new SequentialCommandGroup(
                         new WaitCommand(0.5),
-                        new TimedCommand(new TurnTest(drivetrain, () -> speed), 1), // Rotates at speed 10% max speed
+                        new TimedCommand(new TurnTest(drivetrain, () -> speed), 6), // Rotates at speed 10% max speed
                                                                                     // for 3 second
-                        // new WaitCommand(1),
-                        // new TimedCommand(new TurnTest(drivetrain, () -> -speed), 3), // Rotates in
+                        new WaitCommand(1),
+                        new TimedCommand(new TurnTest(drivetrain, () -> -speed), 6), // Rotates in
                         // the opposite dir for 3 second
-                        // new WaitCommand(0.5),
+                        new WaitCommand(0.5),
                         new InstantCommand(() -> drivetrain.brake()) // Brakes the robot, no need imo cuz it should
                                                                      // break after the TurnTest command
 

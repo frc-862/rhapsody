@@ -8,7 +8,7 @@ import frc.robot.subsystems.Swerve;
 public class TurnTest extends Command {
 
     private Swerve drivetrain;
-    private DoubleSupplier speed;
+    public DoubleSupplier speed;
 
     /**
      * System test command for testing azimuth motors
@@ -27,7 +27,7 @@ public class TurnTest extends Command {
 
     @Override
     public void execute() {
-        drivetrain.applyPercentRequestRobot(() -> 0d, () -> 0d, speed);//speed);
+        drivetrain.setRobot(0d, 0d, speed.getAsDouble());//speed);
         System.out.println("ExecutingTurntest");
     }
 

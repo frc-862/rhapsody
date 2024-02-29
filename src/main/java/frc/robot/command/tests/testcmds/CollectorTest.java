@@ -25,7 +25,9 @@ public class CollectorTest extends Command {
 	}
 
 	@Override
-	public void execute() {}
+	public void execute() {
+		collector.setPower(power);
+	}
 
 	@Override
 	public void end(boolean interrupted) {
