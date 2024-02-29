@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
@@ -26,6 +27,7 @@ public class PointAtTag extends Command {
 	private int limelightPrevPipeline = 0;
 	private double pidOutput;
 	private double targetHeading;
+	private double previousTargetHeading;
 
 	private Translation2d targetPose;
 	private double deltaX;
@@ -74,24 +76,40 @@ public class PointAtTag extends Command {
 
 	@Override
 	public void execute() {
+		
+		previousTargetHeading = targetHeading;
 
 		Pose2d pose = drivetrain.getPose().get();
 		deltaX = targetPose.getX() - pose.getX();
 		deltaY = targetPose.getY() - pose.getY();
 
-		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
+		// targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
 		// targetHeading = Math.toDegrees(targetPose.getRotation().getAngle());
-		pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
+		// pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
 
-		// targetHeading = limelight.getTargetX();
-		// pidOutput = headingController.calculate(targetHeading, 0);
-
-		drivetrain.setFieldDriver(-driver.getLeftY(), -driver.getLeftX(), -pidOutput);
+		targetHeading = limelight.getTargetX();
+		pidOutput = headingController.calculate(0, targetHeading);
+		
+		drivetrain.setFieldDriver(
+			-MathUtil.applyDeadband(-driver.getLeftY(), ControllerConstants.DEADBAND),
+			-MathUtil.applyDeadband(-driver.getLeftX(), ControllerConstants.DEADBAND),
+			-pidOutput);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		limelight.setPipeline(limelightPrevPipeline);
+	}
+
+	/**
+	 * Makes sure that the robot isn't jerking over to a different side while chasing pieces.
+	 * @return t/f if the robot should trust the values
+	 */
+	public boolean trustValues(){
+		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6){
+			return true;
+		}
+		return false;
 	}
 
 	@Override
