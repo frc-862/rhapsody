@@ -241,6 +241,9 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
+		new Trigger(() -> DriverStation.isAutonomousEnabled()).whileTrue(new CollisionDetection(
+				drivetrain, CollisionType.AUTON));
+
 		// new Trigger(() -> true).whileTrue(new CollisionDetection(drivetrain));
 
 		// new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))

@@ -46,7 +46,7 @@ public class CollisionDetection extends Command {
   @Override
   public void initialize() {
     storeVelocities(); // store initial velocities to avoid null values
-    setDisplayAccelerationTolerance(type); // set acceleration tolerance based on type
+    setDisplayAccelerationTolerances(type); // set acceleration tolerance based on type
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -59,7 +59,7 @@ public class CollisionDetection extends Command {
     LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAcceleration()[4]);
     LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getChassisAcceleration()[2]);
     LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration", getChassisAcceleration()[4]);
-    LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided(accelerationTolerance, minAccelerationDiff)[3]);
+    LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided()[3]);
   }
 
   // Called once the command ends or is interrupted.
@@ -128,18 +128,19 @@ public class CollisionDetection extends Command {
   }
 
   /**
-   * sets main acceleration tolerance and minimum acceleration difference
-   * the getIfCollided method can be used seperately with different values
-   * @param accelerationTolerance
-   * @param minAccelerationDiff
+   * <li> sets main acceleration tolerance and minimum acceleration difference
+   * <li> the getIfCollided method can be used seperately with different values
+   * @param type - enum in constants
    */
-  public void setDisplayAccelerationTolerance(CollisionType type){
-    if (type == CollisionType.AUTON){
+  public void setDisplayAccelerationTolerances(CollisionType type){
+    if (type == CollisionType.TELEOP){
       accelerationTolerance = CollisionConstants.ACCELERATION_TOLERANCE_TELEOP; 
       minAccelerationDiff = CollisionConstants.MIN_ACCELERATION_DIFF_TELEOP;
+
     } else if (type == CollisionType.AUTON){
       accelerationTolerance = CollisionConstants.ACCELERATION_TOLERANCE_AUTON; 
       minAccelerationDiff = CollisionConstants.MIN_ACCELERATION_DIFF_AUTON;
+
     } else if (type == CollisionType.SHOOTER){
       accelerationTolerance = CollisionConstants.ACCELERATION_TOLERANCE_SHOOTER; 
       minAccelerationDiff = CollisionConstants.MIN_ACCELERATION_DIFF_SHOOTER;
@@ -173,6 +174,18 @@ public class CollisionDetection extends Command {
     boolean collided = xCollided || yCollided || rotCollided;
 
     return new boolean[] {xCollided, yCollided, rotCollided, collided};
+  }
+
+  /**
+   * uses state from when command was called for tolerances
+   * @return boolean array
+   * <li> 0 - check x
+   * <li> 1 - check y
+   * <li> 2 - check rot
+   * <li> 3 - check all
+   */
+  public boolean[] getIfCollided(){
+    return getIfCollided(accelerationTolerance, minAccelerationDiff);
   }
 
   // Returns true when the command should end.

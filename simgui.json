@@ -12,6 +12,11 @@
       "/SmartDashboard/Module 3": "Mechanism2d"
     },
     "windows": {
+      "/FMSInfo": {
+        "window": {
+          "visible": true
+        }
+      },
       "/Pose": {
         "bottom": 1476,
         "height": 8.210550308227539,
