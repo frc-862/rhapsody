@@ -163,8 +163,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         if (!disableVision) {
             var pose = limelightSubsystem.getPoseQueue().poll();
             while (pose != null) {
-                // High confidence => 0.3 
-                // Low confidence => 18 
+                // High confidence => 0.3
+                // Low confidence => 18
                 // theta trust IMU, use 500 degrees
 
                 double confidence = 18.0;
@@ -175,7 +175,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 } else if (pose.getDistance() < 2) {
                     confidence = 1.0 + (pose.getDistance()/2 * 5.0);
                 }
-                
+
                 addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
                 pose = limelightSubsystem.getPoseQueue().poll();
             }
@@ -198,7 +198,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
         LightningShuffleboard.setDoubleSupplier("Swerve", "velocity y",
                 () -> getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Distance to Speaker", () -> distanceToSpeaker()); 
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Distance to Speaker", () -> distanceToSpeaker());
     }
 
     private void configurePathPlanner() {

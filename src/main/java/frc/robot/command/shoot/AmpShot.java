@@ -21,16 +21,16 @@ public class AmpShot extends Command {
 	 * Creates a new AmpShot
 	 * @param pivot subsystem
 	 * @param flywheel subsystem
-	 * @param indexer subsystem
-	 * @param isAutonomous boolean if robot is in autonomous
+	 * indexer subsystem
+	 * isAutonomous boolean if robot is in autonomous
 	 */
-	public AmpShot(Flywheel flywheel, Pivot pivot, Indexer indexer, boolean isAutonomous) {
+	public AmpShot(Flywheel flywheel, Pivot pivot) {// , Indexer indexer, boolean isAutonomous) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
-		this.indexer = indexer;
-		this.isAutonomous = isAutonomous;
+		// this.indexer = indexer;
+		// this.isAutonomous = isAutonomous;
 
-		addRequirements(flywheel, pivot, indexer);
+		addRequirements(flywheel, pivot);
 	}
 
 	@Override
@@ -43,12 +43,12 @@ public class AmpShot extends Command {
 	@Override
 	public void execute() {
 		// Checks if autonomous and if the pivot and flywheel are on target then shoots
-		if (isAutonomous && pivot.onTarget() && flywheel.allMotorsOnTarget()) {
-			shot = true;
-			shotTime = Timer.getFPGATimestamp();
-			indexer.indexUp();
-		}
-		
+		// if (isAutonomous && pivot.onTarget() && flywheel.allMotorsOnTarget()) {
+		// shot = true;
+		// shotTime = Timer.getFPGATimestamp();
+		// indexer.indexUp();
+		// }
+
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
 		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
@@ -58,14 +58,13 @@ public class AmpShot extends Command {
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
-		indexer.stop();
 	}
 
 	@Override
 	public boolean isFinished() {
-		if (isAutonomous) {
-			return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
-		}
+		// if (isAutonomous) {
+		// return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
+		// }
 		return false;
 	}
 }
