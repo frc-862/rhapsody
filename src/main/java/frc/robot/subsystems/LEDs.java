@@ -119,6 +119,9 @@ public class LEDs extends SubsystemBase {
 		}
 	}
 
+	/**
+	 * @param strand the strand to rainbow
+	 */
 	public void rainbow(int strand) {
 		for (int i = 0; i < LEDsConstants.STRAND_LENGTH.get(strand); i++) {
 			setSingleHSV(strand, i, (i + (int) (Timer.getFPGATimestamp() * 20)) % LEDsConstants.STRAND_LENGTH.get(strand) * 180 / LEDsConstants.STRAND_LENGTH.get(strand), 255,
@@ -136,7 +139,10 @@ public class LEDs extends SubsystemBase {
 	// 		setSingleHSV(i, LEDsConstants.RED_HUE, (int)(255 * Math.cos(Math.toRadians(i * 360 / LEDsConstants.STRAND_LENGTH.get(strand)) / 4)), 255);
 	// 	}
 	// }
-
+	
+	/**
+	 * @param strand the strand to swirl
+	 */
 	public void swirl(int strand) {
 		for (int i = 0; i < LEDsConstants.STRAND_LENGTH.get(strand); i++) {
 			if (((i + (int) (Timer.getFPGATimestamp() * 10)) / LEDsConstants.SWIRL_SEGMENT_SIZE) % 2 == 0) {
@@ -148,6 +154,7 @@ public class LEDs extends SubsystemBase {
 	}
 
 	/**
+	 * @param strand the strand to blink
 	 * @param hue the hue to blink
 	 */
 	public void blink(int strand, int hue) {
@@ -159,6 +166,7 @@ public class LEDs extends SubsystemBase {
 	}
 
 	/**
+	 * @param strand the strand to pulse
 	 * @param hue the hue to blink
 	 */
 	public void pulse(int strand, int hue) {
@@ -166,6 +174,7 @@ public class LEDs extends SubsystemBase {
 	}
 
 	/**
+	 * @param strand What strand to set
 	 * @param index What LED to set
 	 * @param h     Hue
 	 * @param s     Saturation
@@ -176,6 +185,7 @@ public class LEDs extends SubsystemBase {
 	}
 
 	/**
+	 * @param strand What strand to set
 	 * @param h Hue
 	 * @param s Saturation
 	 * @param v Value
