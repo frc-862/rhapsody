@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -11,19 +12,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDsConstants;
-import frc.robot.Constants.RobotMap.PWM;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
+import frc.robot.Constants.RobotMap.PWM;
 
 public class LEDs extends SubsystemBase {
 
 	AddressableLED leds;
 	AddressableLEDBuffer ledBuffer;
-	private LED_STATES state = LED_STATES.START;
+	Random random = new Random();
+	private LED_STATES state = LED_STATES.DEFAULT;
 	private Map<LED_STATES, Boolean> ledStates;
 
 	public LEDs() {
-		leds = new AddressableLED(PWM.LED_PORT_1);
+		leds = new AddressableLED(PWM.LED_PORT);
 		ledBuffer = new AddressableLEDBuffer(LEDsConstants.LED_LENGTH);
 
 		leds.setLength(ledBuffer.getLength());
@@ -31,56 +32,54 @@ public class LEDs extends SubsystemBase {
 
 		ledStates = new HashMap<LEDsConstants.LED_STATES, Boolean>();
 
-		LightningShuffleboard.setString("LEDs", "State", state.toString());
-
-		enableState(LED_STATES.START).withTimeout(6).schedule();
+		enableState(LED_STATES.START).withTimeout(3).schedule();
 	}
 
 	@Override
 	public void periodic() {
 		switch (state) {
 			case EMERGENCY:
-				blink(LEDsConstants.RED_HUE);
+				blink(-1, LEDsConstants.RED_HUE);
 				break;
 
 			case START:
-				rainbow();
+				rainbow(-1);
 				break;
 
 			case COLLECTED:
-				pulse(LEDsConstants.GREEN_HUE);
+				pulse(-1, LEDsConstants.GREEN_HUE);
 				break;
 
 			case SHOT:
-				pulse(LEDsConstants.GREEN_HUE);
+				pulse(-1, LEDsConstants.GREEN_HUE);
 				break;
 
 			case FINISHED_CLIMB:
-				pulse(LEDsConstants.GREEN_HUE);
+				pulse(-1, LEDsConstants.GREEN_HUE);
 				break;
 
 			case SHOOTING:
-				blink(LEDsConstants.YELLOW_HUE);
+				blink(-1, LEDsConstants.YELLOW_HUE);
 				break;
 
 			case COLLECTING:
-				pulse(LEDsConstants.RED_HUE);
+				pulse(-1, LEDsConstants.RED_HUE);
 				break;
 
 			case CHASING:
-				pulse(LEDsConstants.RED_HUE);
+				pulse(-1, LEDsConstants.RED_HUE);
 				break;
 
 			case CLIMBING:
-				blink(LEDsConstants.PURPLE_HUE);
+				blink(-1, LEDsConstants.PURPLE_HUE);
 				break;
 
 			case HAS_PIECE:
-				setSolidHSV(LEDsConstants.ORANGE_HUE, 255, 255);
+				setSolidStrandHSV(-1, LEDsConstants.ORANGE_HUE, 255, 255);
 				break;
 
 			case HAS_VISION:
-				setSolidHSV(LEDsConstants.PINK_HUE, 255, 255);
+				setSolidStrandHSV(-1, LEDsConstants.PINK_HUE, 255, 255);
 				break;
 
 			case DISABLED:
@@ -88,7 +87,7 @@ public class LEDs extends SubsystemBase {
 				break;
 
 			default:
-				swirl();
+			 	swirl(-1);
 		}
 
 		leds.setData(ledBuffer);
@@ -120,19 +119,30 @@ public class LEDs extends SubsystemBase {
 		}
 	}
 
-	public void rainbow() {
-		for (int i = 0; i < LEDsConstants.LED_LENGTH; i++) {
-			setSingleHSV(i, (i + (int) (Timer.getFPGATimestamp() * 20)) % ledBuffer.getLength() * 180 / 14, 255,
-					100);
+	public void rainbow(int strand) {
+		for (int i = 0; i < LEDsConstants.STRAND_LENGTH.get(strand); i++) {
+			setSingleHSV(strand, i, (i + (int) (Timer.getFPGATimestamp() * 20)) % LEDsConstants.STRAND_LENGTH.get(strand) * 180 / LEDsConstants.STRAND_LENGTH.get(strand), 255,
+					255);
 		}
 	}
 
-	public void swirl() {
-		for (int i = 0; i < LEDsConstants.LED_LENGTH; i++) {
+	// public void flame(int strand) {
+	// 	fireLength += (random.nextInt(3) - 1);
+	// 	if (fireLength > LEDsConstants.STRAND_LENGTH.get(strand) || fireLength < 0) {
+	// 		fireLength = LEDsConstants.STRAND_LENGTH.get(strand) / 2;
+	// 	}
+	// 	setSolidHSV(0, 0, 0);
+	// 	for(int i = 0; i < Math.round(fireLength); i++) {
+	// 		setSingleHSV(i, LEDsConstants.RED_HUE, (int)(255 * Math.cos(Math.toRadians(i * 360 / LEDsConstants.STRAND_LENGTH.get(strand)) / 4)), 255);
+	// 	}
+	// }
+
+	public void swirl(int strand) {
+		for (int i = 0; i < LEDsConstants.STRAND_LENGTH.get(strand); i++) {
 			if (((i + (int) (Timer.getFPGATimestamp() * 10)) / LEDsConstants.SWIRL_SEGMENT_SIZE) % 2 == 0) {
-				setSingleHSV(i, LEDsConstants.BLUE_HUE, 255, 255);
+				setSingleHSV(strand, i, LEDsConstants.BLUE_HUE, 255, 255);
 			} else {
-				setSingleHSV(i, LEDsConstants.ORANGE_HUE, 255, 255);
+				setSingleHSV(strand, i, LEDsConstants.ORANGE_HUE, 255, 255);
 			}
 		}
 	}
@@ -140,19 +150,19 @@ public class LEDs extends SubsystemBase {
 	/**
 	 * @param hue the hue to blink
 	 */
-	public void blink(int hue) {
+	public void blink(int strand, int hue) {
 		if ((int) (Timer.getFPGATimestamp() * 10) % 2 == 0) {
-			setSolidHSV(hue, 255, 255);
+			setSolidStrandHSV(strand, hue, 255, 255);
 		} else {
-			setSolidHSV(0, 0, 0);
+			setSolidStrandHSV(strand, 0, 0, 0);
 		}
 	}
 
 	/**
 	 * @param hue the hue to blink
 	 */
-	public void pulse(int hue) {
-		setSolidHSV(hue, 255, (int) Math.abs((Math.sin(Timer.getFPGATimestamp() * 10) * 255)));
+	public void pulse(int strand, int hue) {
+		setSolidStrandHSV(strand, hue, 255, (int) Math.abs((Math.sin(Timer.getFPGATimestamp() * 10) * 255)));
 	}
 
 	/**
@@ -161,8 +171,19 @@ public class LEDs extends SubsystemBase {
 	 * @param s     Saturation
 	 * @param v     Value
 	 */
-	public void setSingleHSV(int index, int h, int s, int v) {
-		ledBuffer.setHSV(index, h, s, v);
+	public void setSingleHSV(int strand, int index, int h, int s, int v) {
+		ledBuffer.setHSV(index + LEDsConstants.STRAND_START.get(strand), h, s, v);
+	}
+
+	/**
+	 * @param h Hue
+	 * @param s Saturation
+	 * @param v Value
+	 */
+	public void setSolidStrandHSV(int strand, int h, int s, int v) {
+		for (int i = 0; i < LEDsConstants.STRAND_LENGTH.get(strand); i++) {
+			setSingleHSV(strand, i, h, s, v);
+		}
 	}
 
 	/**
@@ -172,7 +193,7 @@ public class LEDs extends SubsystemBase {
 	 */
 	public void setSolidHSV(int h, int s, int v) {
 		for (var i = 0; i < LEDsConstants.LED_LENGTH; i++) {
-			setSingleHSV(i, h, s, v);
+			ledBuffer.setHSV(i, h, s, v);
 		}
 	}
 }
