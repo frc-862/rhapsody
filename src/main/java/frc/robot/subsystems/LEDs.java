@@ -86,8 +86,9 @@ public class LEDs extends SubsystemBase {
 				setSolidHSV(0, 0, 0);
 				break;
 
-			default:
+			case DEFAULT:
 			 	swirl(-1);
+				break;
 		}
 
 		leds.setData(ledBuffer);
