@@ -2,9 +2,12 @@ package frc.robot.command;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Limelights;
+import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
@@ -13,6 +16,8 @@ public class ChasePieces extends Command {
 
 	private Swerve drivetrain;
 	private Collector collector;
+	private Indexer indexer;
+	private Pivot pivot;
 	private Limelight limelight;
 
 	private double pidOutput;
@@ -20,6 +25,7 @@ public class ChasePieces extends Command {
 	private double previousTargetHeading;
 
 	private double targetPitch;
+	private double power;
 
     private boolean onTarget;
 	private boolean hasPiece;
@@ -33,20 +39,23 @@ public class ChasePieces extends Command {
 	 * @param collector to collect pieces
 	 * @param limelights to get vision data from dust
 	 */
-	public ChasePieces(Swerve drivetrain, Collector collector, Limelights limelights) {
+
+	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Limelights limelights) {
 		this.drivetrain = drivetrain;
 		this.collector = collector;
+		this.indexer = indexer;
+		this.pivot = pivot;
 
 		limelight = limelights.getDust();
 
-		addRequirements(drivetrain, collector);
+		addRequirements(drivetrain, collector, indexer, pivot);
 	}
 
 	@Override
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
-		collector.setPower(1d); //TODO: get the right power
-
+		power = 0d;
+		new SmartCollect(() -> power, () -> power, collector, indexer, pivot);
 		initLogging();
 	}
 
@@ -75,12 +84,13 @@ public class ChasePieces extends Command {
 		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		hasPiece = collector.hasPiece();
+		hasPiece = collector.getEntryBeamBreakState();
 
 		pidOutput = headingController.calculate(0, targetHeading);
 
 		if (!hasPiece){
 			if (hasTarget){
+				power = 0.75d;
 				if (trustValues()){
 					if (!onTarget) {
 						drivetrain.setRobot(3, 0, -pidOutput);
@@ -89,6 +99,7 @@ public class ChasePieces extends Command {
 					}
 				}
 			} else {
+				power = 0d;
 				drivetrain.setRobot(3, 0, 0);
 			}
 		}
@@ -96,7 +107,7 @@ public class ChasePieces extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		collector.stop();
+		power = 0d;
 	}
 
 	/**
