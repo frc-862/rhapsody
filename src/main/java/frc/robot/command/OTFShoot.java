@@ -1,35 +1,21 @@
 package frc.robot.command;
 
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveDriveBrake;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Telemetry;
-import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
-import frc.thunder.vision.Limelight;
 
 public class OTFShoot extends Command {
 
@@ -194,7 +180,8 @@ public class OTFShoot extends Command {
 		drivetrain.setFieldDriver(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 
 		pivot.setTargetAngle(pivotTargetAngle);
-		flywheel.setAllMotorsRPM(0); //TODO: get real value
+		flywheel.setAllMotorsRPM(3000); //TODO: get real value
+		LightningShuffleboard.setBool("OTF Shooting", "Time Complete", (fireTime - Timer.getFPGATimestamp() < 0));
 
 		if (fireTime - Timer.getFPGATimestamp() < 0) {
 			indexer.setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
@@ -202,7 +189,9 @@ public class OTFShoot extends Command {
 	}
 
 	@Override
-	public void end(boolean interrupted) {}
+	public void end(boolean interrupted) {
+		flywheel.coast(true);
+	}
 
 	@Override
 	public boolean isFinished() {
