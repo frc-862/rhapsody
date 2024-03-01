@@ -68,8 +68,8 @@ import frc.thunder.testing.SystemTest;
 import frc.thunder.testing.SystemTestCommand;
 
 public class RobotContainer extends LightningContainer {
-	public static XboxController driver;
-	public static XboxController coPilot;
+	public static XboxControllerFilter driver;
+	public static XboxControllerFilter coPilot;
 
 	// Subsystems
 	private Swerve drivetrain;
@@ -241,9 +241,9 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
-		// new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
-		// .onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
-		// .onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
+		new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
+			.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
+			.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
 	}
 
 	@Override

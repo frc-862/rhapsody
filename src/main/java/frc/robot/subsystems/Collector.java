@@ -62,7 +62,6 @@ public class Collector extends SubsystemBase {
 	public void setPower(double power) {
 		// Convert from -1,1 to RPS
 		power = power * 100;
-		System.out.println("Power RPS: " + power);
 		motor.setControl(velocityVoltage.withVelocity(power));
 	}
 
