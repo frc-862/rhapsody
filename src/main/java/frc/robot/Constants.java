@@ -363,6 +363,14 @@ public class Constants {
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 60; // TODO: make sure they are not set to 0
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
 
+        public static final double MOTOR_KP = 0;
+        public static final double MOTOR_KI = 0;
+        public static final double MOTOR_KD = 0;
+        public static final double MOTOR_KS = 0;
+        public static final double MOTOR_KV = 0.145;
+        public static final double MOTOR_KA = 0;
+        
+
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
     }
 
