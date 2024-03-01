@@ -44,7 +44,7 @@ public class PointAtPoint extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		Pose2d pose = drivetrain.getPose().get();
+		Pose2d pose = drivetrain.getPose();
 		var deltaX = targetPose.getX() - pose.getX();
 		var deltaY = targetPose.getY() - pose.getY();
 
