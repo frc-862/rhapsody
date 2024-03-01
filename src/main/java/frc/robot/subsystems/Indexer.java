@@ -26,6 +26,7 @@ public class Indexer extends SubsystemBase {
                 IndexerConstants.MOTOR_INVERT, IndexerConstants.MOTOR_STATOR_CURRENT_LIMIT,
                 IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
 
+        indexerMotor.applyConfig();
         initLogging();
     }
 

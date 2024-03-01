@@ -25,10 +25,12 @@ import frc.robot.Constants.MusicConstants;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.CollisionConstants.CollisionType;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
+import frc.robot.command.PointAtPoint;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Sing;
@@ -182,11 +184,10 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector,
-		// limelights));
+		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
 
 		// parks the robot
-		new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
+		// new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
 
 		// smart shoot for the robot
 		new Trigger(driver::getAButton)
@@ -195,7 +196,8 @@ public class RobotContainer extends LightningContainer {
 
 		// aim at amp and stage tags for the robot
 		new Trigger(driver::getLeftBumper)
-				.whileTrue(new PointAtTag(0, 0, drivetrain, limelights, driver)); // TODO: make work
+				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
+		new Trigger(driver::getXButton).whileTrue(new PointAtPoint(VisionConstants.SPEAKER_LOCATION.getX(), VisionConstants.SPEAKER_LOCATION.getY(), drivetrain, driver));
 
 		// new Trigger(driver::getYButton)
 		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
