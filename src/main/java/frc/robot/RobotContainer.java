@@ -95,15 +95,13 @@ public class RobotContainer extends LightningContainer {
 		// SignalLogger.setPath(Constants.HOOT_PATH);
 		// SignalLogger.enableAutoLogging(true);
 
-		// driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort,
-		// Constants.ControllerConstants.DEADBAND, -1, 1,
-		// XboxControllerFilter.filterMode.SQUARED); // Driver controller
-		// coPilot = new XboxControllerFilter(ControllerConstants.CopilotControllerPort,
-		// Constants.ControllerConstants.DEADBAND, -1, 1,
-		// XboxControllerFilter.filterMode.SQUARED); // CoPilot controller
+		driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort,
+		Constants.ControllerConstants.DEADBAND, -1, 1,
+		XboxControllerFilter.filterMode.SQUARED); // Driver controller
+		coPilot = new XboxControllerFilter(ControllerConstants.CopilotControllerPort,
+		Constants.ControllerConstants.DEADBAND, -1, 1,
+		XboxControllerFilter.filterMode.SQUARED); // CoPilot controller
 
-		driver = new XboxController(ControllerConstants.DriverControllerPort);
-		coPilot = new XboxController(ControllerConstants.CopilotControllerPort);
 
 		limelights = new Limelights();
 		drivetrain = TunerConstants.getDrivetrain(limelights);
@@ -171,12 +169,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
 				.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
 				.whileTrue(drivetrain.applyPercentRequestRobot(
-						() -> -MathUtil.applyDeadband(driver.getLeftY(),
-								ControllerConstants.DEADBAND),
-						() -> -MathUtil.applyDeadband(driver.getLeftX(),
-								ControllerConstants.DEADBAND),
-						() -> -MathUtil.applyDeadband(driver.getRightX(),
-								ControllerConstants.DEADBAND)))
+						() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()))
 				.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
 		// enables slow mode for driving
@@ -262,9 +255,7 @@ public class RobotContainer extends LightningContainer {
 		// -driver.getLeftY(),
 		// () -> -driver.getLeftX(), () -> -driver.getRightX()));
 		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(
-				() -> -MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND),
-				() -> -MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND),
-				() -> -MathUtil.applyDeadband(driver.getRightX(), ControllerConstants.DEADBAND)));
+				() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
 
 		/* copilot */
 		collector.setDefaultCommand(
