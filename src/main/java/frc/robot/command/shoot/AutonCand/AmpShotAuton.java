@@ -56,6 +56,7 @@ public class AmpShotAuton extends Command {
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		indexer.stop();
 	}
 
 	@Override
