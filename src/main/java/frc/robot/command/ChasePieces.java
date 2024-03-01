@@ -40,7 +40,9 @@ public class ChasePieces extends Command {
 	/**
 	 * Creates a new ChasePieces.
 	 * @param drivetrain to request movement
-	 * @param collector to collect pieces
+	 * @param collector for smart collect
+	 * @param indexer for smart collect
+	 * @param pivot for smart collect
 	 * @param limelights to get vision data from dust
 	 */
 
@@ -76,11 +78,6 @@ public class ChasePieces extends Command {
 
 	@Override
 	public void execute() {
-		// For tuning.
-		// headingController.setP(LightningShuffleboard.getDouble("ChasePieces", "Pid P", 0.05));
-		// headingController.setI(LightningShuffleboard.getDouble("ChasePieces", "Pid I", 0));
-		// headingController.setD(LightningShuffleboard.getDouble("ChasePieces", "Pid D", 0));
-
 		hasTarget = limelight.hasTarget();
 
 		if (hasTarget){
@@ -112,8 +109,7 @@ public class ChasePieces extends Command {
 	}
 
 	@Override
-	public void end(boolean interrupted) {
-	}
+	public void end(boolean interrupted) {}
 
 	/**
 	 * Makes sure that the robot isn't jerking over to a different side while chasing pieces.
