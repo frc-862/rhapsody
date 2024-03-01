@@ -22,8 +22,10 @@ public class Collector extends SubsystemBase {
 				CollectorConstants.COLLECTOR_MOTOR_INVERTED,
 				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT,
 				CollectorConstants.COLLECTOR_MOTOR_BRAKE_MODE);
-
+		
 		beamBreak = new DigitalInput(DIO.COLLECTOR_BEAMBREAK);
+		motor.applyConfig();
+		
 		initLogging();
 	}
 

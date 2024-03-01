@@ -46,6 +46,9 @@ public class Climber extends SubsystemBase {
         climbMotorR.configPIDF(1, ClimbConstants.RETRACT_KP, ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
 
         initLogging();
+
+        climbMotorR.applyConfig();
+        climbMotorL.applyConfig();
     }
 
     private void initLogging() { // TODO test and fix once we have climber
