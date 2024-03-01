@@ -31,6 +31,8 @@ public class ChasePieces extends Command {
 	private boolean hasPiece;
 	private boolean hasTarget;
 
+	private Command smartCollect =  new SmartCollect(() -> power, () -> power, collector, indexer, pivot);
+
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
 
 	/**
@@ -55,8 +57,8 @@ public class ChasePieces extends Command {
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 		power = 0d;
-		new SmartCollect(() -> power, () -> power, collector, indexer, pivot);
 		initLogging();
+		smartCollect.schedule();
 	}
 
 	private void initLogging() {
@@ -84,14 +86,14 @@ public class ChasePieces extends Command {
 		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		hasPiece = collector.getEntryBeamBreakState();
+		hasPiece = indexer.getEntryBeamBreakState();
 
 		pidOutput = headingController.calculate(0, targetHeading);
 
 		if (!hasPiece){
 			if (hasTarget){
-				power = 0.75d;
 				if (trustValues()){
+					power = 0.75d;
 					if (!onTarget) {
 						drivetrain.setRobot(3, 0, -pidOutput);
 					} else {
@@ -108,6 +110,7 @@ public class ChasePieces extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		power = 0d;
+		smartCollect.end(false);
 	}
 
 	/**
