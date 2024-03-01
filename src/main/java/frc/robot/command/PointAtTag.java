@@ -1,13 +1,7 @@
 package frc.robot.command;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveDriveBrake;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,11 +23,6 @@ public class PointAtTag extends Command {
 	private double targetHeading;
 	private double previousTargetHeading;
 
-	private Translation2d targetPose;
-	private double deltaX;
-	private double deltaY;
-
-
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
 	/**
@@ -49,11 +38,11 @@ public class PointAtTag extends Command {
 		// TODO Figure out which of these is the right one to use
 		limelight = limelights.getStopMe();
 
-		limelightPrevPipeline = limelight.getPipeline();
+		if(limelight.getPipeline() != VisionConstants.SPEAKER_PIPELINE){
+			limelight.setPipeline(VisionConstants.SPEAKER_PIPELINE);
+		}
 
-		limelight.setPipeline(VisionConstants.SPEAKER_PIPELINE);
-
-		targetPose = new Translation2d(0, 5.43);
+		addRequirements(drivetrain);
 	}
 
 	@Override
@@ -66,40 +55,25 @@ public class PointAtTag extends Command {
 	}
 
 	private void initLogging() {
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Delta Y", () -> deltaY);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Delta X", () -> deltaX);
 		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Heading", () -> targetHeading);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose Y", () -> targetPose.getY());
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose X", () -> targetPose.getX());
 		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Pid Output", () -> pidOutput);
 	}
 
 	@Override
 	public void execute() {
-		
 		previousTargetHeading = targetHeading;
-
-		Pose2d pose = drivetrain.getPose().get();
-		deltaX = targetPose.getX() - pose.getX();
-		deltaY = targetPose.getY() - pose.getY();
-
-		// targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
-		// targetHeading = Math.toDegrees(targetPose.getRotation().getAngle());
-		// pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
 
 		targetHeading = limelight.getTargetX();
 		pidOutput = headingController.calculate(0, targetHeading);
 		
 		drivetrain.setFieldDriver(
-			-MathUtil.applyDeadband(-driver.getLeftY(), ControllerConstants.DEADBAND),
-			-MathUtil.applyDeadband(-driver.getLeftX(), ControllerConstants.DEADBAND),
+			-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND),
+			-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND),
 			-pidOutput);
 	}
 
 	@Override
-	public void end(boolean interrupted) {
-		limelight.setPipeline(limelightPrevPipeline);
-	}
+	public void end(boolean interrupted) {}
 
 	/**
 	 * Makes sure that the robot isn't jerking over to a different side while chasing pieces.
