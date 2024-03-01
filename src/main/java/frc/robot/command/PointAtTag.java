@@ -67,8 +67,8 @@ public class PointAtTag extends Command {
 		pidOutput = headingController.calculate(0, targetHeading);
 		
 		drivetrain.setFieldDriver(
-			-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND),
-			-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND),
+			driver.getLeftY(),
+			driver.getLeftX(),
 			-pidOutput);
 	}
 
