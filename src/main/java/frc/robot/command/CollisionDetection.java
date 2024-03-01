@@ -19,8 +19,6 @@ public class CollisionDetection extends Command {
 
     private Swerve drivetrain;
 
-    public Rotation2d collisionDirection;
-
     public double[] rotVelP = {0d, 0d};
     public double[] time = {0d, 0d};
     public double[] xVelC = {0d, 0d};
@@ -175,8 +173,6 @@ public class CollisionDetection extends Command {
         double differenceRot = Math.abs(getPigeonAcceleration()[4] - getChassisAcceleration()[4]);
         boolean rotCollided = differenceRot > getPigeonAcceleration()[4] * accelerationTolerance
             && differenceX > minAccelerationDiff;
-
-        collisionDirection = new Rotation2d(Math.atan2(differenceY, differenceX));
 
         boolean collided = xCollided || yCollided || rotCollided;
 
