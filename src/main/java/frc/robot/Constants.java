@@ -336,7 +336,7 @@ public class Constants {
             public static final int CHASE_PIECE = 2; // FOR the collector
         }
     }
-    
+
     public class CollisionConstants {
         public static final double TIP_DEADZONE = 2d;
 
@@ -384,7 +384,6 @@ public class Constants {
         public static final double MOTOR_KS = 0;
         public static final double MOTOR_KV = 0.145;
         public static final double MOTOR_KA = 0;
-        
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
     }

@@ -62,10 +62,15 @@ public class CollisionDetection extends Command {
     @Override
     public void end(boolean interrupted) {}
 
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
     /**
      * log velocities to calculate acceleration
      */
-    public void storeVelocities(){
+    public void storeVelocities() {
         rotVelP[0] = rotVelP[1];
         time[0] = time[1];
         xVelC[0] = xVelC[1];
@@ -81,19 +86,19 @@ public class CollisionDetection extends Command {
     }
 
     /**
-     * @return array with pigeon acceleration 
+     * @return array with pigeon acceleration
      * <li> 0 - Acceleration in X direction
      * <li> 1 - Acceleration in Y direction
      * <li> 2 - Magnitude of X and Y Acceleration
      * <li> 3 - Direction of X and Y Acceleration
      * <li> 4 - Rotational Acceleration
      */
-    public double[] getPigeonAcceleration(){
-        double accX = drivetrain.getPigeon2().getAccelerationX().getValueAsDouble() 
+    public double[] getPigeonAcceleration() {
+        double accX = drivetrain.getPigeon2().getAccelerationX().getValueAsDouble()
             - drivetrain.getPigeon2().getGravityVectorX().getValueAsDouble() // subtract gravity from acceleration
             * CollisionConstants.ACCELERATION_DUE_TO_GRAVITY; // convert g-force to m/s^2
 
-        double accY = drivetrain.getPigeon2().getAccelerationY().getValueAsDouble() 
+        double accY = drivetrain.getPigeon2().getAccelerationY().getValueAsDouble()
             - drivetrain.getPigeon2().getGravityVectorY().getValueAsDouble() // subtract gravity from acceleration
             * CollisionConstants.ACCELERATION_DUE_TO_GRAVITY; // convert g-force to m/s^2
 
@@ -105,7 +110,7 @@ public class CollisionDetection extends Command {
     }
 
     /**
-     * @return array with chassis acceleration 
+     * @return array with chassis acceleration
      * <li> 0 - Acceleration in X direction
      * <li> 1 - Acceleration in Y direction
      * <li> 2 - Magnitude of X and Y Acceleration
@@ -115,7 +120,7 @@ public class CollisionDetection extends Command {
      * <li> 6 - Raw Y Acceleration (without rotational acceleration)
      * <li> 7 - Raw Direction of Acceleration (without rotational acceleration)
      */
-    public double[] getChassisAcceleration(){
+    public double[] getChassisAcceleration() {
         double deltaTime = time[1] - time[0];
         double accX = xAccCFilter.calculate((xVelC[1] - xVelC[0]) / deltaTime); // calculate acceleration in x direction and filter
         double accY = yAccCFilter.calculate((yVelC[1] - yVelC[0]) / deltaTime); // calculate acceleration in y direction and filter
@@ -134,15 +139,15 @@ public class CollisionDetection extends Command {
     public void setDisplayAccelerationTolerances(CollisionType collisionType) {
         switch (collisionType) {
             case AUTON:
-                accelerationTolerance = CollisionConstants.ACCELERATION_TOLERANCE_AUTON; 
+                accelerationTolerance = CollisionConstants.ACCELERATION_TOLERANCE_AUTON;
                 minAccelerationDiff = CollisionConstants.MIN_ACCELERATION_DIFF_AUTON;
                 break;
             case SHOOTER:
-                accelerationTolerance = CollisionConstants.ACCELERATION_TOLERANCE_SHOOTER; 
+                accelerationTolerance = CollisionConstants.ACCELERATION_TOLERANCE_SHOOTER;
                 minAccelerationDiff = CollisionConstants.MIN_ACCELERATION_DIFF_SHOOTER;
                 break;
             case TELEOP:
-                accelerationTolerance = CollisionConstants.ACCELERATION_TOLERANCE_TELEOP; 
+                accelerationTolerance = CollisionConstants.ACCELERATION_TOLERANCE_TELEOP;
                 minAccelerationDiff = CollisionConstants.MIN_ACCELERATION_DIFF_TELEOP;
                 break;
         }
@@ -158,7 +163,7 @@ public class CollisionDetection extends Command {
      * <li> 2 - check rot
      * <li> 3 - check all
      */
-    public boolean[] getCollided(double accelerationTolerance, double minAccelerationDiff){
+    public boolean[] getCollided(double accelerationTolerance, double minAccelerationDiff) {
         double differenceX = Math.abs(getPigeonAcceleration()[0] - getChassisAcceleration()[0]); // calculate difference in x acceleration
         boolean xCollided = differenceX > getPigeonAcceleration()[0] * accelerationTolerance
             && differenceX > minAccelerationDiff; // check if difference is greater than tolerance and min difference
@@ -168,11 +173,11 @@ public class CollisionDetection extends Command {
             && differenceY > minAccelerationDiff;
 
         double differenceRot = Math.abs(getPigeonAcceleration()[4] - getChassisAcceleration()[4]);
-        boolean rotCollided = differenceRot > getPigeonAcceleration()[4] * accelerationTolerance 
+        boolean rotCollided = differenceRot > getPigeonAcceleration()[4] * accelerationTolerance
             && differenceX > minAccelerationDiff;
 
         collisionDirection = new Rotation2d(Math.atan2(differenceY, differenceX));
-    
+
         boolean collided = xCollided || yCollided || rotCollided;
 
         return new boolean[] {xCollided, yCollided, rotCollided, collided};
@@ -186,12 +191,7 @@ public class CollisionDetection extends Command {
      * <li> 2 - check rot
      * <li> 3 - check all
      */
-    public boolean[] getIfCollided(){
+    public boolean[] getIfCollided() {
         return getCollided(accelerationTolerance, minAccelerationDiff);
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
     }
 }

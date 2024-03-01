@@ -37,7 +37,6 @@ import frc.robot.Constants.VisionConstants;
 import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
-import frc.thunder.vision.Limelight;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
