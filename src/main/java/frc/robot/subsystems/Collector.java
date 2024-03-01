@@ -32,7 +32,10 @@ public class Collector extends SubsystemBase {
 		motor.configPIDF(0, CollectorConstants.MOTOR_KP, CollectorConstants.MOTOR_KI,
 		CollectorConstants.MOTOR_KD, CollectorConstants.MOTOR_KS, CollectorConstants.MOTOR_KV);
 
+		
 		beamBreak = new DigitalInput(DIO.COLLECTOR_BEAMBREAK);
+		motor.applyConfig();
+		
 		initLogging();
 	}
 

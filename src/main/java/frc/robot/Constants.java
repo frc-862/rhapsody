@@ -3,7 +3,9 @@ package frc.robot;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -11,16 +13,14 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
-import com.pathplanner.lib.path.PathConstraints;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -125,7 +125,7 @@ public class Constants {
         }
 
         public class PWM {
-            public static final int LED_PORT_1 = 0;
+            public static final int LED_PORT = 0;
         }
     }
 
@@ -376,17 +376,16 @@ public class Constants {
         public static final boolean MOTOR_BOTTOM_INVERT = false;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
-        public static final double MOTOR_KP = 0.00314;
+        public static final double MOTOR_KP = 0; // 0.00314;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
-        public static final double MOTOR_KV = 0.00195;
+        public static final double MOTOR_KV = 0.123; // 0.00195;
         public static final double MOTOR_KA = 0;
 
         public static final double RPM_TOLERANCE = 50d;
 
-        public static final double BIAS_INCREMENT = 75d; // RPM to bias by per button press
-
+        public static final double BIAS_INCREMENT = 1.25; // RPS to bias by per button press
         public static final double COAST_VOLTAGE = 0.1;
 
         public static final double FLYWHEEL_SYSTEST_POWER = 0.5;
@@ -435,7 +434,7 @@ public class Constants {
         public static final double MAX_INDEX_ANGLE = 40d;
 
         public static final double MIN_ANGLE = 25d;
-        public static final double MAX_ANGLE = 108d;
+        public static final double MAX_ANGLE = 105d;
     }
 
     public class ShooterConstants {
@@ -555,9 +554,25 @@ public class Constants {
     }
 
     public class LEDsConstants {
-        public static final int LED_LENGTH = 14;
+        public static final int LED_LENGTH = 26;
 
         public static final int SWIRL_SEGMENT_SIZE = 5;
+
+        public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>(){
+            {
+            put(-1, 0);
+            put(1, 0);
+            put(2, 14);
+            }
+        };
+
+        public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>(){
+            {
+                put(-1, LEDsConstants.LED_LENGTH);
+                put(1, 14);
+                put(2, 12);
+            }
+        };
 
         public static final int RED_HUE = 0;
         public static final int ORANGE_HUE = 5;
@@ -568,19 +583,20 @@ public class Constants {
         public static final int PINK_HUE = 355;
 
         public enum LED_STATES {
-            DISABLED(0),
-            EMERGENCY(1),
-            START(2),
-            COLLECTED(3),
-            SHOT(4),
-            FINISHED_CLIMB(5),
-            SHOOTING(6),
-            COLLECTING(7),
-            CHASING(8),
-            CLIMBING(9),
-            HAS_PIECE(10),
-            HAS_VISION(11),
-            DEFAULT(12);
+            CUSTOMCONTROL(0),
+            DISABLED(1),
+            EMERGENCY(2),
+            START(3),
+            COLLECTED(4),
+            SHOT(5),
+            FINISHED_CLIMB(6),
+            SHOOTING(7),
+            COLLECTING(8),
+            CHASING(9),
+            CLIMBING(10),
+            HAS_PIECE(11),
+            HAS_VISION(12),
+            DEFAULT(13);
 
             private final int priority;
 
