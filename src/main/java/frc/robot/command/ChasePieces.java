@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Indexer;
@@ -35,7 +36,7 @@ public class ChasePieces extends Command {
 	private Command smartCollect;
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
 
-	private Debouncer debouncer = new Debouncer(0.1);
+	private Debouncer debouncer = new Debouncer(IndexerConstants.INDEXER_DEBOUNCE_TIME);
 
 	/**
 	 * Creates a new ChasePieces.

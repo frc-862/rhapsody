@@ -405,6 +405,7 @@ public class Constants {
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
         public static final double INDEXER_DEFAULT_POWER = 0.6d;
         public static final double INDEXER_MANUAL_POWER = 0.75d;
+        public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
     }
 
     public class PivotConstants { // TODO: get real
