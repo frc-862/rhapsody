@@ -59,7 +59,6 @@ public class PointAtPoint extends Command {
 		LightningShuffleboard.setDouble("PointAtTag", "Target Pose X", targetPose.getX());
 		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
 
-		// TODO test drives and test the deadbands
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
 
