@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.subsystems.Limelights;
@@ -328,6 +329,8 @@ public class Constants {
         public static final int SPEAKER_PIPELINE = 1;
         public static final int NOTE_PIPELINE = 2;
 
+        public static final Translation3d SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
+
         public class Pipelines { // TODO get real
             public static final int APRIL_TAG_3d = 0;
             public static final int APRIL_TAG_2d = 1;
@@ -360,6 +363,14 @@ public class Constants {
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 60; // TODO: make sure they are not set to 0
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
 
+        public static final double MOTOR_KP = 0;
+        public static final double MOTOR_KI = 0;
+        public static final double MOTOR_KD = 0;
+        public static final double MOTOR_KS = 0;
+        public static final double MOTOR_KV = 0.145;
+        public static final double MOTOR_KA = 0;
+        
+
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
     }
 
@@ -368,11 +379,11 @@ public class Constants {
         public static final boolean MOTOR_BOTTOM_INVERT = false;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
-        public static final double MOTOR_KP = 0; // 0.00314;
+        public static final double MOTOR_KP = 0;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
-        public static final double MOTOR_KV = 0.123; // 0.00195;
+        public static final double MOTOR_KV = 0.1115;
         public static final double MOTOR_KA = 0;
 
         public static final double RPM_TOLERANCE = 50d;
@@ -392,8 +403,9 @@ public class Constants {
         }
 
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
-        public static final double INDEXER_DEFAULT_POWER = 0.3d;
-        public static final double INDEXER_MANUAL_POWER = 0.5d;
+        public static final double INDEXER_DEFAULT_POWER = 0.6d;
+        public static final double INDEXER_MANUAL_POWER = 0.75d;
+        public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
     }
 
     public class PivotConstants { // TODO: get real
@@ -418,9 +430,10 @@ public class Constants {
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias
+                                                        // by
 
-        public static final double STOW_ANGLE = 35d;
+        public static final double STOW_ANGLE = 30d;
 
         public static final double MAX_INDEX_ANGLE = 40d;
 
