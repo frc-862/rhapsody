@@ -182,7 +182,8 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, limelights));
+		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, limelights)
+			.deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
 		// parks the robot
 		// new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
@@ -203,9 +204,9 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
-		// new Trigger(coPilot::getBButton)
-		// .whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer,
-		// pivot)); // TODO: find correct button/trigger
+		new Trigger(coPilot::getBButton)
+		.whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer,
+		pivot)); // TODO: find correct button/trigger
 
 		// cand shots for the robot
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
@@ -238,7 +239,7 @@ public class RobotContainer extends LightningContainer {
 				() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()))
 				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		new Trigger(() -> collector.hasPiece())
-				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2))
+				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
 		new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
