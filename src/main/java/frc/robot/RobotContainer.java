@@ -193,7 +193,7 @@ public class RobotContainer extends LightningContainer {
 						.alongWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// aim at amp and stage tags for the robot
-		new Trigger(driver::getLeftBumper).whileTrue(new OTFShoot(drivetrain, driver, pivot, flywheel, indexer)); // TODO: make work
+		new Trigger(driver::getLeftBumper).whileTrue(new OTFShoot(drivetrain, driver, pivot, flywheel, indexer, leds)); // TODO: make work
 		// new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
 		// new Trigger(driver::getYButton)
@@ -234,7 +234,7 @@ public class RobotContainer extends LightningContainer {
 
 		/* Other */
 		new Trigger(() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		// new Trigger(() -> collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+		new Trigger(() -> collector.hasPiece()).whileTrue(leds.enableState(LED_STATES.HAS_PIECE).withTimeout(2)).onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
 		// new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
 		// .onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))

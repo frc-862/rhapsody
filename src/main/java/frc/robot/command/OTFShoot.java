@@ -13,6 +13,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -24,6 +25,7 @@ public class OTFShoot extends Command {
 	private Pivot pivot;
 	private Flywheel flywheel;
 	private Indexer indexer;
+	private LEDs leds;
 
 	private double fireTime = Timer.getFPGATimestamp() + ShooterConstants.OTF_READY_TIME;
 
@@ -36,14 +38,16 @@ public class OTFShoot extends Command {
 	 * @param pivot the pivot subsystem
 	 * @param flywheel the flywheel subsystem
 	 * @param indexer the indexer subsystem
+	 * @param leds the leds subsystem
 	 */
-	public OTFShoot(Swerve drivetrain, XboxController driver, Pivot pivot, Flywheel flywheel, Indexer indexer) {
+	public OTFShoot(Swerve drivetrain, XboxController driver, Pivot pivot, Flywheel flywheel, Indexer indexer, LEDs leds) {
 
 		this.drivetrain = drivetrain;
 		this.driver = driver;
 		this.pivot = pivot;
 		this.flywheel = flywheel;
 		this.indexer = indexer;
+		this.leds = leds;
 
 	}
 
@@ -126,22 +130,20 @@ public class OTFShoot extends Command {
 		double basicHeading = Math.toDegrees(Math.atan2(basicDeltaY, basicDeltaX));
 		double basicDelta = Math.abs(targetHeading - basicHeading);
 
+		targetHeading = 45;
+
 		// Get heading PID output
 		double pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
 
-		// Get the velocity of the robot in the direction of the target (speaker)
-		double velocityToTarget = new Translation2d(robotReleaseVelocityX, robotReleaseVelocityY).rotateBy(new Rotation2d(targetHeading - pose.getRotation().getDegrees())).getX();
-		double deltaPieceTarget = velocityToTarget * timeToSpeaker;
+		// // Get the velocity of the robot in the direction of the target (speaker)
+		// double velocityToTarget = new Translation2d(robotReleaseVelocityX, robotReleaseVelocityY).rotateBy(new Rotation2d(targetHeading - pose.getRotation().getDegrees())).getX();
+		// double deltaPieceTarget = velocityToTarget * timeToSpeaker;
 
-		// Get the new target location based on offset due to velocity towards target
-		double pivotTargetX = VisionConstants.SPEAKER_LOCATION.getX() - deltaPieceTarget;
+		// double distanceToTarget = distanceToSpeaker - deltaPieceTarget;
+		
+		// double pivotTargetAngle = ShooterConstants.ANGLE_MAP.get(distanceToTarget); 
 
-		// Get the delta X and Y to the new target (to find angle)
-		double pivotTargetDeltaX = pivotTargetX - pose.getX();
-		double pivotTargetDeltaY = VisionConstants.SPEAKER_LOCATION.getY() - pose.getY();
-
-		// Get the angle needed for pivot to point at new target
-		double pivotTargetAngle = Math.toDegrees(Math.atan2(pivotTargetDeltaY, pivotTargetDeltaX));
+		// double flywheelTargetSpeed = ShooterConstants.SPEED_MAP.get(distanceToTarget);
 
 		LightningShuffleboard.setDouble("OTF Shooting", "Distance to Speaker", distanceToSpeaker);
 		LightningShuffleboard.setDouble("OTF Shooting", "Rotated Target Heading", (targetHeading + 360) % 360);
@@ -171,21 +173,18 @@ public class OTFShoot extends Command {
 		LightningShuffleboard.setDouble("OTF Shooting", "Driver Rot", driver.getRightX() * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT);
 		LightningShuffleboard.setDouble("OTF Shooting", "Velocity Scaler", veloctiyScaler);
 		LightningShuffleboard.setDouble("OTF Shooting", "Acceleration Scaler", accelerationScaler);
-
-		// Normal driving, no OTF or point at tags
-		// drivetrain.applyRequestField(() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX());
+		LightningShuffleboard.setBool("OTF Shooting", "Shooting", (fireTime - Timer.getFPGATimestamp() < 0));
 
 
 		// OTF driving
 		drivetrain.setFieldDriver(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 
-		pivot.setTargetAngle(pivotTargetAngle);
-		flywheel.setAllMotorsRPM(3000); //TODO: get real value
-		LightningShuffleboard.setBool("OTF Shooting", "Time Complete", (fireTime - Timer.getFPGATimestamp() < 0));
+		// pivot.setTargetAngle(pivotTargetAngle);
+		// flywheel.setAllMotorsRPM(flywheelTargetSpeed); 
 
-		if (fireTime - Timer.getFPGATimestamp() < 0) {
-			indexer.setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
-		} 
+		// if (fireTime - Timer.getFPGATimestamp() < 0.05 && flywheel.allMotorsOnTarget() && pivot.onTarget()) {
+		// 	indexer.setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
+		// } 
 	}
 
 	@Override
