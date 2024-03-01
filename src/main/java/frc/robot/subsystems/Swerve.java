@@ -51,7 +51,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
-    private Limelight[] limelights;
     private boolean slowMode = false;
     private boolean disableVision = false;
     private boolean robotCentricControl = false;
@@ -67,11 +66,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         initLogging();
 
         configurePathPlanner();
-
-        // LightningShuffleboard.setDoubleSupplier("Collision Detection", "ang vel", () -> getPigeon2().getAngularVelocityZWorld().getValueAsDouble());
-        // LightningShuffleboard.setDoubleSupplier("Collision Detection", "motor vel", () -> getModule(0).getDriveMotor().getVelocity().getValueAsDouble());
-        // LightningShuffleboard.setDoubleSupplier("Collision Detection", "x acc", () -> getPigeon2().getAccelerationX().getValueAsDouble());
-        // LightningShuffleboard.setDoubleSupplier("Collision Detection", "y acc", () -> getPigeon2().getAccelerationY().getValueAsDouble());
     }
 
     /* DRIVE METHODS */
@@ -236,9 +230,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     public Supplier<Pose2d> getPose() {
         return () -> getState().Pose;
-    }
-    public Pose2d getPose2d() {
-        return getState().Pose;
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {

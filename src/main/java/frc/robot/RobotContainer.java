@@ -79,8 +79,8 @@ public class RobotContainer extends LightningContainer {
 	private Collector collector;
 	private Flywheel flywheel;
 	private Pivot pivot;
-	Indexer indexer;
-	// Climber climber;
+	private Indexer indexer;
+	// private Climber climber;
 	LEDs leds;
 	Orchestra sing;
 
