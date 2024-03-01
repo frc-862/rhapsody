@@ -28,7 +28,7 @@ public class Pivot extends SubsystemBase {
     private final PIDController angleController = new PIDController(0.06, 0, 0);
     private double bias = 0;
 
-    private double targetAngle = 35;
+    private double targetAngle = 30;
 
     public Pivot() {
         CANcoderConfiguration angleConfig = new CANcoderConfiguration();

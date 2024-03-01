@@ -31,8 +31,7 @@ public class ChasePieces extends Command {
 	private boolean hasPiece;
 	private boolean hasTarget;
 
-	private Command smartCollect =  new SmartCollect(() -> power, () -> power, collector, indexer, pivot);
-
+	private Command smartCollect;
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
 
 	/**
@@ -50,13 +49,14 @@ public class ChasePieces extends Command {
 
 		limelight = limelights.getDust();
 
-		addRequirements(drivetrain, collector, indexer, pivot);
+		addRequirements(drivetrain);
 	}
 
 	@Override
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 		power = 0d;
+		smartCollect =  new SmartCollect(() -> power, () -> power, collector, indexer, pivot);
 		initLogging();
 		smartCollect.schedule();
 	}
@@ -68,6 +68,7 @@ public class ChasePieces extends Command {
 		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Heading", () -> targetHeading);
 		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Y", () -> targetPitch);
 		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Pid Output", () -> pidOutput);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "SmartCollectPower", () -> power);
 	}
 
 	@Override
@@ -86,14 +87,14 @@ public class ChasePieces extends Command {
 		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		hasPiece = indexer.getEntryBeamBreakState();
+		hasPiece = indexer.getExitBeamBreakState();
 
 		pidOutput = headingController.calculate(0, targetHeading);
 
 		if (!hasPiece){
 			if (hasTarget){
 				if (trustValues()){
-					power = 0.75d;
+					power = 1d;
 					if (!onTarget) {
 						drivetrain.setRobot(3, 0, -pidOutput);
 					} else {
@@ -101,16 +102,14 @@ public class ChasePieces extends Command {
 					}
 				}
 			} else {
-				power = 0d;
 				drivetrain.setRobot(3, 0, 0);
 			}
 		}
+
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		power = 0d;
-		smartCollect.end(false);
 	}
 
 	/**

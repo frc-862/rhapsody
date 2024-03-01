@@ -420,7 +420,7 @@ public class Constants {
 
         public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
 
-        public static final double STOW_ANGLE = 35d;
+        public static final double STOW_ANGLE = 30d;
 
         public static final double MAX_INDEX_ANGLE = 40d;
 
