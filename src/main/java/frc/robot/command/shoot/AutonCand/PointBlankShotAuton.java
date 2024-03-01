@@ -31,6 +31,7 @@ public class PointBlankShotAuton extends Command {
 
 	@Override
 	public void initialize() {
+		shot = false;
 		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
 	}

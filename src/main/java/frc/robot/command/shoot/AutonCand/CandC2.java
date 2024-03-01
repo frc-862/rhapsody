@@ -33,6 +33,7 @@ public class CandC2 extends Command {
 
 	@Override
 	public void initialize() {
+		shot = false;
 		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
 	}

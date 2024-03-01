@@ -32,6 +32,7 @@ public class AmpShotAuton extends Command {
 
 	@Override
 	public void initialize() {
+		shot = false;
 		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
 		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
