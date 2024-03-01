@@ -65,7 +65,7 @@ public class Constants {
         public static final double SLOW_SPEED_MULT = 0.4; // TODO Tune for Driver
 
         public static final double SYS_TEST_SPEED_DRIVE = 0.5;
-        public static final double SYS_TEST_SPEED_TURN = 0.5d;
+        public static final double SYS_TEST_SPEED_TURN = 0.7d;
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
     }

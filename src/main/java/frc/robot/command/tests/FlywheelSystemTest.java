@@ -30,7 +30,8 @@ public class FlywheelSystemTest extends SystemTestCommandGroup {
                 new TimedCommand(new FlywheelTest(flywheel, speed, speed), 2), // Both out
                 new WaitCommand(1),
                 new TimedCommand(new FlywheelTest(flywheel, -speed, -speed), 2) // Both in
-            )
+            )  
         );
+        addRequirements(flywheel);
     }
 }

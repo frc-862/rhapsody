@@ -26,6 +26,7 @@ public class Collect extends Command {
 	@Override
 	public void initialize() {
 		collector.setPower(powerSupplier.getAsDouble());
+		System.out.println("Collect.init");
 		LightningShuffleboard.setDoubleSupplier("Collector", "Power", () -> powerSupplier.getAsDouble());
 	}
 

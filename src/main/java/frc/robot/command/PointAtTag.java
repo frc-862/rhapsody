@@ -76,7 +76,7 @@ public class PointAtTag extends Command {
 		// headingController.setI(LightningShuffleboard.getDouble("PointAtTag", "I", 0));
 		// headingController.setD(LightningShuffleboard.getDouble("PointAtTag", "D", 1));
 
-		Pose2d pose = drivetrain.getPose().get();
+		Pose2d pose = drivetrain.getPose();
 		deltaX = targetPose.getX() - pose.getX();
 		deltaY = targetPose.getY() - pose.getY();
 

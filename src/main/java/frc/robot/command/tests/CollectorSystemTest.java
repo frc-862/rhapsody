@@ -4,6 +4,8 @@
 
 package frc.robot.command.tests;
 
+import java.util.function.DoubleSupplier;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.command.tests.testcmds.CollectorTest;
@@ -13,14 +15,16 @@ import frc.thunder.testing.SystemTestCommandGroup;
 
 public class CollectorSystemTest extends SystemTestCommandGroup {
 
-    public CollectorSystemTest(Collector collector, double speed) {
+    public CollectorSystemTest(Collector collector, Double power) {
         super(
             new SequentialCommandGroup(
                 new WaitCommand(0.5),
-                new TimedCommand(new CollectorTest(collector, speed), 4), // Collector out
+                new TimedCommand(new CollectorTest(collector,() -> power), 4), // Collector out
                 new WaitCommand(1),
-                new TimedCommand(new CollectorTest(collector, -speed), 4) // Collector in
+                new TimedCommand(new CollectorTest(collector,() -> -power), 4) // Collector in
+
             )
         );
+        addRequirements(collector);
     }
 }

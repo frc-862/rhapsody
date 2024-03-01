@@ -4,15 +4,17 @@
 
 package frc.robot.command.tests.testcmds;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Collector;
 
 public class CollectorTest extends Command {
 
 	private Collector collector;
-	private double power;
+	public DoubleSupplier power;
 
-	public CollectorTest(Collector collector, double power) {
+	public CollectorTest(Collector collector, DoubleSupplier power) {
 		this.collector = collector;
 		this.power = power;
 
@@ -21,12 +23,11 @@ public class CollectorTest extends Command {
 
 	@Override
 	public void initialize() {
-		collector.setPower(power);
+		collector.setPower(power.getAsDouble());
 	}
 
 	@Override
 	public void execute() {
-		collector.setPower(power);
 	}
 
 	@Override
