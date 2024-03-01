@@ -1,4 +1,4 @@
-package frc.robot.command.shoot;
+package frc.robot.command.shoot.AutonCand;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -9,7 +9,7 @@ import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 
-public class CandLine extends Command {
+public class CandC3 extends Command {
 
 	private final Flywheel flywheel;
 	private final Pivot pivot;
@@ -18,17 +18,17 @@ public class CandLine extends Command {
 	private double shotTime = 0;
 
 	/**
-	 * Creates a new CandLine.
-	 * @param flywheel
-	 * @param pivot
-	 * @param indexer
+	 * Creates a new CandC3.
+	 * @param flywheel subsystem
+	 * @param pivot subsystem
+	 * @param indexer subsystem
 	 */
-	public CandLine(Flywheel flywheel, Pivot pivot, Indexer indexer) {
+	public CandC3(Flywheel flywheel, Pivot pivot, Indexer indexer) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 		this.indexer = indexer;
 
-		addRequirements(pivot, flywheel);
+		addRequirements(pivot, flywheel, indexer);
 	}
 
 	@Override

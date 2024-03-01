@@ -1,16 +1,14 @@
-package frc.robot.command.shoot;
+package frc.robot.command.shoot.AutonCand;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 
-public class CandC2 extends Command {
-
+public class PointBlankShotAuton extends Command {
 	private final Flywheel flywheel;
 	private final Pivot pivot;
 	private final Indexer indexer;
@@ -18,12 +16,12 @@ public class CandC2 extends Command {
 	private double shotTime = 0;
 
 	/**
-	 * Creates a new CandC2.
-	 * @param flywheel
-	 * @param pivot
-	 * @param indexer
+	 * Creates a new PointBlankShot.
+	 * @param flywheel subsystem
+	 * @param pivot subsystem
+	 * @param indexer subsystem
 	 */
-	public CandC2(Flywheel flywheel, Pivot pivot, Indexer indexer) {
+	public PointBlankShotAuton(Flywheel flywheel, Pivot pivot, Indexer indexer) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 		this.indexer = indexer;
@@ -33,17 +31,21 @@ public class CandC2 extends Command {
 
 	@Override
 	public void initialize() {
-		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
-		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
+		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
+		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
 	}
 
 	@Override
 	public void execute() {
+		// Checks if autonomous and if the pivot and flywheel are on target then shoots
 		if(pivot.onTarget() && flywheel.allMotorsOnTarget()) {
-			indexer.setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
 			shot = true;
 			shotTime = Timer.getFPGATimestamp();
+			indexer.indexUp();
 		}
+
+		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());
+		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + flywheel.getBias());
 	}
 
 	@Override
