@@ -34,6 +34,8 @@ public class Flywheel extends SubsystemBase {
         bottomMotor.configPIDF(0, FlywheelConstants.MOTOR_KP, FlywheelConstants.MOTOR_KI,
             FlywheelConstants.MOTOR_KD, FlywheelConstants.MOTOR_KS, FlywheelConstants.MOTOR_KV);
 
+        topMotor.applyConfig();
+        bottomMotor.applyConfig();
         initLogging();
     }
 
