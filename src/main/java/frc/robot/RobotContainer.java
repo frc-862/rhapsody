@@ -35,15 +35,17 @@ import frc.robot.command.PointAtTag;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartCollect;
 import frc.robot.command.shoot.AmpShot;
-import frc.robot.command.shoot.CandC1;
-import frc.robot.command.shoot.CandC2;
-import frc.robot.command.shoot.CandC3;
-import frc.robot.command.shoot.CandLine;
 import frc.robot.command.shoot.PodiumShot;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.shoot.SourceCollect;
 import frc.robot.command.shoot.Stow;
+import frc.robot.command.shoot.AutonCand.AmpShotAuton;
+import frc.robot.command.shoot.AutonCand.CandC1;
+import frc.robot.command.shoot.AutonCand.CandC2;
+import frc.robot.command.shoot.AutonCand.CandC3;
+import frc.robot.command.shoot.AutonCand.CandLine;
+import frc.robot.command.shoot.AutonCand.PointBlankShotAuton;
 import frc.robot.command.tests.ClimbSystemTest;
 import frc.robot.command.tests.CollectorSystemTest;
 import frc.robot.command.tests.DrivetrainSystemTest;
@@ -127,35 +129,24 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("led-Shoot",
 				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
-		// NamedCommands.registerCommand("Cand-Sub",
-		// new PointBlankShot(flywheel, pivot, indexer,
-		// DriverStation.isAutonomousEnabled())
-		// .alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
-		// NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot,
-		// indexer));
-		// NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot,
-		// indexer));
-		// NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot,
-		// indexer));
-		// NamedCommands.registerCommand("Cand-Line", new CandLine(flywheel, pivot,
-		// indexer));
-		// NamedCommands.registerCommand("AMP", new AmpShot(flywheel, pivot,
-		// DriverStation.isAutonomousEnabled()));
-		// NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
-		// NamedCommands.registerCommand("Smart-Shoot",
-		// new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-		// .alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
-		// NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain,
-		// collector,
-		// limelights));
-		// NamedCommands.registerCommand("Collect",
-		// new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot)
-		// .alongWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
-		// NamedCommands.registerCommand("Index-Up", new Index(indexer, () ->
-		// IndexerConstants.INDEXER_DEFAULT_POWER));
-		// NamedCommands.registerCommand("PathFind", new
-		// MoveToPose(AutonomousConstants.TARGET_POSE,
-		// drivetrain, drive)); // TODO find a way to use this
+		NamedCommands.registerCommand("Cand-Sub", 
+			new PointBlankShotAuton(flywheel, pivot, indexer)
+				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5))); 
+		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("Cand-Line", new CandLine(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("AMP", new AmpShotAuton(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
+		NamedCommands.registerCommand("Smart-Shoot",
+			new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
+				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
+		NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, indexer, pivot, limelights));
+		NamedCommands.registerCommand("Collect",
+			new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot)
+				.alongWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
+		NamedCommands.registerCommand("Index-Up", new Index(indexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
+		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -210,12 +201,11 @@ public class RobotContainer extends LightningContainer {
 
 		// cand shots for the robot
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
-		new Trigger(coPilot::getXButton)
-			.whileTrue(new PointBlankShot(flywheel, pivot, indexer, false));
-		new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
-		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel));
+		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
+		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
+		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
-		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,
+		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,  // TODO need new button start? Back?
 		// drivetrain).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
 		/* BIAS */
@@ -252,16 +242,12 @@ public class RobotContainer extends LightningContainer {
 		/* driver */
 		drivetrain.registerTelemetry(logger::telemeterize);
 
-		// drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(() ->
-		// -driver.getLeftY(),
-		// () -> -driver.getLeftX(), () -> -driver.getRightX()));
 		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(
 				() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
 
 		/* copilot */
 		collector.setDefaultCommand(
-				new Collect(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector, indexer));
-
+				new Collect(() -> MathUtil.applyDeadband((coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), ControllerConstants.DEADBAND), collector, indexer));
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
 	}
