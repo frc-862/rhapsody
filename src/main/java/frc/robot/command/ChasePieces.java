@@ -1,6 +1,7 @@
 package frc.robot.command;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.VisionConstants;
@@ -33,6 +34,8 @@ public class ChasePieces extends Command {
 
 	private Command smartCollect;
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
+
+	private Debouncer debouncer = new Debouncer(0.1);
 
 	/**
 	 * Creates a new ChasePieces.
@@ -87,14 +90,14 @@ public class ChasePieces extends Command {
 		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		hasPiece = indexer.getExitBeamBreakState();
+		hasPiece = debouncer.calculate(indexer.getExitBeamBreakState());
 
 		pidOutput = headingController.calculate(0, targetHeading);
 
 		if (!hasPiece){
 			if (hasTarget){
 				if (trustValues()){
-					power = 1d;
+					power = 0.75d;
 					if (!onTarget) {
 						drivetrain.setRobot(3, 0, -pidOutput);
 					} else {
@@ -125,9 +128,6 @@ public class ChasePieces extends Command {
 
 	@Override
 	public boolean isFinished() {
-		if (hasPiece){
-			return true;
-		}
-		return false;
+		return hasPiece;
 	}
 }

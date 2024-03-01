@@ -211,9 +211,9 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
-		// new Trigger(coPilot::getBButton)
-		// .whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer,
-		// pivot)); // TODO: find correct button/trigger
+		new Trigger(coPilot::getBButton)
+		.whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer,
+		pivot)); // TODO: find correct button/trigger
 
 		// cand shots for the robot
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
