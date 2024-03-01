@@ -260,7 +260,7 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		collector.setDefaultCommand(
-				new Collect(() -> (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), collector, indexer));
+				new Collect(() -> MathUtil.applyDeadband((coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), ControllerConstants.DEADBAND), collector, indexer));
 
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
