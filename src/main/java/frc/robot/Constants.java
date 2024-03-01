@@ -340,11 +340,11 @@ public class Constants {
 
         public static final double ACCELERATION_DUE_TO_GRAVITY = 9.80665;
         public static final double ACCELERATION_TOLERANCE_TELEOP = 3; //percent of pigeonAcceleration
-        public static final double MIN_ACCELERATION_DIFF_TELEOP = 0.50; // TODO: get real
-        public static final double ACCELERATION_TOLERANCE_AUTON = 1.00; //percent of pigeonAcceleration
-        public static final double MIN_ACCELERATION_DIFF_AUTON = 0.50; // TODO: get real
+        public static final double MIN_ACCELERATION_DIFF_TELEOP = 0.25; // TODO: get real
+        public static final double ACCELERATION_TOLERANCE_AUTON = 2.00; //percent of pigeonAcceleration
+        public static final double MIN_ACCELERATION_DIFF_AUTON = 0.25; // TODO: get real
         public static final double ACCELERATION_TOLERANCE_SHOOTER = 1.00; //percent of pigeonAcceleration
-        public static final double MIN_ACCELERATION_DIFF_SHOOTER = 0.50; // TODO: get real
+        public static final double MIN_ACCELERATION_DIFF_SHOOTER = 0.25; // TODO: get real
 
         public enum CollisionType {
             AUTON, TELEOP, SHOOTER

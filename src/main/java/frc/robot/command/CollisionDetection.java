@@ -47,6 +47,7 @@ public class CollisionDetection extends Command {
   public void initialize() {
     storeVelocities(); // store initial velocities to avoid null values
     setDisplayAccelerationTolerances(type); // set acceleration tolerance based on type
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
