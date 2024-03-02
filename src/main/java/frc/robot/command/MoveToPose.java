@@ -48,7 +48,7 @@ public class MoveToPose extends Command {
 
     @Override
     public void execute() {
-        current = drivetrain.getPose();
+        current = drivetrain.getPose().get();
         dx = target.getTranslation().getX() - current.getTranslation().getX();
         dy = target.getTranslation().getY() - current.getTranslation().getY();
 

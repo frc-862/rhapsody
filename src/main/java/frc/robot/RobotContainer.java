@@ -151,7 +151,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Collect",
 			new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot)
 				.alongWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
-		NamedCommands.registerCommand("Index-Up", new Index(indexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
+		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
 		// make sure named commands are initialized before autobuilder!

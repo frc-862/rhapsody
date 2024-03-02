@@ -189,8 +189,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         // TODO Remove the unecessary shuffleboard stuff eventually
         LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
         LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPigeon2().getAngle());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getPose().getX());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getPose().getY());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getPose().get().getX());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getPose().get().getY());
 
         LightningShuffleboard.setBoolSupplier("Swerve", "Slow mode", () -> slowMode);
         LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
@@ -227,12 +227,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 }, this); // Subsystem for requirements
     }
 
-    public Pose2d getPose() {
-        var pose = getState().Pose;
-        if (pose == null) {
-            pose = new Pose2d();
-        }
-        return pose;
+    public Supplier<Pose2d> getPose() {
+        return () -> getState().Pose;
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
@@ -308,7 +304,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return boolean if the robot is in the wing to start aiming STATE priming
      */
     public boolean inWing() {
-        return (getPose().getX() < ShooterConstants.FAR_WING_X);
+        return (getPose().get().getX() < ShooterConstants.FAR_WING_X);
     }
 
     public void disableVision() {
@@ -322,6 +318,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public double distanceToSpeaker() {
-        return DrivetrainConstants.SPEAKER_POSE.getDistance(getPose().getTranslation());
+        return DrivetrainConstants.SPEAKER_POSE.getDistance(getPose().get().getTranslation());
     }
 }
