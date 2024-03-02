@@ -15,6 +15,7 @@ public class PointBlankShotAuton extends Command {
 	private final Indexer indexer;
 
 	private boolean shot = false;
+	private double startTime = 0;
 	private double shotTime = 0;
 
 	private boolean startIndexing = false;
@@ -37,6 +38,7 @@ public class PointBlankShotAuton extends Command {
 	public void initialize() {
 		shot = false;
 		startIndexing = false;
+		startTime = Timer.getFPGATimestamp();
 		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
 		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
 	}
@@ -68,6 +70,6 @@ public class PointBlankShotAuton extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
+		return shot && shotTime - startTime >= CandConstants.TIME_TO_SHOOT;
 	}
 }
