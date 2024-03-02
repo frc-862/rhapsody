@@ -18,6 +18,8 @@ public class CandC1 extends Command {
 	private boolean shot = false;
 	private double shotTime = 0;
 
+	private boolean startIndexing = false;
+
 	/**
 	 * Creates a new CandC1.
 	 * @param flywheel subsystem
@@ -35,25 +37,31 @@ public class CandC1 extends Command {
 	@Override
 	public void initialize() {
 		shot = false;
-		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
+		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 	}
 
 	@Override
 	public void execute() {
+		// Checks if the pivot and flywheel are on target then shoots
 		if (pivot.onTarget() && flywheel.allMotorsOnTarget()) {
-			indexer.setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
+			startIndexing = true;
+		}
+
+		if(startIndexing) {
 			shot = true;
 			shotTime = Timer.getFPGATimestamp();
+			indexer.indexUp();
 		}
-		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
+
 		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
+		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		flywheel.coast(true);
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		flywheel.coast(true);
 		indexer.stop();
 	}
 
