@@ -12,14 +12,14 @@ import frc.robot.subsystems.Climber;
 public class ClimbTest extends Command {
 
     private Climber climber;
-    private double power;
+    private DoubleSupplier power;
 
     /**
      * System test command for testing climb motors.
      * @param climber climber subsystem
      * @param power power to control up or down
      */
-    public ClimbTest(Climber climber, double power) {
+    public ClimbTest(Climber climber, DoubleSupplier power) {
         this.climber = climber;
         this.power = power;
 
@@ -31,7 +31,7 @@ public class ClimbTest extends Command {
 
     @Override
     public void execute() {
-        climber.setPower(power);
+        climber.setPower(power.getAsDouble());
     }
 
     @Override

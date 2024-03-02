@@ -23,7 +23,6 @@ public class FlywheelTest extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("Flywheeltest: " + topMotorSpeed);
         flywheel.setTopMoterRPM(topMotorSpeed);
         flywheel.setBottomMoterRPM(bottomMotorSpeed);
     }

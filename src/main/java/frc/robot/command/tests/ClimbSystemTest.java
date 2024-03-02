@@ -17,10 +17,10 @@ public class ClimbSystemTest extends SystemTestCommandGroup {
         super(
             new SequentialCommandGroup(
                 new WaitCommand(0.5),
-                new TimedCommand(new ClimbTest(climber, speed), 1), // UP
+                new TimedCommand(new ClimbTest(climber, () -> speed), 1), // UP
                 new WaitCommand(1),
-                new TimedCommand(new ClimbTest(climber, -speed), 1) // DOWN
-            ) 
+                new TimedCommand(new ClimbTest(climber, () -> -speed), 1) // DOWN
+            )
         );
     }
 }

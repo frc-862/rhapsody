@@ -4,43 +4,42 @@
 
 package frc.robot.command.tests;
 
+import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Pivot;
 import frc.thunder.testing.SystemTestCommand;
 
 public class PivotAngleTest extends SystemTestCommand {
 
-  private Pivot pivot;
-  private double angle;
+    private Pivot pivot;
+    private double angle;
 
-/**
-     * please note that this removes all usage of the drivetrain until it is ended.
-     * use with caution, and only when the drivetrain is not in use.
-     * @param pivot used to get access to pivot
-     * @param angle angle to set pivot to
+    /**
+     * Sets pivot to a certain angle
+     * @param pivot subsystem
+     * @param angle angle to set pivot to (degrees)
      */
+    public PivotAngleTest(Pivot pivot, double angle) {
+        this.pivot = pivot;
+        this.angle = angle;
 
-  public PivotAngleTest(Pivot pivot, double angle) {
-    this.pivot = pivot;
-    this.angle = angle;
+        addRequirements(pivot);
+    }
 
-    addRequirements(pivot);
-  }
+    @Override
+    public void initializeTest() {
+        pivot.setTargetAngle(angle);
+    }
 
-  @Override
-  public void initializeTest() {
-    pivot.setTargetAngle(angle); // Gives pivot an angle to move to
-  }
+    @Override
+    public void executeTest() {}
 
-  @Override
-  public void executeTest() {}
+    @Override
+    public void endTest(boolean interrupted) {
+        pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+    }
 
-  @Override
-  public void endTest(boolean interrupted) {
-    pivot.setPower(0d); // Stops giving pivot power
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

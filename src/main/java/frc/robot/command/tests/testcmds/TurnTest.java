@@ -8,7 +8,7 @@ import frc.robot.subsystems.Swerve;
 public class TurnTest extends Command {
 
     private Swerve drivetrain;
-    public DoubleSupplier speed;
+    private DoubleSupplier speed;
 
     /**
      * System test command for testing azimuth motors
@@ -27,14 +27,12 @@ public class TurnTest extends Command {
 
     @Override
     public void execute() {
-        drivetrain.setRobot(0d, 0d, speed.getAsDouble());//speed);
-        System.out.println("ExecutingTurntest");
+        drivetrain.setRobot(0d, 0d, speed.getAsDouble());
     }
 
     @Override
     public void end(boolean interrupted) {
         drivetrain.brake();
-        System.out.println("Ending");
     }
 
     @Override

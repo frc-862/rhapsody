@@ -84,7 +84,6 @@ public class Collector extends SubsystemBase {
 	 * Stops the collector
 	 */
 	public void stop() {
-		System.out.println("Collector.stop");
 		setPower(0d);
 	}
 }

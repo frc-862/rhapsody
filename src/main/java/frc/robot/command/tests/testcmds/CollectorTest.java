@@ -12,7 +12,7 @@ import frc.robot.subsystems.Collector;
 public class CollectorTest extends Command {
 
 	private Collector collector;
-	public DoubleSupplier power;
+	private DoubleSupplier power;
 
 	public CollectorTest(Collector collector, DoubleSupplier power) {
 		this.collector = collector;

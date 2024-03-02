@@ -16,10 +16,10 @@ public class IndexerSystemTest extends SystemTestCommandGroup {
     public IndexerSystemTest(Indexer indexer, double speed) {
         super(
             new SequentialCommandGroup(
-                new WaitCommand(0.50),
-                new TimedCommand(new IndexerTest(indexer, speed), 3), // Indexer out
-                new WaitCommand(1.00),
-                new TimedCommand(new IndexerTest(indexer, -speed), 3) // Indexer in
+                new WaitCommand(0.5),
+                new TimedCommand(new IndexerTest(indexer, speed), 2), // Indexer out
+                new WaitCommand(1d),
+                new TimedCommand(new IndexerTest(indexer, -speed), 1) // Indexer in
             )
         );
         addRequirements(indexer);
