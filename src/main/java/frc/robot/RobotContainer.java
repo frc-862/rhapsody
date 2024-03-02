@@ -82,7 +82,7 @@ public class RobotContainer extends LightningContainer {
 	private Flywheel flywheel;
 	private Pivot pivot;
 	private Indexer indexer;
-	// private Climber climber;
+	private Climber climber;
 	LEDs leds;
 	Orchestra sing;
 
@@ -114,7 +114,7 @@ public class RobotContainer extends LightningContainer {
 		flywheel = new Flywheel();
 		pivot = new Pivot();
 		indexer = new Indexer(collector);
-		// climber = new Climber(drivetrain);
+		climber = new Climber(drivetrain);
 		leds = new LEDs();
 		sing = new Orchestra();
 
@@ -208,7 +208,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
 		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,  // TODO need new button start? Back?
-		// drivetrain).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
+		// drivetrain, leds).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
 		/* BIAS */
 		new Trigger(() -> coPilot.getPOV() == 0)
@@ -254,8 +254,8 @@ public class RobotContainer extends LightningContainer {
 		/* copilot */
 		collector.setDefaultCommand(
 				new Collect(() -> MathUtil.applyDeadband((coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), ControllerConstants.DEADBAND), collector, indexer));
-		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
-		// coPilot.getRightY(), climber));
+		climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
+		coPilot.getRightY(), climber));
 	}
 
 	protected Command getAutonomousCommand() {
