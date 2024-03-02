@@ -6,6 +6,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -74,6 +75,7 @@ import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
 import frc.thunder.testing.SystemTestCommand;
+import edu.wpi.first.hal.HALUtil;
 
 public class RobotContainer extends LightningContainer {
 	public static XboxControllerFilter driver;
@@ -100,6 +102,8 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeSubsystems() {
+		int roboro1 = HALUtil.RUNTIME_ROBORIO;
+		int roboro2 = HALUtil.RUNTIME_ROBORIO2;
 		// SignalLogger.setPath(Constants.HOOT_PATH);
 		// SignalLogger.enableAutoLogging(true);
 

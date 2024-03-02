@@ -24,6 +24,7 @@ public class SmartShoot extends Command {
 	final Swerve drivetrain;
 	final Indexer indexer;
 	final LEDs leds;
+	private double distance = 0d;
 
 	private ShootingState state = ShootingState.AIM;
 	private double shotTime = 0d;
@@ -50,16 +51,16 @@ public class SmartShoot extends Command {
 	public void initialize() {
 		//Always start with aiming
 		state = ShootingState.AIM;
+
+		// Logging
+		LightningShuffleboard.setDoubleSupplier("Smart-Shoot", "Distance", () -> distance);
+		LightningShuffleboard.setStringSupplier("Smart-Shoot", "State", () -> state.toString());
 	}
 
 	@Override
 	public void execute() {
 		// Distance from current pose to speaker pose
-		double distance = drivetrain.distanceToSpeaker();
-
-		// Logging
-		LightningShuffleboard.setDouble("Smart-Shoot", "Distance", distance);
-		LightningShuffleboard.setString("Smart-Shoot", "State", state.toString());
+		distance = drivetrain.distanceToSpeaker();
 
 		switch(state) {
 			case AIM:

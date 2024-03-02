@@ -38,6 +38,10 @@ public class PointAtPoint extends Command {
 	@Override
 	public void initialize() {
 		headingController.enableContinuousInput(-180, 180);
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Heading", () -> targetHeading);
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose Y", () -> targetPose.getY());
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose X", () -> targetPose.getX());
+		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Pid Output", () -> pidOutput);
 	}
 
 	@Override
@@ -46,16 +50,12 @@ public class PointAtPoint extends Command {
 		var deltaX = targetPose.getX() - pose.getX();
 		var deltaY = targetPose.getY() - pose.getY();
 
+		// LightningShuffleboard.setDouble("PointAtTag", "Delta Y", deltaY);
+		// LightningShuffleboard.setDouble("PointAtTag", "Delta X", deltaX);
+
 		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
 		targetHeading += 180;
 		pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
-
-		LightningShuffleboard.setDouble("PointAtTag", "Delta Y", deltaY);
-		LightningShuffleboard.setDouble("PointAtTag", "Delta X", deltaX);
-		LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
-		LightningShuffleboard.setDouble("PointAtTag", "Target Pose Y", targetPose.getY());
-		LightningShuffleboard.setDouble("PointAtTag", "Target Pose X", targetPose.getX());
-		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
 
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
