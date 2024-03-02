@@ -20,7 +20,7 @@ public class PointBlankShot extends Command {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 
-		addRequirements(pivot, flywheel, indexer);
+		addRequirements(pivot, flywheel);
 	}
 
 	@Override
