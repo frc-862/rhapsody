@@ -541,7 +541,7 @@ public class Constants {
         public static final double RETRACT_KP = 0;
         public static final double RETRACT_KI = 0;
         public static final double RETRACT_KD = 0;
-        public static final double GEAR_REDUCTION = 20d;
+        public static final double GEAR_REDUCTION = 12d;
         public static final double WINCH_DIAMETER_INCHES = 1d;
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 

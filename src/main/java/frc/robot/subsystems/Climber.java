@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -14,7 +15,6 @@ import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.math.Conversions;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Climber extends SubsystemBase {
@@ -48,12 +48,15 @@ public class Climber extends SubsystemBase {
         climbMotorR.configPIDF(0, ClimbConstants.EXTEND_KP, ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD);
         climbMotorR.configPIDF(1, ClimbConstants.RETRACT_KP, ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
 
-        climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(new FeedbackConfigs().)        
+        FeedbackConfigs conf = new FeedbackConfigs();
+
+        conf.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        conf.SensorToMechanismRatio = ClimbConstants.GEAR_REDUCTION * ClimbConstants.WINCH_CIRCUFERENCE;
+
+        climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(conf));
+        climbMotorR.applyConfig(climbMotorR.getConfig().withFeedback(conf));
 
         initLogging();
-
-        climbMotorR.applyConfig();
-        climbMotorL.applyConfig();
     }
 
     private void initLogging() { // TODO test and fix once we have climber
@@ -127,11 +130,6 @@ public class Climber extends SubsystemBase {
      * @param rightInches setpoint for right climb motor in inches
      */
     public void setSetpoint(double leftInches, double rightInches) {
-        // this.setPointL = new PositionTorqueCurrentFOC(Conversions.getInputShaftRotations(
-        //         leftInches / ClimbConstants.WINCH_CIRCUFERENCE, ClimbConstants.GEAR_REDUCTION));
-        // this.setPointR = new PositionTorqueCurrentFOC(Conversions.getInputShaftRotations(
-        //     rightInches / ClimbConstants.WINCH_CIRCUFERENCE, ClimbConstants.GEAR_REDUCTION));
-
         climbMotorL.setControl(setPointL.withPosition(leftInches));
         climbMotorR.setControl(setPointR.withPosition(rightInches));
     }
@@ -147,34 +145,28 @@ public class Climber extends SubsystemBase {
      * @return height of right climb arm
      */
     public double getHeightR() {
-        return Conversions.getOutputShaftRotations(
-                climbMotorR.getRotorPosition().getValueAsDouble(), ClimbConstants.GEAR_REDUCTION)
-                * ClimbConstants.WINCH_CIRCUFERENCE;
+        return climbMotorR.getPosition().getValueAsDouble();
     }
 
     /**
      * @return height of left climb arm
      */
     public double getHeightL() {
-        return Conversions.getOutputShaftRotations(
-                climbMotorL.getRotorPosition().getValueAsDouble(), ClimbConstants.GEAR_REDUCTION)
-                * ClimbConstants.WINCH_CIRCUFERENCE;
+        return climbMotorL.getPosition().getValueAsDouble();
     }
 
     /**
      * @return the setpoint of the right climb arm
      */
     public double getSetpointR() {
-        return Conversions.getOutputShaftRotations(this.setPointR.Position,
-                ClimbConstants.GEAR_REDUCTION) * ClimbConstants.WINCH_CIRCUFERENCE;
+        return this.setPointR.Position;
     }
 
     /**
      * @return the setpoint of the left climb arm
      */
     public double getSetpointL() {
-        return Conversions.getOutputShaftRotations(this.setPointL.Position,
-                ClimbConstants.GEAR_REDUCTION) * ClimbConstants.WINCH_CIRCUFERENCE;
+        return this.setPointL.Position;
     }
 
     /**
