@@ -422,7 +422,7 @@ public class Constants {
         public static final double BOTTOM_MOTOR_KA = 0;
 
 
-        public static final double RPM_TOLERANCE = 100d;
+        public static final double RPM_TOLERANCE = 50d;
 
         public static final double BIAS_INCREMENT = 1.25; // RPS to bias by per button press
         public static final double COAST_VOLTAGE = 0.1;
@@ -509,10 +509,10 @@ public class Constants {
     }
 
     public class CandConstants { // TODO get real
-        // Amp
-        public static final double AMP_TOP_RPM = 300; // 250?
-        public static final double AMP_BOTTOM_RPM = 450;
-        public static final double AMP_ANGLE = 103.5;
+        // Amp 
+        public static final double AMP_TOP_RPM = 300; // FRONT METHOD 250
+        public static final double AMP_BOTTOM_RPM = 450; // FRONT METHOD 1250
+        public static final double AMP_ANGLE = 103.5; // FRONT METHOD 55
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
