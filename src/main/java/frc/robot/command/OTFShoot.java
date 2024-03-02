@@ -1,5 +1,6 @@
 package frc.robot.command;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -7,8 +8,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Flywheel;
@@ -27,7 +28,7 @@ public class OTFShoot extends Command {
 	private Indexer indexer;
 	private LEDs leds;
 
-	private double fireTime = Timer.getFPGATimestamp() + ShooterConstants.OTF_READY_TIME;
+	private double fireTime;
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
@@ -54,6 +55,8 @@ public class OTFShoot extends Command {
 	@Override
 	public void initialize() {
 
+		fireTime = Timer.getFPGATimestamp() + ShooterConstants.OTF_READY_TIME;
+
 		headingController.enableContinuousInput(-180, 180);
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 
@@ -69,7 +72,7 @@ public class OTFShoot extends Command {
 		Pose2d pose = drivetrain.getPose().get();
 
 		// Robot Acceleration
-		double accelerationScaler = 1;
+		double accelerationScaler = 0;
 		double robotAccelerationX = drivetrain.getPigeon2().getAccelerationX().getValue();
 		double robotAccelerationY = drivetrain.getPigeon2().getAccelerationY().getValue();
 
@@ -92,7 +95,7 @@ public class OTFShoot extends Command {
 
 		// Speed of the shot
 		//TODO: get real value
-		double shotSpeed = 0.5;
+		double shotSpeed = 30;
 
 		// Get the distance and time to the speaker
 		double distanceToSpeaker = Math.sqrt(Math.pow(
@@ -122,28 +125,26 @@ public class OTFShoot extends Command {
 		double headingDeltaY = targetY - releaseRobotPoseY;
 
 		//getting the angle to the target (Angle = arctan(Dy, Dx))
-		double targetHeading = Math.toDegrees(Math.atan2(headingDeltaY, headingDeltaX));
+		double targetHeading = Math.toDegrees(Math.atan2(headingDeltaY, headingDeltaX)) + 180;
 
 		// Heading of Robot without math and its delta
 		double basicDeltaX = VisionConstants.SPEAKER_LOCATION.getX() - pose.getX();
 		double basicDeltaY = VisionConstants.SPEAKER_LOCATION.getY() - pose.getY();
-		double basicHeading = Math.toDegrees(Math.atan2(basicDeltaY, basicDeltaX));
+		double basicHeading = Math.toDegrees(Math.atan2(basicDeltaY, basicDeltaX)) + 180;
 		double basicDelta = Math.abs(targetHeading - basicHeading);
-
-		targetHeading = 45;
 
 		// Get heading PID output
 		double pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
 
 		// // Get the velocity of the robot in the direction of the target (speaker)
-		// double velocityToTarget = new Translation2d(robotReleaseVelocityX, robotReleaseVelocityY).rotateBy(new Rotation2d(targetHeading - pose.getRotation().getDegrees())).getX();
-		// double deltaPieceTarget = velocityToTarget * timeToSpeaker;
+		double velocityToTarget = new Translation2d(robotReleaseVelocityX, robotReleaseVelocityY).rotateBy(new Rotation2d(targetHeading - pose.getRotation().getDegrees())).getX();
+		double deltaPieceTarget = velocityToTarget * timeToSpeaker;
 
-		// double distanceToTarget = distanceToSpeaker - deltaPieceTarget;
+		double distanceToTarget = distanceToSpeaker - deltaPieceTarget;
 		
-		// double pivotTargetAngle = ShooterConstants.ANGLE_MAP.get(distanceToTarget); 
+		double pivotTargetAngle = ShooterConstants.ANGLE_MAP.get(distanceToTarget); 
 
-		// double flywheelTargetSpeed = ShooterConstants.SPEED_MAP.get(distanceToTarget);
+		double flywheelTargetSpeed = ShooterConstants.SPEED_MAP.get(distanceToTarget);
 
 		LightningShuffleboard.setDouble("OTF Shooting", "Distance to Speaker", distanceToSpeaker);
 		LightningShuffleboard.setDouble("OTF Shooting", "Rotated Target Heading", (targetHeading + 360) % 360);
@@ -173,18 +174,21 @@ public class OTFShoot extends Command {
 		LightningShuffleboard.setDouble("OTF Shooting", "Driver Rot", driver.getRightX() * DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT);
 		LightningShuffleboard.setDouble("OTF Shooting", "Velocity Scaler", veloctiyScaler);
 		LightningShuffleboard.setDouble("OTF Shooting", "Acceleration Scaler", accelerationScaler);
+		LightningShuffleboard.setDouble("OTF Shooting", "Time until Fire", timeUntilFire);
 		LightningShuffleboard.setBool("OTF Shooting", "Shooting", (fireTime - Timer.getFPGATimestamp() < 0));
 
 
-		// OTF driving
-		drivetrain.setFieldDriver(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
+		drivetrain.setFieldDriver(
+				-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND),
+				-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND),
+				pidOutput);
 
-		// pivot.setTargetAngle(pivotTargetAngle);
-		// flywheel.setAllMotorsRPM(flywheelTargetSpeed); 
+		pivot.setTargetAngle(pivotTargetAngle);
+		flywheel.setAllMotorsRPM(flywheelTargetSpeed); 
 
-		// if (fireTime - Timer.getFPGATimestamp() < 0.05 && flywheel.allMotorsOnTarget() && pivot.onTarget()) {
-		// 	indexer.setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
-		// } 
+		if (fireTime - Timer.getFPGATimestamp() < 0.05 && flywheel.allMotorsOnTarget() && pivot.onTarget()) {
+			indexer.indexUp();
+		} 
 	}
 
 	@Override

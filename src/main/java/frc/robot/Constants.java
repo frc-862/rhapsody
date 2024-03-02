@@ -461,7 +461,7 @@ public class Constants {
             }
         };
 
-        public static final double OTF_READY_TIME = 0.5;
+        public static final double OTF_READY_TIME = 5;
 
         public enum ShootingState {
             AIM, SHOOT, SHOT
