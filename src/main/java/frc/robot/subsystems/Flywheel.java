@@ -64,7 +64,7 @@ public class Flywheel extends SubsystemBase {
             topMotor.set(0d);
         } else {
             topMotor.setControl(topRPMPID.withVelocity((topTargetRPS + bias)));
-            bottomMotor.setControl(bottomRPMPID.withVelocity((topTargetRPS + bias)));
+            bottomMotor.setControl(bottomRPMPID.withVelocity((bottomTargetRPS + bias)));
         }
     }
 

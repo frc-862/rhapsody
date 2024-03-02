@@ -38,8 +38,8 @@ public class CandC1 extends Command {
 	public void initialize() {
 		shot = false;
 		startIndexing = false;
-		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
-		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
+		pivot.setTargetAngle(CandConstants.C1_ANGLE + pivot.getBias());
+		flywheel.setAllMotorsRPM(CandConstants.C1_RPM + flywheel.getBias());
 	}
 
 	@Override
@@ -56,8 +56,8 @@ public class CandC1 extends Command {
 			indexer.indexUp();
 		}
 
-		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
-		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
+		pivot.setTargetAngle(CandConstants.C1_ANGLE + pivot.getBias());
+		flywheel.setAllMotorsRPM(CandConstants.C1_RPM + flywheel.getBias());
 	}
 
 	@Override
