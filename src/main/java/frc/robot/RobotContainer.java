@@ -185,9 +185,9 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
 
 		// smart shoot for the robot
-		new Trigger(driver::getAButton)
-			.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-			.alongWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(driver::getAButton)
+		// 	.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
+		// 	.alongWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// aim at amp and stage tags for the robot
 		new Trigger(driver::getLeftBumper)
@@ -199,7 +199,7 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
-		new Trigger(driver::getAButton).whileTrue(new AlignToTag(AutonomousConstants.AMP_POSE, drivetrain, drive, driver));
+		new Trigger(driver::getAButton).whileTrue(new AlignToTag(AutonomousConstants.AMP_POSE, drivetrain));
 		
 		// Test auto align
 		/* copilot */

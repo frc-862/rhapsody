@@ -3,48 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Amp autoalign.path
-        "x": 1.85,
-        "y": 6.5
+        "x": 3.0,
+        "y": 5.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.85,
-        "y": 6.550000000000001
-========
-        "x": 5.85285555186495,
-        "y": 1.1445653660538107
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 6.94693201083977,
-        "y": 1.0773969622118975
->>>>>>>> main:src/main/deploy/pathplanner/paths/BL-F5.path
+        "x": 3.6324935978490753,
+        "y": 5.0
       },
       "isLocked": false,
-      "linkedName": "BottomLine"
+      "linkedName": null
     },
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Amp autoalign.path
-        "x": 1.85,
-        "y": 7.5
+        "x": 1.9229831326995024,
+        "y": 7.588622081666418
       },
       "prevControl": {
-        "x": 1.85,
-        "y": 7.45
-========
-        "x": 8.293678213604645,
-        "y": 0.77
-      },
-      "prevControl": {
-        "x": 6.94693201083977,
-        "y": 1.0305536160287727
->>>>>>>> main:src/main/deploy/pathplanner/paths/BL-F5.path
+        "x": 1.8761397865163765,
+        "y": 6.897682725465309
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "F5"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -57,14 +38,14 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 90.0,
+    "velocity": 0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Bottom side paths",
+  "folder": null,
   "previewStartingState": {
-    "rotation": 90.0,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true
