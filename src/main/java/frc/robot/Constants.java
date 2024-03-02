@@ -569,6 +569,8 @@ public class Constants {
         public enum CLIMBER_STATES {
             CLIMBED, GROUNDED, STOW
         }
+
+        public static final Pose2d BACK_CLIMB = new Pose2d(new Translation2d(6.90, 4.10), new Rotation2d(Math.toRadians(180d)));
     }
 
     public class LEDsConstants {
