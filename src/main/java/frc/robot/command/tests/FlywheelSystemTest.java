@@ -20,16 +20,16 @@ public class FlywheelSystemTest extends SystemTestCommandGroup {
         super(
             new SequentialCommandGroup(
                 new WaitCommand(0.5),
-                new TimedCommand(new FlywheelTest(flywheel, speed, 0d), 2), // Motor 1 out
-                new WaitCommand(2),
-                new TimedCommand(new FlywheelTest(flywheel, 0d, speed), 2), // Motor 2 out
-                new WaitCommand(2),
-                new TimedCommand(new FlywheelTest(flywheel, -speed, 0d), 2), // Motor 1 in
-                new WaitCommand(2),
-                new TimedCommand(new FlywheelTest(flywheel, 0d, -speed), 2), // Motor 2 in
-                new WaitCommand(2),
+                new TimedCommand(new FlywheelTest(flywheel, speed, 0d), 2), // Top out
+                new WaitCommand(1),
+                new TimedCommand(new FlywheelTest(flywheel, 0d, speed), 2), // Bottom out
+                new WaitCommand(1),
+                new TimedCommand(new FlywheelTest(flywheel, -speed, 0d), 2), // Top in
+                new WaitCommand(1),
+                new TimedCommand(new FlywheelTest(flywheel, 0d, -speed), 2), // Bottom in
+                new WaitCommand(1),
                 new TimedCommand(new FlywheelTest(flywheel, speed, speed), 2), // Both out
-                new WaitCommand(2),
+                new WaitCommand(1),
                 new TimedCommand(new FlywheelTest(flywheel, -speed, -speed), 2) // Both in
             )
         );

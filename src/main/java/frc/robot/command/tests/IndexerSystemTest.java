@@ -18,7 +18,7 @@ public class IndexerSystemTest extends SystemTestCommandGroup {
             new SequentialCommandGroup(
                 new WaitCommand(0.5),
                 new TimedCommand(new IndexerTest(indexer, speed), 2), // Indexer out
-                new WaitCommand(1d),
+                new WaitCommand(1),
                 new TimedCommand(new IndexerTest(indexer, -speed), 2) // Indexer in
             )
         );

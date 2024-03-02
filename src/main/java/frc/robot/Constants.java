@@ -442,6 +442,8 @@ public class Constants {
         public static final double INDEXER_DEFAULT_POWER = 0.6d;
         public static final double INDEXER_MANUAL_POWER = 0.75d;
         public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
+
+        public static final double INDEXER_SYSTEST_POWER = 0.25;
     }
 
     public class PivotConstants { // TODO: get real
@@ -476,6 +478,8 @@ public class Constants {
 
         public static final double MIN_ANGLE = 25d;
         public static final double MAX_ANGLE = 105d;
+
+        public static final double PIVOT_SYSTEST_ANGLE = 90d;
     }
 
     public class ShooterConstants {

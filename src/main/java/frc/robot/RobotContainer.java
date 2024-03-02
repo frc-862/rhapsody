@@ -285,26 +285,28 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureSystemTests() {
-		SystemTest.registerTest("Drive Test",
-			new DrivetrainSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_DRIVE)); // to be tested
-		SystemTest.registerTest("Azimuth Test",
-			new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
+		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain,
+			DrivetrainConstants.SYS_TEST_SPEED_DRIVE)); // to be tested
+		SystemTest.registerTest("Azimuth Test", new TurnSystemTest(drivetrain,
+			DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
-		//SystemTest.registerTest("Single Note Cycle",
-		//		new CycleSytemTest(collector, indexer, pivot, flywheel, () -> 0.5d, () -> 0.6d, () -> 250));
+		// SystemTest.registerTest("Single Note Cycle",
+		// 	new CycleSytemTest(collector, indexer, pivot, flywheel, () -> 0.5d, () -> 0.6d, () -> 250));
 
 		SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
 			Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
-		// SystemTest.registerTest("Pivot 90 Degrees", new PivotAngleTest(pivot, 90d));
+		// SystemTest.registerTest("Pivot 90 Degrees", new PivotAngleTest(pivot,
+		// 	Constants.PivotConstants.PIVOT_SYSTEST_ANGLE));
 
 		SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
 			indexer, pivot, Constants.FlywheelConstants.FLYWHEEL_SYSTEST_RPM));
 
-		SystemTest.registerTest("Indexer Test", new IndexerSystemTest(indexer, 0.1));
+		SystemTest.registerTest("Indexer Test", new IndexerSystemTest(indexer,
+			Constants.IndexerConstants.INDEXER_SYSTEST_POWER));
 
 		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
-		// Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
+		// 	Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
 
 		// Sing chooser SendableChooser<SystemTestCommand> songChooser = new
 		// SendableChooser<>();
