@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -21,8 +22,8 @@ public class Climber extends SubsystemBase {
     private ThunderBird climbMotorR;
     private ThunderBird climbMotorL;
 
-    private PositionTorqueCurrentFOC setPointR;
-    private PositionTorqueCurrentFOC setPointL;
+    private PositionTorqueCurrentFOC setPointR = new PositionTorqueCurrentFOC(0d);
+    private PositionTorqueCurrentFOC setPointL  = new PositionTorqueCurrentFOC(0d);
 
     private CLIMBER_STATES state = CLIMBER_STATES.STOW;
     private Swerve drivetrain;
@@ -33,6 +34,8 @@ public class Climber extends SubsystemBase {
     private boolean hasGroundedL = false;
 
     public Climber(Swerve drivetrain) {
+
+        this.drivetrain = drivetrain;
         // configure climb motors
         climbMotorR = new ThunderBird(CAN.CLIMB_RIGHT, CAN.CANBUS_FD,
                 ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
@@ -44,6 +47,8 @@ public class Climber extends SubsystemBase {
 
         climbMotorR.configPIDF(0, ClimbConstants.EXTEND_KP, ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD);
         climbMotorR.configPIDF(1, ClimbConstants.RETRACT_KP, ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
+
+        climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(new FeedbackConfigs().)        
 
         initLogging();
 
@@ -64,14 +69,14 @@ public class Climber extends SubsystemBase {
                 convertUpperPose(getHeightL(), false));
         LightningShuffleboard.set("Climb", "Right Upper Pose",
                 convertUpperPose(getHeightR(), true));
-        LightningShuffleboard.set("Climb", "Left Lower Setpoint",
-                convertLowerPose(getSetpointL(), false));
-        LightningShuffleboard.set("Climb", "Right Lower Setpoint",
-                convertLowerPose(getSetpointR(), true));
-        LightningShuffleboard.set("Climb", "Left Upper Setpoint",
-                convertUpperPose(getSetpointL(), false));
-        LightningShuffleboard.set("Climb", "Right Upper Setpoint",
-                convertUpperPose(getSetpointR(), true));
+        // LightningShuffleboard.set("Climb", "Left Lower Setpoint",
+        //         convertLowerPose(getSetpointL(), false));
+        // LightningShuffleboard.set("Climb", "Right Lower Setpoint",
+        //         convertLowerPose(getSetpointR(), true));
+        // LightningShuffleboard.set("Climb", "Left Upper Setpoint",
+        //         convertUpperPose(getSetpointL(), false));
+        // LightningShuffleboard.set("Climb", "Right Upper Setpoint",
+        //         convertUpperPose(getSetpointR(), true));
     }
 
     /**
@@ -122,13 +127,13 @@ public class Climber extends SubsystemBase {
      * @param rightInches setpoint for right climb motor in inches
      */
     public void setSetpoint(double leftInches, double rightInches) {
-        this.setPointL = new PositionTorqueCurrentFOC(Conversions.getInputShaftRotations(
-                leftInches / ClimbConstants.WINCH_CIRCUFERENCE, ClimbConstants.GEAR_REDUCTION));
-        this.setPointR = new PositionTorqueCurrentFOC(Conversions.getInputShaftRotations(
-                rightInches / ClimbConstants.WINCH_CIRCUFERENCE, ClimbConstants.GEAR_REDUCTION));
+        // this.setPointL = new PositionTorqueCurrentFOC(Conversions.getInputShaftRotations(
+        //         leftInches / ClimbConstants.WINCH_CIRCUFERENCE, ClimbConstants.GEAR_REDUCTION));
+        // this.setPointR = new PositionTorqueCurrentFOC(Conversions.getInputShaftRotations(
+        //     rightInches / ClimbConstants.WINCH_CIRCUFERENCE, ClimbConstants.GEAR_REDUCTION));
 
-        climbMotorL.setControl(this.setPointL);
-        climbMotorR.setControl(this.setPointR);
+        climbMotorL.setControl(setPointL.withPosition(leftInches));
+        climbMotorR.setControl(setPointR.withPosition(rightInches));
     }
 
     /**
