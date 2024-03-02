@@ -135,9 +135,9 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("led-Shoot",
 				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
-		NamedCommands.registerCommand("Cand-Sub", 
+		NamedCommands.registerCommand("Cand-Sub",
 			new PointBlankShotAuton(flywheel, pivot, indexer)
-				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5))); 
+				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
 		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
@@ -290,8 +290,8 @@ public class RobotContainer extends LightningContainer {
 		SystemTest.registerTest("Azimuth Test", new TurnSystemTest(drivetrain,
 			DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
-		// SystemTest.registerTest("Single Note Cycle",
-		// 	new CycleSytemTest(collector, indexer, pivot, flywheel, () -> 0.5d, () -> 0.6d, () -> 250));
+		// SystemTest.registerTest("Single Note Cycle", new CycleSytemTest(collector,
+		// 	indexer, pivot, flywheel, () -> 0.5d, () -> 0.6d, () -> 250));
 
 		SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
 			Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));

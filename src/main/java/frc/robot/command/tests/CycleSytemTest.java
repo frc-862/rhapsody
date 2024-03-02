@@ -20,7 +20,7 @@ import frc.thunder.command.TimedCommand;
 import frc.thunder.testing.SystemTestCommandGroup;
 
 public class CycleSytemTest extends SystemTestCommandGroup {
-  
+
     public CycleSytemTest(Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel, DoubleSupplier collectorPower, DoubleSupplier indexerPower, DoubleSupplier flywheelRPM) {
         super(
             new SequentialCommandGroup(

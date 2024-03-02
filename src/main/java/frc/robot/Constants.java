@@ -443,7 +443,7 @@ public class Constants {
         public static final double INDEXER_MANUAL_POWER = 0.75d;
         public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
 
-        public static final double INDEXER_SYSTEST_POWER = 0.25;
+        public static final double INDEXER_SYSTEST_POWER = 0.25d;
     }
 
     public class PivotConstants { // TODO: get real
