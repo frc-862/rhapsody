@@ -9,11 +9,14 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.AutonomousConstants;
 import frc.robot.subsystems.Swerve;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 
 
-public class AlignToTag extends Command {
+public class AlignToAmp extends Command {
   
   public Pose2d target;
   public Swerve drivetrain;
@@ -23,7 +26,7 @@ public class AlignToTag extends Command {
   private PathPlannerPath path;
   private boolean aligning;
   /** Creates a new AlignToTag. */
-  public AlignToTag(Pose2d target, Swerve drivetrain) {
+  public AlignToAmp(Pose2d target, Swerve drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.target = target;
     this.drivetrain = drivetrain;
@@ -37,7 +40,7 @@ public class AlignToTag extends Command {
     path = PathPlannerPath.fromPathFile("Amp autoalign");
     moveToPose = new MoveToPose(target, drivetrain);
     moveToPose.initialize();
-    
+    initLogging();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,12 +48,15 @@ public class AlignToTag extends Command {
   public void execute() {
     if(!aligning){
       moveToPose.execute();
-      if(moveToPose.isFinished()){
-        aligning = true;
-      }
-    } else {
-      AutoBuilder.followPath(path);
+      aligning = moveToPose.isFinished();
     }
+  }
+
+  public void initLogging() {
+    LightningShuffleboard.setDoubleSupplier("AlignToAmp", "Target X", () -> target.getTranslation().getX());
+    LightningShuffleboard.setDoubleSupplier("AlignToAmp", "Target Y", () -> target.getTranslation().getY());
+    LightningShuffleboard.setBoolSupplier("AlignToAmp", "Aligning", () -> aligning);
+    LightningShuffleboard.setBoolSupplier("AlignToAmp", "isFinished", () -> isFinished());
   }
   
   // Called once the command ends or is interrupted.
@@ -62,7 +68,9 @@ public class AlignToTag extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return drivetrain.getPose().get().getTranslation().getX() == target.getTranslation().getX() 
-    && drivetrain.getPose().get().getTranslation().getY() == target.getTranslation().getY();
+    return Math.abs(drivetrain.getPose().get().getTranslation().getX() - target.getTranslation().getX()) 
+    < AutonomousConstants.AMP_TOLERANCE 
+    && Math.abs(drivetrain.getPose().get().getTranslation().getY() - target.getTranslation().getY()) 
+    < AutonomousConstants.AMP_TOLERANCE;
   }
 }

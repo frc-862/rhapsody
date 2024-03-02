@@ -152,11 +152,11 @@ public class Constants {
                                                        // constants
 
         // For Pathfinding
-        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(0, 0), new Rotation2d(0d));
         // TODO get real poses to pathfind to
 
         // For AlignToTag      1.85, 6.5
-        public static final Pose2d AMP_POSE = new Pose2d(new Translation2d(3, 5), new Rotation2d(0d)); 
+        public static final Pose2d AMP_POSE = new Pose2d(new Translation2d(3, 5), new Rotation2d(0d));
+        public static final double AMP_TOLERANCE = 0.1; 
 
         // TODO get real poses to pathfind to
         public static final Pose2d TARGET_POSE =
