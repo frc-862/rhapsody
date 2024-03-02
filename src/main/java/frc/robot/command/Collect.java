@@ -10,9 +10,9 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 public class Collect extends Command {
 
 	// Declares collector
+	private DoubleSupplier powerSupplier;
 	private Collector collector;
 	private Indexer indexer;
-	private DoubleSupplier powerSupplier;
 
 	/**
 	 * Creates a new Collect.
@@ -21,9 +21,9 @@ public class Collect extends Command {
 	 * @param indexer subsystem
 	 */
 	public Collect(DoubleSupplier powerSupplier, Collector collector, Indexer indexer) {
+		this.powerSupplier = powerSupplier;
 		this.collector = collector;
 		this.indexer = indexer;
-		this.powerSupplier = powerSupplier;
 
 		addRequirements(collector);
 	}
