@@ -31,6 +31,7 @@ public class ChasePieces extends Command {
 
     private boolean onTarget;
 	private boolean hasPiece;
+	private boolean isDone;
 	private boolean hasTarget;
 
 	private Command smartCollect;
@@ -88,7 +89,8 @@ public class ChasePieces extends Command {
 		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		hasPiece = smartCollect.isFinished();
+		isDone = smartCollect.isFinished();
+		hasPiece = collector.getEntryBeamBreakState();
 
 		pidOutput = headingController.calculate(0, targetHeading);
 
@@ -105,11 +107,6 @@ public class ChasePieces extends Command {
 			} else {
 				drivetrain.setRobot(3, 0, 0);
 			}
-		} else {
-			power = 0d;
-			indexer.stop();
-			collector.stop();
-			smartCollect.end(false);
 		}
 
 	}
@@ -133,6 +130,6 @@ public class ChasePieces extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return hasPiece;
+		return isDone;
 	}
 }
