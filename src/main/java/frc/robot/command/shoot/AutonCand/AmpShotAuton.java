@@ -16,7 +16,7 @@ public class AmpShotAuton extends Command {
 
 	private boolean shot = false;
 	private double shotTime = 0;
-	
+
 	private boolean startIndexing = false;
 
 	/**
@@ -43,7 +43,8 @@ public class AmpShotAuton extends Command {
 	@Override
 	public void execute() {
 		// Checks if the pivot and flywheel are on target then shoots
-		if (pivot.onTarget() && flywheel.allMotorsOnTarget()) {
+		// also checks whether or not the flywheel's target RPM is greater than 0
+		if (pivot.onTarget() && flywheel.allMotorsOnTarget() && (flywheel.getTopMotorRPM() != 0 && flywheel.getBottomMotorRPM() != 0)) {
 			startIndexing = true;
 		}
 

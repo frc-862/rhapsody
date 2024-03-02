@@ -15,7 +15,7 @@ public class PointBlankShotAuton extends Command {
 
 	private boolean shot = false;
 	private double shotTime = 0;
-	
+
 	private boolean startIndexing = false;
 
 	/**
@@ -35,6 +35,7 @@ public class PointBlankShotAuton extends Command {
 	@Override
 	public void initialize() {
 		shot = false;
+		startIndexing = false;
 		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
 		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
 	}
@@ -42,7 +43,8 @@ public class PointBlankShotAuton extends Command {
 	@Override
 	public void execute() {
 		// Checks if the pivot and flywheel are on target then shoots
-		if (pivot.onTarget() && flywheel.allMotorsOnTarget()) {
+		// also checks whether or not the flywheel's target RPM is greater than 0
+		if (pivot.onTarget() && flywheel.allMotorsOnTarget() && (flywheel.getTopMotorRPM() != 0 && flywheel.getBottomMotorRPM() != 0)) {
 			startIndexing = true;
 		}
 
