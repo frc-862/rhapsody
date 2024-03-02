@@ -22,7 +22,7 @@ public class Indexer extends SubsystemBase {
 
     private double timeLastTriggered = 0d;
 
-    private double targetPower = 0; // danny was here
+    private double targetPower = 0;
 
     private PieceState currentState = PieceState.NONE;
 
