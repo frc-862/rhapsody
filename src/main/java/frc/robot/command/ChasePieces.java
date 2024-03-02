@@ -88,7 +88,7 @@ public class ChasePieces extends Command {
 		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		hasPiece = debouncer.calculate(indexer.getExitBeamBreakState());
+		hasPiece = smartCollect.isFinished();
 
 		pidOutput = headingController.calculate(0, targetHeading);
 
@@ -105,12 +105,20 @@ public class ChasePieces extends Command {
 			} else {
 				drivetrain.setRobot(3, 0, 0);
 			}
+		} else {
+			power = 0d;
+			indexer.stop();
+			collector.stop();
+			smartCollect.end(false);
 		}
 
 	}
 
 	@Override
-	public void end(boolean interrupted) {}
+	public void end(boolean interrupted) {
+		power = 0d;
+		smartCollect.end(interrupted);
+	}
 
 	/**
 	 * Makes sure that the robot isn't jerking over to a different side while chasing pieces.
