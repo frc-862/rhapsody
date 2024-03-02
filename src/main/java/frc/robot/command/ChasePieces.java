@@ -31,6 +31,7 @@ public class ChasePieces extends Command {
 
     private boolean onTarget;
 	private boolean hasPiece;
+	private boolean isDone;
 	private boolean hasTarget;
 
 	private Command smartCollect;
@@ -70,6 +71,8 @@ public class ChasePieces extends Command {
 	private void initLogging() {
 		LightningShuffleboard.setBoolSupplier("ChasePieces", "On Target", () -> onTarget);
 		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Target", () -> hasTarget);
+		LightningShuffleboard.setBoolSupplier("ChasePieces", "Is Done", () -> isDone);
+		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Piece", () -> hasPiece);
 
 		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Heading", () -> targetHeading);
 		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Y", () -> targetPitch);
@@ -88,14 +91,15 @@ public class ChasePieces extends Command {
 		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		hasPiece = debouncer.calculate(indexer.getExitBeamBreakState());
+		isDone = smartCollect.isFinished();
+		hasPiece = debouncer.calculate(indexer.getEntryBeamBreakState()) || collector.getEntryBeamBreakState();
 
 		pidOutput = headingController.calculate(0, targetHeading);
 
 		if (!hasPiece){
 			if (hasTarget){
 				if (trustValues()){
-					power = 0.75d;
+					power = 0.65d;
 					if (!onTarget) {
 						drivetrain.setRobot(3, 0, -pidOutput);
 					} else {
@@ -105,12 +109,17 @@ public class ChasePieces extends Command {
 			} else {
 				drivetrain.setRobot(3, 0, 0);
 			}
+		} else {
+			drivetrain.setRobot(0, 0, 0);
 		}
 
 	}
 
 	@Override
-	public void end(boolean interrupted) {}
+	public void end(boolean interrupted) {
+		power = 0d;
+		smartCollect.end(interrupted);
+	}
 
 	/**
 	 * Makes sure that the robot isn't jerking over to a different side while chasing pieces.
@@ -125,6 +134,6 @@ public class ChasePieces extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return hasPiece;
+		return isDone;
 	}
 }
