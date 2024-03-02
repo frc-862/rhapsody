@@ -189,8 +189,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         // TODO Remove the unecessary shuffleboard stuff eventually
         LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
         LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPigeon2().getAngle());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getPose().get().getX());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getPose().get().getY());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getState().Pose.getX());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getState().Pose.getY());
 
         LightningShuffleboard.setBoolSupplier("Swerve", "Slow mode", () -> slowMode);
         LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
