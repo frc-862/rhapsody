@@ -4,68 +4,57 @@
 
 package frc.robot.command;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.AutonomousConstants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
-
 public class MoveToPose extends Command {
-    private final Pose2d target; 
+
+    private final Pose2d target;
     private final Swerve drivetrain;
-    private FieldCentric drive; 
-    private boolean finished;
+
+    private boolean finished = false;
     private Pose2d current;
     private double dx;
     private double dy;
-    private final double kp = 0.8; //1.8 old
-    private final double minSpeed = 0.4; //0.9 old
+    private final double kp = 1.8;
+    private final double minSpeed = 0.9;
     private double powerx;
     private double powery;
-    /** 
+
+    /**
      * @param target The target pose to move to
      * @param drivetrain The drivetrain subsystem
-     * @param drive The drive mode
-    */
-    public MoveToPose(Pose2d target, Swerve drivetrain, SwerveRequest.FieldCentric drive) {
-        this.drive = drive;
-        this.target = target; 
+     */
+    public MoveToPose(Pose2d target, Swerve drivetrain) {
+        this.target = target;
         this.drivetrain = drivetrain;
 
-        addRequirements(drivetrain); 
+        addRequirements(drivetrain);
     }
 
-    // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        finished = false;
+        initLogging();
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
+    private void initLogging() {
+        LightningShuffleboard.setDoubleSupplier("MoveToPose", "dx", () -> dx);
+        LightningShuffleboard.setDoubleSupplier("MoveToPose", "dy", () -> dy);
+        LightningShuffleboard.setDoubleSupplier("MoveToPose", "targetX", () -> target.getX());
+        LightningShuffleboard.setDoubleSupplier("MoveToPose", "targetY", () -> target.getY());
+    }
+
     @Override
     public void execute() {
-        System.out.println("I'm working heheheha!!!!!################################333333!");
-        LightningShuffleboard.setDouble("MoveToPose", "dx", dx);
-        LightningShuffleboard.setDouble("MoveToPose", "dy", dy);
-        LightningShuffleboard.setDouble("MoveToPose", "targetX", target.getX());
-        LightningShuffleboard.setDouble("MoveToPose", "targetY", target.getY());
-
-        current = drivetrain.getPose().get(); 
-        System.out.println(current);
+        current = drivetrain.getPose().get();
         dx = target.getTranslation().getX() - current.getTranslation().getX();
         dy = target.getTranslation().getY() - current.getTranslation().getY();
-        System.out.println(dx);
-        System.out.println(dy);
+
         powerx = dx * kp;
         powery = dy * kp;
-        
+
         if (minSpeed > Math.abs(powerx)) {
             powerx = minSpeed * Math.signum(dx);
         }
@@ -83,21 +72,21 @@ public class MoveToPose extends Command {
         }
 
         var dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 0.4) {
+
+        if (dist < 0.3) {
             powerx = 0;
             powery = 0;
             finished = true;
         }
-        drivetrain.setControl(drive.withVelocityX(powerx).withVelocityY(powery));
+
+        drivetrain.setField(powerx, powery, 0); // TODO test
     }
 
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0));
+        drivetrain.brake(); // TODO test and decide if this is the desired behavior
     }
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
         return finished;

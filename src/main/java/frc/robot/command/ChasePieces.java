@@ -1,16 +1,15 @@
 package frc.robot.command;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
-
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Limelights;
+import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
@@ -19,50 +18,68 @@ public class ChasePieces extends Command {
 
 	private Swerve drivetrain;
 	private Collector collector;
+	private Indexer indexer;
+	private Pivot pivot;
 	private Limelight limelight;
-
-	private RobotCentric noteChase;
-	
-	private int limelightId = 0;
 
 	private double pidOutput;
 	private double targetHeading;
 	private double previousTargetHeading;
 
 	private double targetPitch;
+	private double power;
 
     private boolean onTarget;
 	private boolean hasPiece;
+	private boolean isDone;
 	private boolean hasTarget;
 
+	private Command smartCollect;
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
+
+	private Debouncer debouncer = new Debouncer(IndexerConstants.INDEXER_DEBOUNCE_TIME);
 
 	/**
 	 * Creates a new ChasePieces.
-	 * @param drivetrain to request movement 
-	 * @param collector to collect pieces
+	 * @param drivetrain to request movement
+	 * @param collector for smart collect
+	 * @param indexer for smart collect
+	 * @param pivot for smart collect
 	 * @param limelights to get vision data from dust
 	 */
-	public ChasePieces(Swerve drivetrain, Collector collector, Limelights limelights) {
+
+	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Limelights limelights) {
 		this.drivetrain = drivetrain;
 		this.collector = collector;
+		this.indexer = indexer;
+		this.pivot = pivot;
 
 		limelight = limelights.getDust();
-		limelightId = limelight.getPipeline();
-		
-		noteChase = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-		addRequirements(drivetrain, collector);
+		addRequirements(drivetrain);
 	}
-	
-	// Called when the command is initially scheduled.
+
 	@Override
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
-		limelight.setPipeline(VisionConstants.NOTE_PIPELINE);
+		power = 0d;
+		smartCollect =  new SmartCollect(() -> power, () -> power, collector, indexer, pivot);
+		initLogging();
+		smartCollect.schedule();
 	}
 
-	// Called every time the scheduler runs while the command is scheduled.
+	private void initLogging() {
+		LightningShuffleboard.setBoolSupplier("ChasePieces", "On Target", () -> onTarget);
+		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Target", () -> hasTarget);
+		LightningShuffleboard.setBoolSupplier("ChasePieces", "Is Done", () -> isDone);
+		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Piece", () -> hasPiece);
+
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Heading", () -> targetHeading);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Y", () -> targetPitch);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Pid Output", () -> pidOutput);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "SmartCollectPower", () -> power);
+	}
+
 	@Override
 	public void execute() {
 		hasTarget = limelight.hasTarget();
@@ -74,60 +91,40 @@ public class ChasePieces extends Command {
 		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		hasPiece = collector.hasPiece();
-
-		LightningShuffleboard.setBool("ChasePieces", "On Target", onTarget);
-		LightningShuffleboard.setBool("ChasePieces", "Has Target", hasTarget);
-
-		LightningShuffleboard.setDouble("ChasePieces", "Drivetrain Angle", drivetrain.getPigeon2().getAngle());
-		LightningShuffleboard.setDouble("ChasePieces", "Target Heading", targetHeading);
-		LightningShuffleboard.setDouble("ChasePieces", "Target Y", targetPitch);
-		LightningShuffleboard.setDouble("ChasePieces", "Pid Output", pidOutput);
-
-		// For tuning.
-		// headingController.setP(LightningShuffleboard.getDouble("ChasePieces", "Pid P", 0.05));
-		// headingController.setI(LightningShuffleboard.getDouble("ChasePieces", "Pid I", 0));
-		// headingController.setD(LightningShuffleboard.getDouble("ChasePieces", "Pid D", 0));
-
+		isDone = smartCollect.isFinished();
+		hasPiece = debouncer.calculate(indexer.getEntryBeamBreakState()) || collector.getEntryBeamBreakState();
 
 		pidOutput = headingController.calculate(0, targetHeading);
-		
-		if (hasTarget){
-			if (trustValues()){
-				if (!onTarget) {
-					drivetrain.setControl(
-						noteChase.withRotationalRate(-pidOutput).withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
-					);
-				} else {
-					drivetrain.setControl(
-						noteChase.withVelocityX(-3) // Should be positive for front of robot, negative for back of robot.
-					);
-				}
 
-				// Activates if the target is close to the drivetrain.
-				if (targetPitch < 0) {
-					collector.setPower(0.2); // TODO: get the proper value to set to the collector.
+		if (!hasPiece){
+			if (hasTarget){
+				if (trustValues()){
+					power = 0.65d;
+					if (!onTarget) {
+						drivetrain.setRobot(3, 0, -pidOutput);
+					} else {
+						drivetrain.setRobot(3, 0, 0);
+					}
 				}
-
+			} else {
+				drivetrain.setRobot(3, 0, 0);
 			}
 		} else {
-			drivetrain.setControl(
-				noteChase.withVelocityX(-3).withRotationalRate(0) // Should be positive for front of robot, negative for back of robot.
-			);
+			drivetrain.setRobot(0, 0, 0);
 		}
 
-		isFinished();
-        
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		limelight.setPipeline(limelightId);
-		collector.stop();
+		power = 0d;
+		smartCollect.end(interrupted);
 	}
 
-	// Makes sure that the robot isn't jerking over to a different side while chasing pieces.
+	/**
+	 * Makes sure that the robot isn't jerking over to a different side while chasing pieces.
+	 * @return t/f if the robot should trust the values
+	 */
 	public boolean trustValues(){
 		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6){
 			return true;
@@ -135,13 +132,8 @@ public class ChasePieces extends Command {
 		return false;
 	}
 
-	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		if (hasPiece){
-			return true;
-		}
-		
-		return false;
+		return isDone;
 	}
 }
