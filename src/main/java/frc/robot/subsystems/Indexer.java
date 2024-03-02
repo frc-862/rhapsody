@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.Utils;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,6 +17,7 @@ public class Indexer extends SubsystemBase {
     private ThunderBird indexerMotor;
     private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_ENTER_BEAMBREAK);
     private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_EXIT_BEAMBREAK);
+
     private int exitIndexerIteration = 0;
 
     private double timeLastTriggered = 0d;
@@ -146,7 +145,8 @@ public class Indexer extends SubsystemBase {
 
         } else {
             setPieceState(PieceState.NONE);
-        } 
+        }
+
         // reset exitIndexerIteration
         if (!getEntryBeamBreakState()){
             exitIndexerIteration = 0;

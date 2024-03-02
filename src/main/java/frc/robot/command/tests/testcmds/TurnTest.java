@@ -27,7 +27,7 @@ public class TurnTest extends Command {
 
     @Override
     public void execute() {
-        drivetrain.applyPercentRequestRobot(() -> 0d, () -> 0d, speed);
+        drivetrain.setRobot(0d, 0d, speed.getAsDouble());
     }
 
     @Override

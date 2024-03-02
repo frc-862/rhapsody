@@ -20,25 +20,25 @@ public class SourceCollect extends Command {
 		this.pivot = pivot;
 		this.flywheel = flywheel;
 
-		addRequirements(pivot, flywheel);
+		addRequirements(flywheel);
 	}
 
 	@Override
 	public void initialize() {
-		pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
 		flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
+		// pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
 	}
 
 	@Override
 	public void execute() {
-		pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
 		flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
+		// pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 		flywheel.coast(true);
+		// pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 	}
 
 	@Override

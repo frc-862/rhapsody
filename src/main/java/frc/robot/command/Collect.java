@@ -9,8 +9,8 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 public class Collect extends Command {
 
 	// Declares collector
-	private Collector collector;
 	private DoubleSupplier powerSupplier;
+	private Collector collector;
 
 	/**
 	 * Creates a new Collect.
