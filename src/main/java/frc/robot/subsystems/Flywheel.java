@@ -11,10 +11,8 @@ public class Flywheel extends SubsystemBase {
     private ThunderBird topMotor;
     private ThunderBird bottomMotor;
 
-    private final VelocityVoltage topRPMPID = new VelocityVoltage(0, 0, false, FlywheelConstants.MOTOR_KV,
-    0, false,false, false);
-    private final VelocityVoltage bottomRPMPID = new VelocityVoltage(0, 0, false, FlywheelConstants.MOTOR_KV,
-    0, false,false, false);
+    private final VelocityVoltage topRPMPID = new VelocityVoltage(0);
+    private final VelocityVoltage bottomRPMPID = new VelocityVoltage(0);
 
     private double topTargetRPS = 0;
     private double bottomTargetRPS = 0;
@@ -29,10 +27,10 @@ public class Flywheel extends SubsystemBase {
         bottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD,
             FlywheelConstants.MOTOR_BOTTOM_INVERT, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
             FlywheelConstants.MOTOR_BRAKE_MODE);
-        topMotor.configPIDF(0, FlywheelConstants.MOTOR_KP, FlywheelConstants.MOTOR_KI,
-            FlywheelConstants.MOTOR_KD, FlywheelConstants.MOTOR_KS, FlywheelConstants.MOTOR_KV);
-        bottomMotor.configPIDF(0, FlywheelConstants.MOTOR_KP, FlywheelConstants.MOTOR_KI,
-            FlywheelConstants.MOTOR_KD, FlywheelConstants.MOTOR_KS, FlywheelConstants.MOTOR_KV);
+        topMotor.configPIDF(0, FlywheelConstants.TOP_MOTOR_KP, FlywheelConstants.TOP_MOTOR_KI,
+            FlywheelConstants.TOP_MOTOR_KD, FlywheelConstants.TOP_MOTOR_KS, FlywheelConstants.TOP_MOTOR_KV);
+        bottomMotor.configPIDF(0, FlywheelConstants.BOTTOM_MOTOR_KP, FlywheelConstants.BOTTOM_MOTOR_KI,
+            FlywheelConstants.BOTTOM_MOTOR_KD, FlywheelConstants.BOTTOM_MOTOR_KS, FlywheelConstants.BOTTOM_MOTOR_KV);
 
         topMotor.applyConfig();
         bottomMotor.applyConfig();
@@ -51,8 +49,7 @@ public class Flywheel extends SubsystemBase {
                 () -> bottomMotorRPMOnTarget());
 
         LightningShuffleboard.setDoubleSupplier("Flywheel", "Top Power", () -> topMotor.get());
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Power",
-                () -> bottomMotor.get());
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Power", () -> bottomMotor.get());
 
         LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", this::getBias);
     }
@@ -64,7 +61,7 @@ public class Flywheel extends SubsystemBase {
             topMotor.set(0d);
         } else {
             topMotor.setControl(topRPMPID.withVelocity((topTargetRPS + bias)));
-            bottomMotor.setControl(bottomRPMPID.withVelocity((topTargetRPS + bias)));
+            bottomMotor.setControl(bottomRPMPID.withVelocity((bottomTargetRPS + bias)));
         }
     }
 

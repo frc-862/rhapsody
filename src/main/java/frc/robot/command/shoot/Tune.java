@@ -31,9 +31,10 @@ public class Tune extends Command {
 
 	@Override
 	public void execute() {
-
 		flywheelTargetRPM = LightningShuffleboard.getDouble("TUNE", "Target RPM", flywheelTargetRPM);
 		pivotTargetAngle = LightningShuffleboard.getDouble("TUNE", "Target Angle", pivotTargetAngle);
+		LightningShuffleboard.setBool("TUNE", "Flywheel On target", flywheel.allMotorsOnTarget());
+		LightningShuffleboard.setBool("TUNE", "Pivot On target", pivot.onTarget());
 
 		flywheel.setAllMotorsRPM(flywheelTargetRPM);
 		pivot.setTargetAngle(pivotTargetAngle);
