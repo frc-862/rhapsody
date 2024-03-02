@@ -19,7 +19,7 @@ public class IndexerSystemTest extends SystemTestCommandGroup {
                 new WaitCommand(0.5),
                 new TimedCommand(new IndexerTest(indexer, speed), 2), // Indexer out
                 new WaitCommand(1d),
-                new TimedCommand(new IndexerTest(indexer, -speed), 1) // Indexer in
+                new TimedCommand(new IndexerTest(indexer, -speed), 2) // Indexer in
             )
         );
         addRequirements(indexer);
