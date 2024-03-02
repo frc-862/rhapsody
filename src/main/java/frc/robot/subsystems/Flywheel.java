@@ -150,6 +150,10 @@ public class Flywheel extends SubsystemBase {
         this.coast = coast;
     }
 
+    public void stop() {
+        setAllMotorsRPM(0);
+    }
+    
     /**
      * @return The bias to add to the target RPM of the flywheel
      */
