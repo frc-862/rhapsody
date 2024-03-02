@@ -1,12 +1,11 @@
 package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.CandConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PivotConstants;
-import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Flywheel;
+
 public class PointBlankShot extends Command {
 
 	private final Pivot pivot;
@@ -17,7 +16,7 @@ public class PointBlankShot extends Command {
 	 * @param pivot subsystem
 	 * @param flywheel subsystem
 	 */
-	public PointBlankShot(Flywheel flywheel, Pivot pivot) {
+	public PointBlankShot(Pivot pivot, Flywheel flywheel) {
 		this.pivot = pivot;
 		this.flywheel = flywheel;
 

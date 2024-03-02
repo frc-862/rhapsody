@@ -2,16 +2,14 @@ package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PivotConstants;
-import frc.robot.command.Index;
-import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Flywheel;
 
 public class AmpShot extends Command {
 
-	private Pivot pivot;
-	private Flywheel flywheel;
+	private final Pivot pivot;
+	private final Flywheel flywheel;
 
 	/**
 	 * Creates a new AmpShot

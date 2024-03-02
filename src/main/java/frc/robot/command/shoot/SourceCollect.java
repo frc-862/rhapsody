@@ -3,43 +3,42 @@ package frc.robot.command.shoot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.PivotConstants;
-import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Flywheel;
 
 public class SourceCollect extends Command {
 
-	private final Flywheel flywheel;
 	private final Pivot pivot;
+	private final Flywheel flywheel;
 
 	/**
 	 * Creates a new SourceCollect.
-	 * 
-	 * @param flywheel subsystem
 	 * @param pivot subsystem
+	 * @param flywheel subsystem
 	 */
-	public SourceCollect(Flywheel flywheel, Pivot pivot) {
-		this.flywheel = flywheel;
+	public SourceCollect(Pivot pivot, Flywheel flywheel) {
 		this.pivot = pivot;
+		this.flywheel = flywheel;
 
-		addRequirements(flywheel, pivot);
+		addRequirements(pivot, flywheel);
 	}
 
 	@Override
 	public void initialize() {
-		flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
 		pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
+		flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
 	}
 
 	@Override
 	public void execute() {
-		flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
 		pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
+		flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		flywheel.coast(true);
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		flywheel.coast(true);
 	}
 
 	@Override
