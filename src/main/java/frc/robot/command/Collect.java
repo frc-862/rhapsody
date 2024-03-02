@@ -25,7 +25,7 @@ public class Collect extends Command {
 		this.indexer = indexer;
 		this.powerSupplier = powerSupplier;
 
-		addRequirements(collector);
+		addRequirements(collector, indexer);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class Collect extends Command {
 		if (powerSupplier.getAsDouble() > 0d) {
 			indexer.setPower(1d);
 		} else {
-			indexer.stop();
+			indexer.setPower(.7);
 		}
 	}
 

@@ -54,7 +54,6 @@ public class AmpShot extends Command {
 			shot = true;
 			shotTime = Timer.getFPGATimestamp();
 			indexer.indexUp();
-			// alongWith(new Index(indiexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
 		}
 
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());

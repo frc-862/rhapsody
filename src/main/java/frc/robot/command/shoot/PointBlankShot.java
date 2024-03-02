@@ -1,5 +1,6 @@
 package frc.robot.command.shoot;
 
+import org.opencv.core.Point;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -16,6 +17,7 @@ public class PointBlankShot extends Command {
 	private final Flywheel flywheel;
 	private final Pivot pivot;
 	private final Indexer indexer;
+	private Index indexCommand;
 	private boolean isAutonomous;
 	private boolean goShoot = false;
 	private boolean shot = false;
@@ -32,6 +34,7 @@ public class PointBlankShot extends Command {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 		this.indexer = indexer;
+		this.indexCommand = new Index(indexer, () -> 0.6d);
 		this.isAutonomous = isAutonomous;
 
 		addRequirements(pivot, flywheel, indexer);
@@ -49,11 +52,11 @@ public class PointBlankShot extends Command {
 		if(isAutonomous && pivot.onTarget() && flywheel.allMotorsOnTarget()) {
 			goShoot = true;
 		}
-
+		
 		if(goShoot){
 			shot = true;
 			shotTime = Timer.getFPGATimestamp();
-			indexer.setPower(0.6);
+			indexer.indexUp();
 		}
 
 		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());
@@ -64,7 +67,7 @@ public class PointBlankShot extends Command {
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
-		indexer.stop();
+		indexCommand.cancel();
 	}
 
 	@Override
