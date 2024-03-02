@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 
@@ -22,8 +24,9 @@ public class Climber extends SubsystemBase {
     private ThunderBird climbMotorR;
     private ThunderBird climbMotorL;
 
-    private PositionTorqueCurrentFOC setPointR = new PositionTorqueCurrentFOC(0d);
-    private PositionTorqueCurrentFOC setPointL  = new PositionTorqueCurrentFOC(0d);
+    private PositionTorqueCurrentFOC setPointControl = new PositionTorqueCurrentFOC(0d);
+
+    private TorqueCurrentFOC manualControl = new TorqueCurrentFOC(0d);
 
     private CLIMBER_STATES state = CLIMBER_STATES.STOW;
     private Swerve drivetrain;
@@ -51,12 +54,15 @@ public class Climber extends SubsystemBase {
         FeedbackConfigs conf = new FeedbackConfigs();
 
         conf.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-        conf.SensorToMechanismRatio = ClimbConstants.GEAR_REDUCTION * ClimbConstants.WINCH_CIRCUFERENCE;
+        conf.SensorToMechanismRatio = ClimbConstants.GEAR_REDUCTION;
 
         climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(conf));
         climbMotorR.applyConfig(climbMotorR.getConfig().withFeedback(conf));
 
         initLogging();
+
+        climbMotorL.setPosition(0d);
+        climbMotorR.setPosition(0d);
     }
 
     private void initLogging() { // TODO test and fix once we have climber
@@ -64,14 +70,14 @@ public class Climber extends SubsystemBase {
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
-        LightningShuffleboard.set("Climb", "Left Lower Pose",
-                convertLowerPose(getHeightL(), false));
-        LightningShuffleboard.set("Climb", "Right Lower Pose",
-                convertLowerPose(getHeightR(), true));
-        LightningShuffleboard.set("Climb", "Left Upper Pose",
-                convertUpperPose(getHeightL(), false));
-        LightningShuffleboard.set("Climb", "Right Upper Pose",
-                convertUpperPose(getHeightR(), true));
+        // LightningShuffleboard.set("Climb", "Left Lower Pose",
+        //         convertLowerPose(getHeightL(), false));
+        // LightningShuffleboard.set("Climb", "Right Lower Pose",
+        //         convertLowerPose(getHeightR(), true));
+        // LightningShuffleboard.set("Climb", "Left Upper Pose",
+        //         convertUpperPose(getHeightL(), false));
+        // LightningShuffleboard.set("Climb", "Right Upper Pose",
+        //         convertUpperPose(getHeightR(), true));
         // LightningShuffleboard.set("Climb", "Left Lower Setpoint",
         //         convertLowerPose(getSetpointL(), false));
         // LightningShuffleboard.set("Climb", "Right Lower Setpoint",
@@ -96,8 +102,8 @@ public class Climber extends SubsystemBase {
      * @param powerL the power to set the left climb motor to
      */
     public void setPower(double powerL, double powerR) {
-        climbMotorR.set(powerR);
-        climbMotorL.set(powerL);
+        climbMotorR.setControl(manualControl.withOutput(powerR)); // FOC On by default
+        climbMotorL.setControl(manualControl.withOutput(powerL));
     }
 
     /**
@@ -130,8 +136,8 @@ public class Climber extends SubsystemBase {
      * @param rightInches setpoint for right climb motor in inches
      */
     public void setSetpoint(double leftInches, double rightInches) {
-        climbMotorL.setControl(setPointL.withPosition(leftInches));
-        climbMotorR.setControl(setPointR.withPosition(rightInches));
+        climbMotorL.setControl(setPointControl.withPosition(leftInches));
+        climbMotorR.setControl(setPointControl.withPosition(rightInches));
     }
 
     /**
@@ -159,14 +165,14 @@ public class Climber extends SubsystemBase {
      * @return the setpoint of the right climb arm
      */
     public double getSetpointR() {
-        return this.setPointR.Position;
+        return this.setPointControl.Position;
     }
 
     /**
      * @return the setpoint of the left climb arm
      */
     public double getSetpointL() {
-        return this.setPointL.Position;
+        return this.setPointControl.Position;
     }
 
     /**

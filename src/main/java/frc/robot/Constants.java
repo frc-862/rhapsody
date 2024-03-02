@@ -530,10 +530,9 @@ public class Constants {
     }
 
     public class ClimbConstants { // TODO: find real values
-        public static final boolean CLIMB_RIGHT_MOTOR_INVERT = true;
-        public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
-        public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final boolean CLIMB_RIGHT_MOTOR_INVERT = false;
+        public static final boolean CLIMB_LEFT_MOTOR_INVERT = true;
+        public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean CLIMB_MOTOR_BRAKE_MODE = true;
         public static final double EXTEND_KP = 0;
         public static final double EXTEND_KI = 0;
@@ -545,7 +544,7 @@ public class Constants {
         public static final double WINCH_DIAMETER_INCHES = 1d;
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
-        public static final double MAX_HEIGHT = 999d;
+        public static final double MAX_HEIGHT = 8.83; //In rotations
         public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of lower arm in inches
         public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
 
