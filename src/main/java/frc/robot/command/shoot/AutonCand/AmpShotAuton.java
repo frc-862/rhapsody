@@ -25,19 +25,21 @@ public class AmpShotAuton extends Command {
 	 * @param flywheel subsystem
 	 * @param indexer subsystem
 	 */
-	public AmpShotAuton(Flywheel flywheel, Pivot pivot, Indexer indexer) {
-		this.flywheel = flywheel;
+	public AmpShotAuton(Pivot pivot, Flywheel flywheel, Indexer indexer) {
 		this.pivot = pivot;
+		this.flywheel = flywheel;
 		this.indexer = indexer;
 
-		addRequirements(flywheel, pivot, indexer);
+		addRequirements(pivot, flywheel, indexer);
 	}
 
 	@Override
 	public void initialize() {
 		shot = false;
+		startIndexing = false;
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
-		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
+		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 	}
 
 	@Override
@@ -55,7 +57,8 @@ public class AmpShotAuton extends Command {
 		}
 
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
-		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
+		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 	}
 
 	@Override

@@ -8,37 +8,38 @@ import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 public class PointBlankShot extends Command {
-	private final Flywheel flywheel;
+
 	private final Pivot pivot;
+	private final Flywheel flywheel;
 
 	/**
 	 * Creates a new PointBlankShot.
-	 * @param flywheel subsystem
 	 * @param pivot subsystem
+	 * @param flywheel subsystem
 	 */
 	public PointBlankShot(Flywheel flywheel, Pivot pivot) {
-		this.flywheel = flywheel;
 		this.pivot = pivot;
+		this.flywheel = flywheel;
 
 		addRequirements(pivot, flywheel);
 	}
 
 	@Override
 	public void initialize() {
-		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
+		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
 	}
 
 	@Override
 	public void execute() {
-		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());
 		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + flywheel.getBias());
+		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		flywheel.coast(true);
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		flywheel.coast(true);
 	}
 
 	@Override

@@ -8,17 +8,17 @@ import frc.robot.subsystems.Pivot;
 
 public class PodiumShot extends Command {
 
-	private final Flywheel flywheel;
 	private final Pivot pivot;
+	private final Flywheel flywheel;
 
 	/**
 	 * Creates a new PodiumShot.
-	 * @param flywheel
 	 * @param pivot
+	 * @param flywheel
 	 */
-	public PodiumShot(Flywheel flywheel, Pivot pivot) {
-		this.flywheel = flywheel;
+	public PodiumShot(Pivot pivot, Flywheel flywheel) {
 		this.pivot = pivot;
+		this.flywheel = flywheel;
 
 		addRequirements(pivot, flywheel);
 	}
@@ -28,13 +28,13 @@ public class PodiumShot extends Command {
 
 	@Override
 	public void execute() {
-		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
+		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		flywheel.coast(true);
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		flywheel.coast(true);
 	}
 }

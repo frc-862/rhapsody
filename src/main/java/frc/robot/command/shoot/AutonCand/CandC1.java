@@ -11,8 +11,8 @@ import frc.robot.subsystems.Pivot;
 
 public class CandC1 extends Command {
 
-	private final Flywheel flywheel;
 	private final Pivot pivot;
+	private final Flywheel flywheel;
 	private final Indexer indexer;
 
 	private boolean shot = false;
@@ -22,13 +22,13 @@ public class CandC1 extends Command {
 
 	/**
 	 * Creates a new CandC1.
-	 * @param flywheel subsystem
 	 * @param pivot subsystem
+	 * @param flywheel subsystem
 	 * @param indexer subsystem
 	 */
-	public CandC1(Flywheel flywheel, Pivot pivot, Indexer indexer) {
-		this.flywheel = flywheel;
+	public CandC1(Pivot pivot, Flywheel flywheel, Indexer indexer) {
 		this.pivot = pivot;
+		this.flywheel = flywheel;
 		this.indexer = indexer;
 
 		addRequirements(pivot, flywheel, indexer);
@@ -37,6 +37,7 @@ public class CandC1 extends Command {
 	@Override
 	public void initialize() {
 		shot = false;
+		startIndexing = false;
 		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
 		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 	}

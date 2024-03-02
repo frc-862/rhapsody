@@ -18,18 +18,18 @@ public class AmpShot extends Command {
 	 * @param pivot subsystem
 	 * @param flywheel subsystem
 	 */
-	public AmpShot(Flywheel flywheel, Pivot pivot) {
-		this.flywheel = flywheel;
+	public AmpShot(Pivot pivot, Flywheel flywheel) {
 		this.pivot = pivot;
+		this.flywheel = flywheel;
 
-		addRequirements(flywheel, pivot);
+		addRequirements(pivot, flywheel);
 	}
 
 	@Override
 	public void initialize() {
+		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
 		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
-		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 	}
 
 	@Override
@@ -41,8 +41,8 @@ public class AmpShot extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		flywheel.coast(true);
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		flywheel.coast(true);
 	}
 
 	@Override

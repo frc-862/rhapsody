@@ -9,8 +9,9 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 
 public class PointBlankShotAuton extends Command {
-	private final Flywheel flywheel;
+
 	private final Pivot pivot;
+	private final Flywheel flywheel;
 	private final Indexer indexer;
 
 	private boolean shot = false;
@@ -20,13 +21,13 @@ public class PointBlankShotAuton extends Command {
 
 	/**
 	 * Creates a new PointBlankShot.
-	 * @param flywheel subsystem
 	 * @param pivot subsystem
+	 * @param flywheel subsystem
 	 * @param indexer subsystem
 	 */
-	public PointBlankShotAuton(Flywheel flywheel, Pivot pivot, Indexer indexer) {
-		this.flywheel = flywheel;
+	public PointBlankShotAuton(Pivot pivot, Flywheel flywheel, Indexer indexer) {
 		this.pivot = pivot;
+		this.flywheel = flywheel;
 		this.indexer = indexer;
 
 		addRequirements(pivot, flywheel, indexer);
