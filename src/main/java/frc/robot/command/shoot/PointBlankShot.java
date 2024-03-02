@@ -5,20 +5,22 @@ import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
+
 public class PointBlankShot extends Command {
+
 	private final Flywheel flywheel;
 	private final Pivot pivot;
 
 	/**
 	 * Creates a new PointBlankShot.
-	 * @param flywheel subsystem
 	 * @param pivot subsystem
+	 * @param flywheel subsystem
 	 */
 	public PointBlankShot(Flywheel flywheel, Pivot pivot) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 
-		addRequirements(pivot, flywheel);
+		addRequirements(flywheel, pivot);
 	}
 
 	@Override
