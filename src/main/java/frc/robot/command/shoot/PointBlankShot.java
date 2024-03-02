@@ -1,41 +1,24 @@
 package frc.robot.command.shoot;
 
-import org.opencv.core.Point;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
-import frc.robot.command.Index;
-import frc.thunder.shuffleboard.LightningShuffleboard;
-
 public class PointBlankShot extends Command {
 	private final Flywheel flywheel;
 	private final Pivot pivot;
-	private final Indexer indexer;
-	private Index indexCommand;
-	private boolean isAutonomous;
-	private boolean goShoot = false;
-	private boolean shot = false;
-	private double shotTime = 0;
 
 	/**
 	 * Creates a new PointBlankShot.
 	 * @param flywheel subsystem
 	 * @param pivot subsystem
-	 * @param indexer subsystem
-	 * @param isAutonomous boolean if robot is in autonomous
 	 */
-	public PointBlankShot(Flywheel flywheel, Pivot pivot, Indexer indexer, boolean isAutonomous) {
+	public PointBlankShot(Flywheel flywheel, Pivot pivot) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
-		this.indexer = indexer;
-		this.indexCommand = new Index(indexer, () -> 0.6d);
-		this.isAutonomous = isAutonomous;
 
 		addRequirements(pivot, flywheel, indexer);
 	}
@@ -48,17 +31,6 @@ public class PointBlankShot extends Command {
 
 	@Override
 	public void execute() {
-		// Checks if autonomous and if the pivot and flywheel are on target then shoots
-		if(isAutonomous && pivot.onTarget() && flywheel.allMotorsOnTarget()) {
-			goShoot = true;
-		}
-		
-		if(goShoot){
-			shot = true;
-			shotTime = Timer.getFPGATimestamp();
-			indexer.indexUp();
-		}
-
 		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());
 		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + flywheel.getBias());
 	}
@@ -67,14 +39,10 @@ public class PointBlankShot extends Command {
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
 		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
-		indexCommand.cancel();
 	}
 
 	@Override
 	public boolean isFinished() {
-		if(isAutonomous){
-			return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
-		}
 		return false;
 	}
 }
