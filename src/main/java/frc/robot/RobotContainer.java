@@ -41,6 +41,7 @@ import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.shoot.SourceCollect;
 import frc.robot.command.shoot.Stow;
+import frc.robot.command.shoot.Tune;
 import frc.robot.command.shoot.AutonCand.AmpShotAuton;
 import frc.robot.command.shoot.AutonCand.CandC1;
 import frc.robot.command.shoot.AutonCand.CandC2;
@@ -198,13 +199,13 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		new Trigger(coPilot::getBButton)
-		.whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer,
-		pivot)); // TODO: find correct button/trigger
+		.whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer, pivot)); // TODO: find correct button/trigger
 
 		// cand shots for the robot
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
 		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
+		// new Trigger(coPilot::getXButton).whileTrue(new Tune(flywheel, pivot));
 		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
 		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,  // TODO need new button start? Back?
