@@ -188,9 +188,9 @@ public class Constants {
         // This may need to be tuned to your individual robot
         private static final double kCoupleRatio = 3.5714285714285716;
 
-        private static final double kDriveGearRatio = 6.122448979591837;
-        private static final double kSteerGearRatio = 21.428571428571427;
-        private static final double kWheelRadiusInches = 2;
+        public static final double kDriveGearRatio = 6.122448979591837;
+        public static final double kSteerGearRatio = 21.428571428571427;
+        public static final double kWheelRadiusInches = 2;
 
         private static final boolean kSteerMotorReversed = true;
         private static final boolean kInvertLeftSide = false;
@@ -322,7 +322,6 @@ public class Constants {
                 Units.feetToMeters(26.0));
         public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
                 Units.feetToMeters(5));
-        public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
@@ -330,10 +329,28 @@ public class Constants {
         public static final int SPEAKER_PIPELINE = 1;
         public static final int NOTE_PIPELINE = 2;
 
+        public static final Translation3d SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
+
         public class Pipelines { // TODO get real
             public static final int APRIL_TAG_3d = 0;
             public static final int APRIL_TAG_2d = 1;
             public static final int CHASE_PIECE = 2; // FOR the collector
+        }
+    }
+
+    public class CollisionConstants {
+        public static final double TIP_DEADZONE = 2d;
+
+        public static final double ACCELERATION_DUE_TO_GRAVITY = 9.80665;
+        public static final double ACCELERATION_TOLERANCE_TELEOP = 3; //percent of pigeonAcceleration
+        public static final double MIN_ACCELERATION_DIFF_TELEOP = 0.25; // TODO: get real
+        public static final double ACCELERATION_TOLERANCE_AUTON = 2.00; //percent of pigeonAcceleration
+        public static final double MIN_ACCELERATION_DIFF_AUTON = 0.25; // TODO: get real
+        public static final double ACCELERATION_TOLERANCE_SHOOTER = 1.00; //percent of pigeonAcceleration
+        public static final double MIN_ACCELERATION_DIFF_SHOOTER = 0.25; // TODO: get real
+
+        public enum CollisionType {
+            AUTON, TELEOP, SHOOTER
         }
     }
 
@@ -362,6 +379,13 @@ public class Constants {
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 60; // TODO: make sure they are not set to 0
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
 
+        public static final double MOTOR_KP = 0;
+        public static final double MOTOR_KI = 0;
+        public static final double MOTOR_KD = 0;
+        public static final double MOTOR_KS = 0;
+        public static final double MOTOR_KV = 0.145;
+        public static final double MOTOR_KA = 0;
+
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
     }
 
@@ -370,11 +394,11 @@ public class Constants {
         public static final boolean MOTOR_BOTTOM_INVERT = false;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
-        public static final double MOTOR_KP = 0; // 0.00314;
+        public static final double MOTOR_KP = 0;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
-        public static final double MOTOR_KV = 0.123; // 0.00195;
+        public static final double MOTOR_KV = 0.1115;
         public static final double MOTOR_KA = 0;
 
         public static final double RPM_TOLERANCE = 50d;
@@ -394,8 +418,9 @@ public class Constants {
         }
 
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
-        public static final double INDEXER_DEFAULT_POWER = 0.3d;
-        public static final double INDEXER_MANUAL_POWER = 0.5d;
+        public static final double INDEXER_DEFAULT_POWER = 0.6d;
+        public static final double INDEXER_MANUAL_POWER = 0.75d;
+        public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
     }
 
     public class PivotConstants { // TODO: get real
@@ -420,9 +445,10 @@ public class Constants {
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias
+                                                        // by
 
-        public static final double STOW_ANGLE = 35d;
+        public static final double STOW_ANGLE = 30d;
 
         public static final double MAX_INDEX_ANGLE = 40d;
 

@@ -1,4 +1,4 @@
-package frc.robot.command.shoot;
+package frc.robot.command.shoot.AutonCand;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,9 +19,9 @@ public class CandC2 extends Command {
 
 	/**
 	 * Creates a new CandC2.
-	 * @param flywheel
-	 * @param pivot
-	 * @param indexer
+	 * @param flywheel subsystem
+	 * @param pivot subsystem
+	 * @param indexer subsystem
 	 */
 	public CandC2(Flywheel flywheel, Pivot pivot, Indexer indexer) {
 		this.flywheel = flywheel;
@@ -33,6 +33,7 @@ public class CandC2 extends Command {
 
 	@Override
 	public void initialize() {
+		shot = false;
 		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
 	}
