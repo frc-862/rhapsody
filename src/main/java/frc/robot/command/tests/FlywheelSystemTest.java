@@ -23,15 +23,15 @@ public class FlywheelSystemTest extends SystemTestCommandGroup {
                 // new InstantCommand(() -> { System.out.println("Start top"); }),
                 new TimedCommand(new FlywheelTest(flywheel, speed, 0.0), 2), // Motor 1 out
                 // new InstantCommand(() -> { System.out.println("Stop top"); }),
-                new WaitCommand(1),
-                new TimedCommand(new FlywheelTest(flywheel, -speed, 0.0), 2), // Motor 1 in
-                new WaitCommand(1),
+                new WaitCommand(2), // Top out first, then bottom out, then top in, bottom in
                 new TimedCommand(new FlywheelTest(flywheel, 0.0, speed), 2), // Motor 2 out
-                new WaitCommand(1),
+                new WaitCommand(2),
+                new TimedCommand(new FlywheelTest(flywheel, -speed, 0.0), 2), // Motor 1 in
+                new WaitCommand(2),
                 new TimedCommand(new FlywheelTest(flywheel, 0.0, -speed), 2), // Motor 2 in
-                new WaitCommand(1),
+                new WaitCommand(2),
                 new TimedCommand(new FlywheelTest(flywheel, speed, speed), 2), // Both out
-                new WaitCommand(1),
+                new WaitCommand(2),
                 new TimedCommand(new FlywheelTest(flywheel, -speed, -speed), 2) // Both in
             )  
         );
