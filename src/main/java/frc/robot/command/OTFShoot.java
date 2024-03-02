@@ -28,6 +28,9 @@ public class OTFShoot extends Command {
 	private LEDs leds;
 
 	private double fireTime;
+	private double targetHeading;
+	private double releaseRobotPoseX;
+	private double releaseRobotPoseY;
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
@@ -60,6 +63,7 @@ public class OTFShoot extends Command {
 
 		headingController.enableContinuousInput(-180, 180);
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
+		LightningShuffleboard.setDoubleArray("OTF Shooting", "Release Robot Pose", () -> new double[]{releaseRobotPoseX, releaseRobotPoseY, targetHeading});
 
 	}
 
@@ -95,7 +99,7 @@ public class OTFShoot extends Command {
 
 		// Speed of the shot
 		//TODO: get real value
-		double shotSpeed = 30;
+		double shotSpeed = 40;
 
 		// Get the distance and time to the speaker
 		double distanceToSpeaker = Math.sqrt(Math.pow(
@@ -117,16 +121,15 @@ public class OTFShoot extends Command {
 		double targetY = VisionConstants.SPEAKER_LOCATION.getY() + pieceDeltaY;
 
 		//Change of final Robot pose due to acceleration and velocity (X = Xi + ViT + 0.5AT^2)
-		double releaseRobotPoseX = pose.getX() + (robotVelocityX * timeUntilFire  * veloctiyScaler) + (0.5 * robotAccelerationX * timeUntilFire * timeUntilFire * accelerationScaler);
-		double releaseRobotPoseY = pose.getY() + (robotVelocityY * timeUntilFire  * veloctiyScaler) + (0.5 * robotAccelerationY * timeUntilFire * timeUntilFire * accelerationScaler);
-		Pose2d releaseRobotPose = new Pose2d(releaseRobotPoseX, releaseRobotPoseY, new Rotation2d(0));
+		releaseRobotPoseX = pose.getX() + (robotVelocityX * timeUntilFire  * veloctiyScaler) + (0.5 * robotAccelerationX * timeUntilFire * timeUntilFire * accelerationScaler);
+		releaseRobotPoseY = pose.getY() + (robotVelocityY * timeUntilFire  * veloctiyScaler) + (0.5 * robotAccelerationY * timeUntilFire * timeUntilFire * accelerationScaler);
 
 		// Get final Delta X and Delta Y to find the target heading of the robot
 		double headingDeltaX = targetX - releaseRobotPoseX;
 		double headingDeltaY = targetY - releaseRobotPoseY;
 
 		//getting the angle to the target (Angle = arctan(Dy, Dx))
-		double targetHeading = Math.toDegrees(Math.atan2(headingDeltaY, headingDeltaX)) + 180;
+		targetHeading = Math.toDegrees(Math.atan2(headingDeltaY, headingDeltaX)) + 180;
 
 		// Heading of Robot without math and its delta
 		double basicDeltaX = VisionConstants.SPEAKER_LOCATION.getX() - pose.getX();
@@ -177,8 +180,6 @@ public class OTFShoot extends Command {
 		LightningShuffleboard.setDouble("OTF Shooting", "Acceleration Scaler", accelerationScaler);
 		LightningShuffleboard.setDouble("OTF Shooting", "Time until Fire", timeUntilFire);
 		LightningShuffleboard.setBool("OTF Shooting", "Shooting", (fireTime - Timer.getFPGATimestamp() < 0));
-		LightningShuffleboard.setDoubleArray("OTF Shooting", "Release Robot Pose", () -> new double[] {releaseRobotPoseX, releaseRobotPoseY});
-
 
 		drivetrain.setFieldDriver(
 			-driver.getLeftY(),
@@ -186,7 +187,7 @@ public class OTFShoot extends Command {
 			pidOutput);
 
 		// drivetrain.applyPercentRequestField(
-		// 		() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX());
+				// () -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX());
 
 		pivot.setTargetAngle(pivotTargetAngle);
 		flywheel.setAllMotorsRPM(flywheelTargetSpeed); 
@@ -195,7 +196,7 @@ public class OTFShoot extends Command {
 			if (flywheel.topMotorRPMOnTarget() && pivot.onTarget()) {
 				indexer.indexUp();
 			} else {
-				fireTime += 0.1;
+				fireTime += 0.02;
 			}
 		} 
 	}
