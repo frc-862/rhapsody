@@ -3,7 +3,9 @@ package frc.robot;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -11,18 +13,17 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
-import com.pathplanner.lib.path.PathConstraints;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.subsystems.Limelights;
@@ -125,7 +126,7 @@ public class Constants {
         }
 
         public class PWM {
-            public static final int LED_PORT_1 = 0;
+            public static final int LED_PORT = 0;
         }
     }
 
@@ -191,9 +192,9 @@ public class Constants {
         // This may need to be tuned to your individual robot
         private static final double kCoupleRatio = 3.5714285714285716;
 
-        private static final double kDriveGearRatio = 6.122448979591837;
-        private static final double kSteerGearRatio = 21.428571428571427;
-        private static final double kWheelRadiusInches = 2;
+        public static final double kDriveGearRatio = 6.122448979591837;
+        public static final double kSteerGearRatio = 21.428571428571427;
+        public static final double kWheelRadiusInches = 2;
 
         private static final boolean kSteerMotorReversed = true;
         private static final boolean kInvertLeftSide = false;
@@ -229,21 +230,21 @@ public class Constants {
                         .withSteerMotorInverted(kSteerMotorReversed);
 
         // OFFSETS Rhapsody
-        private static final double kFrontLeftEncoderOffsetRh = -0.03564453125;
-        private static final double kFrontLeftXPosInchesRh = 13.5;
-        private static final double kFrontLeftYPosInchesRh = 13.5;
+        private static final double kFrontLeftEncoderOffsetRh = 0.0546875;
+        private static final double kFrontLeftXPosInchesRh = 10.825;
+        private static final double kFrontLeftYPosInchesRh = 10.825;
 
-        private static final double kFrontRightEncoderOffsetRh = 0.2978515625;
-        private static final double kFrontRightXPosInchesRh = 13.5;
-        private static final double kFrontRightYPosInchesRh = -13.5;
+        private static final double kFrontRightEncoderOffsetRh = 0.287353515625;
+        private static final double kFrontRightXPosInchesRh = 10.825;
+        private static final double kFrontRightYPosInchesRh = -10.825;
 
-        private static final double kBackLeftEncoderOffsetRh = 0.245361328125;
-        private static final double kBackLeftXPosInchesRh = -13.5;
-        private static final double kBackLeftYPosInchesRh = 13.5;
+        private static final double kBackLeftEncoderOffsetRh = 0.243408203125;
+        private static final double kBackLeftXPosInchesRh = -10.825;
+        private static final double kBackLeftYPosInchesRh = 10.825;
 
-        private static final double kBackRightEncoderOffsetRh = 0.044189453125;
-        private static final double kBackRightXPosInchesRh = -13.5;
-        private static final double kBackRightYPosInchesRh = -13.5;
+        private static final double kBackRightEncoderOffsetRh = -0.052734375;
+        private static final double kBackRightXPosInchesRh = -10.825;
+        private static final double kBackRightYPosInchesRh = -10.825;
 
         // OFFSETS Mercury
         private static final double kFrontLeftEncoderOffset = -0.11572265625;
@@ -324,17 +325,38 @@ public class Constants {
                 new Translation2d(Units.feetToMeters(54.0), Units.feetToMeters(26.0));
         public static final Translation2d VISION_LIMIT =
                 new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
-        public static final double COLLISION_DEADZONE = 2d;
         public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
+        public static final int SPEAKER_PIPELINE = 1;
         public static final int NOTE_PIPELINE = 2;
+
+        public static final Translation3d SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
 
         public class Pipelines { // TODO get real
             public static final int APRIL_TAG_3d = 0;
             public static final int APRIL_TAG_2d = 1;
             public static final int CHASE_PIECE = 2; // FOR the collector
+        }
+    }
+
+    public class CollisionConstants {
+        public static final double TIP_DEADZONE = 2d;
+
+        public static final double ACCELERATION_DUE_TO_GRAVITY = 9.80665;
+        public static final double ACCELERATION_TOLERANCE_TELEOP = 3; // percent of
+                                                                      // pigeonAcceleration
+        public static final double MIN_ACCELERATION_DIFF_TELEOP = 0.25; // TODO: get real
+        public static final double ACCELERATION_TOLERANCE_AUTON = 2.00; // percent of
+                                                                        // pigeonAcceleration
+        public static final double MIN_ACCELERATION_DIFF_AUTON = 0.25; // TODO: get real
+        public static final double ACCELERATION_TOLERANCE_SHOOTER = 1.00; // percent of
+                                                                          // pigeonAcceleration
+        public static final double MIN_ACCELERATION_DIFF_SHOOTER = 0.25; // TODO: get real
+
+        public enum CollisionType {
+            AUTON, TELEOP, SHOOTER
         }
     }
 
@@ -363,9 +385,16 @@ public class Constants {
 
     public class CollectorConstants { // TODO: get real
         public static final boolean COLLECTOR_MOTOR_INVERTED = true;
-        public static final int COLLECTOR_MOTOR_SUPPLY_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 0; // TODO: make sure they are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 60; // TODO: make sure they
+                                                                           // are not set to 0
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
+
+        public static final double MOTOR_KP = 0;
+        public static final double MOTOR_KI = 0;
+        public static final double MOTOR_KD = 0;
+        public static final double MOTOR_KS = 0;
+        public static final double MOTOR_KV = 0.145;
+        public static final double MOTOR_KA = 0;
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
     }
@@ -373,20 +402,29 @@ public class Constants {
     public class FlywheelConstants { // TODO: get real
         public static final boolean MOTOR_TOP_INVERT = true;
         public static final boolean MOTOR_BOTTOM_INVERT = false;
-        public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 40;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
-        public static final double MOTOR_KP = 0.00314;
-        public static final double MOTOR_KI = 0;
-        public static final double MOTOR_KD = 0;
-        public static final double MOTOR_KS = 0;
-        public static final double MOTOR_KV = 0.00195;
-        public static final double MOTOR_KA = 0;
 
-        public static final double RPM_TOLERANCE = 50d;
+        // TUNED TOP
+        public static final double TOP_MOTOR_KP = 0.15;
+        public static final double TOP_MOTOR_KI = 0;
+        public static final double TOP_MOTOR_KD = 0;
+        public static final double TOP_MOTOR_KS = 0.3;
+        public static final double TOP_MOTOR_KV = 0.11;
+        public static final double TOP_MOTOR_KA = 0;
 
-        public static final double BIAS_INCREMENT = 75d; // RPM to bias by per button press
+        // TUNED BOTTOM
+        public static final double BOTTOM_MOTOR_KP = 0.15;
+        public static final double BOTTOM_MOTOR_KI = 0;
+        public static final double BOTTOM_MOTOR_KD = 0;
+        public static final double BOTTOM_MOTOR_KS = 0.3;
+        public static final double BOTTOM_MOTOR_KV = 0.115;
+        public static final double BOTTOM_MOTOR_KA = 0;
 
+
+        public static final double RPM_TOLERANCE = 100d;
+
+        public static final double BIAS_INCREMENT = 1.25; // RPS to bias by per button press
         public static final double COAST_VOLTAGE = 0.1;
 
         public static final double FLYWHEEL_SYSTEST_RPM = 1000;
@@ -394,22 +432,23 @@ public class Constants {
 
     public class IndexerConstants { // TODO: get real
         public static final boolean MOTOR_INVERT = true;
-        public static final int MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
 
         public enum PieceState {
             IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE
         }
 
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
-        public static final double INDEXER_DEFAULT_POWER = 0.3;
+        public static final double INDEXER_DEFAULT_POWER = 0.6d;
+        public static final double INDEXER_MANUAL_POWER = 0.75d;
+        public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
     }
 
     public class PivotConstants { // TODO: get real
         public static final boolean MOTOR_INVERT = true; // POS power is up
-        public static final int MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
-        public static final double MOTOR_KP = 0.08;
+        public static final double MOTOR_KP = 0;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KS = 0;
@@ -428,14 +467,15 @@ public class Constants {
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO
+                                                        // get amount to bias by
 
-        public static final double STOW_ANGLE = 35d;
+        public static final double STOW_ANGLE = 28d;
 
         public static final double MAX_INDEX_ANGLE = 40d;
 
         public static final double MIN_ANGLE = 25d;
-        public static final double MAX_ANGLE = 100d;
+        public static final double MAX_ANGLE = 105d;
     }
 
     public class ShooterConstants {
@@ -447,12 +487,8 @@ public class Constants {
             {
                 // As distance gets smaller angle goes up
                 put(1.08d, 60d);
-                put(1.97d, 47d);
-                put(2.89d, 39d);
-                put(3.796, 37d);
-                put(4.72, 34d);
-                put(5.74, 27d);
-
+                put(2.01d, 50d);
+                put(2.94d, 39d);
             }
         };
 
@@ -461,11 +497,9 @@ public class Constants {
             {
                 // As distance get smaller RPM gets smaller
                 put(1.08d, 2000d);
-                put(1.97d, 2250d);
-                put(2.89d, 2500d);
-                put(3.796, 2500d);
-                put(4.72, 2750d);
-                put(5.74, 3800d);
+                put(2.01d, 2250d);
+                put(2.94d, 2500d);
+
             }
         };
 
@@ -486,7 +520,7 @@ public class Constants {
 
         // Podium
         public static final double PODIUM_RPM = 3000;
-        public static final double PODIUM_ANGLE = 90;
+        public static final double PODIUM_ANGLE = 45;
 
         // C1
         public static final double C1_RPM = 0;
@@ -509,7 +543,8 @@ public class Constants {
         public static final double SOURCE_ANGLE = 45d; // TODO test
 
         // TODO find time to shoot
-        public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer start to flywheel exit
+        public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer
+                                                       // start to flywheel exit
     }
 
     public class ClimbConstants { // TODO: find real values
@@ -529,13 +564,27 @@ public class Constants {
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
         public static final double MAX_HEIGHT = 999d;
-        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of lower arm in inches
-        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
+        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of
+                                                       // lower arm in inches
+        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of
+                                                       // upper arm in inches
 
-        public static final Pose3d LOWER_OFFSET = new Pose3d(); // NOTE: Poses are in meters despite george washington's best efforts
-        public static final Pose3d UPPER_OFFSET = new Pose3d(); // NOTE 2: these poses should exclude side to side offset, since it gets set below
+        public static final Pose3d LOWER_OFFSET = new Pose3d(); // NOTE: Poses are in meters despite
+                                                                // george washington's
+                                                                // best efforts
+        public static final Pose3d UPPER_OFFSET = new Pose3d(); // NOTE 2: these poses should
+                                                                // exclude side to side
+                                                                // offset, since it gets set below
 
-        public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); // NOTE 3: this is the side to side offset of the pivot point of the arms, should exclude anything but side to side values
+        public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); // NOTE 3: this is
+                                                                               // the side to side
+                                                                               // offset of the
+                                                                               // pivot point of the
+                                                                               // arms,
+                                                                               // should exclude
+                                                                               // anything but side
+                                                                               // to
+                                                                               // side values
         public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; // TODO: find real values
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
@@ -550,9 +599,25 @@ public class Constants {
     }
 
     public class LEDsConstants {
-        public static final int LED_LENGTH = 14;
+        public static final int LED_LENGTH = 26;
 
         public static final int SWIRL_SEGMENT_SIZE = 5;
+
+        public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
+            {
+                put(-1, 0);
+                put(1, 0);
+                put(2, 14);
+            }
+        };
+
+        public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
+            {
+                put(-1, LEDsConstants.LED_LENGTH);
+                put(1, 14);
+                put(2, 12);
+            }
+        };
 
         public static final int RED_HUE = 0;
         public static final int ORANGE_HUE = 5;
@@ -563,19 +628,9 @@ public class Constants {
         public static final int PINK_HUE = 355;
 
         public enum LED_STATES {
-            DISABLED(0),
-            EMERGENCY(1),
-            START(2),
-            COLLECTED(3),
-            SHOT(4),
-            FINISHED_CLIMB(5),
-            SHOOTING(6),
-            COLLECTING(7),
-            CHASING(8),
-            CLIMBING(9),
-            HAS_PIECE(10),
-            HAS_VISION(11),
-            DEFAULT(12);
+            CUSTOMCONTROL(0), DISABLED(1), EMERGENCY(2), START(3), COLLECTED(4), SHOT(
+                    5), FINISHED_CLIMB(6), SHOOTING(7), COLLECTING(8), CHASING(
+                            9), CLIMBING(10), HAS_PIECE(11), HAS_VISION(12), DEFAULT(13);
 
             private final int priority;
 
