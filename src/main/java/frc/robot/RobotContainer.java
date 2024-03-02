@@ -47,6 +47,7 @@ import frc.robot.command.tests.CollectorSystemTest;
 import frc.robot.command.tests.CycleSytemTest;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.FlywheelSystemTest;
+import frc.robot.command.tests.IndexerSystemTest;
 import frc.robot.command.tests.PivotAngleTest;
 import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
@@ -299,7 +300,9 @@ public class RobotContainer extends LightningContainer {
 		// SystemTest.registerTest("Pivot 90 Degrees", new PivotAngleTest(pivot, 90d));
 
 		 SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,//to be tested
-		 indexer, pivot, Constants.FlywheelConstants.FLYWHEEL_SYSTEST_POWER));
+		 indexer, pivot, Constants.FlywheelConstants.FLYWHEEL_SYSTEST_RPM)); 
+
+		 SystemTest.registerTest("Indexer Test", new IndexerSystemTest(indexer, 0.1));
 
 		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
 		// Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
