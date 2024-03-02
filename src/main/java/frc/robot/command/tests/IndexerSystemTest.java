@@ -22,5 +22,6 @@ public class IndexerSystemTest extends SystemTestCommandGroup {
                 new TimedCommand(new IndexerTest(indexer, -speed), 2) // Indexer in
             )
         );
+        addRequirements(indexer);
     }
 }

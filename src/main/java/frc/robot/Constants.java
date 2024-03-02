@@ -66,7 +66,7 @@ public class Constants {
         public static final double SLOW_SPEED_MULT = 0.4; // TODO Tune for Driver
 
         public static final double SYS_TEST_SPEED_DRIVE = 0.5;
-        public static final double SYS_TEST_SPEED_TURN = 1d;
+        public static final double SYS_TEST_SPEED_TURN = 0.7d;
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
     }
@@ -427,7 +427,7 @@ public class Constants {
         public static final double BIAS_INCREMENT = 1.25; // RPS to bias by per button press
         public static final double COAST_VOLTAGE = 0.1;
 
-        public static final double FLYWHEEL_SYSTEST_POWER = 0.5;
+        public static final double FLYWHEEL_SYSTEST_RPM = 1000;
     }
 
     public class IndexerConstants { // TODO: get real
@@ -442,6 +442,8 @@ public class Constants {
         public static final double INDEXER_DEFAULT_POWER = 0.6d;
         public static final double INDEXER_MANUAL_POWER = 0.75d;
         public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
+
+        public static final double INDEXER_SYSTEST_POWER = 0.25d;
     }
 
     public class PivotConstants { // TODO: get real
@@ -476,6 +478,8 @@ public class Constants {
 
         public static final double MIN_ANGLE = 25d;
         public static final double MAX_ANGLE = 105d;
+
+        public static final double PIVOT_SYSTEST_ANGLE = 90d;
     }
 
     public class ShooterConstants {
