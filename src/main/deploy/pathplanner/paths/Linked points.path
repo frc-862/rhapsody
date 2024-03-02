@@ -1,0 +1,273 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.3929974013794195,
+        "y": 7.57781207870108
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.3929974013794193,
+        "y": 7.07781207870108
+      },
+      "isLocked": false,
+      "linkedName": "TopFront"
+    },
+    {
+      "anchor": {
+        "x": 0.7121783474336195,
+        "y": 6.739121939782341
+      },
+      "prevControl": {
+        "x": -0.2878216525663805,
+        "y": 7.739121939782341
+      },
+      "nextControl": {
+        "x": 1.7121783474336194,
+        "y": 5.739121939782341
+      },
+      "isLocked": false,
+      "linkedName": "SubwooferTop"
+    },
+    {
+      "anchor": {
+        "x": 1.334102025955381,
+        "y": 5.567399971117918
+      },
+      "prevControl": {
+        "x": 1.0841020259553815,
+        "y": 7.067399971117918
+      },
+      "nextControl": {
+        "x": 1.5841020259553806,
+        "y": 4.067399971117918
+      },
+      "isLocked": false,
+      "linkedName": "SubwooferMiddle"
+    },
+    {
+      "anchor": {
+        "x": 0.7284778050297884,
+        "y": 4.414985377759629
+      },
+      "prevControl": {
+        "x": 0.8536309457501952,
+        "y": 3.6563405478597257
+      },
+      "nextControl": {
+        "x": 0.6033246643093817,
+        "y": 5.1736302076595315
+      },
+      "isLocked": false,
+      "linkedName": "SubwooferBottom"
+    },
+    {
+      "anchor": {
+        "x": 2.9066934025451485,
+        "y": 6.99
+      },
+      "prevControl": {
+        "x": 2.8441168321849455,
+        "y": 7.369322414949951
+      },
+      "nextControl": {
+        "x": 2.9692699729053516,
+        "y": 6.610677585050049
+      },
+      "isLocked": false,
+      "linkedName": "C1"
+    },
+    {
+      "anchor": {
+        "x": 2.65,
+        "y": 5.539225686154654
+      },
+      "prevControl": {
+        "x": 2.6812882851801016,
+        "y": 5.349564478679678
+      },
+      "nextControl": {
+        "x": 2.618711714819898,
+        "y": 5.72888689362963
+      },
+      "isLocked": false,
+      "linkedName": "C2"
+    },
+    {
+      "anchor": {
+        "x": 2.577030538676463,
+        "y": 4.084914323674802
+      },
+      "prevControl": {
+        "x": 2.5613863960864123,
+        "y": 4.1797449274122895
+      },
+      "nextControl": {
+        "x": 2.592674681266514,
+        "y": 3.9900837199373145
+      },
+      "isLocked": false,
+      "linkedName": "C3"
+    },
+    {
+      "anchor": {
+        "x": 5.892323323108186,
+        "y": 6.5
+      },
+      "prevControl": {
+        "x": 4.413102650919927,
+        "y": 5.742693558629845
+      },
+      "nextControl": {
+        "x": 7.323030030675447,
+        "y": 7.232469080322777
+      },
+      "isLocked": false,
+      "linkedName": "TopLine"
+    },
+    {
+      "anchor": {
+        "x": 8.281967377058862,
+        "y": 7.436381206571257
+      },
+      "prevControl": {
+        "x": 8.289789448353886,
+        "y": 7.388965904702514
+      },
+      "nextControl": {
+        "x": 8.274145305763836,
+        "y": 7.48379650844
+      },
+      "isLocked": false,
+      "linkedName": "F1"
+    },
+    {
+      "anchor": {
+        "x": 8.293678213604645,
+        "y": 5.785153253616065
+      },
+      "prevControl": {
+        "x": 8.289767177957131,
+        "y": 5.808860904550437
+      },
+      "nextControl": {
+        "x": 8.297589249252157,
+        "y": 5.761445602681693
+      },
+      "isLocked": false,
+      "linkedName": "F2"
+    },
+    {
+      "anchor": {
+        "x": 8.289990426134699,
+        "y": 4.1046482092964185
+      },
+      "prevControl": {
+        "x": 8.291945943958455,
+        "y": 4.092794383829233
+      },
+      "nextControl": {
+        "x": 8.288034908310943,
+        "y": 4.116502034763604
+      },
+      "isLocked": false,
+      "linkedName": "F3"
+    },
+    {
+      "anchor": {
+        "x": 8.281967377058862,
+        "y": 2.435854001522554
+      },
+      "prevControl": {
+        "x": 8.280989618146984,
+        "y": 2.4417809142561473
+      },
+      "nextControl": {
+        "x": 8.28294513597074,
+        "y": 2.429927088788961
+      },
+      "isLocked": false,
+      "linkedName": "F4"
+    },
+    {
+      "anchor": {
+        "x": 8.293678213604645,
+        "y": 0.77
+      },
+      "prevControl": {
+        "x": 8.275355154306451,
+        "y": 1.6050862461783453
+      },
+      "nextControl": {
+        "x": 8.312001272902839,
+        "y": -0.06508624617834524
+      },
+      "isLocked": false,
+      "linkedName": "F5"
+    },
+    {
+      "anchor": {
+        "x": 5.85285555186495,
+        "y": 1.1445653660538107
+      },
+      "prevControl": {
+        "x": 5.862017081514047,
+        "y": 0.7021429638622849
+      },
+      "nextControl": {
+        "x": 5.843694022215853,
+        "y": 1.5869877682453364
+      },
+      "isLocked": false,
+      "linkedName": "BottomLine"
+    },
+    {
+      "anchor": {
+        "x": 1.4125123190622362,
+        "y": 1.0286394653595627
+      },
+      "prevControl": {
+        "x": 1.384509881146125,
+        "y": 1.314260267457123
+      },
+      "nextControl": {
+        "x": 1.4405147569783474,
+        "y": 0.7430186632620024
+      },
+      "isLocked": false,
+      "linkedName": "BottomFront"
+    },
+    {
+      "anchor": {
+        "x": 0.49989451479273267,
+        "y": 1.5050796425884936
+      },
+      "prevControl": {
+        "x": 0.5431728251152421,
+        "y": 1.3681246598126042
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BottomBack"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}
