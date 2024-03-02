@@ -186,21 +186,21 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     private void initLogging() {
         // TODO Remove the unecessary shuffleboard stuff eventually
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPigeon2().getAngle());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getState().Pose.getX());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getState().Pose.getY());
+        // LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
+        // LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPigeon2().getAngle());
+        // LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getState().Pose.getX());
+        // LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getState().Pose.getY());
 
-        LightningShuffleboard.setBoolSupplier("Swerve", "Slow mode", () -> slowMode);
-        LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
+        // LightningShuffleboard.setBoolSupplier("Swerve", "Slow mode", () -> slowMode);
+        // LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
 
-        LightningShuffleboard.setBoolSupplier("Sweve", "Tipped", () -> isTipped());
+        // LightningShuffleboard.setBoolSupplier("Sweve", "Tipped", () -> isTipped());
 
-        LightningShuffleboard.setDoubleSupplier("Swerve", "velocity x",
-                () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "velocity y",
-                () -> getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Distance to Speaker", () -> distanceToSpeaker());
+        // LightningShuffleboard.setDoubleSupplier("Swerve", "velocity x",
+        //         () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
+        // LightningShuffleboard.setDoubleSupplier("Swerve", "velocity y",
+        //         () -> getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
+        // LightningShuffleboard.setDoubleSupplier("Swerve", "Distance to Speaker", () -> distanceToSpeaker());
     }
 
     private void configurePathPlanner() {

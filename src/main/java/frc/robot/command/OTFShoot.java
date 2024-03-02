@@ -1,6 +1,5 @@
 package frc.robot.command;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,8 +7,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Flywheel;
@@ -50,6 +49,8 @@ public class OTFShoot extends Command {
 		this.indexer = indexer;
 		this.leds = leds;
 
+		addRequirements(drivetrain, pivot, flywheel, indexer);
+
 	}
 
 	@Override
@@ -60,7 +61,6 @@ public class OTFShoot extends Command {
 		headingController.enableContinuousInput(-180, 180);
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 
-		addRequirements(drivetrain, pivot, flywheel, indexer);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
@@ -78,15 +78,15 @@ public class OTFShoot extends Command {
 
 		// Robot velocity
 		//TODO: get real value
-		double velocityDeadback = 0.2;
-		double veloctiyScaler = 1;
+		// double velocityDeadback = 0.6;
+		double veloctiyScaler = -1;
 		double robotVelocityX = drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond;
 		double robotVelocityY = drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond;
 		
 		// If the robot is not moving, don't compensate for velocity
-		if ((Math.abs(robotVelocityX) < velocityDeadback && Math.abs(robotVelocityY) < velocityDeadback) || (LightningShuffleboard.getBool("OTF Shooting", "Velocity Compensating", false))){
-			veloctiyScaler = 0;
-		}
+		// if ((Math.abs(robotVelocityX) < velocityDeadback && Math.abs(robotVelocityY) < velocityDeadback) || (LightningShuffleboard.getBool("OTF Shooting", "Velocity Compensating", false))){
+		// 	veloctiyScaler = 0;
+		// }
 
 		// Acceleration don't compensate for accleration
 		if (LightningShuffleboard.getBool("OTF Shooting", "Acceleration Compensating", false)) {
@@ -119,6 +119,7 @@ public class OTFShoot extends Command {
 		//Change of final Robot pose due to acceleration and velocity (X = Xi + ViT + 0.5AT^2)
 		double releaseRobotPoseX = pose.getX() + (robotVelocityX * timeUntilFire  * veloctiyScaler) + (0.5 * robotAccelerationX * timeUntilFire * timeUntilFire * accelerationScaler);
 		double releaseRobotPoseY = pose.getY() + (robotVelocityY * timeUntilFire  * veloctiyScaler) + (0.5 * robotAccelerationY * timeUntilFire * timeUntilFire * accelerationScaler);
+		Pose2d releaseRobotPose = new Pose2d(releaseRobotPoseX, releaseRobotPoseY, new Rotation2d(0));
 
 		// Get final Delta X and Delta Y to find the target heading of the robot
 		double headingDeltaX = targetX - releaseRobotPoseX;
@@ -176,24 +177,33 @@ public class OTFShoot extends Command {
 		LightningShuffleboard.setDouble("OTF Shooting", "Acceleration Scaler", accelerationScaler);
 		LightningShuffleboard.setDouble("OTF Shooting", "Time until Fire", timeUntilFire);
 		LightningShuffleboard.setBool("OTF Shooting", "Shooting", (fireTime - Timer.getFPGATimestamp() < 0));
+		LightningShuffleboard.setDoubleArray("OTF Shooting", "Release Robot Pose", () -> new double[] {releaseRobotPoseX, releaseRobotPoseY});
 
 
 		drivetrain.setFieldDriver(
-				-MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND),
-				-MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND),
-				pidOutput);
+			-driver.getLeftY(),
+			-driver.getLeftX(),
+			pidOutput);
+
+		// drivetrain.applyPercentRequestField(
+		// 		() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX());
 
 		pivot.setTargetAngle(pivotTargetAngle);
 		flywheel.setAllMotorsRPM(flywheelTargetSpeed); 
 
-		if (fireTime - Timer.getFPGATimestamp() < 0.05 && flywheel.allMotorsOnTarget() && pivot.onTarget()) {
-			indexer.indexUp();
+		if (fireTime - Timer.getFPGATimestamp() < 0) {
+			if (flywheel.topMotorRPMOnTarget() && pivot.onTarget()) {
+				indexer.indexUp();
+			} else {
+				fireTime += 0.1;
+			}
 		} 
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
+		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 	}
 
 	@Override
