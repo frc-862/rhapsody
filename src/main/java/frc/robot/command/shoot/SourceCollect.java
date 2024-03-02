@@ -3,22 +3,22 @@ package frc.robot.command.shoot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.PivotConstants;
-import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Pivot;
 
 public class SourceCollect extends Command {
 
-	private final Pivot pivot;
 	private final Flywheel flywheel;
+	private final Pivot pivot;
 
 	/**
 	 * Creates a new SourceCollect.
-	 * @param pivot subsystem
 	 * @param flywheel subsystem
+	 * @param pivot subsystem
 	 */
-	public SourceCollect(Pivot pivot, Flywheel flywheel) {
-		this.pivot = pivot;
+	public SourceCollect(Flywheel flywheel, Pivot pivot) {
 		this.flywheel = flywheel;
+		this.pivot = pivot;
 
 		addRequirements(flywheel);
 	}

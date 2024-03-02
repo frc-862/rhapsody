@@ -136,13 +136,13 @@ public class RobotContainer extends LightningContainer {
 				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
 		NamedCommands.registerCommand("Cand-Sub", 
-			new PointBlankShotAuton(pivot, flywheel, indexer)
+			new PointBlankShotAuton(flywheel, pivot, indexer)
 				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1))); 
-		NamedCommands.registerCommand("Cand-C1", new CandC1(pivot, flywheel, indexer));
-		NamedCommands.registerCommand("Cand-C2", new CandC2(pivot, flywheel, indexer));
-		NamedCommands.registerCommand("Cand-C3", new CandC3(pivot, flywheel, indexer));
-		NamedCommands.registerCommand("Cand-Line", new CandLine(pivot, flywheel, indexer));
-		NamedCommands.registerCommand("AMP", new AmpShotAuton(pivot, flywheel, indexer));
+		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("Cand-Line", new CandLine(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("AMP", new AmpShotAuton(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
 		NamedCommands.registerCommand("Smart-Shoot",
 			new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
@@ -205,10 +205,10 @@ public class RobotContainer extends LightningContainer {
 		.whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer, pivot)); // TODO: find correct button/trigger
 
 		// cand shots for the robot
-		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(pivot, flywheel));
-		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(pivot, flywheel));
+		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
+		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
-		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(pivot, flywheel));
+		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
 		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,  // TODO need new button start? Back?
 		// drivetrain).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));

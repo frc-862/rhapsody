@@ -4,14 +4,14 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.PivotConstants;
-import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Indexer;
 
 public class PointBlankShotAuton extends Command {
 
-	private final Pivot pivot;
 	private final Flywheel flywheel;
+	private final Pivot pivot;
 	private final Indexer indexer;
 
 	private boolean shot = false;
@@ -22,16 +22,16 @@ public class PointBlankShotAuton extends Command {
 
 	/**
 	 * Creates a new PointBlankShot.
-	 * @param pivot subsystem
 	 * @param flywheel subsystem
+	 * @param pivot subsystem
 	 * @param indexer subsystem
 	 */
-	public PointBlankShotAuton(Pivot pivot, Flywheel flywheel, Indexer indexer) {
-		this.pivot = pivot;
+	public PointBlankShotAuton(Flywheel flywheel, Pivot pivot, Indexer indexer) {
 		this.flywheel = flywheel;
+		this.pivot = pivot;
 		this.indexer = indexer;
 
-		addRequirements(pivot, flywheel, indexer);
+		addRequirements(flywheel, pivot, indexer);
 	}
 
 	@Override
@@ -57,14 +57,14 @@ public class PointBlankShotAuton extends Command {
 			indexer.indexUp();
 		}
 
-		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + flywheel.getBias());
 		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());
+		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + flywheel.getBias());
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 		flywheel.coast(true);
+		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 		indexer.stop();
 	}
 
