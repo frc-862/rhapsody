@@ -24,6 +24,7 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.MusicConstants;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.TunerConstants;
+import frc.robot.Constants.CollisionConstants.CollisionType;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.command.ChasePieces;
@@ -53,6 +54,7 @@ import frc.robot.command.tests.FlywheelSystemTest;
 import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
+import frc.robot.command.CollisionDetection;
 import frc.robot.command.Collect;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
@@ -232,6 +234,9 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
+		new Trigger(() -> DriverStation.isAutonomousEnabled()).whileTrue(new CollisionDetection(
+				drivetrain, CollisionType.AUTON));
+
 		new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
 			.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
 			.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
@@ -243,7 +248,8 @@ public class RobotContainer extends LightningContainer {
 		drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(
-				() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
+				() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX())
+				.alongWith(new CollisionDetection(drivetrain, CollisionType.TELEOP)));
 
 		/* copilot */
 		collector.setDefaultCommand(
