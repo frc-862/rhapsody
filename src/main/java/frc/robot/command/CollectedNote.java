@@ -13,18 +13,23 @@ public class CollectedNote extends Command {
   private final Indexer indexer;
   private final Timer timer = new Timer();
 
-  /** Creates a new CollectedNote. 
+  /**
+   * Creates a new CollectedNote.
+   * 
    * @param indexer not required, but used to read sensors
-  */
+   */
   public CollectedNote(Indexer indexer) {
     this.timeout = 0.5;
     this.indexer = indexer;
   }
 
-  /** Creates a new CollectedNote. 
-   * @param timeout in seconds, if a note is not collected the command will finish in this many seconds
+  /**
+   * Creates a new CollectedNote.
+   * 
+   * @param timeout in seconds, if a note is not collected the command will finish
+   *                in this many seconds
    * @param indexer not required, but used to access beam break sensors
-  */
+   */
   public CollectedNote(double timeout, Indexer indexer) {
     this.timeout = timeout;
     this.indexer = indexer;
@@ -39,7 +44,7 @@ public class CollectedNote extends Command {
 
   // This command will end after you shoot a note, or after
   // after timeout seconds if you do not possess a note.
-  // It can be used in auton to skip to the next note if we 
+  // It can be used in auton to skip to the next note if we
   // fail to collect
   @Override
   public boolean isFinished() {

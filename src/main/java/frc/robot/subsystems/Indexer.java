@@ -53,6 +53,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Get current state of piece
+     * 
      * @return current state of piece
      */
     public PieceState getPieceState() {
@@ -61,6 +62,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Set the current state of the piece
+     * 
      * @param state new state of piece
      */
     public void setPieceState(PieceState state) {
@@ -69,6 +71,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Set raw power to the indexer motor
+     * 
      * @param power
      */
     public void setPower(double power) {
@@ -99,6 +102,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Gets the current beam brake state
+     * 
      * @return entry beambreak state
      */
     public boolean getEntryBeamBreakState() {
@@ -107,6 +111,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Gets the current beam brake state
+     * 
      * @return exit beambreak state
      */
     public boolean getExitBeamBreakState() {
@@ -116,12 +121,14 @@ public class Indexer extends SubsystemBase {
     /**
      * @return true if piece is exiting the indexer
      */
-    public boolean isExiting(){
+    public boolean isExiting() {
         return exitIndexerIteration >= 1;
     }
 
     /**
-     * Will return true after shooting (or really anytime we no longer have a note, after previously having one)
+     * Will return true after shooting (or really anytime we no longer have a note,
+     * after previously having one)
+     * 
      * @return boolean
      */
     public boolean hasShot() {
@@ -129,8 +136,8 @@ public class Indexer extends SubsystemBase {
     }
 
     /**
-     * Has shot flag stays on until 
-     * cleared, will be false on 
+     * Has shot flag stays on until
+     * cleared, will be false on
      * robot init
      */
     public void clearHasShot() {
