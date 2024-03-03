@@ -42,7 +42,7 @@ public class PointAtPoint extends Command {
 
 	@Override
 	public void execute() {
-		Pose2d pose = drivetrain.getPose().get();
+		Pose2d pose = drivetrain.getPose();
 		var deltaX = targetPose.getX() - pose.getX();
 		var deltaY = targetPose.getY() - pose.getY();
 
