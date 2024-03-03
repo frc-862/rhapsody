@@ -23,6 +23,7 @@ public class Indexer extends SubsystemBase {
     private double timeLastTriggered = 0d;
 
     private PieceState currentState = PieceState.NONE;
+    private boolean didShoot = false;
 
     public Indexer(Collector collector) {
         this.collector = collector;
@@ -116,11 +117,20 @@ public class Indexer extends SubsystemBase {
     }
 
     /**
-     * TO BE IMPLEMENTED
+     * Will return true after shooting (or really anytime we no longer have a note, after previously having one)
      * @return boolean
      */
     public boolean hasShot() {
-        return false; // TODO add actual logic
+        return didShoot;
+    }
+
+    /**
+     * Has shot flag stays on until 
+     * cleared, will be false on 
+     * robot init
+     */
+    public void clearHasShot() {
+        didShoot = false;
     }
 
     @Override
@@ -128,7 +138,7 @@ public class Indexer extends SubsystemBase {
         // Update piece state based on beambreaks
         if (getExitBeamBreakState()) {
             exitIndexerIteration++;
-            if(exitIndexerIteration >= 3){
+            if (exitIndexerIteration >= 3) {
                 setPieceState(PieceState.IN_INDEXER);
             }
         } else if (getEntryBeamBreakState()) {
@@ -138,14 +148,18 @@ public class Indexer extends SubsystemBase {
             setPieceState(PieceState.IN_COLLECT);
         } else if (Timer.getFPGATimestamp() - timeLastTriggered <= 1) {
             setPieceState(PieceState.IN_COLLECT);
-
         } else {
+            didShoot = didShoot || hasNote();
             setPieceState(PieceState.NONE);
         }
 
         // reset exitIndexerIteration
-        if (!getEntryBeamBreakState()){
+        if (!getEntryBeamBreakState()) {
             exitIndexerIteration = 0;
         }
+    }
+
+    public boolean hasNote() {
+        return getPieceState() != PieceState.NONE;
     }
 }
