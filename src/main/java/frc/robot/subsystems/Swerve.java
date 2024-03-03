@@ -229,8 +229,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     public Pose2d getPose() {
         var state = getState();
-        if (state == null || getState().Pose == null)
+        if (state == null || getState().Pose == null) {
             return new Pose2d();
+        }
 
         return state.Pose;
     }
