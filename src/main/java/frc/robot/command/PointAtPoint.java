@@ -13,7 +13,7 @@ public class PointAtPoint extends Command {
 
 	private Swerve drivetrain;
 	private XboxController driver;
-	
+
 	private double pidOutput;
 	private double targetHeading;
 	private Translation2d targetPose;
@@ -24,7 +24,7 @@ public class PointAtPoint extends Command {
 	 * Creates a new PointAtTag.
 	 * @param targetX the x coordinate of the target
 	 * @param targetY the y coordinate of the target
-	 * @param drivetrain to request movement 
+	 * @param drivetrain to request movement
 	 * @param driver the driver's controller, used for drive input
 	 */
 	public PointAtPoint(double targetX, double targetY, Swerve drivetrain, XboxController driver) {
@@ -34,14 +34,12 @@ public class PointAtPoint extends Command {
 
 		addRequirements(drivetrain);
 	}
-	
-	// Called when the command is initially scheduled.
+
 	@Override
 	public void initialize() {
 		headingController.enableContinuousInput(-180, 180);
 	}
 
-	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 		Pose2d pose = drivetrain.getPose().get();
@@ -62,11 +60,9 @@ public class PointAtPoint extends Command {
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {}
 
-	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
 		return false;

@@ -13,7 +13,6 @@ public class SourceCollect extends Command {
 
 	/**
 	 * Creates a new SourceCollect.
-	 * 
 	 * @param flywheel subsystem
 	 * @param pivot subsystem
 	 */
@@ -21,25 +20,25 @@ public class SourceCollect extends Command {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 
-		addRequirements(flywheel, pivot);
+		addRequirements(flywheel);
 	}
 
 	@Override
 	public void initialize() {
 		flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
-		pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
+		// pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
 	}
 
 	@Override
 	public void execute() {
 		flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
-		pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
+		// pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		// pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.Utils;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,9 +17,12 @@ public class Indexer extends SubsystemBase {
     private ThunderBird indexerMotor;
     private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_ENTER_BEAMBREAK);
     private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_EXIT_BEAMBREAK);
+
     private int exitIndexerIteration = 0;
 
     private double timeLastTriggered = 0d;
+
+    private double targetPower = 0;
 
     private PieceState currentState = PieceState.NONE;
 
@@ -38,6 +39,7 @@ public class Indexer extends SubsystemBase {
 
     private void initLogging() {
         LightningShuffleboard.setDoubleSupplier("Indexer", "Indexer Power", () -> indexerMotor.get());
+        LightningShuffleboard.setDoubleSupplier("Indexer", "Indexer Target Power", () -> targetPower);
 
         LightningShuffleboard.setBoolSupplier("Indexer", "Entry Beam Break", () -> getEntryBeamBreakState());
         LightningShuffleboard.setBoolSupplier("Indexer", "Exit Beam Break", () -> getExitBeamBreakState());
@@ -69,6 +71,7 @@ public class Indexer extends SubsystemBase {
      * @param power
      */
     public void setPower(double power) {
+        targetPower = power;
         indexerMotor.set(power);
     }
 
@@ -142,7 +145,8 @@ public class Indexer extends SubsystemBase {
 
         } else {
             setPieceState(PieceState.NONE);
-        } 
+        }
+
         // reset exitIndexerIteration
         if (!getEntryBeamBreakState()){
             exitIndexerIteration = 0;

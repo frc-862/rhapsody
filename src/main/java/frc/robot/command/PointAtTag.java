@@ -17,7 +17,7 @@ public class PointAtTag extends Command {
 	private Swerve drivetrain;
 	private Limelight limelight;
 	private XboxController driver;
-	
+
 	private int limelightPrevPipeline = 0;
 	private double pidOutput;
 	private double targetHeading;
@@ -27,7 +27,7 @@ public class PointAtTag extends Command {
 
 	/**
 	 * Creates a new PointAtTag.
-	 * @param drivetrain to request movement 
+	 * @param drivetrain to request movement
 	 * @param limelights to get the limelight from
 	 * @param driver the driver's controller, used for drive input
 	 */
@@ -65,7 +65,7 @@ public class PointAtTag extends Command {
 
 		targetHeading = limelight.getTargetX();
 		pidOutput = headingController.calculate(0, targetHeading);
-		
+
 		drivetrain.setFieldDriver(
 			driver.getLeftY(),
 			driver.getLeftX(),

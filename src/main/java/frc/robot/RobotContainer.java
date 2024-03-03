@@ -41,6 +41,7 @@ import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.shoot.SourceCollect;
 import frc.robot.command.shoot.Stow;
+import frc.robot.command.shoot.Tune;
 import frc.robot.command.shoot.AutonCand.AmpShotAuton;
 import frc.robot.command.shoot.AutonCand.CandC1;
 import frc.robot.command.shoot.AutonCand.CandC2;
@@ -49,8 +50,11 @@ import frc.robot.command.shoot.AutonCand.CandLine;
 import frc.robot.command.shoot.AutonCand.PointBlankShotAuton;
 import frc.robot.command.tests.ClimbSystemTest;
 import frc.robot.command.tests.CollectorSystemTest;
+import frc.robot.command.tests.CycleSytemTest;
 import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.FlywheelSystemTest;
+import frc.robot.command.tests.IndexerSystemTest;
+import frc.robot.command.tests.PivotAngleTest;
 import frc.robot.command.tests.SingSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
@@ -133,7 +137,7 @@ public class RobotContainer extends LightningContainer {
 
 		// NamedCommands.registerCommand("Cand-Sub", 
 		// 	new PointBlankShotAuton(flywheel, pivot, indexer)
-		// 		.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5))); 
+		// 		.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1))); 
 		// NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
 		// NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
 		// NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
@@ -147,7 +151,7 @@ public class RobotContainer extends LightningContainer {
 		// NamedCommands.registerCommand("Collect",
 		// 	new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot)
 		// 		.alongWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
-		// NamedCommands.registerCommand("Index-Up", new Index(indexer, () -> IndexerConstants.INDEXER_DEFAULT_POWER));
+		// NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		// NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
 		// make sure named commands are initialized before autobuilder!
@@ -198,8 +202,8 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		// new Trigger(coPilot::getBButton)
-		// .whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer,
-		// pivot)); // TODO: find correct button/trigger
+		// .whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
+		// .andThen(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer, pivot))); // TODO: find correct button/trigger
 
 		// cand shots for the robot
 		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
@@ -222,9 +226,10 @@ public class RobotContainer extends LightningContainer {
 		// 	.onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
 
 		// new Trigger(coPilot::getRightBumper)
-		// 	.whileTrue(new Index(indexer, () -> IndexerConstants.INDEXER_MANUAL_POWER));
+		// 		.whileTrue(new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		// new Trigger(coPilot::getLeftBumper)
-		// 	.whileTrue(new Index(indexer, () -> -IndexerConstants.INDEXER_MANUAL_POWER));
+		// 		.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
+
 
 		/* Other */
 		// new Trigger(
@@ -253,7 +258,7 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		// collector.setDefaultCommand(
-		// 		new Collect(() -> MathUtil.applyDeadband((coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), ControllerConstants.DEADBAND), collector, indexer));
+		// 		new Collect(() -> MathUtil.applyDeadband((coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), ControllerConstants.DEADBAND), collector));
 		climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(),() ->
 		-coPilot.getRightY(), climber));
 	}
@@ -280,22 +285,28 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureSystemTests() {
-		SystemTest.registerTest("Drive Test",
-				new DrivetrainSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_DRIVE));
-		SystemTest.registerTest("Azimuth Test",
-				new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
+		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain,
+			DrivetrainConstants.SYS_TEST_SPEED_DRIVE)); // to be tested
+		SystemTest.registerTest("Azimuth Test", new TurnSystemTest(drivetrain,
+			DrivetrainConstants.SYS_TEST_SPEED_TURN));
+
+		// SystemTest.registerTest("Single Note Cycle", new CycleSytemTest(collector,
+		// 	indexer, pivot, flywheel, () -> 0.5d, () -> 0.6d, () -> 250));
 
 		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
-		// Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+		// 	Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
-		// TODO make pivot system test
+		// // SystemTest.registerTest("Pivot 90 Degrees", new PivotAngleTest(pivot,
+		// // 	Constants.PivotConstants.PIVOT_SYSTEST_ANGLE));
 
-		// SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel,
-		// collector,
-		// indexer, pivot, Constants.FlywheelConstants.SYS_TEST_SPEED));
+		// SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
+		// 	indexer, pivot, Constants.FlywheelConstants.FLYWHEEL_SYSTEST_RPM));
+
+		// SystemTest.registerTest("Indexer Test", new IndexerSystemTest(indexer,
+		// 	Constants.IndexerConstants.INDEXER_SYSTEST_POWER));
 
 		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
-		// Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
+		// 	Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
 
 		// Sing chooser SendableChooser<SystemTestCommand> songChooser = new
 		// SendableChooser<>();

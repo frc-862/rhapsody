@@ -29,7 +29,7 @@ public class IndexerTest extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        indexer.setPower(0);
+        indexer.stop();
     }
 
     @Override

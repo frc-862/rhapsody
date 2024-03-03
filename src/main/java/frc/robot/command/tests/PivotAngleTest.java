@@ -2,17 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.command.tests.testcmds;
+package frc.robot.command.tests;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Pivot;
+import frc.thunder.testing.SystemTestCommand;
 
-public class PivotTest extends Command {
+public class PivotAngleTest extends SystemTestCommand {
 
     private Pivot pivot;
     private double angle;
 
-    public PivotTest(Pivot pivot, double angle) {
+    /**
+     * Sets pivot to a certain angle
+     * @param pivot subsystem
+     * @param angle angle to set pivot to (degrees)
+     */
+    public PivotAngleTest(Pivot pivot, double angle) {
         this.pivot = pivot;
         this.angle = angle;
 
@@ -20,15 +26,17 @@ public class PivotTest extends Command {
     }
 
     @Override
-    public void initialize() {
+    public void initializeTest() {
         pivot.setTargetAngle(angle);
     }
 
     @Override
-    public void execute() {}
+    public void executeTest() {}
 
     @Override
-    public void end(boolean interrupted) {}
+    public void endTest(boolean interrupted) {
+        pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+    }
 
     @Override
     public boolean isFinished() {
