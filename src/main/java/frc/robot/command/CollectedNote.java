@@ -9,10 +9,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
 
 public class CollectedNote extends Command {
-  final private double timeout;
-  final private Indexer indexer;
-  private boolean collected_note = false;
-  private Timer timer;
+  private final double timeout;
+  private final Indexer indexer;
+  private final Timer timer = new Timer();
 
   /** Creates a new CollectedNote. 
    * @param indexer not required, but used to read sensors
@@ -34,15 +33,8 @@ public class CollectedNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    this.collected_note = false;
-    this.timer = new Timer();
     indexer.clearHasShot();
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    collected_note = collected_note || indexer.hasNote();
+    timer.restart();
   }
 
   // This command will end after you shoot a note, or after
