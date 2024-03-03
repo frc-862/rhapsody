@@ -22,10 +22,11 @@ public class PointAtPoint extends Command {
 
 	/**
 	 * Creates a new PointAtTag.
-	 * @param targetX the x coordinate of the target
-	 * @param targetY the y coordinate of the target
+	 * 
+	 * @param targetX    the x coordinate of the target
+	 * @param targetY    the y coordinate of the target
 	 * @param drivetrain to request movement
-	 * @param driver the driver's controller, used for drive input
+	 * @param driver     the driver's controller, used for drive input
 	 */
 	public PointAtPoint(double targetX, double targetY, Swerve drivetrain, XboxController driver) {
 		this.drivetrain = drivetrain;
@@ -61,7 +62,8 @@ public class PointAtPoint extends Command {
 	}
 
 	@Override
-	public void end(boolean interrupted) {}
+	public void end(boolean interrupted) {
+	}
 
 	@Override
 	public boolean isFinished() {

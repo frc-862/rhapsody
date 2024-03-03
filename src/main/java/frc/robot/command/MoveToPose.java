@@ -24,7 +24,7 @@ public class MoveToPose extends Command {
     private double powery;
 
     /**
-     * @param target The target pose to move to
+     * @param target     The target pose to move to
      * @param drivetrain The drivetrain subsystem
      */
     public MoveToPose(Pose2d target, Swerve drivetrain) {
@@ -71,7 +71,7 @@ public class MoveToPose extends Command {
             powery = 0;
         }
 
-        var dist = Math.sqrt(dx*dx + dy*dy);
+        var dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < 0.3) {
             powerx = 0;
