@@ -9,21 +9,24 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
 
 public class CollectedNote extends Command {
-  private boolean collected_note = false;
   final private double timeout;
   final private Indexer indexer;
+  private boolean collected_note = false;
   private Timer timer;
 
-  /** Creates a new CollectedNote. */
+  /** Creates a new CollectedNote. 
+   * @param indexer not required, but used to read sensors
+  */
   public CollectedNote(Indexer indexer) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.timeout = 0.5;
     this.indexer = indexer;
   }
 
-  /** Creates a new CollectedNote. */
+  /** Creates a new CollectedNote. 
+   * @param timeout in seconds, if a note is not collected the command will finish in this many seconds
+   * @param indexer not required, but used to access beam break sensors
+  */
   public CollectedNote(double timeout, Indexer indexer) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.timeout = timeout;
     this.indexer = indexer;
   }
@@ -33,6 +36,7 @@ public class CollectedNote extends Command {
   public void initialize() {
     this.collected_note = false;
     this.timer = new Timer();
+    indexer.clearHasShot();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,9 +45,12 @@ public class CollectedNote extends Command {
     collected_note = collected_note || indexer.hasNote();
   }
 
-  // Returns true when the command should end.
+  // This command will end after you shoot a note, or after
+  // after timeout seconds if you do not possess a note.
+  // It can be used in auton to skip to the next note if we 
+  // fail to collect
   @Override
   public boolean isFinished() {
-    return !collected_note && timer.hasElapsed(timeout);
+    return indexer.hasShot() || (!indexer.hasNote() && timer.hasElapsed(timeout));
   }
 }
