@@ -60,6 +60,7 @@ import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
 import frc.robot.command.CollisionDetection;
 import frc.robot.command.Collect;
+import frc.robot.command.CollectAndGo;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climber;
@@ -153,6 +154,7 @@ public class RobotContainer extends LightningContainer {
 				.alongWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
+		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
