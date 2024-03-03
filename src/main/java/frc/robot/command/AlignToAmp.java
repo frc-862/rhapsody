@@ -24,7 +24,7 @@ public class AlignToAmp extends Command {
   public PointAtTag pointAtTag;
 
   private PathPlannerPath path;
-  private boolean aligning;
+
   /** Creates a new AlignToTag. */
   public AlignToAmp(Pose2d target, Swerve drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -36,26 +36,25 @@ public class AlignToAmp extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    aligning = false;
     path = PathPlannerPath.fromPathFile("Amp autoalign");
     moveToPose = new MoveToPose(target, drivetrain);
     moveToPose.initialize();
+    new Trigger(() -> moveToPose.isFinished()).whileTrue(new AutoBuilder().buildAuto("Amp autoalign"));
     initLogging();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(!aligning){
+    if(!moveToPose.isFinished()){
       moveToPose.execute();
-      aligning = moveToPose.isFinished();
     }
   }
 
   public void initLogging() {
     LightningShuffleboard.setDoubleSupplier("AlignToAmp", "Target X", () -> target.getTranslation().getX());
     LightningShuffleboard.setDoubleSupplier("AlignToAmp", "Target Y", () -> target.getTranslation().getY());
-    LightningShuffleboard.setBoolSupplier("AlignToAmp", "Aligning", () -> aligning);
+    LightningShuffleboard.setBoolSupplier("AlignToAmp", "Aligning", () -> moveToPose.isFinished());
     LightningShuffleboard.setBoolSupplier("AlignToAmp", "isFinished", () -> isFinished());
   }
   
@@ -68,9 +67,8 @@ public class AlignToAmp extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(drivetrain.getPose().get().getTranslation().getX() - target.getTranslation().getX()) 
-    < AutonomousConstants.AMP_TOLERANCE 
-    && Math.abs(drivetrain.getPose().get().getTranslation().getY() - target.getTranslation().getY()) 
-    < AutonomousConstants.AMP_TOLERANCE;
+    return Math.hypot(drivetrain.getPose().get().getTranslation().getX() - target.getTranslation().getX(),
+     drivetrain.getPose().get().getTranslation().getY() - target.getTranslation().getY()) 
+     < AutonomousConstants.AMP_TOLERANCE;
   }
 }
