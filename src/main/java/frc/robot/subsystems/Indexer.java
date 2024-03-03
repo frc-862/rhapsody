@@ -22,6 +22,8 @@ public class Indexer extends SubsystemBase {
 
     private double timeLastTriggered = 0d;
 
+    private double targetPower = 0;
+
     private PieceState currentState = PieceState.NONE;
     private boolean didShoot = false;
 
@@ -38,6 +40,7 @@ public class Indexer extends SubsystemBase {
 
     private void initLogging() {
         LightningShuffleboard.setDoubleSupplier("Indexer", "Indexer Power", () -> indexerMotor.get());
+        LightningShuffleboard.setDoubleSupplier("Indexer", "Indexer Target Power", () -> targetPower);
 
         LightningShuffleboard.setBoolSupplier("Indexer", "Entry Beam Break", () -> getEntryBeamBreakState());
         LightningShuffleboard.setBoolSupplier("Indexer", "Exit Beam Break", () -> getExitBeamBreakState());
@@ -69,6 +72,7 @@ public class Indexer extends SubsystemBase {
      * @param power
      */
     public void setPower(double power) {
+        targetPower = power;
         indexerMotor.set(power);
     }
 
