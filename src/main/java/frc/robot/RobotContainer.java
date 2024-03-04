@@ -36,6 +36,7 @@ import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
+import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.PodiumShot;
@@ -213,8 +214,7 @@ public class RobotContainer extends LightningContainer {
 		// // new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
-		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,  // TODO need new button start? Back?
-		// drivetrain, leds).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
+		// new Trigger(coPilot::getBButton).whileTrue(
 
 		/* BIAS */
 		// new Trigger(() -> coPilot.getPOV() == 0)
@@ -263,9 +263,15 @@ public class RobotContainer extends LightningContainer {
 		// 		new Collect(() -> MathUtil.applyDeadband((coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), ControllerConstants.DEADBAND), collector));
 		// climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(),() ->
 		// -coPilot.getRightY(), climber));
-		climber.setDefaultCommand(new SetPointClimb(climber,
-			() -> (((-coPilot.getLeftY())+1)/2)*ClimbConstants.MAX_HEIGHT,
-			() -> (((-coPilot.getRightY())+1)/2)*ClimbConstants.MAX_HEIGHT));
+		// climber.setDefaultCommand(new SetPointClimb(climber,
+		// 	() -> (((-coPilot.getLeftY())+1)/2)*ClimbConstants.MAX_HEIGHT,
+		// 	() -> (((-coPilot.getRightY())+1)/2)*ClimbConstants.MAX_HEIGHT));
+		climber.setDefaultCommand(new SmartClimb(
+			climber,
+			drivetrain,
+			() -> -coPilot.getLeftY(),
+			() -> -coPilot.getRightY(),
+			coPilot::getBButton));
 	}
 
 	protected Command getAutonomousCommand() {

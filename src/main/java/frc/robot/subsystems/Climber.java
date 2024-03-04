@@ -120,6 +120,20 @@ public class Climber extends SubsystemBase {
     }
 
     /**
+     * sets the setpoint of the climb motors to the max height
+     */
+    public void deploy() {
+        setSetpoint(ClimbConstants.MAX_HEIGHT);
+    }
+
+    /**
+     * sets the setpoint of the climb motors to the retracted position
+     */
+    public void retract() {
+        setSetpoint(ClimbConstants.CLIMB_PID_SETPOINT_RETRACTED);
+    }
+
+    /**
      * Stops all climb motors
      */
     public void stop() {
