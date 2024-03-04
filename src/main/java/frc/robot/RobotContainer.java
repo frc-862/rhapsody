@@ -61,6 +61,7 @@ import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
 import frc.robot.command.CollisionDetection;
 import frc.robot.command.Collect;
+import frc.robot.command.CollectAndGo;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climber;
@@ -138,7 +139,7 @@ public class RobotContainer extends LightningContainer {
 
 		NamedCommands.registerCommand("Cand-Sub",
 			new PointBlankShotAuton(flywheel, pivot, indexer)
-				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
+				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
 		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
@@ -154,6 +155,7 @@ public class RobotContainer extends LightningContainer {
 				.alongWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
+		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -203,13 +205,13 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		new Trigger(coPilot::getBButton)
-		.whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer, pivot).deadlineWith(leds.enableState(LED_STATES.COLLECTING))); // TODO: find correct button/trigger
+			.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
+			.andThen(new SmartCollect(() -> 0.55, () -> 0.75, collector, indexer, pivot))); // TODO: find correct button/trigger
 
 		// cand shots for the robot
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
-		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
+		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
-		new Trigger(coPilot::getXButton).whileTrue(new Tune(flywheel, pivot));
 		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
 		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,  // TODO need new button start? Back?
@@ -263,7 +265,10 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		collector.setDefaultCommand(
-				new Collect(() -> MathUtil.applyDeadband((coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), ControllerConstants.DEADBAND), collector, indexer));
+				new Collect(() -> MathUtil.applyDeadband(
+					(coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()),
+					ControllerConstants.DEADBAND), collector));
+
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
 	}
