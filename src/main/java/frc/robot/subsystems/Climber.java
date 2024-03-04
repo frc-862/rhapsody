@@ -6,11 +6,6 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
@@ -24,7 +19,6 @@ public class Climber extends SubsystemBase {
     private ThunderBird climbMotorL;
 
     private PositionVoltage setPointControl = new PositionVoltage(0d);
-
     private DutyCycleOut manualControl = new DutyCycleOut(0d);
 
     private CLIMBER_STATES state = CLIMBER_STATES.STOW;
@@ -71,22 +65,6 @@ public class Climber extends SubsystemBase {
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Applied", () -> climbMotorL.getMotorVoltage().getValueAsDouble());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Applied", () -> climbMotorR.getMotorVoltage().getValueAsDouble());
-        // LightningShuffleboard.set("Climb", "Left Lower Pose",
-        //         convertLowerPose(getHeightL(), false));
-        // LightningShuffleboard.set("Climb", "Right Lower Pose",
-        //         convertLowerPose(getHeightR(), true));
-        // LightningShuffleboard.set("Climb", "Left Upper Pose",
-        //         convertUpperPose(getHeightL(), false));
-        // LightningShuffleboard.set("Climb", "Right Upper Pose",
-        //         convertUpperPose(getHeightR(), true));
-        // LightningShuffleboard.set("Climb", "Left Lower Setpoint",
-        //         convertLowerPose(getSetpointL(), false));
-        // LightningShuffleboard.set("Climb", "Right Lower Setpoint",
-        //         convertLowerPose(getSetpointR(), true));
-        // LightningShuffleboard.set("Climb", "Left Upper Setpoint",
-        //         convertUpperPose(getSetpointL(), false));
-        // LightningShuffleboard.set("Climb", "Right Upper Setpoint",
-        //         convertUpperPose(getSetpointR(), true));
     }
 
     /**
@@ -125,7 +103,7 @@ public class Climber extends SubsystemBase {
 
     /**
      * sets the setpoint of both climb motors
-     * @param setPoint setpoint for both climb motors in inches
+     * @param setPoint setpoint for both climb motors in pulley rotations
      */
     public void setSetpoint(double setPoint) {
         setSetpoint(setPoint, setPoint);
@@ -174,59 +152,6 @@ public class Climber extends SubsystemBase {
      */
     public double getSetpointL() {
         return this.setPointControl.Position;
-    }
-
-    /**
-     * @param height the height to convert to a pose, in inches
-     * @param isRight whether the pose is for the right arm
-     * @return the pose of the climb arm
-     */
-    private Pose3d convertLowerPose(double height, boolean isRight) {
-        // law of cosines to get angle of lower arm
-        double pitch = (Math.PI / 2) - Math.acos((-Math.pow(ClimbConstants.UPPER_LENGTH, 2)
-                + Math.pow(height, 2) + Math.pow(ClimbConstants.LOWER_LENGTH, 2))
-                / (2 * height * ClimbConstants.LOWER_LENGTH));
-        if (isRight) {
-            return ClimbConstants.LOWER_OFFSET
-                    .plus(new Transform3d(new Translation3d(), new Rotation3d(0, pitch, 0))
-                            .plus(ClimbConstants.LEFT_RIGHT_OFFSET));
-        } else {
-            return ClimbConstants.LOWER_OFFSET
-                    .plus(new Transform3d(new Translation3d(0, 0, -Units.inchesToMeters(height)),
-                            new Rotation3d(0, pitch, 0))
-                                    .plus(ClimbConstants.LEFT_RIGHT_OFFSET.inverse()));
-        }
-    }
-
-    /**
-     * @param height the height to convert to a pose, in inches
-     * @param isRight whether the pose is for the right arm
-     * @return the pose of the climb arm
-     */
-    private Pose3d convertUpperPose(double height, boolean isRight) {
-        Pose3d lowerPose = convertLowerPose(height, isRight);
-        double lowerPitch = lowerPose.getRotation().getY();
-        // law of cosines to get angle of upper arm
-        double pitch = Math.PI
-                - Math.acos((-Math.pow(height, 2) + Math.pow(ClimbConstants.LOWER_LENGTH, 2)
-                        + Math.pow(ClimbConstants.UPPER_LENGTH, 2))
-                        / (2 * ClimbConstants.LOWER_LENGTH * ClimbConstants.UPPER_LENGTH))
-                - lowerPitch;
-        // simple trig to get height of upper arm (equal to height of end of lower arm)
-        double poseZ = Units.inchesToMeters(ClimbConstants.LOWER_LENGTH * Math.sin(lowerPitch))
-                + lowerPose.getTranslation().getZ();
-        // simple trig to get distance from end of lower arm to base of upper arm
-        double poseX = Units.inchesToMeters(ClimbConstants.LOWER_LENGTH * Math.cos(lowerPitch))
-                + lowerPose.getTranslation().getX();
-        if (isRight) {
-            return ClimbConstants.UPPER_OFFSET.plus(
-                    new Transform3d(new Translation3d(poseX, 0, poseZ), new Rotation3d(0, pitch, 0))
-                            .plus(ClimbConstants.LEFT_RIGHT_OFFSET));
-        } else {
-            return ClimbConstants.UPPER_OFFSET.plus(
-                    new Transform3d(new Translation3d(poseX, 0, poseZ), new Rotation3d(0, pitch, 0))
-                            .plus(ClimbConstants.LEFT_RIGHT_OFFSET.inverse()));
-        }
     }
 
     /**
