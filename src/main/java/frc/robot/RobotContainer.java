@@ -63,6 +63,7 @@ import frc.robot.command.tests.TurnSystemTest;
 import frc.robot.command.Climb;
 import frc.robot.command.CollisionDetection;
 import frc.robot.command.Collect;
+import frc.robot.command.CollectAndGo;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climber;

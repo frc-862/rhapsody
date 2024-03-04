@@ -397,6 +397,7 @@ public class Constants {
         public static final double MOTOR_KA = 0;
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
+        public static final double COLLECTOR_GRABANDGO_POWER = 0.75;
     }
 
     public class FlywheelConstants { // TODO: get real
