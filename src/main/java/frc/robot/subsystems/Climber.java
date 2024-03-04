@@ -2,8 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 
@@ -24,9 +23,9 @@ public class Climber extends SubsystemBase {
     private ThunderBird climbMotorR;
     private ThunderBird climbMotorL;
 
-    private PositionTorqueCurrentFOC setPointControl = new PositionTorqueCurrentFOC(0d);
+    private PositionVoltage setPointControl = new PositionVoltage(0d);
 
-    private TorqueCurrentFOC manualControl = new TorqueCurrentFOC(0d);
+    private DutyCycleOut manualControl = new DutyCycleOut(0d);
 
     private CLIMBER_STATES state = CLIMBER_STATES.STOW;
     private Swerve drivetrain;
@@ -45,11 +44,11 @@ public class Climber extends SubsystemBase {
         climbMotorL = new ThunderBird(CAN.CLIMB_LEFT, CAN.CANBUS_FD,
             ClimbConstants.CLIMB_LEFT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
 
-        climbMotorL.configPIDF(0, ClimbConstants.EXTEND_KP, ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD);
-        climbMotorL.configPIDF(1, ClimbConstants.RETRACT_KP, ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
+        climbMotorL.configPIDF(0, ClimbConstants.UNLOADED_KP, ClimbConstants.UNLOADED_KI, ClimbConstants.UNLOADED_KD);
+        climbMotorL.configPIDF(1, ClimbConstants.LOADED_KP, ClimbConstants.LOADED_KI, ClimbConstants.LOADED_KD);
 
-        climbMotorR.configPIDF(0, ClimbConstants.EXTEND_KP, ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD);
-        climbMotorR.configPIDF(1, ClimbConstants.RETRACT_KP, ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
+        climbMotorR.configPIDF(0, ClimbConstants.UNLOADED_KP, ClimbConstants.UNLOADED_KI, ClimbConstants.UNLOADED_KD);
+        climbMotorR.configPIDF(1, ClimbConstants.LOADED_KP, ClimbConstants.LOADED_KI, ClimbConstants.LOADED_KD);
 
         FeedbackConfigs conf = new FeedbackConfigs();
 
@@ -70,6 +69,8 @@ public class Climber extends SubsystemBase {
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
+        LightningShuffleboard.setDoubleSupplier("Climb", "Left Applied", () -> climbMotorL.getMotorVoltage().getValueAsDouble());
+        LightningShuffleboard.setDoubleSupplier("Climb", "Right Applied", () -> climbMotorR.getMotorVoltage().getValueAsDouble());
         // LightningShuffleboard.set("Climb", "Left Lower Pose",
         //         convertLowerPose(getHeightL(), false));
         // LightningShuffleboard.set("Climb", "Right Lower Pose",
@@ -132,12 +133,12 @@ public class Climber extends SubsystemBase {
 
     /**
      * sets the setpoint of the climb motors
-     * @param leftInches setpoint for left climb motor in inches
-     * @param rightInches setpoint for right climb motor in inches
+     * @param leftSetPoint setpoint for left climb motor in pulley rotations
+     * @param rightSetPoint setpoint for right climb motor in pulley rotations
      */
-    public void setSetpoint(double leftInches, double rightInches) {
-        climbMotorL.setControl(setPointControl.withPosition(leftInches));
-        climbMotorR.setControl(setPointControl.withPosition(rightInches));
+    public void setSetpoint(double leftSetPoint, double rightSetPoint) {
+        climbMotorL.setControl(setPointControl.withPosition(leftSetPoint));
+        climbMotorR.setControl(setPointControl.withPosition(rightSetPoint));
     }
 
     /**
@@ -291,10 +292,10 @@ public class Climber extends SubsystemBase {
     public void periodic() {
         // updates height based on limit switches
         for (TalonFX motor : new TalonFX[] {climbMotorR, climbMotorL}) {
-            if (motor.getRotorPosition().getValueAsDouble() > ClimbConstants.MAX_HEIGHT) {
+            if (motor.getPosition().getValueAsDouble() > ClimbConstants.MAX_HEIGHT) {
                 motor.setPosition(ClimbConstants.MAX_HEIGHT);
             }
-            if (motor.getRotorPosition().getValueAsDouble() < 0
+            if (motor.getPosition().getValueAsDouble() < 0
                     || motor.getReverseLimit().getValueAsDouble() == 0) {
                 motor.setPosition(0d);
             }

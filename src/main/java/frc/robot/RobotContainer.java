@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonomousConstants;
+import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
@@ -33,6 +34,7 @@ import frc.robot.command.MoveToPose;
 import frc.robot.command.PointAtPoint;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
+import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartCollect;
 import frc.robot.command.shoot.AmpShot;
@@ -259,8 +261,11 @@ public class RobotContainer extends LightningContainer {
 		/* copilot */
 		// collector.setDefaultCommand(
 		// 		new Collect(() -> MathUtil.applyDeadband((coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), ControllerConstants.DEADBAND), collector));
-		climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(),() ->
-		-coPilot.getRightY(), climber));
+		// climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(),() ->
+		// -coPilot.getRightY(), climber));
+		climber.setDefaultCommand(new SetPointClimb(climber,
+			() -> (((-coPilot.getLeftY())+1)/2)*ClimbConstants.MAX_HEIGHT,
+			() -> (((-coPilot.getRightY())+1)/2)*ClimbConstants.MAX_HEIGHT));
 	}
 
 	protected Command getAutonomousCommand() {
