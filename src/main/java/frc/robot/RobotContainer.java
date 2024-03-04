@@ -202,7 +202,7 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		new Trigger(coPilot::getBButton)
-				.whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer, pivot)); // TODO: find correct button/trigger
+				.whileTrue(new SmartCollect(() -> 0.55, () -> 0.75, collector, indexer, pivot)); // TODO: find correct button/trigger
 
 		// cand shots for the robot
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));

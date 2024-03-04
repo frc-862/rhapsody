@@ -4,9 +4,11 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
+import frc.thunder.command.TimedCommand;
 
 public class SmartCollect extends Command {
 
@@ -71,9 +73,10 @@ public class SmartCollect extends Command {
 			case IN_PIVOT: /* Note has touched entry indexer beambreak */
 				collector.stop();
 				if (allowIndex && !reversedFromExit) {
-					indexer.setPower(0.8 * indexerPower.getAsDouble());
+					indexer.setPower(0.9 * indexerPower.getAsDouble());
 				} else if (reversedFromExit) {
 					indexer.stop();
+					new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 				}
 				break;
 
