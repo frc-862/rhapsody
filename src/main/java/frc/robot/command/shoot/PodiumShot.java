@@ -13,14 +13,14 @@ public class PodiumShot extends Command {
 
 	/**
 	 * Creates a new PodiumShot.
-	 * @param flywheel
-	 * @param pivot
+	 * @param flywheel subsystem
+	 * @param pivot subsystem
 	 */
 	public PodiumShot(Flywheel flywheel, Pivot pivot) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 
-		addRequirements(flywheel);
+		addRequirements(flywheel, pivot);
 	}
 
 	@Override

@@ -29,6 +29,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutonomousConstants;
+import frc.robot.Constants.CollisionConstants;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
@@ -41,7 +43,6 @@ import frc.thunder.util.Pose4d;
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
-
     private final Limelights limelightSubsystem;
 
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
@@ -149,6 +150,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
+        //TODO: don't use
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
@@ -242,9 +244,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public boolean isTipped() {
         return (Math.abs(
-                getPigeon2().getPitch().getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE
+                getPigeon2().getPitch().getValueAsDouble()) > CollisionConstants.TIP_DEADZONE
                 || Math.abs(getPigeon2().getRoll()
-                        .getValueAsDouble()) > VisionConstants.COLLISION_DEADZONE);
+                        .getValueAsDouble()) > CollisionConstants.TIP_DEADZONE);
     }
 
     /**

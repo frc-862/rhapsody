@@ -1,95 +1,47 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.FlywheelConstants;
-import frc.robot.Constants.PivotConstants;
-import frc.thunder.config.FalconConfig;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
-import frc.thunder.tuning.FalconTuner;
 
 public class Flywheel extends SubsystemBase {
-    // private ThunderBird topMotor; // TODO figure out which is top vs bottom
-    // private ThunderBird bottomMotor;
-    private TalonFX topMotor;
-    private TalonFX bottomMotor;
+    private ThunderBird topMotor;
+    private ThunderBird bottomMotor;
 
-    private final PIDController topRPMPID;
-    private final PIDController bottomRPMPID;
-    private final SimpleMotorFeedforward topFeedForward;
-    private final SimpleMotorFeedforward bottomFeedForward;
+    private final VelocityVoltage topRPMPID = new VelocityVoltage(0);
+    private final VelocityVoltage bottomRPMPID = new VelocityVoltage(0);
 
-    // private final VelocityVoltage rpmPID = new VelocityVoltage(0, 0, false,
-    // FlywheelConstants.MOTOR_KV,
-    // 0, false,false, false);
-    // private final VelocityVoltage rpmPID = new VelocityVoltage(0d).withSlot(0);
-    private double topTargetRPM = 0;
-    private double bottomTargetRPM = 0;
+    private double topTargetRPS = 0;
+    private double bottomTargetRPS = 0;
     private double bias = 0;
-    private boolean tuning = false;
     private boolean coast = false;
-
-    // private FalconTuner topTuner;
-    // private FalconTuner bottomTuner;
 
     public Flywheel() {
         /* TEST after kettering basic stuff for now */
-        // topMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD,
-        // FlywheelConstants.MOTOR_TOP_INVERT, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
-        // FlywheelConstants.MOTOR_BRAKE_MODE);
-        // bottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD,
-        // FlywheelConstants.MOTOR_BOTTOM_INVERT, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
-        // FlywheelConstants.MOTOR_BRAKE_MODE);
-        // topMotor.configPIDF(0, FlywheelConstants.MOTOR_KP, FlywheelConstants.MOTOR_KI,
-        // FlywheelConstants.MOTOR_KD, FlywheelConstants.MOTOR_KS, FlywheelConstants.MOTOR_KV);
-        // bottomMotor.configPIDF(0, FlywheelConstants.MOTOR_KP, FlywheelConstants.MOTOR_KI,
-        // FlywheelConstants.MOTOR_KD, FlywheelConstants.MOTOR_KS, FlywheelConstants.MOTOR_KV);
+        topMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD,
+            FlywheelConstants.MOTOR_TOP_INVERT, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
+            FlywheelConstants.MOTOR_BRAKE_MODE);
+        bottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD,
+            FlywheelConstants.MOTOR_BOTTOM_INVERT, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
+            FlywheelConstants.MOTOR_BRAKE_MODE);
+        topMotor.configPIDF(0, FlywheelConstants.TOP_MOTOR_KP, FlywheelConstants.TOP_MOTOR_KI,
+            FlywheelConstants.TOP_MOTOR_KD, FlywheelConstants.TOP_MOTOR_KS, FlywheelConstants.TOP_MOTOR_KV);
+        bottomMotor.configPIDF(0, FlywheelConstants.BOTTOM_MOTOR_KP, FlywheelConstants.BOTTOM_MOTOR_KI,
+            FlywheelConstants.BOTTOM_MOTOR_KD, FlywheelConstants.BOTTOM_MOTOR_KS, FlywheelConstants.BOTTOM_MOTOR_KV);
 
-        // note - if you wanna tune these together, you should be able to set the tab to the same
-        // name and it'll read the same values for both instances
-        // topTuner = new FalconTuner(shooterTopMotor, "Flywheel Top", this::setTopMoterRPM,
-        // topTargetRPM);
-        // bottomTuner = new FalconTuner(shooterBottomMotor, "Flywheel Bottom",
-        // this::setBottomMoterRPM, bottomTargetRPM);
-
-        /* TEMP base code */
-        topMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD,
-                FlywheelConstants.MOTOR_TOP_INVERT, 0, 0, NeutralModeValue.Coast);
-        bottomMotor = FalconConfig.createMotor(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD,
-                FlywheelConstants.MOTOR_BOTTOM_INVERT, 0, 0, NeutralModeValue.Coast);
-
-        topRPMPID = new PIDController(FlywheelConstants.MOTOR_KP, FlywheelConstants.MOTOR_KI,
-                FlywheelConstants.MOTOR_KD, 0.01);
-        bottomRPMPID = new PIDController(FlywheelConstants.MOTOR_KP, FlywheelConstants.MOTOR_KI,
-                FlywheelConstants.MOTOR_KD, 0.01);
-
-        topFeedForward = new SimpleMotorFeedforward(FlywheelConstants.MOTOR_KS,
-                FlywheelConstants.MOTOR_KV, FlywheelConstants.MOTOR_KA);
-        bottomFeedForward = new SimpleMotorFeedforward(FlywheelConstants.MOTOR_KS,
-                FlywheelConstants.MOTOR_KV, FlywheelConstants.MOTOR_KA);
-
-        topRPMPID.disableContinuousInput();
-        bottomRPMPID.disableContinuousInput();
-
-        topRPMPID.setTolerance(FlywheelConstants.RPM_TOLERANCE);
-        bottomRPMPID.setTolerance(FlywheelConstants.RPM_TOLERANCE);
-
+        topMotor.applyConfig();
+        bottomMotor.applyConfig();
         initLogging();
     }
 
     private void initLogging() {
         LightningShuffleboard.setDoubleSupplier("Flywheel", "Top RPM", this::getTopMotorRPM);
         LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom RPM", this::getBottomMotorRPM);
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Target Top RPM", () -> topTargetRPM);
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Target Bottom RPM",
-                () -> bottomTargetRPM);
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Target Top RPM", () -> topTargetRPS * 60);
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Target Bottom RPM", () -> bottomTargetRPS * 60);
 
         LightningShuffleboard.setBoolSupplier("Flywheel", "Top on Target",
                 () -> topMotorRPMOnTarget());
@@ -97,41 +49,19 @@ public class Flywheel extends SubsystemBase {
                 () -> bottomMotorRPMOnTarget());
 
         LightningShuffleboard.setDoubleSupplier("Flywheel", "Top Power", () -> topMotor.get());
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Power",
-                () -> bottomMotor.get());
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Power", () -> bottomMotor.get());
 
         LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", this::getBias);
-
-
     }
 
     @Override
     public void periodic() {
-        // topTuner.update();
-        // bottomTuner.update();
-
-        LightningShuffleboard.setDouble("Flywheel", "top PID output",
-                topRPMPID.calculate(getTopMotorRPM()));
-        LightningShuffleboard.setDouble("Flywheel", "bottom PID output",
-                bottomRPMPID.calculate(getBottomMotorRPM()));
-        LightningShuffleboard.setDouble("Flywheel", "top Feed forward",
-                topFeedForward.calculate(topTargetRPM));
-        LightningShuffleboard.setDouble("Flywheel", "bottom Feed forward",
-                bottomFeedForward.calculate(bottomTargetRPM));
-
-        LightningShuffleboard.setDouble("Flywheel", "Top velocity error",
-                topRPMPID.getPositionError());
-        LightningShuffleboard.setDouble("Flywheel", "Bottom velocity error",
-                bottomRPMPID.getPositionError());
-
         if (coast) {
             bottomMotor.set(0d);
             topMotor.set(0d);
         } else {
-            topMotor.setVoltage(
-                    topRPMPID.calculate(getTopMotorRPM()) + topFeedForward.calculate(topTargetRPM));
-            bottomMotor.setVoltage(bottomRPMPID.calculate(getBottomMotorRPM())
-                    + bottomFeedForward.calculate(bottomTargetRPM));
+            topMotor.setControl(topRPMPID.withVelocity((topTargetRPS + bias)));
+            bottomMotor.setControl(bottomRPMPID.withVelocity((bottomTargetRPS + bias)));
         }
     }
 
@@ -141,18 +71,8 @@ public class Flywheel extends SubsystemBase {
      */
     public void setAllMotorsRPM(double rpm) {
         coast(false);
-        topTargetRPM = rpm;
-        bottomTargetRPM = rpm;
-
-        System.out.println("Setting all motors to " + rpm);
-        topRPMPID.setSetpoint(rpm);
-        bottomRPMPID.setSetpoint(rpm);
-
-        // double rps = rpm / 60;
-        // topMotor.setControl(
-        // rpmPID.withVelocity(rps).withFeedForward(rps * FlywheelConstants.MOTOR_KV));
-        // bottomMotor.setControl(
-        // rpmPID.withVelocity(rps).withFeedForward(rps * FlywheelConstants.MOTOR_KV));
+        topTargetRPS = rpm / 60;
+        bottomTargetRPS = rpm / 60;
     }
 
     /**
@@ -161,12 +81,7 @@ public class Flywheel extends SubsystemBase {
      */
     public void setTopMoterRPM(double rpm) {
         coast(false);
-        topTargetRPM = rpm;
-        topRPMPID.setSetpoint(rpm);
-
-        // double rps = rpm / 60;
-        // topMotor.setControl(
-        // rpmPID.withVelocity(rps).withFeedForward(FlywheelConstants.MOTOR_KV * rps));
+        topTargetRPS = rpm / 60;
     }
 
     /**
@@ -175,12 +90,7 @@ public class Flywheel extends SubsystemBase {
      */
     public void setBottomMoterRPM(double rpm) {
         coast(false);
-        bottomTargetRPM = rpm;
-        bottomRPMPID.setSetpoint(rpm);
-
-        // double rps = rpm / 60;
-        // bottomMotor.setControl(
-        // rpmPID.withVelocity(rps).withFeedForward(FlywheelConstants.MOTOR_KV * rps));
+        bottomTargetRPS = rpm / 60;
     }
 
     /**
@@ -201,14 +111,14 @@ public class Flywheel extends SubsystemBase {
      * @return Whether or not top flywheel is on target, within FlywheelConstants.RPM_TOLERANCE
      */
     public boolean topMotorRPMOnTarget() {
-        return Math.abs(getTopMotorRPM() - topTargetRPM) < FlywheelConstants.RPM_TOLERANCE;
+        return Math.abs(getTopMotorRPM() - (topTargetRPS * 60)) < FlywheelConstants.RPM_TOLERANCE;
     }
 
     /**
      * @return Whether or not bottom flywheel is on target, within FlywheelConstants.RPM_TOLERANCE
      */
     public boolean bottomMotorRPMOnTarget() {
-        return Math.abs(getBottomMotorRPM() - bottomTargetRPM) < FlywheelConstants.RPM_TOLERANCE;
+        return Math.abs(getBottomMotorRPM() - (bottomTargetRPS * 60)) < FlywheelConstants.RPM_TOLERANCE;
     }
 
     /**
@@ -219,14 +129,31 @@ public class Flywheel extends SubsystemBase {
     }
 
     /**
+     * @return the top motor's target RPM
+     */
+    public double topMotorTargetRPM() {
+        return topTargetRPS * 60;
+    }
+
+    /**
+     * @return the bottom motor's target RPM
+     */
+    public double bottomMotorTargetRPM() {
+        return bottomTargetRPS * 60;
+    }
+
+    /**
      * Sets the voltage to a small amount so the flywheel coasts to a stop
      * @param coast Whether or not to coast the flywheel
      */
     public void coast(boolean coast) {
-        System.out.println("Coasting: " + coast);
         this.coast = coast;
     }
 
+    public void stop() {
+        setAllMotorsRPM(0);
+    }
+    
     /**
      * @return The bias to add to the target RPM of the flywheel
      */

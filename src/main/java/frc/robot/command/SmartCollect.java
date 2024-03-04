@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
@@ -43,7 +44,9 @@ public class SmartCollect extends Command {
 	}
 
 	@Override
-	public void initialize() {}
+	public void initialize() {
+	
+	}
 
 	@Override
 	public void execute() {
@@ -96,6 +99,9 @@ public class SmartCollect extends Command {
 
 	@Override
 	public boolean isFinished() {
+		if (reversedFromExit && indexer.getPieceState() == PieceState.IN_PIVOT){
+			return true;
+		}
 		return false;
 	}
 }
