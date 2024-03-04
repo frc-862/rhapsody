@@ -397,6 +397,7 @@ public class Constants {
         public static final double MOTOR_KA = 0;
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
+        public static final double COLLECTOR_GRABANDGO_POWER = 0.75;
     }
 
     public class FlywheelConstants { // TODO: get real
@@ -493,6 +494,7 @@ public class Constants {
                 put(1.08d, 60d);
                 put(2.01d, 50d);
                 put(2.94d, 39d);
+                put(3.99d, 31d);
             }
         };
 
@@ -501,9 +503,9 @@ public class Constants {
             {
                 // As distance get smaller RPM gets smaller
                 put(1.08d, 2000d);
-                put(2.01d, 2250d);
+                put(2.01d, 2000d);
                 put(2.94d, 2500d);
-
+                put(3.99d, 3250d);
             }
         };
 

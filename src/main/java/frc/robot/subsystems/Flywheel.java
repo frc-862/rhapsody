@@ -129,6 +129,20 @@ public class Flywheel extends SubsystemBase {
     }
 
     /**
+     * @return the top motor's target RPM
+     */
+    public double topMotorTargetRPM() {
+        return topTargetRPS * 60;
+    }
+
+    /**
+     * @return the bottom motor's target RPM
+     */
+    public double bottomMotorTargetRPM() {
+        return bottomTargetRPS * 60;
+    }
+
+    /**
      * Sets the voltage to a small amount so the flywheel coasts to a stop
      * @param coast Whether or not to coast the flywheel
      */
@@ -136,6 +150,10 @@ public class Flywheel extends SubsystemBase {
         this.coast = coast;
     }
 
+    public void stop() {
+        setAllMotorsRPM(0);
+    }
+    
     /**
      * @return The bias to add to the target RPM of the flywheel
      */
