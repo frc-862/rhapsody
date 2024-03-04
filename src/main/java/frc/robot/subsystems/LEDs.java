@@ -43,43 +43,43 @@ public class LEDs extends SubsystemBase {
 				break;
 
 			case START:
-				rainbow(-1);
+				rainbow(5);
 				break;
 
 			case COLLECTED:
-				pulse(-1, LEDsConstants.GREEN_HUE);
+				pulse(5, LEDsConstants.GREEN_HUE);
 				break;
 
 			case SHOT:
-				pulse(-1, LEDsConstants.GREEN_HUE);
+				pulse(5, LEDsConstants.GREEN_HUE);
 				break;
 
 			case FINISHED_CLIMB:
-				pulse(-1, LEDsConstants.GREEN_HUE);
+				pulse(5, LEDsConstants.GREEN_HUE);
 				break;
 
 			case SHOOTING:
-				blink(-1, LEDsConstants.YELLOW_HUE);
+				blink(5, LEDsConstants.YELLOW_HUE);
 				break;
 
 			case COLLECTING:
-				pulse(-1, LEDsConstants.RED_HUE);
+				pulse(5, LEDsConstants.RED_HUE);
 				break;
 
 			case CHASING:
-				pulse(-1, LEDsConstants.RED_HUE);
+				pulse(5, LEDsConstants.RED_HUE);
 				break;
 
 			case CLIMBING:
-				blink(-1, LEDsConstants.PURPLE_HUE);
+				blink(5, LEDsConstants.PURPLE_HUE);
 				break;
 
 			case HAS_PIECE:
-				setSolidStrandHSV(-1, LEDsConstants.ORANGE_HUE, 255, 255);
+				setSolidStrandHSV(5, LEDsConstants.ORANGE_HUE, 255, 255);
 				break;
 
 			case HAS_VISION:
-				setSolidStrandHSV(-1, LEDsConstants.PINK_HUE, 255, 255);
+				setSolidStrandHSV(5, LEDsConstants.PINK_HUE, 255, 255);
 				break;
 
 			case DISABLED:
@@ -87,9 +87,34 @@ public class LEDs extends SubsystemBase {
 				break;
 
 			case DEFAULT:
-			 	swirl(-1);
+			 	swirl(5);
 				break;
 		}
+
+		if (ledStates.get(LED_STATES.COLLECTOR_BEAMBREAK) != null) {
+			if (ledStates.get(LED_STATES.COLLECTOR_BEAMBREAK)) {
+				setSolidStrandHSV(1, LEDsConstants.GREEN_HUE, 255, 255);
+			}
+			else {
+				setSolidStrandHSV(1, 0, 0, 0);
+			}
+		} 
+		if (ledStates.get(LED_STATES.INDEXER_ENTER_BEAMBREAK) != null) {
+			if (ledStates.get(LED_STATES.INDEXER_ENTER_BEAMBREAK)) {
+				setSolidStrandHSV(2, LEDsConstants.GREEN_HUE, 255, 255);
+			}
+			else {
+				setSolidStrandHSV(2, 0, 0, 0);
+			}
+		} 
+		if (ledStates.get(LED_STATES.INDEXER_EXIT_BEAMBREAK) != null) {
+			if (ledStates.get(LED_STATES.INDEXER_EXIT_BEAMBREAK)) {
+				setSolidStrandHSV(3, LEDsConstants.GREEN_HUE, 255, 255);
+			}
+			else {
+				setSolidStrandHSV(3, 0, 0, 0);
+			}
+		} 
 
 		leds.setData(ledBuffer);
 	}

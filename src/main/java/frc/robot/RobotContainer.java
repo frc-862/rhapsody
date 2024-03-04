@@ -25,6 +25,7 @@ import frc.robot.Constants.MusicConstants;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.CollisionConstants.CollisionType;
+import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.command.ChasePieces;
@@ -202,7 +203,7 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		new Trigger(coPilot::getBButton)
-		.whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer, pivot)); // TODO: find correct button/trigger
+		.whileTrue(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer, pivot).deadlineWith(leds.enableState(LED_STATES.COLLECTING))); // TODO: find correct button/trigger
 
 		// cand shots for the robot
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
@@ -235,9 +236,13 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(
 				() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()))
 				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		new Trigger(() -> collector.hasPiece())
+		new Trigger(() -> indexer.getPieceState() != PieceState.NONE)
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+
+		new Trigger(() ->  collector.getEntryBeamBreakState()).whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
+		new Trigger(() ->  indexer.getEntryBeamBreakState()).whileTrue(leds.enableState(LED_STATES.INDEXER_ENTER_BEAMBREAK));
+		new Trigger(() ->  indexer.getExitBeamBreakState()).whileTrue(leds.enableState(LED_STATES.INDEXER_EXIT_BEAMBREAK));
 
 		new Trigger(() -> DriverStation.isAutonomousEnabled()).whileTrue(new CollisionDetection(
 				drivetrain, CollisionType.AUTON));
