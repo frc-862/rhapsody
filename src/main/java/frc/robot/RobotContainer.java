@@ -136,9 +136,9 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("led-Shoot",
 				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
-		NamedCommands.registerCommand("Cand-Sub", 
+		NamedCommands.registerCommand("Cand-Sub",
 			new PointBlankShotAuton(flywheel, pivot, indexer)
-				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1))); 
+				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
 		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
@@ -260,8 +260,10 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		collector.setDefaultCommand(
-				new Collect(() -> MathUtil.applyDeadband((coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), ControllerConstants.DEADBAND), collector));
-				
+				new Collect(() -> MathUtil.applyDeadband(
+					(coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()),
+					ControllerConstants.DEADBAND), collector));
+
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
 	}
