@@ -571,43 +571,24 @@ public class Constants {
 
     public class ClimbConstants { // TODO: find real values
         public static final boolean CLIMB_RIGHT_MOTOR_INVERT = false;
-        public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
-        public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final boolean CLIMB_LEFT_MOTOR_INVERT = true;
+        public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean CLIMB_MOTOR_BRAKE_MODE = true;
-        public static final double EXTEND_KP = 0;
-        public static final double EXTEND_KI = 0;
-        public static final double EXTEND_KD = 0;
-        public static final double RETRACT_KP = 0;
-        public static final double RETRACT_KI = 0;
-        public static final double RETRACT_KD = 0;
-        public static final double GEAR_REDUCTION = 20d;
+        public static final double UNLOADED_KP = 10;
+        public static final double UNLOADED_KI = 0;
+        public static final double UNLOADED_KD = 0;
+        public static final double LOADED_KP = 0;
+        public static final double LOADED_KI = 0;
+        public static final double LOADED_KD = 0;
+        public static final double GEAR_REDUCTION = 12d;
         public static final double WINCH_DIAMETER_INCHES = 1d;
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
-        public static final double MAX_HEIGHT = 999d;
-        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of
-                                                       // lower arm in inches
-        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of
-                                                       // upper arm in inches
+        public static final double MAX_HEIGHT = 8.83; //In rotations
+        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of lower arm in inches
+        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
 
-        public static final Pose3d LOWER_OFFSET = new Pose3d(); // NOTE: Poses are in meters despite
-                                                                // george washington's
-                                                                // best efforts
-        public static final Pose3d UPPER_OFFSET = new Pose3d(); // NOTE 2: these poses should
-                                                                // exclude side to side
-                                                                // offset, since it gets set below
-
-        public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); // NOTE 3: this is
-                                                                               // the side to side
-                                                                               // offset of the
-                                                                               // pivot point of the
-                                                                               // arms,
-                                                                               // should exclude
-                                                                               // anything but side
-                                                                               // to
-                                                                               // side values
-        public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; // TODO: find real values
+        public static final double CLIMB_PID_SETPOINT_EXTENDED = MAX_HEIGHT;
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
         public static final double CLIMB_RETRACTION_TOLERANCE = 0;

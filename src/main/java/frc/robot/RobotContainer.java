@@ -30,6 +30,9 @@ import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
 import frc.robot.command.PointAtPoint;
 import frc.robot.command.PointAtTag;
+import frc.robot.command.SetPointClimb;
+import frc.robot.command.Sing;
+import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.PointBlankShot;
@@ -47,6 +50,7 @@ import frc.robot.command.tests.DrivetrainSystemTest;
 import frc.robot.command.tests.FlywheelSystemTest;
 import frc.robot.command.tests.IndexerSystemTest;
 import frc.robot.command.tests.TurnSystemTest;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
@@ -196,9 +200,6 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
 		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
-		// new Trigger(coPilot::getBButton).whileTrue(new Climb(climber,  // TODO need new button start? Back?
-		// drivetrain).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
-
 		/* BIAS */
 		new Trigger(() -> coPilot.getPOV() == 0)
 			.onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
@@ -251,8 +252,14 @@ public class RobotContainer extends LightningContainer {
 					(coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()),
 					ControllerConstants.DEADBAND), collector));
 
-		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
-		// coPilot.getRightY(), climber));
+		// climber.setDefaultCommand(
+		// 	new SmartClimb(
+		// 		climber,
+		// 		drivetrain,
+		// 		() -> -coPilot.getLeftY(),
+		// 		() -> -coPilot.getRightY(),
+		// 		coPilot::getBButton));
+
 	}
 
 	protected Command getAutonomousCommand() {

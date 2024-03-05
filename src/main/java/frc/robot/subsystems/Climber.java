@@ -1,19 +1,16 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
-import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.math.Conversions;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Climber extends SubsystemBase {
@@ -21,57 +18,49 @@ public class Climber extends SubsystemBase {
     private ThunderBird climbMotorR;
     private ThunderBird climbMotorL;
 
-    private PositionTorqueCurrentFOC setPointR;
-    private PositionTorqueCurrentFOC setPointL;
+    private PositionVoltage setPointControlR = new PositionVoltage(0d);
+    private PositionVoltage setPointControlL = new PositionVoltage(0d);
 
-    private CLIMBER_STATES state = CLIMBER_STATES.STOW;
-    private Swerve drivetrain;
+    private DutyCycleOut manualControl = new DutyCycleOut(0d);
 
-    private boolean hasClimbed = false;
-    private boolean hasStowed = false;
-    private boolean hasGroundedR = false;
-    private boolean hasGroundedL = false;
-
-    public Climber(Swerve drivetrain) {
+    public Climber() {
         // configure climb motors
         climbMotorR = new ThunderBird(CAN.CLIMB_RIGHT, CAN.CANBUS_FD,
                 ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
         climbMotorL = new ThunderBird(CAN.CLIMB_LEFT, CAN.CANBUS_FD,
             ClimbConstants.CLIMB_LEFT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
 
-        climbMotorL.configPIDF(0, ClimbConstants.EXTEND_KP, ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD);
-        climbMotorL.configPIDF(1, ClimbConstants.RETRACT_KP, ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
+        climbMotorL.configPIDF(0, ClimbConstants.UNLOADED_KP, ClimbConstants.UNLOADED_KI, ClimbConstants.UNLOADED_KD);
+        climbMotorL.configPIDF(1, ClimbConstants.LOADED_KP, ClimbConstants.LOADED_KI, ClimbConstants.LOADED_KD);
 
-        climbMotorR.configPIDF(0, ClimbConstants.EXTEND_KP, ClimbConstants.EXTEND_KI, ClimbConstants.EXTEND_KD);
-        climbMotorR.configPIDF(1, ClimbConstants.RETRACT_KP, ClimbConstants.RETRACT_KI, ClimbConstants.RETRACT_KD);
+        climbMotorR.configPIDF(0, ClimbConstants.UNLOADED_KP, ClimbConstants.UNLOADED_KI, ClimbConstants.UNLOADED_KD);
+        climbMotorR.configPIDF(1, ClimbConstants.LOADED_KP, ClimbConstants.LOADED_KI, ClimbConstants.LOADED_KD);
+
+        FeedbackConfigs sensorConf = new FeedbackConfigs();
+        SoftwareLimitSwitchConfigs softLimitConf = new SoftwareLimitSwitchConfigs();
+
+        sensorConf.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        sensorConf.SensorToMechanismRatio = ClimbConstants.GEAR_REDUCTION;
+
+        softLimitConf.ForwardSoftLimitEnable = true;
+        softLimitConf.ForwardSoftLimitThreshold = ClimbConstants.MAX_HEIGHT;
+
+        climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConf));
+        climbMotorR.applyConfig(climbMotorR.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConf));
 
         initLogging();
 
-        climbMotorR.applyConfig();
-        climbMotorL.applyConfig();
+        climbMotorL.setPosition(0d);
+        climbMotorR.setPosition(0d);
     }
 
-    private void initLogging() { // TODO test and fix once we have climber
+    private void initLogging() {
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Height", () -> getHeightL());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
-        LightningShuffleboard.set("Climb", "Left Lower Pose",
-                convertLowerPose(getHeightL(), false));
-        LightningShuffleboard.set("Climb", "Right Lower Pose",
-                convertLowerPose(getHeightR(), true));
-        LightningShuffleboard.set("Climb", "Left Upper Pose",
-                convertUpperPose(getHeightL(), false));
-        LightningShuffleboard.set("Climb", "Right Upper Pose",
-                convertUpperPose(getHeightR(), true));
-        LightningShuffleboard.set("Climb", "Left Lower Setpoint",
-                convertLowerPose(getSetpointL(), false));
-        LightningShuffleboard.set("Climb", "Right Lower Setpoint",
-                convertLowerPose(getSetpointR(), true));
-        LightningShuffleboard.set("Climb", "Left Upper Setpoint",
-                convertUpperPose(getSetpointL(), false));
-        LightningShuffleboard.set("Climb", "Right Upper Setpoint",
-                convertUpperPose(getSetpointR(), true));
+        LightningShuffleboard.setDoubleSupplier("Climb", "Left Applied", () -> climbMotorL.getMotorVoltage().getValueAsDouble());
+        LightningShuffleboard.setDoubleSupplier("Climb", "Right Applied", () -> climbMotorR.getMotorVoltage().getValueAsDouble());
     }
 
     /**
@@ -88,29 +77,13 @@ public class Climber extends SubsystemBase {
      * @param powerL the power to set the left climb motor to
      */
     public void setPower(double powerL, double powerR) {
-        climbMotorR.set(powerR);
-        climbMotorL.set(powerL);
-    }
-
-    /**
-     * Set power to left climb motor
-     * @param power power
-     */
-    public void setPowerL(double power) {
-        climbMotorL.set(power);
-    }
-
-    /**
-     * Set power to right climb motor
-     * @param power power
-     */
-    public void setPowerR(double power) {
-        climbMotorL.set(power);
+        climbMotorR.setControl(manualControl.withOutput(powerR)); // FOC On by default
+        climbMotorL.setControl(manualControl.withOutput(powerL));
     }
 
     /**
      * sets the setpoint of both climb motors
-     * @param setPoint setpoint for both climb motors in inches
+     * @param setPoint setpoint for both climb motors in pulley rotations
      */
     public void setSetpoint(double setPoint) {
         setSetpoint(setPoint, setPoint);
@@ -118,17 +91,28 @@ public class Climber extends SubsystemBase {
 
     /**
      * sets the setpoint of the climb motors
-     * @param leftInches setpoint for left climb motor in inches
-     * @param rightInches setpoint for right climb motor in inches
+     * @param leftSetPoint setpoint for left climb motor in pulley rotations
+     * @param rightSetPoint setpoint for right climb motor in pulley rotations
      */
-    public void setSetpoint(double leftInches, double rightInches) {
-        this.setPointL = new PositionTorqueCurrentFOC(Conversions.getInputShaftRotations(
-                leftInches / ClimbConstants.WINCH_CIRCUFERENCE, ClimbConstants.GEAR_REDUCTION));
-        this.setPointR = new PositionTorqueCurrentFOC(Conversions.getInputShaftRotations(
-                rightInches / ClimbConstants.WINCH_CIRCUFERENCE, ClimbConstants.GEAR_REDUCTION));
+    public void setSetpoint(double leftSetPoint, double rightSetPoint) {
+        setPointControlL = setPointControlL.withPosition(leftSetPoint);
+        setPointControlR = setPointControlR.withPosition(rightSetPoint);
+        climbMotorL.setControl(setPointControlL);
+        climbMotorR.setControl(setPointControlR);
+    }
 
-        climbMotorL.setControl(this.setPointL);
-        climbMotorR.setControl(this.setPointR);
+    /**
+     * sets the setpoint of the climb motors to the max height
+     */
+    public void deploy() {
+        setSetpoint(ClimbConstants.MAX_HEIGHT);
+    }
+
+    /**
+     * sets the setpoint of the climb motors to the retracted position
+     */
+    public void retract() {
+        setSetpoint(ClimbConstants.CLIMB_PID_SETPOINT_RETRACTED);
     }
 
     /**
@@ -142,182 +126,38 @@ public class Climber extends SubsystemBase {
      * @return height of right climb arm
      */
     public double getHeightR() {
-        return Conversions.getOutputShaftRotations(
-                climbMotorR.getRotorPosition().getValueAsDouble(), ClimbConstants.GEAR_REDUCTION)
-                * ClimbConstants.WINCH_CIRCUFERENCE;
+        return climbMotorR.getPosition().getValueAsDouble();
     }
 
     /**
      * @return height of left climb arm
      */
     public double getHeightL() {
-        return Conversions.getOutputShaftRotations(
-                climbMotorL.getRotorPosition().getValueAsDouble(), ClimbConstants.GEAR_REDUCTION)
-                * ClimbConstants.WINCH_CIRCUFERENCE;
+        return climbMotorL.getPosition().getValueAsDouble();
     }
 
     /**
      * @return the setpoint of the right climb arm
      */
     public double getSetpointR() {
-        return Conversions.getOutputShaftRotations(this.setPointR.Position,
-                ClimbConstants.GEAR_REDUCTION) * ClimbConstants.WINCH_CIRCUFERENCE;
+        return this.setPointControlR.Position;
     }
 
     /**
      * @return the setpoint of the left climb arm
      */
     public double getSetpointL() {
-        return Conversions.getOutputShaftRotations(this.setPointL.Position,
-                ClimbConstants.GEAR_REDUCTION) * ClimbConstants.WINCH_CIRCUFERENCE;
-    }
-
-    /**
-     * @param height the height to convert to a pose, in inches
-     * @param isRight whether the pose is for the right arm
-     * @return the pose of the climb arm
-     */
-    private Pose3d convertLowerPose(double height, boolean isRight) {
-        // law of cosines to get angle of lower arm
-        double pitch = (Math.PI / 2) - Math.acos((-Math.pow(ClimbConstants.UPPER_LENGTH, 2)
-                + Math.pow(height, 2) + Math.pow(ClimbConstants.LOWER_LENGTH, 2))
-                / (2 * height * ClimbConstants.LOWER_LENGTH));
-        if (isRight) {
-            return ClimbConstants.LOWER_OFFSET
-                    .plus(new Transform3d(new Translation3d(), new Rotation3d(0, pitch, 0))
-                            .plus(ClimbConstants.LEFT_RIGHT_OFFSET));
-        } else {
-            return ClimbConstants.LOWER_OFFSET
-                    .plus(new Transform3d(new Translation3d(0, 0, -Units.inchesToMeters(height)),
-                            new Rotation3d(0, pitch, 0))
-                                    .plus(ClimbConstants.LEFT_RIGHT_OFFSET.inverse()));
-        }
-    }
-
-    /**
-     * @param height the height to convert to a pose, in inches
-     * @param isRight whether the pose is for the right arm
-     * @return the pose of the climb arm
-     */
-    private Pose3d convertUpperPose(double height, boolean isRight) {
-        Pose3d lowerPose = convertLowerPose(height, isRight);
-        double lowerPitch = lowerPose.getRotation().getY();
-        // law of cosines to get angle of upper arm
-        double pitch = Math.PI
-                - Math.acos((-Math.pow(height, 2) + Math.pow(ClimbConstants.LOWER_LENGTH, 2)
-                        + Math.pow(ClimbConstants.UPPER_LENGTH, 2))
-                        / (2 * ClimbConstants.LOWER_LENGTH * ClimbConstants.UPPER_LENGTH))
-                - lowerPitch;
-        // simple trig to get height of upper arm (equal to height of end of lower arm)
-        double poseZ = Units.inchesToMeters(ClimbConstants.LOWER_LENGTH * Math.sin(lowerPitch))
-                + lowerPose.getTranslation().getZ();
-        // simple trig to get distance from end of lower arm to base of upper arm
-        double poseX = Units.inchesToMeters(ClimbConstants.LOWER_LENGTH * Math.cos(lowerPitch))
-                + lowerPose.getTranslation().getX();
-        if (isRight) {
-            return ClimbConstants.UPPER_OFFSET.plus(
-                    new Transform3d(new Translation3d(poseX, 0, poseZ), new Rotation3d(0, pitch, 0))
-                            .plus(ClimbConstants.LEFT_RIGHT_OFFSET));
-        } else {
-            return ClimbConstants.UPPER_OFFSET.plus(
-                    new Transform3d(new Translation3d(poseX, 0, poseZ), new Rotation3d(0, pitch, 0))
-                            .plus(ClimbConstants.LEFT_RIGHT_OFFSET.inverse()));
-        }
-    }
-
-    /**
-     * stores state value for climber
-     * @param state
-     */
-    public void setState(CLIMBER_STATES state) {
-        this.state = state;
-    }
-
-    /**
-     * @return current stored state of climber
-     */
-    public CLIMBER_STATES getState() {
-        return state;
-    }
-
-    /**
-     * tell climber if climber has begun climbing
-     * @param hasClimbed boolean if the robot has climbed
-     */
-    public void setHasClimbed(boolean hasClimbed) {
-        this.hasClimbed = hasClimbed;
-    }
-
-    /**
-     * tell climber if the right arm has been fully extended (robot should have returned to ground
-     * after climb)
-     * @param hasGroundedR
-     */
-    public void setHasGroundedR(boolean hasGroundedR) {
-        this.hasGroundedR = hasGroundedR;
-    }
-
-    /**
-     * tell climber if the left arm has been fully extended (robot should have returned to ground
-     * after climb)
-     * @param hasGroundedL
-     */
-    public void setHasGroundedL(boolean hasGroundedL) {
-        this.hasGroundedL = hasGroundedL;
-    }
-
-    /**
-     * tell climber if both arms have been retracted after returning to gound
-     * @param hasStowed
-     */
-    public void setHasStowed(boolean hasStowed) {
-        this.hasStowed = hasStowed;
-    }
-
-    /**
-     * resets has stowed/grounded/tipped values
-     */
-    public void resetHasValues() {
-        hasGroundedL = false;
-        hasGroundedR = false;
-        hasStowed = false;
-        hasClimbed = false;
+        return this.setPointControlL.Position;
     }
 
     @Override
     public void periodic() {
-        // updates height based on limit switches
+        // zeroes height if the limit switch is pressed or position is negative
         for (TalonFX motor : new TalonFX[] {climbMotorR, climbMotorL}) {
-            if (motor.getRotorPosition().getValueAsDouble() > ClimbConstants.MAX_HEIGHT) {
-                motor.setPosition(ClimbConstants.MAX_HEIGHT);
-            }
-            if (motor.getRotorPosition().getValueAsDouble() < 0
+            if (motor.getPosition().getValueAsDouble() < 0
                     || motor.getReverseLimit().getValueAsDouble() == 0) {
                 motor.setPosition(0d);
             }
-        }
-
-        // updates states
-        if (hasClimbed && getHeightL() < ClimbConstants.MAX_HEIGHT / 2
-                && getHeightR() < ClimbConstants.MAX_HEIGHT / 2) {
-            state = CLIMBER_STATES.CLIMBED;
-            resetHasValues();
-        }
-
-        // ONCE the robot is completely climbed, the robot will be in the STOW state
-        if (getHeightR() <= ClimbConstants.CLIMB_RETRACTION_TOLERANCE
-                && getHeightL() <= ClimbConstants.CLIMB_RETRACTION_TOLERANCE
-                && !drivetrain.isTipped() && hasStowed) {
-            state = CLIMBER_STATES.STOW;
-            resetHasValues();
-        }
-
-        if (ClimbConstants.MAX_HEIGHT - getHeightR() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE
-                && ClimbConstants.MAX_HEIGHT
-                        - getHeightL() <= ClimbConstants.CLIMB_EXTENSION_TOLERANCE
-                && !drivetrain.isTipped() && hasGroundedR && hasGroundedL) {
-            state = CLIMBER_STATES.GROUNDED;
-            resetHasValues();
         }
     }
 }
