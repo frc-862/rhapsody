@@ -6,15 +6,24 @@ import java.util.function.DoubleSupplier;
 
 
 public class SetPointClimb extends Command {
+
     private Climber climber;
+
     private DoubleSupplier setPointL;
     private DoubleSupplier setPointR;
 
+    /**
+     * SetPointClimb to control the climber using setpoints
+     * @param climber subsystem
+     * @param setPointL left setpoint
+     * @param setPointR right setpoint
+     */
     public SetPointClimb(Climber climber, DoubleSupplier setPointL, DoubleSupplier setPointR) {
-        addRequirements(climber);
         this.climber = climber;
         this.setPointL = setPointL;
         this.setPointR = setPointR;
+
+        addRequirements(climber);
     }
 
     @Override
