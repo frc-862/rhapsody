@@ -188,8 +188,8 @@ public class Flywheel extends SubsystemBase {
     }
 
     /**
-     * 
-     * @param targetRPS
+     * Sets target RPS to the bottom motor, using the proper slots and FOC
+     * @param targetRPS 
      */
     private void applyPowerTop(double targetRPS) {
         if(targetRPS > 95) {
@@ -202,7 +202,7 @@ public class Flywheel extends SubsystemBase {
     }
 
     /**
-     * 
+     * Sets target RPS to the bottom motor, using the proper slots and FOC
      * @param targetRPS
      */
     private void applyPowerBottom(double targetRPS) {
