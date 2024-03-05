@@ -193,11 +193,11 @@ public class Flywheel extends SubsystemBase {
      */
     private void applyPowerTop(double targetRPS) {
         if(targetRPS > 95) {
-            topMotor.setControl(topRPMPID.withVelocity((targetRPS)).withEnableFOC(false).withSlot(1));
+            topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(false).withSlot(1));
         } else if (targetRPS > 50){
-            topMotor.setControl(topRPMPID.withVelocity((targetRPS)).withEnableFOC(true).withSlot(1));
+            topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(1));
         } else {
-            topMotor.setControl(topRPMPID.withVelocity((targetRPS )).withEnableFOC(true).withSlot(0));
+            topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(0));
         }
     }
 
