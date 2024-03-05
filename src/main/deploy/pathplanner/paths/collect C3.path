@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.33,
-        "y": 5.54
+        "x": 1.36,
+        "y": 5.574358195791997
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.33,
-        "y": 5.54
+        "x": 2.36,
+        "y": 5.574358195791997
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "SubwooferMiddle"
     },
     {
       "anchor": {
-        "x": 3.33,
-        "y": 5.54
+        "x": 3.81,
+        "y": 2.71
       },
       "prevControl": {
-        "x": 2.33,
-        "y": 5.54
+        "x": 3.3766990478060843,
+        "y": 3.155011788739671
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,8 +39,8 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
-    "rotateFast": false
+    "rotation": -45.0,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": null,

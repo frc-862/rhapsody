@@ -31,6 +31,7 @@ import frc.robot.command.ChasePieces;
 import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
 import frc.robot.command.PointAtPoint;
+import frc.robot.command.PointAtPointAuton;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.Sing;
@@ -149,12 +150,13 @@ public class RobotContainer extends LightningContainer {
 			new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
 				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
 		NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, indexer, pivot, limelights));
-		NamedCommands.registerCommand("Collect",
+		NamedCommands.registerCommand("Smart-Collect",
 			new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot)
 				.alongWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
-		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector));
+		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
+		NamedCommands.registerCommand("Point-At-Point", new PointAtPointAuton(drivetrain));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();

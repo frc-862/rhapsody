@@ -6,13 +6,19 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Cand-Sub"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "collect forward"
+                  "pathName": "collect C3"
                 }
               },
               {
@@ -25,9 +31,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "collect back"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "collect back"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Collect"
+                }
+              }
+            ]
           }
         },
         {
