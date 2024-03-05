@@ -10,8 +10,8 @@ public class Tune extends Command {
 	private final Flywheel flywheel;
 	private final Pivot pivot;
 
-	private double flywheelBottomTargetRPM = 0;
-	private double flywheelTopTarget = 0;
+	private double flywheelTargetRPMTop = 0;
+	private double flywheelTargetRPMBottom = 0;
 	private double pivotTargetAngle = PivotConstants.STOW_ANGLE;
 
 	/**
@@ -32,15 +32,15 @@ public class Tune extends Command {
 
 	@Override
 	public void execute() {
-		flywheelTopTarget = LightningShuffleboard.getDouble("TUNE", "Top Flywheel Target RPM", flywheelTopTarget);
-		flywheelBottomTargetRPM = LightningShuffleboard.getDouble("TUNE", "Bottom Target RPM", flywheelBottomTargetRPM);
+		flywheelTargetRPMTop = LightningShuffleboard.getDouble("TUNE", "Target RPM TOP", flywheelTargetRPMTop);
+		flywheelTargetRPMBottom = LightningShuffleboard.getDouble("TUNE", "Target RPM BOTTOM", flywheelTargetRPMBottom);
 		pivotTargetAngle = LightningShuffleboard.getDouble("TUNE", "Target Angle", pivotTargetAngle);
 		LightningShuffleboard.setBool("TUNE", "Flywheel On target", flywheel.allMotorsOnTarget());
 		LightningShuffleboard.setBool("TUNE", "Pivot On target", pivot.onTarget());
 
 		// flywheel.setAllMotorsRPM(flywheelTargetRPM);
-		flywheel.setTopMoterRPM(flywheelTopTarget);
-		flywheel.setBottomMoterRPM(flywheelBottomTargetRPM);
+		flywheel.setTopMoterRPM(flywheelTargetRPMTop);
+		flywheel.setBottomMoterRPM(flywheelTargetRPMBottom);
 		pivot.setTargetAngle(pivotTargetAngle);
 	}
 
