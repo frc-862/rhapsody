@@ -8,6 +8,8 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
+import com.ctre.phoenix6.signals.ReverseLimitValue;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
@@ -33,9 +35,9 @@ public class Pivot extends SubsystemBase {
 
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
-    // private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
-    // private final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(0);
-    private final PIDController angleController = new PIDController(0.06, 0, 0);
+    private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
+    private final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(0);
+    // private final PIDController angleController = new PIDController(0.06, 0, 0);
     private double bias = 0;
 
     private double targetAngle = PivotConstants.STOW_ANGLE;
