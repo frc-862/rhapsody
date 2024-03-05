@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SB-F5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "F5-BL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL-F4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "F4-BL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL-F3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "F3-BL"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Ann Arbor Autons",
+  "choreoAuto": false
+}
