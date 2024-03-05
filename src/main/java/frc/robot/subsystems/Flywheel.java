@@ -27,10 +27,15 @@ public class Flywheel extends SubsystemBase {
         bottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD,
             FlywheelConstants.MOTOR_BOTTOM_INVERT, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
             FlywheelConstants.MOTOR_BRAKE_MODE);
-        topMotor.configPIDF(0, FlywheelConstants.TOP_MOTOR_KP, FlywheelConstants.TOP_MOTOR_KI,
-            FlywheelConstants.TOP_MOTOR_KD, FlywheelConstants.TOP_MOTOR_KS, FlywheelConstants.TOP_MOTOR_KV);
-        bottomMotor.configPIDF(0, FlywheelConstants.BOTTOM_MOTOR_KP, FlywheelConstants.BOTTOM_MOTOR_KI,
-            FlywheelConstants.BOTTOM_MOTOR_KD, FlywheelConstants.BOTTOM_MOTOR_KS, FlywheelConstants.BOTTOM_MOTOR_KV);
+        topMotor.configPIDF(0, FlywheelConstants.TOP_0_MOTOR_KP, FlywheelConstants.TOP_0_MOTOR_KI,
+            FlywheelConstants.TOP_0_MOTOR_KD, FlywheelConstants.TOP_0_MOTOR_KS, FlywheelConstants.TOP_0_MOTOR_KV);
+        bottomMotor.configPIDF(0, FlywheelConstants.BOTTOM_0_MOTOR_KP, FlywheelConstants.BOTTOM_0_MOTOR_KI,
+            FlywheelConstants.BOTTOM_0_MOTOR_KD, FlywheelConstants.BOTTOM_0_MOTOR_KS, FlywheelConstants.BOTTOM_0_MOTOR_KV);
+
+            topMotor.configPIDF(1, FlywheelConstants.TOP_1_MOTOR_KP, FlywheelConstants.TOP_1_MOTOR_KI,
+            FlywheelConstants.TOP_1_MOTOR_KD, FlywheelConstants.TOP_1_MOTOR_KS, FlywheelConstants.TOP_1_MOTOR_KV);
+        bottomMotor.configPIDF(1, FlywheelConstants.BOTTOM_1_MOTOR_KP, FlywheelConstants.BOTTOM_1_MOTOR_KI,
+            FlywheelConstants.BOTTOM_1_MOTOR_KD, FlywheelConstants.BOTTOM_1_MOTOR_KS, FlywheelConstants.BOTTOM_1_MOTOR_KV);
 
         topMotor.applyConfig();
         bottomMotor.applyConfig();
@@ -60,8 +65,8 @@ public class Flywheel extends SubsystemBase {
             bottomMotor.set(0d);
             topMotor.set(0d);
         } else {
-            topMotor.setControl(topRPMPID.withVelocity((topTargetRPS + bias)));
-            bottomMotor.setControl(bottomRPMPID.withVelocity((bottomTargetRPS + bias)));
+            applyPowerTop(topTargetRPS + bias);
+            applyPowerBottom(bottomTargetRPS + bias);
         }
     }
 
@@ -180,5 +185,33 @@ public class Flywheel extends SubsystemBase {
      */
     public void resetBias() {
         bias = 0;
+    }
+
+    /**
+     * Sets target RPS to the bottom motor, using the proper slots and FOC
+     * @param targetRPS 
+     */
+    private void applyPowerTop(double targetRPS) {
+        if(targetRPS > 95) {
+            topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(false).withSlot(1));
+        } else if (targetRPS > 50){
+            topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(1));
+        } else {
+            topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(0));
+        }
+    }
+
+    /**
+     * Sets target RPS to the bottom motor, using the proper slots and FOC
+     * @param targetRPS
+     */
+    private void applyPowerBottom(double targetRPS) {
+        if(targetRPS > 95) {
+            bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(false).withSlot(1));
+        } else if (targetRPS > 50){
+            bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(1));
+        } else {
+            bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(0));
+        }
     }
 }
