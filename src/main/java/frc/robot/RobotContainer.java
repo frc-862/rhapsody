@@ -139,9 +139,9 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("led-Shoot",
 				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
-		NamedCommands.registerCommand("Cand-Sub", 
+		NamedCommands.registerCommand("Cand-Sub",
 			new PointBlankShotAuton(flywheel, pivot, indexer)
-				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1))); 
+				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
 		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
@@ -210,8 +210,8 @@ public class RobotContainer extends LightningContainer {
 		// Test auto align
 		/* copilot */
 		new Trigger(coPilot::getBButton)
-		.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
-		.andThen(new SmartCollect(() -> 0.50, () -> 0.60, collector, indexer, pivot))); // TODO: find correct button/trigger
+			.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
+			.andThen(new SmartCollect(() -> 0.55, () -> 0.75, collector, indexer, pivot))); // TODO: find correct button/trigger
 
 		// cand shots for the robot
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
@@ -266,8 +266,10 @@ public class RobotContainer extends LightningContainer {
 
 		/* copilot */
 		collector.setDefaultCommand(
-				new Collect(() -> MathUtil.applyDeadband((coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()), ControllerConstants.DEADBAND), collector));
-				
+				new Collect(() -> MathUtil.applyDeadband(
+					(coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()),
+					ControllerConstants.DEADBAND), collector));
+
 		// climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(),() ->
 		// coPilot.getRightY(), climber));
 	}
