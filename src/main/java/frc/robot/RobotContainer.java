@@ -14,13 +14,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonomousConstants;
+import frc.robot.Constants.CollisionConstants.CollisionType;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.TunerConstants;
-import frc.robot.Constants.CollisionConstants.CollisionType;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Collect;
 import frc.robot.command.CollectAndGo;
@@ -167,26 +168,26 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		// new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, limelights)
-		// 	.deadlineWith(leds.enableState(LED_STATES.CHASING)));
+		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, limelights)
+			.deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
 		// parks the robot
 		// new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
 
 		// smart shoot for the robot
-		// new Trigger(driver::getAButton)
-		// 	.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-		// 	.alongWith(leds.enableState(LED_STATES.SHOOTING)));
+		new Trigger(driver::getAButton)
+			.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
+			.alongWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// aim at amp and stage tags for the robot
-		// new Trigger(driver::getLeftBumper)
-		// 		.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
-		// new Trigger(driver::getXButton).whileTrue(new PointAtPoint(VisionConstants.SPEAKER_LOCATION.getX(), VisionConstants.SPEAKER_LOCATION.getY(), drivetrain, driver));
+		new Trigger(driver::getLeftBumper)
+				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
+		new Trigger(driver::getXButton).whileTrue(new PointAtPoint(VisionConstants.SPEAKER_LOCATION.getX(), VisionConstants.SPEAKER_LOCATION.getY(), drivetrain, driver));
 
 		// new Trigger(driver::getYButton)
 		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
-		// new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* copilot */
 		new Trigger(coPilot::getBButton)
@@ -194,28 +195,26 @@ public class RobotContainer extends LightningContainer {
 			.andThen(new SmartCollect(() -> 0.55, () -> 0.75, collector, indexer, pivot)).deadlineWith(leds.enableState(LED_STATES.COLLECTING))); // TODO: find correct button/trigger
 
 		// cand shots for the robot
-		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
-		// new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
-		// // new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
-		// new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
-
-		// new Trigger(coPilot::getBButton).whileTrue(
+		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
+		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
+		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
+		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
 		/* BIAS */
-		// new Trigger(() -> coPilot.getPOV() == 0)
-		// 	.onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
-		// new Trigger(() -> coPilot.getPOV() == 180)
-		// 	.onTrue(new InstantCommand(() -> pivot.decreaseBias())); // DOWN
+		new Trigger(() -> coPilot.getPOV() == 0)
+			.onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
+		new Trigger(() -> coPilot.getPOV() == 180)
+			.onTrue(new InstantCommand(() -> pivot.decreaseBias())); // DOWN
 
-		// new Trigger(() -> coPilot.getPOV() == 90)
-		// 	.onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
-		// new Trigger(() -> coPilot.getPOV() == 270)
-		// 	.onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
+		new Trigger(() -> coPilot.getPOV() == 90)
+			.onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
+		new Trigger(() -> coPilot.getPOV() == 270)
+			.onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
 
-		// new Trigger(coPilot::getRightBumper)
-		// 		.whileTrue(new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
-		// new Trigger(coPilot::getLeftBumper)
-		// 		.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
+		new Trigger(coPilot::getRightBumper)
+				.whileTrue(new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
+		new Trigger(coPilot::getLeftBumper)
+				.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 
 
 		/* Other */
@@ -293,17 +292,17 @@ public class RobotContainer extends LightningContainer {
 		// SystemTest.registerTest("Single Note Cycle", new CycleSytemTest(collector,
 		// 	indexer, pivot, flywheel, () -> 0.5d, () -> 0.6d, () -> 250));
 
-		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
-		// 	Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+		SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
+			Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
-		// // SystemTest.registerTest("Pivot 90 Degrees", new PivotAngleTest(pivot,
-		// // 	Constants.PivotConstants.PIVOT_SYSTEST_ANGLE));
+		// SystemTest.registerTest("Pivot 90 Degrees", new PivotAngleTest(pivot,
+		// 	Constants.PivotConstants.PIVOT_SYSTEST_ANGLE));
 
-		// SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
-		// 	indexer, pivot, Constants.FlywheelConstants.FLYWHEEL_SYSTEST_RPM));
+		SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
+			indexer, pivot, Constants.FlywheelConstants.FLYWHEEL_SYSTEST_RPM));
 
-		// SystemTest.registerTest("Indexer Test", new IndexerSystemTest(indexer,
-		// 	Constants.IndexerConstants.INDEXER_SYSTEST_POWER));
+		SystemTest.registerTest("Indexer Test", new IndexerSystemTest(indexer,
+			Constants.IndexerConstants.INDEXER_SYSTEST_POWER));
 
 		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
 		// 	Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
