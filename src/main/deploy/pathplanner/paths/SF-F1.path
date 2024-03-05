@@ -3,54 +3,48 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.534123991324907,
-        "y": 2.387800160215706
+        "x": 1.334102025955381,
+        "y": 5.567399971117918
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.9781364178112995,
-        "y": 3.0192845001074615
+        "x": 2.22182059748735,
+        "y": 5.525487974052871
       },
       "isLocked": false,
-      "linkedName": "BottomLine"
+      "linkedName": "SubwooferFront"
     },
     {
       "anchor": {
-        "x": 5.122701783865108,
-        "y": 3.7593052109181126
+        "x": 1.9060784275414722,
+        "y": 7.725816220863211
       },
       "prevControl": {
-        "x": 4.27414470213556,
-        "y": 3.384361384107383
+        "x": 1.4824439916279637,
+        "y": 7.700448889371384
       },
       "nextControl": {
-        "x": 6.073090172099115,
-        "y": 4.179244266184301
+        "x": 3.5538578769465246,
+        "y": 7.824485648971298
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.289990426134699,
-        "y": 4.1046482092964185
+        "x": 8.281967377058862,
+        "y": 7.436381206571257
       },
       "prevControl": {
-        "x": 6.395537406459429,
-        "y": 4.0750473808639915
+        "x": 4.866161270784081,
+        "y": 7.666614563998359
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "F3"
+      "linkedName": "F1"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.1,
-      "rotationDegrees": -70.19227165749537,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -61,11 +55,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
-    "rotateFast": true
+    "rotation": -2.3924969233801208,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "Bottom side paths",
+  "folder": "Top side paths",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

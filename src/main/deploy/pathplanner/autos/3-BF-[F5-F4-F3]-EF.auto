@@ -8,7 +8,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SB-F5"
+            "pathName": "BF-BL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL-F5"
           }
         },
         {
@@ -33,12 +39,6 @@
           "type": "path",
           "data": {
             "pathName": "BL-F3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "F3-BL"
           }
         }
       ]

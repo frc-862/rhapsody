@@ -34,12 +34,6 @@
           "data": {
             "pathName": "BL-F3"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "F3-BL"
-          }
         }
       ]
     }

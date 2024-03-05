@@ -22,24 +22,6 @@
           "data": {
             "pathName": "BL-F4"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "F4-BL"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BL-F3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "F3-BL"
-          }
         }
       ]
     }

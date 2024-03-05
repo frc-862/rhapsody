@@ -3,52 +3,52 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.534123991324907,
-        "y": 2.387800160215706
+        "x": 0.7121783474336195,
+        "y": 6.739121939782341
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.9781364178112995,
-        "y": 3.0192845001074615
+        "x": 1.2252593735956716,
+        "y": 7.489009593403803
       },
       "isLocked": false,
-      "linkedName": "BottomLine"
+      "linkedName": "SubwooferTop"
     },
     {
       "anchor": {
-        "x": 5.122701783865108,
-        "y": 3.7593052109181126
+        "x": 2.912506594243959,
+        "y": 7.6863484496199765
       },
       "prevControl": {
-        "x": 4.27414470213556,
-        "y": 3.384361384107383
+        "x": 2.063949512514411,
+        "y": 7.706082335241594
       },
       "nextControl": {
-        "x": 6.073090172099115,
-        "y": 4.179244266184301
+        "x": 4.403611862419778,
+        "y": 7.651671582918214
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.289990426134699,
-        "y": 4.1046482092964185
+        "x": 8.281967377058862,
+        "y": 7.436381206571257
       },
       "prevControl": {
-        "x": 6.395537406459429,
-        "y": 4.0750473808639915
+        "x": 7.066489517594421,
+        "y": 7.567945135890272
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "F3"
+      "linkedName": "F1"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.1,
-      "rotationDegrees": -70.19227165749537,
-      "rotateFast": false
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0,
+      "rotateFast": true
     }
   ],
   "constraintZones": [],
@@ -65,9 +65,9 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Bottom side paths",
+  "folder": "Top side paths",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 52.49585763972986,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -8,10 +8,11 @@
     "Top side paths"
   ],
   "autoFolders": [
-    "Ann Arbor Autons"
+    "Ann Arbor Bottom",
+    "Ann Arbor Top"
   ],
-  "defaultMaxVel": 5.0,
-  "defaultMaxAccel": 3.0,
+  "defaultMaxVel": 10.0,
+  "defaultMaxAccel": 10.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 5.21
