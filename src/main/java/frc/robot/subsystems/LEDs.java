@@ -94,24 +94,21 @@ public class LEDs extends SubsystemBase {
 		if (ledStates.get(LED_STATES.COLLECTOR_BEAMBREAK) != null) {
 			if (ledStates.get(LED_STATES.COLLECTOR_BEAMBREAK)) {
 				setSolidStrandHSV(1, LEDsConstants.GREEN_HUE, 255, 255);
-			}
-			else {
+			} else {
 				setSolidStrandHSV(1, 0, 0, 0);
 			}
 		} 
 		if (ledStates.get(LED_STATES.INDEXER_ENTER_BEAMBREAK) != null) {
 			if (ledStates.get(LED_STATES.INDEXER_ENTER_BEAMBREAK)) {
 				setSolidStrandHSV(2, LEDsConstants.GREEN_HUE, 255, 255);
-			}
-			else {
+			} else {
 				setSolidStrandHSV(2, 0, 0, 0);
 			}
 		} 
 		if (ledStates.get(LED_STATES.INDEXER_EXIT_BEAMBREAK) != null) {
 			if (ledStates.get(LED_STATES.INDEXER_EXIT_BEAMBREAK)) {
 				setSolidStrandHSV(3, LEDsConstants.GREEN_HUE, 255, 255);
-			}
-			else {
+			} else {
 				setSolidStrandHSV(3, 0, 0, 0);
 			}
 		} 
