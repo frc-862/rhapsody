@@ -46,9 +46,6 @@ public class AlignToAmp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(!moveToPose.isFinished()){
-      moveToPose.execute();
-    }
   }
 
   public void initLogging() {
