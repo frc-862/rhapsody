@@ -9,32 +9,31 @@ import frc.robot.subsystems.Indexer;
 
 public class IndexerTest extends Command {
 
-  private Indexer indexer;
-  private double power;
+    private Indexer indexer;
+    private double power;
 
-  public IndexerTest(Indexer indexer, double power) {
-    this.indexer = indexer;
-    this.power = power;
+    public IndexerTest(Indexer indexer, double power) {
+        this.indexer = indexer;
+        this.power = power;
 
-    addRequirements(indexer);
-  }
+        addRequirements(indexer);
+    }
 
-  @Override
-  public void initialize() {
-    indexer.setPower(power);
-  }
+    @Override
+    public void initialize() {
+        indexer.setPower(power);
+    }
 
-  @Override
-  public void execute() {}
+    @Override
+    public void execute() {}
 
-  @Override
-  public void end(boolean interrupted) {
-    indexer.setPower(0);
-  }
+    @Override
+    public void end(boolean interrupted) {
+        indexer.stop();
+    }
 
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
-  
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

@@ -1,10 +1,8 @@
 package frc.robot.command.shoot;
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend.Attr;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 
@@ -12,25 +10,19 @@ public class PointBlankShot extends Command {
 
 	private final Flywheel flywheel;
 	private final Pivot pivot;
-	private boolean isAutonomous;
-	private boolean shot = false;
-	private double shotTime = 0;
 
 	/**
 	 * Creates a new PointBlankShot.
-	 * @param flywheel 
-	 * @param pivot
-	 * @param isAutonomous
+	 * @param pivot subsystem
+	 * @param flywheel subsystem
 	 */
-	public PointBlankShot(Flywheel flywheel, Pivot pivot, boolean isAutonomous) {
+	public PointBlankShot(Flywheel flywheel, Pivot pivot) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
-		this.isAutonomous = isAutonomous;
 
-		addRequirements(pivot, flywheel);
+		addRequirements(flywheel, pivot);
 	}
 
-	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
 		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
@@ -39,25 +31,18 @@ public class PointBlankShot extends Command {
 
 	@Override
 	public void execute() {
-		if(pivot.onTarget() && flywheel.allMotorsOnTarget()) {
-			shot = true;
-			shotTime = Timer.getFPGATimestamp();
-		}
+		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());
+		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + flywheel.getBias());
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		flywheel.coast();
-		pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
-		//TODO add LED state
+		flywheel.coast(true);
+		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 	}
 
 	@Override
 	public boolean isFinished() {
-		if(isAutonomous){
-			return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT; 
-		}
 		return false;
 	}
 }

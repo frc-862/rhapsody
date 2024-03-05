@@ -1,32 +1,36 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.Flywheel;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Flywheel;
 
 public class Stow extends Command {
-	/** Creates a new Stow. */
 
 	private Pivot pivot;
 	private Flywheel flywheel;
 
+	/**
+	 * Creates a new Stow.
+	 * @param pivot subsystem
+	 * @param flywheel subsystem
+	 */
 	public Stow(Flywheel flywheel, Pivot pivot) {
-		this.flywheel = flywheel;
 		this.pivot = pivot;
+		this.flywheel = flywheel;
 
 		addRequirements(pivot, flywheel);
 	}
 
-	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		flywheel.coast();
-		pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
+		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		flywheel.coast(true);
+	}
+
+	@Override
+	public void execute() {
+		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
 	}
 
 	@Override

@@ -21,7 +21,7 @@ public class ManualClimb extends Command {
         this.climber = climber;
         this.leftPower = leftPower;
         this.rightPower = rightPower;
-        
+
         addRequirements(climber);
     }
 

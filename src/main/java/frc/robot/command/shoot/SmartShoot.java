@@ -1,26 +1,40 @@
 package frc.robot.command.shoot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.IndexerConstants;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
+import frc.robot.Constants.ShooterConstants.ShootingState;
+import frc.robot.Constants.PivotConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.command.TimedCommand;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class SmartShoot extends Command {
-	/** Creates a new SmartShoot. */
+
 	final Flywheel flywheel;
 	final Pivot pivot;
 	final Swerve drivetrain;
 	final Indexer indexer;
 	final LEDs leds;
-	private boolean hasShot = false;
 
+	private ShootingState state = ShootingState.AIM;
+	private double shotTime = 0d;
+
+	/**
+	 * SmartShoot to control flywheel, pivot, drivetrain, and indexer
+	 * @param flywheel subsystem to set target RPM
+	 * @param pivot subsystem to set target angle
+	 * @param drivetrain subsystem to get distance from speaker
+	 * @param indexer subsystem to set power
+	 * @param leds subsystem to provide driver feedback
+	 */
 	public SmartShoot(Flywheel flywheel, Pivot pivot, Swerve drivetrain, Indexer indexer, LEDs leds) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
@@ -31,56 +45,84 @@ public class SmartShoot extends Command {
 		addRequirements(pivot, flywheel, indexer);
 	}
 
-	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
+		//Always start with aiming
+		state = ShootingState.AIM;
 	}
 
-	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		pivot.setTargetAngle(calculateTargetAngle());
-		flywheel.setAllMotorsRPM(calculateTargetRPM());
+		// Distance from current pose to speaker pose
+		double distance = drivetrain.distanceToSpeaker();
 
-		if (onTarget()) {
-			indexer.setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
-			hasShot = true;
+		// Logging
+		LightningShuffleboard.setDouble("Smart-Shoot", "Distance", distance);
+		LightningShuffleboard.setString("Smart-Shoot", "State", state.toString());
+
+		switch(state) {
+			case AIM:
+				// Default state remains here until pivot + Flywheel are on target
+				pivot.setTargetAngle(calculateTargetAngle(distance));
+				flywheel.setAllMotorsRPM(calculateTargetRPM(distance));
+				if (onTarget()) { // Moves to next state and logs time
+					state = ShootingState.SHOOT;
+					shotTime = Timer.getFPGATimestamp();
+				}
+			break;
+			case SHOOT:
+				// Continues aiming, indexs to shoot
+				pivot.setTargetAngle(calculateTargetAngle(distance));
+				flywheel.setAllMotorsRPM(calculateTargetRPM(distance));
+				indexer.indexUp();
+				// Once shoot critera met moves to shot
+				if(Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT){
+					state = ShootingState.SHOT;
+				}
+			break;
+			case SHOT:
+				// Provides driver feed back and ends command
+				new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
+				leds.enableState(LED_STATES.SHOT).withTimeout(2).schedule();
+			break;
 		}
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		if (hasShot) {
-			flywheel.coast();
-			pivot.setTargetAngle(ShooterConstants.STOW_ANGLE);
-			indexer.stop();
-			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
-			leds.enableState(LED_STATES.SHOT).withTimeout(2).schedule();
-		} else {
-			flywheel.coast();
-		}
+		flywheel.coast(true);
+		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		indexer.stop();
 	}
 
-	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false; //TODO add timer + piece passed through indexer
-	}
-
-	public boolean onTarget() {
-		return flywheel.allMotorsOnTarget() && pivot.onTarget(); //TODO add indexer sensor and drivetrain speed
+		return state == ShootingState.SHOT;
 	}
 
 	/**
-	 * calculatePivotTargetAngle
-	 * @return Angle to set pivot to
+	 * Checks if Flywheel and Pivot are in range of target angle
+	 * @return boolean on Target
 	 */
-	public double calculateTargetAngle() {
-		return 45d + pivot.getBias(); //TODO Add math from Chris branch or interpolation map
+	public boolean onTarget() {
+		return flywheel.allMotorsOnTarget() && pivot.onTarget();
 	}
 
-	public double calculateTargetRPM() {
-		return 5500 + flywheel.getBias(); // TODO test with interpolation or math 
+	/**
+	 * Calculate Pivot Target angle (in degrees)
+	 * @param distance from the speaker
+	 * @return Angle to set pivot to
+	 */
+	public double calculateTargetAngle(double distance) {
+		return ShooterConstants.ANGLE_MAP.get(distance);
+	}
+
+	/**
+	 * Calculate Flywheel Target RPM (in RPM)
+	 * @param distance from the speaker
+	 * @return RPM to set the Flywheels
+	 */
+	public double calculateTargetRPM(double distance) {
+		return ShooterConstants.SPEED_MAP.get(distance);
 	}
 }

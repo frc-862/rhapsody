@@ -9,36 +9,35 @@ import frc.robot.subsystems.Flywheel;
 
 public class FlywheelTest extends Command {
 
-  private Flywheel flywheel;
-  private double motor2Speed;
-  private double motor1Speed;
+    private Flywheel flywheel;
+    private double topMotorSpeed;
+    private double bottomMotorSpeed;
 
-  public FlywheelTest(Flywheel flywheel, double motor1Speed, double motor2Speed) {
-    this.flywheel = flywheel;
-    this.motor1Speed = motor1Speed;
-    this.motor2Speed = motor2Speed;
+    public FlywheelTest(Flywheel flywheel, double topMotorSpeed, double bottomMotorSpeed) {
+        this.flywheel = flywheel;
+        this.topMotorSpeed = topMotorSpeed;
+        this.bottomMotorSpeed = bottomMotorSpeed;
 
-    addRequirements(flywheel);
-  }
+        addRequirements(flywheel);
+    }
 
-  @Override
-  public void initialize() {
-    flywheel.setTopMoterRPM(motor1Speed);
-    flywheel.setTopMoterRPM(motor2Speed);
-  }
+    @Override
+    public void initialize() {
+        flywheel.setTopMoterRPM(topMotorSpeed);
+        flywheel.setBottomMoterRPM(bottomMotorSpeed);
+    }
 
-  @Override
-  public void execute() {
-  }
+    @Override
+    public void execute() {
+    }
 
-  @Override
-  public void end(boolean interrupted) {
-    flywheel.setAllMotorsRPM(0);
-  }
+    @Override
+    public void end(boolean interrupted) {
+        flywheel.coast(true);
+    }
 
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
-
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

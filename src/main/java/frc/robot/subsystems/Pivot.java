@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
@@ -28,12 +30,15 @@ import frc.robot.Robot;
 import frc.robot.Constants.PivotConstants;
 
 public class Pivot extends SubsystemBase {
+
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
-    private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
+    // private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
+    // private final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(0);
+    private final PIDController angleController = new PIDController(0.06, 0, 0);
     private double bias = 0;
 
-    private double targetAngle = 0; // TODO: find initial target angle
+    private double targetAngle = PivotConstants.STOW_ANGLE;
 
     private SingleJointedArmSim pivotSim = new SingleJointedArmSim(DCMotor.getFalcon500(1), PivotConstants.ENCODER_TO_MECHANISM_RATIO, 0.00401, 0.568, Math.toRadians(15), Math.toRadians(95), true, Math.toRadians(15)); //TODO: complete adding constants
     private TalonFXSimState pivotSimState;
@@ -56,19 +61,27 @@ public class Pivot extends SubsystemBase {
         
         CANcoderConfiguration angleConfig = new CANcoderConfiguration();
         angleConfig.MagnetSensor.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
-                .withMagnetOffset(PivotConstants.ENCODER_OFFSET).withSensorDirection(PivotConstants.ENCODER_DIRECTION);
+                .withMagnetOffset(PivotConstants.ENCODER_OFFSET)
+                .withSensorDirection(PivotConstants.ENCODER_DIRECTION);
 
         angleEncoder = new CANcoder(CAN.PIVOT_ANGLE_CANCODER, CAN.CANBUS_FD);
         angleEncoder.getConfigurator().apply(angleConfig);
 
-        angleMotor = new ThunderBird(CAN.PIVOT_ANGLE_MOTOR, CAN.CANBUS_FD, PivotConstants.PIVOT_MOTOR_INVERT, PivotConstants.PIVOT_MOTOR_STATOR_CURRENT_LIMIT, PivotConstants.PIVOT_MOTOR_BRAKE_MODE);
-        angleMotor.configPIDF(0, PivotConstants.PIVOT_MOTOR_KP, PivotConstants.PIVOT_MOTOR_KI, PivotConstants.PIVOT_MOTOR_KD, PivotConstants.PIVOT_MOTOR_KS, PivotConstants.PIVOT_MOTOR_KV);
+        angleMotor = new ThunderBird(CAN.PIVOT_ANGLE_MOTOR, CAN.CANBUS_FD, PivotConstants.MOTOR_INVERT,
+                        PivotConstants.MOTOR_STATOR_CURRENT_LIMIT, PivotConstants.MOTOR_BRAKE_MODE);
+        angleMotor.configPIDF(0, PivotConstants.MOTOR_KP, PivotConstants.MOTOR_KI,
+                PivotConstants.MOTOR_KD, PivotConstants.MOTOR_KS, PivotConstants.MOTOR_KV);
         TalonFXConfiguration motorConfig = angleMotor.getConfig();
 
         motorConfig.Feedback.FeedbackRemoteSensorID = angleEncoder.getDeviceID();
         motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         motorConfig.Feedback.SensorToMechanismRatio = PivotConstants.ENCODER_TO_MECHANISM_RATIO;
         motorConfig.Feedback.RotorToSensorRatio = PivotConstants.ROTOR_TO_ENCODER_RATIO;
+
+        MotionMagicConfigs motionMagicConfigs = motorConfig.MotionMagic;
+        motionMagicConfigs.MotionMagicCruiseVelocity = PivotConstants.MAGIC_CRUISE_VEL;
+        motionMagicConfigs.MotionMagicAcceleration = PivotConstants.MAGIC_ACCEL;
+        motionMagicConfigs.MotionMagicJerk = PivotConstants.MAGIC_JERK;
 
         angleMotor.applyConfig(motorConfig);
         
@@ -128,11 +141,26 @@ public class Pivot extends SubsystemBase {
     }
 
     /**
-     * @return Whether or not the pivot is on target, within
-     *         PivotConstants.ANGLE_TOLERANCE
+     * @return Whether or not the pivot is on target, within Angle tolerance
      */
     public boolean onTarget() {
         return Math.abs(getAngle() - targetAngle) < PivotConstants.ANGLE_TOLERANCE;
+    }
+
+    /**
+     * Gets forward limit switch
+     * @return true if pressed
+     */
+    public boolean getForwardLimit() {
+        return angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
+    }
+
+    /**
+     * Gets reverse limit switch
+     * @return true if pressed
+     */
+    public boolean getReverseLimit() {
+        return angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
     }
 
     /**
@@ -161,5 +189,12 @@ public class Pivot extends SubsystemBase {
      */
     public void resetBias() {
         bias = 0;
+    }
+
+    /**
+     * @param angle angle to set the pivot angle to
+     */
+    public void resetAngle(double angle) {
+        // TODO is this necessary and implement
     }
 }

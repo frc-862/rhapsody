@@ -4,6 +4,7 @@
 
 package frc.robot.command.tests;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.command.tests.testcmds.IndexerTest;
@@ -13,15 +14,15 @@ import frc.thunder.testing.SystemTestCommandGroup;
 
 public class IndexerSystemTest extends SystemTestCommandGroup {
 
-  public IndexerSystemTest(Indexer indexer, double speed) {
-    super(
-      new SequentialCommandGroup(
-        new WaitCommand(0.5),
-        new TimedCommand(new IndexerTest(indexer, speed), 2), // Indexer out
-        new WaitCommand(1),
-        new TimedCommand(new IndexerTest(indexer, -speed), 2) // Indexer in
-      )
-    );
-  }
-
+    public IndexerSystemTest(Indexer indexer, double speed) {
+        super(
+            new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new TimedCommand(new IndexerTest(indexer, speed), 2), // Indexer out
+                new WaitCommand(1),
+                new TimedCommand(new IndexerTest(indexer, -speed), 2) // Indexer in
+            )
+        );
+        addRequirements(indexer);
+    }
 }
