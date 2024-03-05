@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -44,13 +45,17 @@ public class Climber extends SubsystemBase {
         climbMotorR.configPIDF(0, ClimbConstants.UNLOADED_KP, ClimbConstants.UNLOADED_KI, ClimbConstants.UNLOADED_KD);
         climbMotorR.configPIDF(1, ClimbConstants.LOADED_KP, ClimbConstants.LOADED_KI, ClimbConstants.LOADED_KD);
 
-        FeedbackConfigs conf = new FeedbackConfigs();
+        FeedbackConfigs sensorConf = new FeedbackConfigs();
+        SoftwareLimitSwitchConfigs softLimitConf = new SoftwareLimitSwitchConfigs();
 
-        conf.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-        conf.SensorToMechanismRatio = ClimbConstants.GEAR_REDUCTION;
+        sensorConf.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        sensorConf.SensorToMechanismRatio = ClimbConstants.GEAR_REDUCTION;
 
-        climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(conf));
-        climbMotorR.applyConfig(climbMotorR.getConfig().withFeedback(conf));
+        softLimitConf.ForwardSoftLimitEnable = true;
+        softLimitConf.ForwardSoftLimitThreshold = ClimbConstants.MAX_HEIGHT;
+
+        climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConf));
+        climbMotorR.applyConfig(climbMotorR.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConf));
 
         initLogging();
 
@@ -231,9 +236,6 @@ public class Climber extends SubsystemBase {
     public void periodic() {
         // updates height based on limit switches
         for (TalonFX motor : new TalonFX[] {climbMotorR, climbMotorL}) {
-            if (motor.getPosition().getValueAsDouble() > ClimbConstants.MAX_HEIGHT) {
-                motor.setPosition(ClimbConstants.MAX_HEIGHT);
-            }
             if (motor.getPosition().getValueAsDouble() < 0
                     || motor.getReverseLimit().getValueAsDouble() == 0) {
                 motor.setPosition(0d);
