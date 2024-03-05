@@ -613,15 +613,21 @@ public class Constants {
             {
                 put(-1, 0);
                 put(1, 0);
-                put(2, 14);
+                put(2,1);
+                put(3,2);
+                put(4,3);
+                put(5, 14);
             }
         };
 
         public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
             {
                 put(-1, LEDsConstants.LED_LENGTH);
-                put(1, 14);
-                put(2, 12);
+                put(1,1);
+                put(2,1);
+                put(3,1);
+                put(4, 11);
+                put(5, 12);
             }
         };
 
@@ -634,9 +640,23 @@ public class Constants {
         public static final int PINK_HUE = 355;
 
         public enum LED_STATES {
-            CUSTOMCONTROL(0), DISABLED(1), EMERGENCY(2), START(3), COLLECTED(4), SHOT(
-                    5), FINISHED_CLIMB(6), SHOOTING(7), COLLECTING(8), CHASING(
-                            9), CLIMBING(10), HAS_PIECE(11), HAS_VISION(12), DEFAULT(13);
+            CUSTOMCONTROL(0), 
+            DISABLED(1),
+            EMERGENCY(2),
+            START(3),
+            COLLECTED(4),
+            SHOT(5),
+            FINISHED_CLIMB(6),
+            SHOOTING(7),
+            COLLECTING(8),
+            CHASING(9),
+            CLIMBING(10),
+            HAS_PIECE(11),
+            HAS_VISION(12),
+            COLLECTOR_BEAMBREAK(13),
+            INDEXER_ENTER_BEAMBREAK(14),
+            INDEXER_EXIT_BEAMBREAK(15),
+            DEFAULT(16);
 
             private final int priority;
 
