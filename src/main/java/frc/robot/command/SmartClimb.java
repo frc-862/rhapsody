@@ -34,7 +34,7 @@ public class SmartClimb extends Command {
             //Engage Manual Climb whenever sticks are active
             climber.setPower(leftPower.getAsDouble(), rightPower.getAsDouble());
             autoClimbEngaged = false;
-        } else if ((buttonState && !bButton.getAsBoolean()) || drivetrain.isTipped()) {
+        } else if ((buttonState && !bButton.getAsBoolean()) || (drivetrain.isTipped()  && !autoClimbEngaged)) {
             //Auto retract on the falling edge of the B button or if the robot is tipped
             climber.retract();
             buttonState = false; //reset button state for next time
