@@ -609,22 +609,16 @@ public class Constants {
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
                 put(-1, 0);
-                put(1, 0);
-                put(2,1);
-                put(3,2);
-                put(4,3);
-                put(5, 14);
+                put(0,0);
+                put(1, 14);
             }
         };
 
         public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
             {
                 put(-1, LEDsConstants.LED_LENGTH);
-                put(1,1);
-                put(2,1);
-                put(3,1);
-                put(4, 11);
-                put(5, 12);
+                put(0, 11);
+                put(1, 12);
             }
         };
 
@@ -648,12 +642,14 @@ public class Constants {
             COLLECTING(8),
             CHASING(9),
             CLIMBING(10),
-            HAS_PIECE(11),
-            HAS_VISION(12),
+            HAS_PIECE(12),
+            HAS_VISION(11),
+            PIVOT_BOTTOM_SWITCH(13),
+            PIVOT_TOP_SWITCH(13),
             COLLECTOR_BEAMBREAK(13),
-            INDEXER_ENTER_BEAMBREAK(14),
-            INDEXER_EXIT_BEAMBREAK(15),
-            DEFAULT(16);
+            INDEXER_ENTER_BEAMBREAK(13),
+            INDEXER_EXIT_BEAMBREAK(13),
+            DEFAULT(13);
 
             private final int priority;
 

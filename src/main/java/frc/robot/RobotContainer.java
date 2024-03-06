@@ -228,6 +228,9 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() ->  collector.getEntryBeamBreakState()).whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
 		new Trigger(() ->  indexer.getEntryBeamBreakState()).whileTrue(leds.enableState(LED_STATES.INDEXER_ENTER_BEAMBREAK));
 		new Trigger(() ->  indexer.getExitBeamBreakState()).whileTrue(leds.enableState(LED_STATES.INDEXER_EXIT_BEAMBREAK));
+		new Trigger(() -> pivot.getForwardLimit()).whileTrue(leds.enableState(LED_STATES.PIVOT_BOTTOM_SWITCH));
+		new Trigger(() -> pivot.getReverseLimit()).whileTrue(leds.enableState(LED_STATES.PIVOT_TOP_SWITCH));
+
 
 		new Trigger(() -> DriverStation.isAutonomousEnabled()).whileTrue(new CollisionDetection(
 				drivetrain, CollisionType.AUTON));
