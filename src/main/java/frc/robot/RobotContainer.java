@@ -181,7 +181,7 @@ public class RobotContainer extends LightningContainer {
 			.alongWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// aim at amp and stage tags for the robot
-		new Trigger(driver::getLeftBumper).whileTrue(new OTFShoot(drivetrain, driver, pivot, flywheel, indexer, leds)); // TODO: make work
+		new Trigger(driver::getLeftBumper).whileTrue(new OTFShoot(drivetrain, driver, pivot, flywheel, indexer)); // TODO: make work
 		// new Trigger(driver::getLeftBumper).whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
 		// new Trigger(driver::getYButton)

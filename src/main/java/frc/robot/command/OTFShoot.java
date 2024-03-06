@@ -13,7 +13,6 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -25,7 +24,6 @@ public class OTFShoot extends Command {
 	private Pivot pivot;
 	private Flywheel flywheel;
 	private Indexer indexer;
-	private LEDs leds;
 
 	private double fireTime;
 	private double targetHeading;
@@ -43,14 +41,13 @@ public class OTFShoot extends Command {
 	 * @param indexer the indexer subsystem
 	 * @param leds the leds subsystem
 	 */
-	public OTFShoot(Swerve drivetrain, XboxController driver, Pivot pivot, Flywheel flywheel, Indexer indexer, LEDs leds) {
+	public OTFShoot(Swerve drivetrain, XboxController driver, Pivot pivot, Flywheel flywheel, Indexer indexer) {
 
 		this.drivetrain = drivetrain;
 		this.driver = driver;
 		this.pivot = pivot;
 		this.flywheel = flywheel;
 		this.indexer = indexer;
-		this.leds = leds;
 
 		addRequirements(drivetrain, pivot, flywheel, indexer);
 
