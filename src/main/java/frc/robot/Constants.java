@@ -439,7 +439,7 @@ public class Constants {
         public static final double BOTTOM_1_MOTOR_KA = 0;
 
 
-        public static final double RPM_TOLERANCE = 100d;
+        public static final double RPM_TOLERANCE = 50d;
 
         public static final double BIAS_INCREMENT = 1.25; // RPS to bias by per button press
         public static final double COAST_VOLTAGE = 0.1;
@@ -531,10 +531,10 @@ public class Constants {
     }
 
     public class CandConstants { // TODO get real
-        // Amp
-        public static final double AMP_TOP_RPM = 300; // 250?
-        public static final double AMP_BOTTOM_RPM = 450;
-        public static final double AMP_ANGLE = 103.5;
+        // Amp 
+        public static final double AMP_TOP_RPM = 300; // FRONT METHOD 250
+        public static final double AMP_BOTTOM_RPM = 450; // FRONT METHOD 1250
+        public static final double AMP_ANGLE = 103.5; // FRONT METHOD 55
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
@@ -571,43 +571,24 @@ public class Constants {
 
     public class ClimbConstants { // TODO: find real values
         public static final boolean CLIMB_RIGHT_MOTOR_INVERT = false;
-        public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
-        public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final boolean CLIMB_LEFT_MOTOR_INVERT = true;
+        public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean CLIMB_MOTOR_BRAKE_MODE = true;
-        public static final double EXTEND_KP = 0;
-        public static final double EXTEND_KI = 0;
-        public static final double EXTEND_KD = 0;
-        public static final double RETRACT_KP = 0;
-        public static final double RETRACT_KI = 0;
-        public static final double RETRACT_KD = 0;
-        public static final double GEAR_REDUCTION = 20d;
+        public static final double UNLOADED_KP = 10;
+        public static final double UNLOADED_KI = 0;
+        public static final double UNLOADED_KD = 0;
+        public static final double LOADED_KP = 0;
+        public static final double LOADED_KI = 0;
+        public static final double LOADED_KD = 0;
+        public static final double GEAR_REDUCTION = 12d;
         public static final double WINCH_DIAMETER_INCHES = 1d;
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
-        public static final double MAX_HEIGHT = 999d;
-        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of
-                                                       // lower arm in inches
-        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of
-                                                       // upper arm in inches
+        public static final double MAX_HEIGHT = 8.83; //In rotations
+        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of lower arm in inches
+        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
 
-        public static final Pose3d LOWER_OFFSET = new Pose3d(); // NOTE: Poses are in meters despite
-                                                                // george washington's
-                                                                // best efforts
-        public static final Pose3d UPPER_OFFSET = new Pose3d(); // NOTE 2: these poses should
-                                                                // exclude side to side
-                                                                // offset, since it gets set below
-
-        public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); // NOTE 3: this is
-                                                                               // the side to side
-                                                                               // offset of the
-                                                                               // pivot point of the
-                                                                               // arms,
-                                                                               // should exclude
-                                                                               // anything but side
-                                                                               // to
-                                                                               // side values
-        public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; // TODO: find real values
+        public static final double CLIMB_PID_SETPOINT_EXTENDED = MAX_HEIGHT;
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
         public static final double CLIMB_RETRACTION_TOLERANCE = 0;
@@ -628,22 +609,16 @@ public class Constants {
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
                 put(-1, 0);
-                put(1, 0);
-                put(2,1);
-                put(3,2);
-                put(4,3);
-                put(5, 14);
+                put(0,0);
+                put(1, 14);
             }
         };
 
         public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
             {
                 put(-1, LEDsConstants.LED_LENGTH);
-                put(1,1);
-                put(2,1);
-                put(3,1);
-                put(4, 11);
-                put(5, 12);
+                put(0, 11);
+                put(1, 12);
             }
         };
 
@@ -667,12 +642,14 @@ public class Constants {
             COLLECTING(8),
             CHASING(9),
             CLIMBING(10),
-            HAS_PIECE(11),
-            HAS_VISION(12),
+            HAS_PIECE(12),
+            HAS_VISION(11),
+            PIVOT_BOTTOM_SWITCH(13),
+            PIVOT_TOP_SWITCH(13),
             COLLECTOR_BEAMBREAK(13),
-            INDEXER_ENTER_BEAMBREAK(14),
-            INDEXER_EXIT_BEAMBREAK(15),
-            DEFAULT(16);
+            INDEXER_ENTER_BEAMBREAK(13),
+            INDEXER_EXIT_BEAMBREAK(13),
+            DEFAULT(13);
 
             private final int priority;
 
