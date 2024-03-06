@@ -44,7 +44,9 @@ public class SmartCollect extends Command {
 	}
 
 	@Override
-	public void initialize() {}
+	public void initialize() {
+		reversedFromExit = false;
+	}
 
 	@Override
 	public void execute() {

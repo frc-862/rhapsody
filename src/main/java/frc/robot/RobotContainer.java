@@ -29,7 +29,6 @@ import frc.robot.command.CollisionDetection;
 import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
 import frc.robot.command.PointAtPoint;
-import frc.robot.command.PointAtPointAuton;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.SetPointClimb;
@@ -137,14 +136,13 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Smart-Shoot",
 			new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
 				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
-		NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, indexer, pivot, limelights));
+		NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, indexer, pivot, limelights, flywheel));
 		NamedCommands.registerCommand("Smart-Collect",
 			new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot)
 				.alongWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
-		NamedCommands.registerCommand("Point-At-Point", new PointAtPointAuton(drivetrain));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -171,7 +169,7 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, limelights)
+		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, limelights, flywheel)
 			.deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
 		// parks the robot
