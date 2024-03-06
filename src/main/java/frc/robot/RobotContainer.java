@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonomousConstants;
@@ -125,7 +126,7 @@ public class RobotContainer extends LightningContainer {
 
 		NamedCommands.registerCommand("Cand-Sub",
 			new PointBlankShotAuton(flywheel, pivot, indexer)
-				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
+				.deadlineWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
 		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
@@ -134,11 +135,11 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
 		NamedCommands.registerCommand("Smart-Shoot",
 			new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
+				.deadlineWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
 		NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, indexer, pivot, limelights));
 		NamedCommands.registerCommand("Collect",
 			new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot)
-				.alongWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
+				.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector));
@@ -177,7 +178,7 @@ public class RobotContainer extends LightningContainer {
 		// smart shoot for the robot
 		new Trigger(driver::getAButton)
 			.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-			.alongWith(leds.enableState(LED_STATES.SHOOTING)));
+			.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// aim at amp and stage tags for the robot
 		new Trigger(driver::getLeftBumper)
@@ -238,7 +239,8 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
 			.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
 			.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
-	}
+
+		}
 
 	@Override
 	protected void configureDefaultCommands() {
