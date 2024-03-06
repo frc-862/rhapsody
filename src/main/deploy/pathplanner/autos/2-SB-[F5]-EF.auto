@@ -6,15 +6,40 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "SB-F5"
+            "name": "Cand-Sub"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SB-F5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Collect"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "F5-BL"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Smart-Shoot"
           }
         }
       ]

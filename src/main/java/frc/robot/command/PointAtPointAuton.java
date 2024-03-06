@@ -8,8 +8,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PointAtPointAuton extends Command {
 
@@ -27,8 +29,8 @@ public class PointAtPointAuton extends Command {
 	 */
     public PointAtPointAuton(Swerve drivetrain) {
         this.drivetrain = drivetrain;
-		    this.targetPose = new Translation2d();
-        
+		this.targetPose = DrivetrainConstants.SPEAKER_POSE;
+
         addRequirements(drivetrain);
     }
 
@@ -39,7 +41,7 @@ public class PointAtPointAuton extends Command {
 
     @Override
     public void execute() {
-        Pose2d pose = drivetrain.getPose().get();
+        Pose2d pose = drivetrain.getPose();
 		var deltaX = targetPose.getX() - pose.getX();
 		var deltaY = targetPose.getY() - pose.getY();
 
@@ -48,15 +50,18 @@ public class PointAtPointAuton extends Command {
 		pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
 
         drivetrain.setField(0, 0, pidOutput);
+
+        LightningShuffleboard.setDouble("Auton", "target Heading", targetHeading);
+        LightningShuffleboard.setDouble("Auton", "heading", drivetrain.getPose().getRotation().getDegrees());
     }
 
     @Override
     public void end(boolean interrupted) {
-
+        System.out.println("PointAtPointAuton ended!!!!!!!!!!");
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()) < 25;
     }
 }
