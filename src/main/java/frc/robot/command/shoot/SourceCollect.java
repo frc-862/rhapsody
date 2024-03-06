@@ -13,7 +13,6 @@ public class SourceCollect extends Command {
 
 	/**
 	 * Creates a new SourceCollect.
-	 * 
 	 * @param flywheel subsystem
 	 * @param pivot subsystem
 	 */

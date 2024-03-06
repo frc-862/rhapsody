@@ -34,7 +34,8 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
 
 /**
- * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
+ * Class that extends the Phoenix SwerveDrivetrain class and implements
+ * subsystem so it can be used
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
@@ -70,8 +71,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a percentage Field centric request to the drivetrain
-     * @param x the x, percent of max velocity (-1,1)
-     * @param y the y, percent of max velocity (-1,1)
+     * 
+     * @param x   the x, percent of max velocity (-1,1)
+     * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity (-1,1)
      * @return the request to drive for the drivetrain
      */
@@ -84,35 +86,38 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a Field centric request to the drivetrain run in periodic
-     * @param x the x velocity m/s
-     * @param y the y velocity m/s
+     * 
+     * @param x   the x velocity m/s
+     * @param y   the y velocity m/s
      * @param rot the rotational velocity in rad/s
      */
     public void setField(double x, double y, double rot) {
         this.setControl(driveField
-            .withVelocityX(x)
-            .withVelocityY(y)
-            .withRotationalRate(rot));
+                .withVelocityX(x)
+                .withVelocityY(y)
+                .withRotationalRate(rot));
     }
 
     /**
      * Apply a Field centric request to the drivetrain run in periodic,
      * Allows driving normally and pid control of rotation
-     * @param x the x, percent of max velocity (-1,1)
-     * @param y the y, percent of max velocity (-1,1)
+     * 
+     * @param x   the x, percent of max velocity (-1,1)
+     * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity rad/s
      */
     public void setFieldDriver(double x, double y, double rot) {
         this.setControl(driveField
-            .withVelocityX(x * maxSpeed)
-            .withVelocityY(y * maxSpeed)
-            .withRotationalRate(rot));
+                .withVelocityX(x * maxSpeed)
+                .withVelocityY(y * maxSpeed)
+                .withRotationalRate(rot));
     }
 
     /**
      * Apply a percentage Robot centric request to the drivetrain
-     * @param x the x, percent of max velocity (-1,1)
-     * @param y the y, percent of max velocity (-1,1)
+     * 
+     * @param x   the x, percent of max velocity (-1,1)
+     * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity (-1,1)
      * @return the request to drive for the drivetrain
      */
@@ -125,15 +130,16 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a Robot centric request to the drivetrain run in periodic
-     * @param x the x velocity m/s
-     * @param y the y velocity m/s
+     * 
+     * @param x   the x velocity m/s
+     * @param y   the y velocity m/s
      * @param rot the rotational velocity in rad/s
      */
     public void setRobot(double x, double y, double rot) {
         this.setControl(driveRobot
-            .withVelocityX(x)
-            .withVelocityY(y)
-            .withRotationalRate(rot));
+                .withVelocityX(x)
+                .withVelocityY(y)
+                .withRotationalRate(rot));
     }
 
     /**
@@ -145,11 +151,12 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a request to the drivetrain
+     * 
      * @param requestSupplier the SwerveRequest to apply
      * @return the request to drive for the drivetrain
      */
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
-        //TODO: don't use
+        // TODO: don't use
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
@@ -173,12 +180,13 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 if (pose.getMoreThanOneTarget() && pose.getDistance() < 3) {
                     confidence = 0.3;
                 } else if (pose.getMoreThanOneTarget()) {
-                    confidence = 0.3 + ((pose.getDistance() - 3)/5 * 18);
+                    confidence = 0.3 + ((pose.getDistance() - 3) / 5 * 18);
                 } else if (pose.getDistance() < 2) {
-                    confidence = 1.0 + (pose.getDistance()/2 * 5.0);
+                    confidence = 1.0 + (pose.getDistance() / 2 * 5.0);
                 }
 
-                addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
+                addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(),
+                        VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
                 pose = limelightSubsystem.getPoseQueue().poll();
             }
         }
@@ -186,10 +194,10 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     private void initLogging() {
         // TODO Remove the unecessary shuffleboard stuff eventually
-        // LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
-        // LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPigeon2().getAngle());
-        // LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getState().Pose.getX());
-        // LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getState().Pose.getY());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPigeon2().getAngle());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getPose().getX());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getPose().getY());
 
         // LightningShuffleboard.setBoolSupplier("Swerve", "Slow mode", () -> slowMode);
         // LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
@@ -207,7 +215,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         AutoBuilder.configureHolonomic(() -> this.getState().Pose, // Supplier of current robot pose
                 this::seedFieldRelative, // Consumer for seeding pose against auto
                 this::getCurrentRobotChassisSpeeds,
-                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
+                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
+                                                                             // robot
                 new HolonomicPathFollowerConfig(AutonomousConstants.TRANSLATION_PID,
                         AutonomousConstants.ROTATION_PID, AutonomousConstants.MAX_MODULE_VELOCITY,
                         AutonomousConstants.DRIVE_BASE_RADIUS, new ReplanningConfig(),
@@ -226,8 +235,12 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                 }, this); // Subsystem for requirements
     }
 
-    public Supplier<Pose2d> getPose() {
-        return () -> getState().Pose;
+    public Pose2d getPose() {
+        var state = getState();
+        if (state == null || getState().Pose == null) {
+            return new Pose2d();
+        }
+        return state.Pose;
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
@@ -250,6 +263,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * gets if slow mode is enabled
+     * 
      * @return if the robot is driving in slow mode
      */
     public boolean inSlowMode() {
@@ -258,6 +272,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Set slow mode t/f
+     * 
      * @param slow boolean if we are in slow mode
      */
     public void setSlowMode(boolean slow) {
@@ -273,6 +288,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Logs if the robot is in robot centric control
+     * 
      * @param robotCentricControl boolean if the robot is in robot centric control
      */
     public void setRobotCentricControl(boolean robotCentricControl) {
@@ -281,6 +297,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Returns if the robot is in robot centric control
+     * 
      * @return boolean if the robot is in robot centric control
      */
     public boolean isRobotCentricControl() {
@@ -289,7 +306,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Swaps the driver and copilot controllers
-     * @param driverC the driver controller
+     * 
+     * @param driverC  the driver controller
      * @param copilotC the copilot controller
      */
     public void swap(XboxControllerFilter driverC, XboxControllerFilter copilotC) {
@@ -300,10 +318,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Returns if the robot Pose is in Wing
+     * 
      * @return boolean if the robot is in the wing to start aiming STATE priming
      */
     public boolean inWing() {
-        return (getPose().get().getX() < ShooterConstants.FAR_WING_X);
+        return (getPose().getX() < ShooterConstants.FAR_WING_X);
     }
 
     public void disableVision() {
@@ -317,6 +336,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public double distanceToSpeaker() {
-        return DrivetrainConstants.SPEAKER_POSE.getDistance(getPose().get().getTranslation());
+        return DrivetrainConstants.SPEAKER_POSE.getDistance(getPose().getTranslation());
     }
 }

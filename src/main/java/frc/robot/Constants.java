@@ -66,7 +66,7 @@ public class Constants {
         public static final double SLOW_SPEED_MULT = 0.4; // TODO Tune for Driver
 
         public static final double SYS_TEST_SPEED_DRIVE = 0.5;
-        public static final double SYS_TEST_SPEED_TURN = 1d;
+        public static final double SYS_TEST_SPEED_TURN = 0.7d;
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
     }
@@ -396,6 +396,7 @@ public class Constants {
         public static final double MOTOR_KA = 0;
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
+        public static final double COLLECTOR_GRABANDGO_POWER = 0.75;
     }
 
     public class FlywheelConstants { // TODO: get real
@@ -404,21 +405,37 @@ public class Constants {
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
 
-        // TUNED TOP
-        public static final double TOP_MOTOR_KP = 0.15;
-        public static final double TOP_MOTOR_KI = 0;
-        public static final double TOP_MOTOR_KD = 0;
-        public static final double TOP_MOTOR_KS = 0.3;
-        public static final double TOP_MOTOR_KV = 0.11;
-        public static final double TOP_MOTOR_KA = 0;
+        // SLOT 0 TOP, 0 - 49 RPS
+        public static final double TOP_0_MOTOR_KP = 0.155;
+        public static final double TOP_0_MOTOR_KI = 0;
+        public static final double TOP_0_MOTOR_KD = 0;
+        public static final double TOP_0_MOTOR_KS = 0.3;
+        public static final double TOP_0_MOTOR_KV = 0.11;
+        public static final double TOP_0_MOTOR_KA = 0;
 
-        // TUNED BOTTOM
-        public static final double BOTTOM_MOTOR_KP = 0.15;
-        public static final double BOTTOM_MOTOR_KI = 0;
-        public static final double BOTTOM_MOTOR_KD = 0;
-        public static final double BOTTOM_MOTOR_KS = 0.3;
-        public static final double BOTTOM_MOTOR_KV = 0.115;
-        public static final double BOTTOM_MOTOR_KA = 0;
+        // SLOT 1 TOP, 50 - 107 RPS
+        public static final double TOP_1_MOTOR_KP = 0.16;
+        public static final double TOP_1_MOTOR_KI = 0;
+        public static final double TOP_1_MOTOR_KD = 0;
+        public static final double TOP_1_MOTOR_KS = 0.3;
+        public static final double TOP_1_MOTOR_KV = 0.113;
+        public static final double TOP_1_MOTOR_KA = 0;
+
+        // SLOT 0 BOTTOM, 0 - 49 RPS
+        public static final double BOTTOM_0_MOTOR_KP = 0.15;
+        public static final double BOTTOM_0_MOTOR_KI = 0;
+        public static final double BOTTOM_0_MOTOR_KD = 0;
+        public static final double BOTTOM_0_MOTOR_KS = 0.3;
+        public static final double BOTTOM_0_MOTOR_KV = 0.115;
+        public static final double BOTTOM_0_MOTOR_KA = 0;
+
+        // SLOT 1 BOTTOM, 50 - 107 RPS
+        public static final double BOTTOM_1_MOTOR_KP = 0.155;
+        public static final double BOTTOM_1_MOTOR_KI = 0;
+        public static final double BOTTOM_1_MOTOR_KD = 0;
+        public static final double BOTTOM_1_MOTOR_KS = 0.3;
+        public static final double BOTTOM_1_MOTOR_KV = 0.117;
+        public static final double BOTTOM_1_MOTOR_KA = 0;
 
 
         public static final double RPM_TOLERANCE = 100d;
@@ -426,7 +443,7 @@ public class Constants {
         public static final double BIAS_INCREMENT = 1.25; // RPS to bias by per button press
         public static final double COAST_VOLTAGE = 0.1;
 
-        public static final double FLYWHEEL_SYSTEST_POWER = 0.5;
+        public static final double FLYWHEEL_SYSTEST_RPM = 1000;
     }
 
     public class IndexerConstants { // TODO: get real
@@ -441,6 +458,8 @@ public class Constants {
         public static final double INDEXER_DEFAULT_POWER = 0.6d;
         public static final double INDEXER_MANUAL_POWER = 0.75d;
         public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
+
+        public static final double INDEXER_SYSTEST_POWER = 0.25d;
     }
 
     public class PivotConstants { // TODO: get real
@@ -475,6 +494,8 @@ public class Constants {
 
         public static final double MIN_ANGLE = 25d;
         public static final double MAX_ANGLE = 105d;
+
+        public static final double PIVOT_SYSTEST_ANGLE = 90d;
     }
 
     public class ShooterConstants {
@@ -488,6 +509,7 @@ public class Constants {
                 put(1.08d, 60d);
                 put(2.01d, 50d);
                 put(2.94d, 39d);
+                put(3.99d, 31d);
             }
         };
 
@@ -496,9 +518,9 @@ public class Constants {
             {
                 // As distance get smaller RPM gets smaller
                 put(1.08d, 2000d);
-                put(2.01d, 2250d);
+                put(2.01d, 2000d);
                 put(2.94d, 2500d);
-
+                put(3.99d, 3250d);
             }
         };
 
@@ -550,43 +572,24 @@ public class Constants {
 
     public class ClimbConstants { // TODO: find real values
         public static final boolean CLIMB_RIGHT_MOTOR_INVERT = false;
-        public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
-        public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final boolean CLIMB_LEFT_MOTOR_INVERT = true;
+        public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean CLIMB_MOTOR_BRAKE_MODE = true;
-        public static final double EXTEND_KP = 0;
-        public static final double EXTEND_KI = 0;
-        public static final double EXTEND_KD = 0;
-        public static final double RETRACT_KP = 0;
-        public static final double RETRACT_KI = 0;
-        public static final double RETRACT_KD = 0;
-        public static final double GEAR_REDUCTION = 20d;
+        public static final double UNLOADED_KP = 10;
+        public static final double UNLOADED_KI = 0;
+        public static final double UNLOADED_KD = 0;
+        public static final double LOADED_KP = 0;
+        public static final double LOADED_KI = 0;
+        public static final double LOADED_KD = 0;
+        public static final double GEAR_REDUCTION = 12d;
         public static final double WINCH_DIAMETER_INCHES = 1d;
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
-        public static final double MAX_HEIGHT = 999d;
-        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of
-                                                       // lower arm in inches
-        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of
-                                                       // upper arm in inches
+        public static final double MAX_HEIGHT = 8.83; //In rotations
+        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of lower arm in inches
+        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
 
-        public static final Pose3d LOWER_OFFSET = new Pose3d(); // NOTE: Poses are in meters despite
-                                                                // george washington's
-                                                                // best efforts
-        public static final Pose3d UPPER_OFFSET = new Pose3d(); // NOTE 2: these poses should
-                                                                // exclude side to side
-                                                                // offset, since it gets set below
-
-        public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); // NOTE 3: this is
-                                                                               // the side to side
-                                                                               // offset of the
-                                                                               // pivot point of the
-                                                                               // arms,
-                                                                               // should exclude
-                                                                               // anything but side
-                                                                               // to
-                                                                               // side values
-        public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; // TODO: find real values
+        public static final double CLIMB_PID_SETPOINT_EXTENDED = MAX_HEIGHT;
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
         public static final double CLIMB_RETRACTION_TOLERANCE = 0;
@@ -608,15 +611,21 @@ public class Constants {
             {
                 put(-1, 0);
                 put(1, 0);
-                put(2, 14);
+                put(2,1);
+                put(3,2);
+                put(4,3);
+                put(5, 14);
             }
         };
 
         public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
             {
                 put(-1, LEDsConstants.LED_LENGTH);
-                put(1, 14);
-                put(2, 12);
+                put(1,1);
+                put(2,1);
+                put(3,1);
+                put(4, 11);
+                put(5, 12);
             }
         };
 
@@ -629,9 +638,23 @@ public class Constants {
         public static final int PINK_HUE = 355;
 
         public enum LED_STATES {
-            CUSTOMCONTROL(0), DISABLED(1), EMERGENCY(2), START(3), COLLECTED(4), SHOT(
-                    5), FINISHED_CLIMB(6), SHOOTING(7), COLLECTING(8), CHASING(
-                            9), CLIMBING(10), HAS_PIECE(11), HAS_VISION(12), DEFAULT(13);
+            CUSTOMCONTROL(0), 
+            DISABLED(1),
+            EMERGENCY(2),
+            START(3),
+            COLLECTED(4),
+            SHOT(5),
+            FINISHED_CLIMB(6),
+            SHOOTING(7),
+            COLLECTING(8),
+            CHASING(9),
+            CLIMBING(10),
+            HAS_PIECE(11),
+            HAS_VISION(12),
+            COLLECTOR_BEAMBREAK(13),
+            INDEXER_ENTER_BEAMBREAK(14),
+            INDEXER_EXIT_BEAMBREAK(15),
+            DEFAULT(16);
 
             private final int priority;
 
