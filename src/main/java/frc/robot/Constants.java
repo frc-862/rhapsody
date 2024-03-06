@@ -438,7 +438,7 @@ public class Constants {
         public static final double BOTTOM_1_MOTOR_KA = 0;
 
 
-        public static final double RPM_TOLERANCE = 100d;
+        public static final double RPM_TOLERANCE = 50d;
 
         public static final double BIAS_INCREMENT = 1.25; // RPS to bias by per button press
         public static final double COAST_VOLTAGE = 0.1;
@@ -532,10 +532,10 @@ public class Constants {
     }
 
     public class CandConstants { // TODO get real
-        // Amp
-        public static final double AMP_TOP_RPM = 300; // 250?
-        public static final double AMP_BOTTOM_RPM = 450;
-        public static final double AMP_ANGLE = 103.5;
+        // Amp 
+        public static final double AMP_TOP_RPM = 300; // FRONT METHOD 250
+        public static final double AMP_BOTTOM_RPM = 450; // FRONT METHOD 1250
+        public static final double AMP_ANGLE = 103.5; // FRONT METHOD 55
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
@@ -610,22 +610,16 @@ public class Constants {
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
                 put(-1, 0);
-                put(1, 0);
-                put(2,1);
-                put(3,2);
-                put(4,3);
-                put(5, 14);
+                put(0,0);
+                put(1, 14);
             }
         };
 
         public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
             {
                 put(-1, LEDsConstants.LED_LENGTH);
-                put(1,1);
-                put(2,1);
-                put(3,1);
-                put(4, 11);
-                put(5, 12);
+                put(0, 11);
+                put(1, 12);
             }
         };
 
@@ -649,12 +643,14 @@ public class Constants {
             COLLECTING(8),
             CHASING(9),
             CLIMBING(10),
-            HAS_PIECE(11),
-            HAS_VISION(12),
+            HAS_PIECE(12),
+            HAS_VISION(11),
+            PIVOT_BOTTOM_SWITCH(13),
+            PIVOT_TOP_SWITCH(13),
             COLLECTOR_BEAMBREAK(13),
-            INDEXER_ENTER_BEAMBREAK(14),
-            INDEXER_EXIT_BEAMBREAK(15),
-            DEFAULT(16);
+            INDEXER_ENTER_BEAMBREAK(13),
+            INDEXER_EXIT_BEAMBREAK(13),
+            DEFAULT(13);
 
             private final int priority;
 
