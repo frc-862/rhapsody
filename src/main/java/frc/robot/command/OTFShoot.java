@@ -73,7 +73,7 @@ public class OTFShoot extends Command {
 		// Time until the shot
 		double timeUntilFire = fireTime - Timer.getFPGATimestamp();
 		// Robot pose
-		Pose2d pose = drivetrain.getPose().get();
+		Pose2d pose = drivetrain.getPose();
 
 		// Robot Acceleration
 		double accelerationScaler = 0;
