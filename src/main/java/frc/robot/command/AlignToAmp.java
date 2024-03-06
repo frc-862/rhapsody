@@ -64,8 +64,8 @@ public class AlignToAmp extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.hypot(drivetrain.getPose().get().getTranslation().getX() - target.getTranslation().getX(),
-     drivetrain.getPose().get().getTranslation().getY() - target.getTranslation().getY()) 
+    return Math.hypot(drivetrain.getPose().getTranslation().getX() - target.getTranslation().getX(),
+     drivetrain.getPose().getTranslation().getY() - target.getTranslation().getY()) 
      < AutonomousConstants.AMP_TOLERANCE;
   }
 }
