@@ -7,6 +7,7 @@ import java.util.Random;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -91,6 +92,66 @@ public class LEDs extends SubsystemBase {
 				break;
 		}
 
+		if (DriverStation.isTest()) {
+			if (ledStates.get(LED_STATES.COLLECTOR_BEAMBREAK) != null) {
+				if (ledStates.get(LED_STATES.COLLECTOR_BEAMBREAK)) {
+					setStrandSingleHSV(0, 0, LEDsConstants.GREEN_HUE, 255, 255);
+					setStrandSingleHSV(1, 0, LEDsConstants.GREEN_HUE, 255, 255);
+				} else {
+					setStrandSingleHSV(0, 0, LEDsConstants.RED_HUE, 255, 255);
+					setStrandSingleHSV(1, 0, LEDsConstants.RED_HUE, 255, 255);
+				}
+			} else {
+				ledStates.put(LED_STATES.COLLECTOR_BEAMBREAK, false);
+			}
+			if (ledStates.get(LED_STATES.INDEXER_ENTER_BEAMBREAK) != null) {
+				if (ledStates.get(LED_STATES.INDEXER_ENTER_BEAMBREAK)) {
+					setStrandSingleHSV(0, 1, LEDsConstants.GREEN_HUE, 255, 255);
+					setStrandSingleHSV(1, 1, LEDsConstants.GREEN_HUE, 255, 255);
+				} else {
+					setStrandSingleHSV(0, 1, LEDsConstants.RED_HUE, 255, 255);
+					setStrandSingleHSV(1, 1, LEDsConstants.RED_HUE, 255, 255);
+				}
+			}  else {
+				ledStates.put(LED_STATES.INDEXER_ENTER_BEAMBREAK, false);
+			}
+			if (ledStates.get(LED_STATES.INDEXER_EXIT_BEAMBREAK) != null) {
+				if (ledStates.get(LED_STATES.INDEXER_EXIT_BEAMBREAK)) {
+					setStrandSingleHSV(0, 2, LEDsConstants.GREEN_HUE, 255, 255);
+					setStrandSingleHSV(1, 2, LEDsConstants.GREEN_HUE, 255, 255);
+				} else {
+					setStrandSingleHSV(0, 2, LEDsConstants.RED_HUE, 255, 255);
+					setStrandSingleHSV(1, 2, LEDsConstants.RED_HUE, 255, 255);
+
+				}
+			}  else {
+				ledStates.put(LED_STATES.INDEXER_EXIT_BEAMBREAK, false);
+			}
+			if (ledStates.get(LED_STATES.PIVOT_BOTTOM_SWITCH) != null) {
+				if (ledStates.get(LED_STATES.PIVOT_BOTTOM_SWITCH)) {
+					setStrandSingleHSV(0, 3, LEDsConstants.GREEN_HUE, 255, 255);
+					setStrandSingleHSV(1, 3, LEDsConstants.GREEN_HUE, 255, 255);
+				} else {
+					setStrandSingleHSV(0, 3, LEDsConstants.RED_HUE, 255, 255);
+					setStrandSingleHSV(1, 3, LEDsConstants.RED_HUE, 255, 255);
+
+				}
+			}  else {
+				ledStates.put(LED_STATES.PIVOT_BOTTOM_SWITCH, false);
+			}
+			if (ledStates.get(LED_STATES.PIVOT_TOP_SWITCH) != null) {
+				if (ledStates.get(LED_STATES.PIVOT_TOP_SWITCH)) {
+					setStrandSingleHSV(0, 4, LEDsConstants.GREEN_HUE, 255, 255);
+					setStrandSingleHSV(1, 4, LEDsConstants.GREEN_HUE, 255, 255);
+				} else {
+					setStrandSingleHSV(0, 4, LEDsConstants.RED_HUE, 255, 255);
+					setStrandSingleHSV(1, 4, LEDsConstants.RED_HUE, 255, 255);
+
+				}
+			} 
+		} else {
+			ledStates.put(LED_STATES.PIVOT_TOP_SWITCH, false);
+		}
 		leds.setData(ledBuffer);
 	}
 
@@ -125,7 +186,7 @@ public class LEDs extends SubsystemBase {
 	 */
 	public void rainbow(int strand) {
 		for (int i = 0; i < LEDsConstants.STRAND_LENGTH.get(strand); i++) {
-			setSingleHSV(strand, i, (i + (int) (Timer.getFPGATimestamp() * 20)) % LEDsConstants.STRAND_LENGTH.get(strand) * 180 / LEDsConstants.STRAND_LENGTH.get(strand), 255,
+			setStrandSingleHSV(strand, i, (i + (int) (Timer.getFPGATimestamp() * 20)) % LEDsConstants.STRAND_LENGTH.get(strand) * 180 / LEDsConstants.STRAND_LENGTH.get(strand), 255,
 					255);
 		}
 	}
@@ -137,7 +198,7 @@ public class LEDs extends SubsystemBase {
 	// 	}
 	// 	setSolidHSV(0, 0, 0);
 	// 	for(int i = 0; i < Math.round(fireLength); i++) {
-	// 		setSingleHSV(i, LEDsConstants.RED_HUE, (int)(255 * Math.cos(Math.toRadians(i * 360 / LEDsConstants.STRAND_LENGTH.get(strand)) / 4)), 255);
+	// 		setStrandSingleHSV(i, LEDsConstants.RED_HUE, (int)(255 * Math.cos(Math.toRadians(i * 360 / LEDsConstants.STRAND_LENGTH.get(strand)) / 4)), 255);
 	// 	}
 	// }
 	
@@ -147,9 +208,9 @@ public class LEDs extends SubsystemBase {
 	public void swirl(int strand) {
 		for (int i = 0; i < LEDsConstants.STRAND_LENGTH.get(strand); i++) {
 			if (((i + (int) (Timer.getFPGATimestamp() * 10)) / LEDsConstants.SWIRL_SEGMENT_SIZE) % 2 == 0) {
-				setSingleHSV(strand, i, LEDsConstants.BLUE_HUE, 255, 255);
+				setStrandSingleHSV(strand, i, LEDsConstants.BLUE_HUE, 255, 255);
 			} else {
-				setSingleHSV(strand, i, LEDsConstants.ORANGE_HUE, 255, 255);
+				setStrandSingleHSV(strand, i, LEDsConstants.ORANGE_HUE, 255, 255);
 			}
 		}
 	}
@@ -177,12 +238,22 @@ public class LEDs extends SubsystemBase {
 	/**
 	 * @param strand What strand to set
 	 * @param index What LED to set
-	 * @param h     Hue
-	 * @param s     Saturation
-	 * @param v     Value
+	 * @param h Hue
+	 * @param s Saturation
+	 * @param v Value
 	 */
-	public void setSingleHSV(int strand, int index, int h, int s, int v) {
+	public void setStrandSingleHSV(int strand, int index, int h, int s, int v) {
 		ledBuffer.setHSV(index + LEDsConstants.STRAND_START.get(strand), h, s, v);
+	}
+
+	/**
+	 * @param index What LED to set
+	 * @param h Hue
+	 * @param s Saturation
+	 * @param v Value
+	 */
+	public void setSingleHSV(int index, int h, int s, int v) {
+		ledBuffer.setHSV(index, h, s, v);
 	}
 
 	/**
@@ -193,7 +264,7 @@ public class LEDs extends SubsystemBase {
 	 */
 	public void setSolidStrandHSV(int strand, int h, int s, int v) {
 		for (int i = 0; i < LEDsConstants.STRAND_LENGTH.get(strand); i++) {
-			setSingleHSV(strand, i, h, s, v);
+			setStrandSingleHSV(strand, i, h, s, v);
 		}
 	}
 
