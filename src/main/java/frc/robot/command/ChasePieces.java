@@ -58,7 +58,6 @@ public class ChasePieces extends Command {
 		this.indexer = indexer;
 		this.flywheel = flywheel;
 		this.pivot = pivot;
-		this.flywheel = flywheel;
 
 		this.limelight = limelights.getDust();
 
