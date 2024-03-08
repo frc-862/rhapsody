@@ -30,6 +30,7 @@ import frc.robot.command.CollisionDetection;
 import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
 import frc.robot.command.PointAtPoint;
+import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
@@ -136,14 +137,14 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
 		NamedCommands.registerCommand("Smart-Shoot",
 			new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-				.deadlineWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
+				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
 		NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
-		NamedCommands.registerCommand("Collect",
+		NamedCommands.registerCommand("Smart-Collect",
 			new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot, flywheel)
 				.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
-		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector));
+		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
