@@ -49,6 +49,8 @@ public class Indexer extends SubsystemBase {
 
         LightningShuffleboard.setBoolSupplier("Indexer", "Is Exiting", () -> isExiting());
         LightningShuffleboard.setBoolSupplier("Indexer", "Has Piece", () -> getPieceState() == PieceState.IN_COLLECT);
+        LightningShuffleboard.setBoolSupplier("Indexer", "In Pivot", () -> getPieceState() == PieceState.IN_PIVOT);
+        LightningShuffleboard.setStringSupplier("Indexer", "Current Piece State", () -> getPieceState().toString());
     }
 
     /**

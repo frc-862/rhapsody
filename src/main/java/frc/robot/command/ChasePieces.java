@@ -6,12 +6,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.IndexerConstants.PieceState;
+import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Limelights;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 
@@ -20,8 +21,8 @@ public class ChasePieces extends Command {
 	private Swerve drivetrain;
 	private Collector collector;
 	private Indexer indexer;
-	private Pivot pivot;
 	private Flywheel flywheel;
+	private Pivot pivot;
 	private Limelight limelight;
 
 	private double pidOutput;
@@ -46,20 +47,20 @@ public class ChasePieces extends Command {
 	 * @param drivetrain to request movement
 	 * @param collector for smart collect
 	 * @param indexer for smart collect
+	 * @param flywheel for stopping the flywheels before collecting / for smart collect
 	 * @param pivot for smart collect
-	 * @param flywheel for smart collect
 	 * @param limelights to get vision data from dust
 	 */
 	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel, Limelights limelights) {
 		this.drivetrain = drivetrain;
 		this.collector = collector;
 		this.indexer = indexer;
-		this.pivot = pivot;
 		this.flywheel = flywheel;
+		this.pivot = pivot;
 
 		this.limelight = limelights.getDust();
 
-		addRequirements(drivetrain);
+		addRequirements(drivetrain, collector, indexer, flywheel);
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class ChasePieces extends Command {
 		smartCollect = new SmartCollect(() -> power, () -> power, collector, indexer, pivot, flywheel);
 
 		initLogging();
-		smartCollect.schedule();
+		smartCollect.initialize();
 	}
 
 	private void initLogging() {
@@ -87,6 +88,8 @@ public class ChasePieces extends Command {
 	@Override
 	public void execute() {
 		hasTarget = limelight.hasTarget();
+		flywheel.setAllMotorsRPM(-300);
+		smartCollect.execute();
 
 		if (hasTarget){
 			previousTargetHeading = targetHeading;
@@ -95,7 +98,6 @@ public class ChasePieces extends Command {
 		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		isDone = smartCollect.isFinished();
 		hasPiece = debouncer.calculate(indexer.getEntryBeamBreakState()) || collector.getEntryBeamBreakState();
 
 		pidOutput = headingController.calculate(0, targetHeading);
@@ -138,6 +140,6 @@ public class ChasePieces extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return isDone;
+		return smartCollect.isFinished();
 	}
 }
