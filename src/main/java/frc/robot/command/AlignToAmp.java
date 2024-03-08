@@ -9,6 +9,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.subsystems.Swerve;
@@ -20,10 +21,11 @@ public class AlignToAmp extends Command {
   
   public Pose2d target;
   public Swerve drivetrain;
-  public MoveToPose moveToPose;
+  public MoveToPose roughMTP;
+  public MoveToPose preciseMTP;
   public PointAtTag pointAtTag;
+  public PathPlannerPath path;
 
-  private PathPlannerPath path;
 
   /** Creates a new AlignToTag. */
   public AlignToAmp(Pose2d target, Swerve drivetrain) {
@@ -36,22 +38,28 @@ public class AlignToAmp extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    path = PathPlannerPath.fromPathFile("Amp autoalign");
-    moveToPose = new MoveToPose(target, drivetrain);
-    moveToPose.initialize();
-    new Trigger(() -> moveToPose.isFinished()).whileTrue(new AutoBuilder().buildAuto("Amp autoalign"));
+    roughMTP = new MoveToPose(target, drivetrain);
+    roughMTP.schedule();
     initLogging();
+    path = PathPlannerPath.fromPathFile("Example Path");
+    // followPath = AutoBuilder.followPath(path);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // if (!roughMTP.isFinished()){
+    //   roughMTP.execute();
+    // }
+    // if(roughMTP.isFinished()){
+    //   preciseMTP.execute();
+    // }
   }
 
   public void initLogging() {
     LightningShuffleboard.setDoubleSupplier("AlignToAmp", "Target X", () -> target.getTranslation().getX());
     LightningShuffleboard.setDoubleSupplier("AlignToAmp", "Target Y", () -> target.getTranslation().getY());
-    LightningShuffleboard.setBoolSupplier("AlignToAmp", "Aligning", () -> moveToPose.isFinished());
+    LightningShuffleboard.setBoolSupplier("AlignToAmp", "Aligning", () -> roughMTP.isFinished());
     LightningShuffleboard.setBoolSupplier("AlignToAmp", "isFinished", () -> isFinished());
   }
   
