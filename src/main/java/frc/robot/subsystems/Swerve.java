@@ -9,6 +9,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
@@ -17,6 +18,7 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -170,7 +172,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     @Override
     public void periodic() {
         // TODO Remove the unecessary shuffleboard stuff eventually
-        if (!disableVision) {
+        if (false) {
             var pose = limelightSubsystem.getPoseQueue().poll();
             while (pose != null) {
                 // High confidence => 0.3
@@ -213,11 +215,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     private void configurePathPlanner() {
-        AutoBuilder.configureHolonomic(() -> this.getState().Pose, // Supplier of current robot pose
-                this::seedFieldRelative, // Consumer for seeding pose against auto
+        AutoBuilder.configureHolonomic(
+            getAutonPoseSupplier(), // Supplier of current robot pose
+            this::seedFieldRelativeAuton, // Consumer for seeding pose against auto
                 this::getCurrentRobotChassisSpeeds,
-                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
-                                                                             // robot
+                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
                 new HolonomicPathFollowerConfig(AutonomousConstants.TRANSLATION_PID,
                         AutonomousConstants.ROTATION_PID, AutonomousConstants.MAX_MODULE_VELOCITY,
                         AutonomousConstants.DRIVE_BASE_RADIUS, new ReplanningConfig(),
@@ -242,6 +244,37 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             return new Pose2d();
         }
         return state.Pose;
+    }
+
+    /**
+     * @return pose 2d in blue alliance origin
+     */
+    public Supplier<Pose2d> getAutonPoseSupplier() {
+        var alliance = DriverStation.getAlliance();
+        if(alliance.get() == DriverStation.Alliance.Red) {
+            return () -> {
+                var pose = getPose();
+                return new Pose2d(new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY()), pose.getRotation());
+            };
+        } else {
+            return () -> getPose();
+        }
+    }
+
+    public void seedFieldRelativeAuton(Pose2d pose) {
+        var alliance = DriverStation.getAlliance();
+        if(alliance.get() == DriverStation.Alliance.Red) {
+            pose =  new Pose2d(new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY()), pose.getRotation());
+        }
+        seedFieldRelative(pose);
+    }
+
+    public static Pose2d blueToRed(Pose2d pose) {
+        return new Pose2d(new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY()), pose.getRotation());
+    }
+
+    public static Pose2d redToBlue(Pose2d pose) {
+        return new Pose2d(new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY()), pose.getRotation());
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
