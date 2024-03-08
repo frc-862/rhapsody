@@ -3,9 +3,14 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
+import frc.robot.Constants;
 import frc.robot.Constants.FlywheelConstants;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
+import edu.wpi.first.math.Pair;
+import java.util.function.DoubleSupplier;
+import java.util.function.BooleanSupplier;
 
 public class Flywheel extends SubsystemBase {
     private ThunderBird topMotor;
@@ -18,6 +23,8 @@ public class Flywheel extends SubsystemBase {
     private double bottomTargetRPS = 0;
     private double bias = 0;
     private boolean coast = false;
+
+    private LightningShuffleboardPeriodic periodicShuffleboard;
 
     public Flywheel() {
         /* TEST after kettering basic stuff for now */
@@ -37,21 +44,21 @@ public class Flywheel extends SubsystemBase {
         initLogging();
     }
 
+    @SuppressWarnings("unchecked")
     private void initLogging() {
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Top RPM", this::getTopMotorRPM);
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom RPM", this::getBottomMotorRPM);
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Target Top RPM", () -> topTargetRPS * 60);
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Target Bottom RPM", () -> bottomTargetRPS * 60);
 
-        LightningShuffleboard.setBoolSupplier("Flywheel", "Top on Target",
-                () -> topMotorRPMOnTarget());
-        LightningShuffleboard.setBoolSupplier("Flywheel", "Bottom on Target",
-                () -> bottomMotorRPMOnTarget());
+        periodicShuffleboard = new LightningShuffleboardPeriodic("Flywheel", Constants.importantShuffleboardPeriod,
+            new Pair<String, Object>("Top RPM", (DoubleSupplier) () -> getTopMotorRPM()),
+            new Pair<String, Object>("Bottom RPM", (DoubleSupplier) () -> getBottomMotorRPM()),
+            new Pair<String, Object>("Target Top RPM", (DoubleSupplier) () -> this.topTargetRPS * 60),
+            new Pair<String, Object>("Target Bottom RPM", (DoubleSupplier) () -> this.bottomTargetRPS * 60),
+            new Pair<String, Object>("Top on Target", (BooleanSupplier) this::topMotorRPMOnTarget),
+            new Pair<String, Object>("Bottom on Target", (BooleanSupplier) this::bottomMotorRPMOnTarget),
+            new Pair<String, Object>("Top Power", (DoubleSupplier) topMotor::get),
+            new Pair<String, Object>("Bottom Power", (DoubleSupplier) bottomMotor::get),
+            new Pair<String, Object>("Bias", (DoubleSupplier) this::getBias)
+        );
 
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Top Power", () -> topMotor.get());
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Power", () -> bottomMotor.get());
-
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", this::getBias);
     }
 
     @Override

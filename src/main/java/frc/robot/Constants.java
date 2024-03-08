@@ -647,5 +647,6 @@ public class Constants {
             }
         }
     }
-
+    public static final double shuffleboardPeriod = 0.5;
+    public static final double importantShuffleboardPeriod = .1;
 }

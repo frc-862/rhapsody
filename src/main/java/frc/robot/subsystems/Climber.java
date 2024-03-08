@@ -9,12 +9,18 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.math.Conversions;
 import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
+
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+import edu.wpi.first.math.Pair;
 
 public class Climber extends SubsystemBase {
 
@@ -31,6 +37,8 @@ public class Climber extends SubsystemBase {
     private boolean hasStowed = false;
     private boolean hasGroundedR = false;
     private boolean hasGroundedL = false;
+
+    private LightningShuffleboardPeriodic periodicShuffleboard;
 
     public Climber(Swerve drivetrain) {
         // configure climb motors
@@ -51,27 +59,42 @@ public class Climber extends SubsystemBase {
         climbMotorL.applyConfig();
     }
 
+    @SuppressWarnings("unchecked")
     private void initLogging() { // TODO test and fix once we have climber
-        LightningShuffleboard.setDoubleSupplier("Climb", "Left Height", () -> getHeightL());
-        LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
-        LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
-        LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
-        LightningShuffleboard.set("Climb", "Left Lower Pose",
-                convertLowerPose(getHeightL(), false));
-        LightningShuffleboard.set("Climb", "Right Lower Pose",
-                convertLowerPose(getHeightR(), true));
-        LightningShuffleboard.set("Climb", "Left Upper Pose",
-                convertUpperPose(getHeightL(), false));
-        LightningShuffleboard.set("Climb", "Right Upper Pose",
-                convertUpperPose(getHeightR(), true));
-        LightningShuffleboard.set("Climb", "Left Lower Setpoint",
-                convertLowerPose(getSetpointL(), false));
-        LightningShuffleboard.set("Climb", "Right Lower Setpoint",
-                convertLowerPose(getSetpointR(), true));
-        LightningShuffleboard.set("Climb", "Left Upper Setpoint",
-                convertUpperPose(getSetpointL(), false));
-        LightningShuffleboard.set("Climb", "Right Upper Setpoint",
-                convertUpperPose(getSetpointR(), true));
+        // LightningShuffleboard.setDoubleSupplier("Climb", "Left Height", () -> getHeightL());
+        // LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
+        // LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
+        // LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
+        // LightningShuffleboard.set("Climb", "Left Lower Pose",
+        //         convertLowerPose(getHeightL(), false));
+        // LightningShuffleboard.set("Climb", "Right Lower Pose",
+        //         convertLowerPose(getHeightR(), true));
+        // LightningShuffleboard.set("Climb", "Left Upper Pose",
+        //         convertUpperPose(getHeightL(), false));
+        // LightningShuffleboard.set("Climb", "Right Upper Pose",
+        //         convertUpperPose(getHeightR(), true));
+        // LightningShuffleboard.set("Climb", "Left Lower Setpoint",
+        //         convertLowerPose(getSetpointL(), false));
+        // LightningShuffleboard.set("Climb", "Right Lower Setpoint",
+        //         convertLowerPose(getSetpointR(), true));
+        // LightningShuffleboard.set("Climb", "Left Upper Setpoint",
+        //         convertUpperPose(getSetpointL(), false));
+        // LightningShuffleboard.set("Climb", "Right Upper Setpoint",
+        //         convertUpperPose(getSetpointR(), true));
+
+        periodicShuffleboard = new LightningShuffleboardPeriodic("Climb", Constants.shuffleboardPeriod,
+            new Pair<String, Object>("Left Height", (DoubleSupplier) () -> getHeightL()),
+            new Pair<String, Object>("Right Height", (DoubleSupplier) () -> getHeightR()),
+            new Pair<String, Object>("Left Setpoint", (DoubleSupplier) () -> getSetpointL()),
+            new Pair<String, Object>("Right Setpoint", (DoubleSupplier) () -> getSetpointR()),
+            new Pair<String, Object>("Left Lower Pose", (Supplier<Pose3d>) () -> convertLowerPose(getHeightL(), false)),
+            new Pair<String, Object>("Right Lower Pose", (Supplier<Pose3d>) () -> convertLowerPose(getHeightR(), true)),
+            new Pair<String, Object>("Left Upper Pose", (Supplier<Pose3d>) () -> convertUpperPose(getHeightL(), false)),
+            new Pair<String, Object>("Right Upper Pose", (Supplier<Pose3d>) () -> convertUpperPose(getHeightR(), true)),
+            new Pair<String, Object>("Left Lower Setpoint", (Supplier<Pose3d>) () -> convertLowerPose(getSetpointL(), false)),
+            new Pair<String, Object>("Right Lower Setpoint", (Supplier<Pose3d>) () -> convertLowerPose(getSetpointR(), true)),
+            new Pair<String, Object>("Left Upper Setpoint", (Supplier<Pose3d>) () -> convertUpperPose(getSetpointL(), false)),
+            new Pair<String, Object>("Right Upper Setpoint", (Supplier<Pose3d>) () -> convertUpperPose(getSetpointR(), true)));
     }
 
     /**

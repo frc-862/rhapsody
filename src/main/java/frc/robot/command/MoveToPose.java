@@ -4,10 +4,14 @@
 
 package frc.robot.command;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
+import java.util.function.DoubleSupplier;
 
 public class MoveToPose extends Command {
 
@@ -22,6 +26,8 @@ public class MoveToPose extends Command {
     private final double minSpeed = 0.9;
     private double powerx;
     private double powery;
+
+    private LightningShuffleboardPeriodic periodicShuffleboard;
 
     /**
      * @param target The target pose to move to
@@ -39,11 +45,13 @@ public class MoveToPose extends Command {
         initLogging();
     }
 
+    @SuppressWarnings ("unchecked")
     private void initLogging() {
-        LightningShuffleboard.setDoubleSupplier("MoveToPose", "dx", () -> dx);
-        LightningShuffleboard.setDoubleSupplier("MoveToPose", "dy", () -> dy);
-        LightningShuffleboard.setDoubleSupplier("MoveToPose", "targetX", () -> target.getX());
-        LightningShuffleboard.setDoubleSupplier("MoveToPose", "targetY", () -> target.getY());
+        periodicShuffleboard = new LightningShuffleboardPeriodic("MoveToPose", Constants.importantShuffleboardPeriod,
+                new Pair<String, Object>("dx", (DoubleSupplier) () -> dx), 
+                new Pair<String, Object>("dy", (DoubleSupplier) () -> dy),
+                new Pair<String, Object>("targetX", (DoubleSupplier) () -> target.getX()), 
+                new Pair<String, Object>("targetY", (DoubleSupplier) () -> target.getY()));
     }
 
     @Override

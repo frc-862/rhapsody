@@ -1,9 +1,14 @@
 package frc.robot.command;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Collector;
@@ -12,6 +17,7 @@ import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
 import frc.thunder.vision.Limelight;
 
 public class ChasePieces extends Command {
@@ -38,6 +44,8 @@ public class ChasePieces extends Command {
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
 
 	private Debouncer debouncer = new Debouncer(IndexerConstants.INDEXER_DEBOUNCE_TIME);
+
+	private LightningShuffleboardPeriodic periodicShuffleboard;
 
 	/**
 	 * Creates a new ChasePieces.
@@ -68,16 +76,17 @@ public class ChasePieces extends Command {
 		smartCollect.schedule();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void initLogging() {
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "On Target", () -> onTarget);
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Target", () -> hasTarget);
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "Is Done", () -> isDone);
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Piece", () -> hasPiece);
-
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Heading", () -> targetHeading);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Y", () -> targetPitch);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Pid Output", () -> pidOutput);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "SmartCollectPower", () -> power);
+		periodicShuffleboard = new LightningShuffleboardPeriodic("ChasePieces", Constants.shuffleboardPeriod,
+				new Pair<String, Object>("On Target", (BooleanSupplier) () -> onTarget),
+				new Pair<String, Object>("Has Target", (BooleanSupplier) () -> hasTarget),
+				new Pair<String, Object>("Is Done", (BooleanSupplier) () -> isDone),
+				new Pair<String, Object>("Has Piece", (BooleanSupplier) () -> hasPiece),
+				new Pair<String, Object>("Target Heading", (DoubleSupplier) () -> targetHeading),
+				new Pair<String, Object>("Target Y", (DoubleSupplier) () -> targetPitch),
+				new Pair<String, Object>("Pid Output", (DoubleSupplier) () -> pidOutput),
+				new Pair<String, Object>("SmartCollectPower", (DoubleSupplier) () -> power));
 	}
 
 	@Override

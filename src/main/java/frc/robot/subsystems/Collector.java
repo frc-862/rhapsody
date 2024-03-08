@@ -4,18 +4,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
+import frc.robot.Constants;
 import frc.robot.Constants.CollectorConstants;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
+import edu.wpi.first.math.Pair;
+import java.util.function.DoubleSupplier;
+import java.util.function.BooleanSupplier;
 
 public class Collector extends SubsystemBase {
 
 	// Declare collector hardware
 	private ThunderBird motor;
 	private DigitalInput beamBreak;
+	private LightningShuffleboardPeriodic periodicShuffleboard;
 
 	private final VelocityVoltage velocityVoltage = new VelocityVoltage(
 			0, 0, true, CollectorConstants.MOTOR_KV,
@@ -39,10 +46,13 @@ public class Collector extends SubsystemBase {
 		initLogging();
 	}
 
+	@SuppressWarnings ("unchecked")
 	private void initLogging() {
-		LightningShuffleboard.setDoubleSupplier("Collector", "Collector Power", () -> motor.get());
-		LightningShuffleboard.setBoolSupplier("Collector", "Beam Break", () -> getEntryBeamBreakState());
-		LightningShuffleboard.setBoolSupplier("Collector", "Has Piece", () -> hasPiece());
+
+		periodicShuffleboard = new LightningShuffleboardPeriodic("Collector", Constants.shuffleboardPeriod,
+				new Pair<String, Object>("Collector Power", (DoubleSupplier) () -> motor.get()),
+				new Pair<String, Object>("Beam Break", (BooleanSupplier) () -> getEntryBeamBreakState()),
+				new Pair<String, Object>("Has Piece", (BooleanSupplier) () -> hasPiece()));
 	}
 
 	/**
