@@ -40,6 +40,7 @@ import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.shoot.SourceCollect;
 import frc.robot.command.shoot.Stow;
+import frc.robot.command.shoot.Tune;
 import frc.robot.command.shoot.AutonCand.AmpShotAuton;
 import frc.robot.command.shoot.AutonCand.CandC1;
 import frc.robot.command.shoot.AutonCand.CandC2;
