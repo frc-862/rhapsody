@@ -4,18 +4,32 @@
 
 package frc.robot.command;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.Swerve;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AmpAlign extends ParallelDeadlineGroup {
+public class AmpAlign extends SequentialCommandGroup {
   /** Creates a new AmpAlign. */
-  public AmpAlign() {
-    // Add the deadline command in the super() call. Add other commands using
+  public AmpAlign(Pose2d target, Swerve drivetrain) {   
     // addCommands().
-    super(new InstantCommand());
+    //var roughMTP = new MoveToPose(target, drivetrain);
+   // var  path = PathPlannerPath.fromPathFile("Example Path");
+    //var followPath = AutoBuilder.followPath(path);
+    super(new MoveToPose(target, drivetrain), buildPath());
     // addCommands(new FooCommand(), new BarCommand());
+  }
+
+  private static Command buildPath() {
+    var  path = PathPlannerPath.fromPathFile("Amp autoalign");
+    var followPath = AutoBuilder.followPath(path);
+    // LightningShuffleboard.setBoolSupplier("AmpAlign", "path is running", () -> !followPath.isFinished());
+    return followPath;
   }
 }

@@ -26,6 +26,7 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.command.AlignToAmp;
+import frc.robot.command.AmpAlign;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.command.ChasePieces;
@@ -196,7 +197,7 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
-		new Trigger(driver::getAButton).whileTrue(new AlignToAmp(AutonomousConstants.AMP_POSE, drivetrain));
+		new Trigger(driver::getAButton).whileTrue(new AmpAlign(AutonomousConstants.AMP_POSE, drivetrain));
 		
 		// Test auto align
 		/* copilot */
