@@ -9,6 +9,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
@@ -23,6 +24,7 @@ public class ChasePieces extends Command {
 	private Indexer indexer;
 	private Flywheel flywheel;
 	private Pivot pivot;
+	private Flywheel flywheel;
 	private Limelight limelight;
 
 	private double pidOutput;
@@ -49,16 +51,18 @@ public class ChasePieces extends Command {
 	 * @param indexer for smart collect
 	 * @param flywheel for stopping the flywheels before collecting
 	 * @param pivot for smart collect
+	 * @param flywheel for smart collect
 	 * @param limelights to get vision data from dust
 	 */
-	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Flywheel flywheel, Pivot pivot, Limelights limelights) {
+	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel, Limelights limelights) {
 		this.drivetrain = drivetrain;
 		this.collector = collector;
 		this.indexer = indexer;
 		this.flywheel = flywheel;
 		this.pivot = pivot;
+		this.flywheel = flywheel;
 
-		limelight = limelights.getDust();
+		this.limelight = limelights.getDust();
 
 		addRequirements(drivetrain, collector, indexer, flywheel);
 	}
@@ -67,7 +71,8 @@ public class ChasePieces extends Command {
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 		power = 0d;
-		smartCollect =  new SmartCollect(() -> power, () -> power, collector, indexer, pivot);
+		smartCollect = new SmartCollect(() -> power, () -> power, collector, indexer, pivot, flywheel);
+
 		initLogging();
 		smartCollect.initialize();
 	}

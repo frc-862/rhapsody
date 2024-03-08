@@ -7,6 +7,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 import frc.thunder.command.TimedCommand;
@@ -18,6 +19,7 @@ public class SmartCollect extends Command {
 	private Collector collector;
 	private Indexer indexer;
 	private Pivot pivot;
+	private Flywheel flywheel;
 
 	/* Used to prevent indexing if pivot angle is too high */
 	private boolean allowIndex;
@@ -31,16 +33,18 @@ public class SmartCollect extends Command {
 	 * @param indexerPower power to apply to indexer
 	 * @param collector subsystem
 	 * @param indexer subsystem
-	 * @param pivot subsystem
+	 * @param pivot subsystem (read only)
+	 * @param flywheel subsystem
 	 */
-	public SmartCollect(DoubleSupplier collectorPower, DoubleSupplier indexerPower, Collector collector, Indexer indexer, Pivot pivot) {
+	public SmartCollect(DoubleSupplier collectorPower, DoubleSupplier indexerPower, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel) {
 		this.collector = collector;
 		this.indexer = indexer;
 		this.pivot = pivot;
+		this.flywheel = flywheel;
 		this.collectorPower = collectorPower;
 		this.indexerPower = indexerPower;
 
-		addRequirements(collector, indexer);
+		addRequirements(collector, indexer, flywheel);
 	}
 
 	@Override
@@ -58,6 +62,7 @@ public class SmartCollect extends Command {
 				collector.setPower(collectorPower.getAsDouble());
 				if (allowIndex) {
 					indexer.setPower(indexerPower.getAsDouble());
+					flywheel.setAllMotorsRPM(-200);
 				}
 				break;
 
@@ -66,6 +71,7 @@ public class SmartCollect extends Command {
 					// Slow down collector to prevent jamming
 					collector.setPower(0.65 * collectorPower.getAsDouble());
 					indexer.setPower(indexerPower.getAsDouble());
+					flywheel.setAllMotorsRPM(-500);
 				} else {
 					// Stop collecting since pivot is not in right place
 					collector.stop();
@@ -79,6 +85,7 @@ public class SmartCollect extends Command {
 					indexer.setPower(0.9 * indexerPower.getAsDouble());
 				} else if (reversedFromExit) {
 					indexer.stop();
+					flywheel.coast(true);
 					new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 				}
 				break;
@@ -95,6 +102,7 @@ public class SmartCollect extends Command {
 	public void end(boolean interrupted) {
 		collector.stop();
 		indexer.stop();
+		flywheel.coast(true);
 	}
 
 	@Override

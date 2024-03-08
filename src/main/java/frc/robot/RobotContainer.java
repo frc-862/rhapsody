@@ -41,6 +41,7 @@ import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.shoot.SourceCollect;
 import frc.robot.command.shoot.Stow;
+import frc.robot.command.shoot.Tune;
 import frc.robot.command.shoot.AutonCand.AmpShotAuton;
 import frc.robot.command.shoot.AutonCand.CandC1;
 import frc.robot.command.shoot.AutonCand.CandC2;
@@ -170,7 +171,7 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, indexer, flywheel, pivot, limelights)
+		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights)
 			.deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
 		// parks the robot
@@ -195,7 +196,8 @@ public class RobotContainer extends LightningContainer {
 		/* copilot */
 		new Trigger(coPilot::getBButton)
 			.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
-			.andThen(new SmartCollect(() -> 0.55, () -> 0.75, collector, indexer, pivot)).deadlineWith(leds.enableState(LED_STATES.COLLECTING))); // TODO: find correct button/trigger
+			.andThen(new SmartCollect(() -> 0.55, () -> 0.75, collector, indexer, pivot, flywheel))
+			.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
 		// cand shots for the robot
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
