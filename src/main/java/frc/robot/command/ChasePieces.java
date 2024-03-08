@@ -11,7 +11,6 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Limelights;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -24,7 +23,6 @@ public class ChasePieces extends Command {
 	private Indexer indexer;
 	private Flywheel flywheel;
 	private Pivot pivot;
-	private Flywheel flywheel;
 	private Limelight limelight;
 
 	private double pidOutput;

@@ -138,9 +138,9 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Smart-Shoot",
 			new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
 				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
-		NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, indexer, flywheel, pivot, limelights));
+		NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
 		NamedCommands.registerCommand("Smart-Collect",
-			new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot)
+			new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot, flywheel)
 				.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
