@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.thunder.util.Pose4d;
@@ -12,15 +13,16 @@ public class Limelights extends SubsystemBase {
     private Limelight dust;
     private Limelight champs;
     private Thread poseProducer;
-    private ConcurrentLinkedQueue<Pose4d> poseQueue = new ConcurrentLinkedQueue<Pose4d>();
     private double lastVisionRead = 0;
+    private Consumer<Pose4d> visionConsumer = (Pose4d _pose) -> {
+    };
 
     public Limelights() {
-        stopMe = new Limelight("limelight-stopme", "10.8.62.11");   // LL3   Back
-        dust = new Limelight("limelight-dust", "10.8.62.12");           // LL2+  Front up
-        champs = new Limelight("limelight-champs", "10.8.62.13"); // LL2+  Front down (collector)
+        stopMe = new Limelight("limelight-stopme", "10.8.62.11"); // LL3 Back
+        dust = new Limelight("limelight-dust", "10.8.62.12"); // LL2+ Front up
+        champs = new Limelight("limelight-champs", "10.8.62.13"); // LL2+ Front down (collector)
 
-        //TODO: make actual pipelines... maybe an enum? At least use constants
+        // TODO: make actual pipelines... maybe an enum? At least use constants
         stopMe.setPipeline(0);
         dust.setPipeline(0);
         champs.setPipeline(0);
@@ -40,17 +42,17 @@ public class Limelights extends SubsystemBase {
     }
 
     private void monitor(Limelight limelight) {
-        if(limelight.hasTarget()) {
-            Pose4d pose = limelight.getAlliancePose();
-            if (Limelight.trustPose(pose) && pose.getFPGATimestamp() > lastVisionRead) {
-                poseQueue.add(pose);
+        if (limelight.hasTarget()) {
+            Pose4d pose = limelight.getBlueAlliancePose();
+            if (pose.getFPGATimestamp() > lastVisionRead && pose.trust()) {
+                visionConsumer.accept(pose);
                 lastVisionRead = pose.getFPGATimestamp();
             }
         }
     }
 
-    public ConcurrentLinkedQueue<Pose4d> getPoseQueue() {
-        return poseQueue;
+    public void setApplyVisionUpdate(Consumer<Pose4d> visionConsumer) {
+        this.visionConsumer = visionConsumer;
     }
 
     public Limelight getStopMe() {
@@ -78,17 +80,16 @@ public class Limelights extends SubsystemBase {
     }
 
     public int getStopMePipeline() {
-        return  stopMe.getPipeline();
+        return stopMe.getPipeline();
     }
 
     public int getDustPipeline() {
-        return  dust.getPipeline();
+        return dust.getPipeline();
     }
 
     public int getChampsPipeline() {
-        return  champs.getPipeline();
+        return champs.getPipeline();
     }
-
 
     @Override
     public void periodic() {
