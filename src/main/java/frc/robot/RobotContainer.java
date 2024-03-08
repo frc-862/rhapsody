@@ -191,15 +191,10 @@ public class RobotContainer extends LightningContainer {
 		// aim at amp and stage tags for the robot
 		new Trigger(driver::getXButton)
 				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
-<<<<<<< Updated upstream
-		
-		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(VisionConstants.SPEAKER_LOCATION.getX(), VisionConstants.SPEAKER_LOCATION.getY(), drivetrain, driver));
-=======
 
 		new Trigger(driver::getLeftBumper)
 				.whileTrue(new PointAtPoint(VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d(),
 						drivetrain, driver));
->>>>>>> Stashed changes
 
 		// new Trigger(driver::getYButton)
 		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
