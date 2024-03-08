@@ -9,27 +9,23 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Swerve;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class AmpAlign extends SequentialCommandGroup {
   /** Creates a new AmpAlign. */
-  public AmpAlign(Pose2d target, Swerve drivetrain) {   
-    // addCommands().
-    //var roughMTP = new MoveToPose(target, drivetrain);
-   // var  path = PathPlannerPath.fromPathFile("Example Path");
-    //var followPath = AutoBuilder.followPath(path);
+  public AmpAlign(Pose2d target, Swerve drivetrain) {
+    // sequentialy run move to pose to get near the amp followed by the path to align precisely
     super(new MoveToPose(target, drivetrain), buildPath());
-    // addCommands(new FooCommand(), new BarCommand());
   }
 
+  /**
+   * build Amp autoalign path
+   * @return command to follow path
+   */
   private static Command buildPath() {
-    var  path = PathPlannerPath.fromPathFile("Amp autoalign");
-    var followPath = AutoBuilder.followPath(path);
-    // LightningShuffleboard.setBoolSupplier("AmpAlign", "path is running", () -> !followPath.isFinished());
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Amp autoalign");
+    Command followPath = AutoBuilder.followPath(path);
     return followPath;
   }
 }
