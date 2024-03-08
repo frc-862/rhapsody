@@ -7,12 +7,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
-import frc.robot.subsystems.Collector;
-import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Limelights;
-import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Limelights;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 
@@ -21,9 +21,9 @@ public class ChasePieces extends Command {
 	private Swerve drivetrain;
 	private Collector collector;
 	private Indexer indexer;
+	private Flywheel flywheel;
 	private Pivot pivot;
 	private Limelight limelight;
-	private Flywheel flywheel;
 
 	private double pidOutput;
 	private double targetHeading;
@@ -47,14 +47,15 @@ public class ChasePieces extends Command {
 	 * @param drivetrain to request movement
 	 * @param collector for smart collect
 	 * @param indexer for smart collect
+	 * @param flywheel for stopping the flywheels before collecting
 	 * @param pivot for smart collect
 	 * @param limelights to get vision data from dust
 	 */
-
-	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Limelights limelights, Flywheel flywheel) {
+	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Flywheel flywheel, Pivot pivot, Limelights limelights) {
 		this.drivetrain = drivetrain;
 		this.collector = collector;
 		this.indexer = indexer;
+		this.flywheel = flywheel;
 		this.pivot = pivot;
 
 		limelight = limelights.getDust();
