@@ -8,6 +8,12 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+<<<<<<< Updated upstream
+=======
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+>>>>>>> Stashed changes
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -185,8 +191,15 @@ public class RobotContainer extends LightningContainer {
 		// aim at amp and stage tags for the robot
 		new Trigger(driver::getXButton)
 				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
+<<<<<<< Updated upstream
 		
 		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(VisionConstants.SPEAKER_LOCATION.getX(), VisionConstants.SPEAKER_LOCATION.getY(), drivetrain, driver));
+=======
+
+		new Trigger(driver::getLeftBumper)
+				.whileTrue(new PointAtPoint(VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d(),
+						drivetrain, driver));
+>>>>>>> Stashed changes
 
 		// new Trigger(driver::getYButton)
 		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
