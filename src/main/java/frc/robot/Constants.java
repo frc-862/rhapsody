@@ -541,8 +541,8 @@ public class Constants {
         public static final double POINT_BLANK_ANGLE = 60;
 
         // Podium
-        public static final double PODIUM_RPM = 3000;
-        public static final double PODIUM_ANGLE = 45;
+        public static final double PODIUM_RPM = 3500;
+        public static final double PODIUM_ANGLE = 37;
 
         // C1
         public static final double C1_RPM = 0;
