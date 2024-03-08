@@ -137,9 +137,9 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Smart-Shoot",
 			new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
 				.deadlineWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
-		NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, indexer, pivot, limelights));
+		NamedCommands.registerCommand("Chase-Pieces", new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
 		NamedCommands.registerCommand("Collect",
-			new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot)
+			new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot, flywheel)
 				.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
@@ -170,7 +170,7 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, limelights)
+		new Trigger(driver::getRightBumper).whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights)
 			.deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
 		// parks the robot
@@ -195,7 +195,8 @@ public class RobotContainer extends LightningContainer {
 		/* copilot */
 		new Trigger(coPilot::getBButton)
 			.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
-			.andThen(new SmartCollect(() -> 0.55, () -> 0.75, collector, indexer, pivot)).deadlineWith(leds.enableState(LED_STATES.COLLECTING))); // TODO: find correct button/trigger
+			.andThen(new SmartCollect(() -> 0.55, () -> 0.75, collector, indexer, pivot, flywheel))
+			.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
 		// cand shots for the robot
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
