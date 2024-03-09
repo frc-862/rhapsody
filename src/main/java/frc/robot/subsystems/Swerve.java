@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.sql.Driver;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -174,23 +175,19 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         updateSimState(0.01, 12);
     }
 
+    @SuppressWarnings({"unchecked", "resource"})
     private void initLogging() {
-        // TODO Remove the unecessary shuffleboard stuff eventually
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPigeon2().getAngle());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getPose().getX());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getPose().getY());
-
-        LightningShuffleboard.setBoolSupplier("Swerve", "Slow mode", () -> slowMode);
-        LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
-
-        LightningShuffleboard.setBoolSupplier("Sweve", "Tipped", () -> isTipped());
-
-        LightningShuffleboard.setDoubleSupplier("Swerve", "velocity x",
-                () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "velocity y",
-                () -> getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Distance to Speaker", () -> distanceToSpeaker());
+        periodicShuffleboard = new LightningShuffleboardPeriodic("Swerve", ShuffleboardPeriodicConstants.SHUFFLEBOARD_PERIOD_IMPORTANT,
+                new Pair<String, Object>("Timer", (DoubleSupplier) Timer::getFPGATimestamp),
+                new Pair<String, Object>("Robot Heading", (DoubleSupplier) getPigeon2()::getAngle),
+                new Pair<String, Object>("Odo X", (DoubleSupplier) getPose()::getX),
+                new Pair<String, Object>("Odo Y", (DoubleSupplier) getPose()::getY),
+                new Pair<String, Object>("Slow mode", (BooleanSupplier) this::inSlowMode),
+                new Pair<String, Object>("Robot Centric", (BooleanSupplier) this::isRobotCentricControl),
+                new Pair<String, Object>("Tipped", (BooleanSupplier) this::isTipped),
+                new Pair<String, Object>("velocity x", (DoubleSupplier) getPigeon2().getAngularVelocityXDevice()::getValueAsDouble),
+                new Pair<String, Object>("velocity y", (DoubleSupplier) getPigeon2().getAngularVelocityYDevice()::getValueAsDouble),
+                new Pair<String, Object>("Distance to Speaker", (DoubleSupplier) this::distanceToSpeaker));
     }
 
     private void configurePathPlanner() {
