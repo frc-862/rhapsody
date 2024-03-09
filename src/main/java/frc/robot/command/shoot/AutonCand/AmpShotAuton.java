@@ -39,8 +39,8 @@ public class AmpShotAuton extends Command {
 		shot = false;
 		startIndexing = false;
 		startTime = Timer.getFPGATimestamp();
-		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
-		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
+		flywheel.setTopMotorRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMotorRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 	}
 
@@ -58,8 +58,8 @@ public class AmpShotAuton extends Command {
 			indexer.indexUp();
 		}
 
-		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
-		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
+		flywheel.setTopMotorRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMotorRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 	}
 
