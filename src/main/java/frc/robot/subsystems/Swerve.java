@@ -13,18 +13,11 @@ import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,10 +25,8 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.CollisionConstants;
-import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
@@ -46,8 +37,6 @@ import frc.thunder.util.Pose4d;
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
-    private final Limelights limelightSubsystem;
-
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric();
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
@@ -60,14 +49,18 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
-            Limelights limelightSubsystem, SwerveModuleConstants... modules) {
+            SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
-
-        this.limelightSubsystem = limelightSubsystem;
 
         initLogging();
 
         configurePathPlanner();
+    }
+
+    public void applyVisionPose(Pose4d pose) {
+        if (!disableVision) {
+            addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), pose.getStdDevs());
+        }
     }
 
     /* DRIVE METHODS */
@@ -169,32 +162,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         updateSimState(0.01, 12);
     }
 
-    @Override
-    public void periodic() {
-        // TODO Remove the unecessary shuffleboard stuff eventually
-        if (false) {
-            var pose = limelightSubsystem.getPoseQueue().poll();
-            while (pose != null) {
-                // High confidence => 0.3
-                // Low confidence => 18
-                // theta trust IMU, use 500 degrees
-
-                double confidence = 18.0;
-                if (pose.getMoreThanOneTarget() && pose.getDistance() < 3) {
-                    confidence = 0.3;
-                } else if (pose.getMoreThanOneTarget()) {
-                    confidence = 0.3 + ((pose.getDistance() - 3) / 5 * 18);
-                } else if (pose.getDistance() < 2) {
-                    confidence = 1.0 + (pose.getDistance() / 2 * 5.0);
-                }
-
-                addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(),
-                        VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
-                pose = limelightSubsystem.getPoseQueue().poll();
-            }
-        }
-    }
-
     private void initLogging() {
         // TODO Remove the unecessary shuffleboard stuff eventually
         LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
@@ -216,8 +183,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     private void configurePathPlanner() {
         AutoBuilder.configureHolonomic(
-            getAutonPoseSupplier(), // Supplier of current robot pose
-            this::seedFieldRelativeAuton, // Consumer for seeding pose against auto
+            () -> getPose(), // Supplier of current robot pose
+            this::seedFieldRelative, // Consumer for seeding pose against auto
                 this::getCurrentRobotChassisSpeeds,
                 (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
                 new HolonomicPathFollowerConfig(AutonomousConstants.TRANSLATION_PID,
@@ -244,37 +211,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             return new Pose2d();
         }
         return state.Pose;
-    }
-
-    /**
-     * @return pose 2d in blue alliance origin
-     */
-    public Supplier<Pose2d> getAutonPoseSupplier() {
-        var alliance = DriverStation.getAlliance();
-        if(alliance.get() == DriverStation.Alliance.Red) {
-            return () -> {
-                var pose = getPose();
-                return new Pose2d(new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY()), pose.getRotation());
-            };
-        } else {
-            return () -> getPose();
-        }
-    }
-
-    public void seedFieldRelativeAuton(Pose2d pose) {
-        var alliance = DriverStation.getAlliance();
-        if(alliance.get() == DriverStation.Alliance.Red) {
-            pose =  new Pose2d(new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY()), pose.getRotation());
-        }
-        seedFieldRelative(pose);
-    }
-
-    public static Pose2d blueToRed(Pose2d pose) {
-        return new Pose2d(new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY()), pose.getRotation());
-    }
-
-    public static Pose2d redToBlue(Pose2d pose) {
-        return new Pose2d(new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY()), pose.getRotation());
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {

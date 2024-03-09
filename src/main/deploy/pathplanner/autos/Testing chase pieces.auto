@@ -8,6 +8,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Cand-Sub"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Chase-Pieces"
           }
         },
@@ -15,6 +21,12 @@
           "type": "path",
           "data": {
             "pathName": "C2 to subwoofer middle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Smart-Shoot"
           }
         }
       ]
