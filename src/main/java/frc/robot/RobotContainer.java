@@ -237,6 +237,10 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState() || collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+		new Trigger(() -> !(drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond > 0.1d || drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond > 0.1d) && 
+					DriverStation.isDisabled() && 
+					(limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()))
+				.whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
 
 		new Trigger(() -> collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
