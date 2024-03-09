@@ -31,6 +31,8 @@ public class Climber extends SubsystemBase {
 
     private DutyCycleOut manualControl = new DutyCycleOut(0d);
 
+    private LightningShuffleboardPeriodic periodicShuffleboard;
+
     public Climber() {
         // configure climb motors
         climbMotorR = new ThunderBird(CAN.CLIMB_RIGHT, CAN.CANBUS_FD,
@@ -69,14 +71,8 @@ public class Climber extends SubsystemBase {
             new Pair<String, Object>("Right Height", (DoubleSupplier) () -> getHeightR()),
             new Pair<String, Object>("Left Setpoint", (DoubleSupplier) () -> getSetpointL()),
             new Pair<String, Object>("Right Setpoint", (DoubleSupplier) () -> getSetpointR()),
-            new Pair<String, Object>("Left Lower Pose", (Supplier<Pose3d>) () -> convertLowerPose(getHeightL(), false)),
-            new Pair<String, Object>("Right Lower Pose", (Supplier<Pose3d>) () -> convertLowerPose(getHeightR(), true)),
-            new Pair<String, Object>("Left Upper Pose", (Supplier<Pose3d>) () -> convertUpperPose(getHeightL(), false)),
-            new Pair<String, Object>("Right Upper Pose", (Supplier<Pose3d>) () -> convertUpperPose(getHeightR(), true)),
-            new Pair<String, Object>("Left Lower Setpoint", (Supplier<Pose3d>) () -> convertLowerPose(getSetpointL(), false)),
-            new Pair<String, Object>("Right Lower Setpoint", (Supplier<Pose3d>) () -> convertLowerPose(getSetpointR(), true)),
-            new Pair<String, Object>("Left Upper Setpoint", (Supplier<Pose3d>) () -> convertUpperPose(getSetpointL(), false)),
-            new Pair<String, Object>("Right Upper Setpoint", (Supplier<Pose3d>) () -> convertUpperPose(getSetpointR(), true)));
+            new Pair<String, Object>("Left Applied", (DoubleSupplier) () -> climbMotorL.getMotorVoltage().getValueAsDouble()),
+            new Pair<String, Object>("Right Applied", (DoubleSupplier) () -> climbMotorR.getMotorVoltage().getValueAsDouble()));
     }
 
     /**

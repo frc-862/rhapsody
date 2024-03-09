@@ -65,10 +65,6 @@ public class PointAtPoint extends Command {
 	@Override
 	public void initialize() {
 		headingController.enableContinuousInput(-180, 180);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Heading", () -> targetHeading);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose Y", () -> targetPose.getY());
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose X", () -> targetPose.getX());
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Pid Output", () -> pidOutput);
 	}
 
 	@SuppressWarnings("unchecked")
