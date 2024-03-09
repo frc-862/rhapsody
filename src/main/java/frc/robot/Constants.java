@@ -140,18 +140,16 @@ public class Constants {
     }
 
     public static class AutonomousConstants {
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(2.0, 0, 0); // TODO:
-                                                                                        // Tune
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(2.0, 0, 0); // TODO Tune
         public static final PIDConstants ROTATION_PID = new PIDConstants(4, 0, 0); // TODO: Tune
 
-        public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(17.3); // f/s to m/s
-        public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(19.09); // TODO check
+        public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(15); // f/s to m/s
+        public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(10.825);
 
-        public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
+        public static final double CONTROL_LOOP_PERIOD = 0.01;
 
         public static final PathConstraints PATH_CONSTRAINTS =
-                new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
-                                                       // constants
+                new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
 
         // For Pathfinding
         // TODO get real poses to pathfind to
@@ -188,7 +186,7 @@ public class Constants {
 
         // Theoretical free speed (m/s) at 12v applied output;
         // This needs to be tuned to your individual robot
-        public static final double kSpeedAt12VoltsMps = 5.21;
+        public static final double kSpeedAt12VoltsMps = 5.02;
 
         // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
         // This may need to be tuned to your individual robot
@@ -569,8 +567,8 @@ public class Constants {
         public static final double SOURCE_ANGLE = 45d; // TODO test
 
         // TODO find time to shoot
-        public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer
-                                                       // start to flywheel exit
+        public static final double TIME_TO_SHOOT = .5d; // Time in seconds it takes from indexer
+                                                        // start to flywheel exit
     }
 
     public class ClimbConstants { // TODO: find real values

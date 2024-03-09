@@ -189,7 +189,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
                                                                              // ChassisSpeeds to
                                                                              // drive the robot
                 new HolonomicPathFollowerConfig(AutonomousConstants.TRANSLATION_PID,
-                        AutonomousConstants.ROTATION_PID, AutonomousConstants.MAX_MODULE_VELOCITY,
+                        AutonomousConstants.ROTATION_PID,
+                        AutonomousConstants.MAX_MODULE_VELOCITY,
                         AutonomousConstants.DRIVE_BASE_RADIUS, new ReplanningConfig(),
                         AutonomousConstants.CONTROL_LOOP_PERIOD),
                 () -> {
