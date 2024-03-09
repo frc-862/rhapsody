@@ -177,12 +177,12 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// makes the robot chase pieces
-		// new Trigger(driver::getRightBumper)
-				// .whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights)
-						// .deadlineWith(leds.enableState(LED_STATES.CHASING)));
-
 		new Trigger(driver::getRightBumper)
-				.whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain, driver));
+				.whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights)
+						.deadlineWith(leds.enableState(LED_STATES.CHASING)));
+
+		// new Trigger(driver::getRightBumper)
+				// .whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain, driver));
 
 		// parks the robot
 		// new Trigger(driver::getXButton).whileTrue(new InstantCommand(() ->
