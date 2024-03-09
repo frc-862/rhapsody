@@ -1,5 +1,6 @@
 package frc.robot.command;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -7,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -58,8 +60,7 @@ public class PointAtPoint extends Command {
 
 	@Override
 	public void initialize() {
-		headingController.enableContinuousInput(-180, 180);
-
+		headingController.enableContinuousInput(0, 360);
 		if (isBlueAlliance()) {
 			targetPose = originalTargetPose;
 		} else {
@@ -75,14 +76,16 @@ public class PointAtPoint extends Command {
 
 		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
 		targetHeading += 180;
+		targetHeading %= 360;
 		pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
 
-		LightningShuffleboard.setDouble("PointAtTag", "Delta Y", deltaY);
-		LightningShuffleboard.setDouble("PointAtTag", "Delta X", deltaX);
-		LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
-		LightningShuffleboard.setDouble("PointAtTag", "Target Pose Y", targetPose.getY());
-		LightningShuffleboard.setDouble("PointAtTag", "Target Pose X", targetPose.getX());
-		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
+		LightningShuffleboard.setDouble("PointAtPoint", "Delta Y", deltaY);
+		LightningShuffleboard.setDouble("PointAtPoint", "Delta X", deltaX);
+		LightningShuffleboard.setDouble("PointAtPoint", "Target Heading", targetHeading);
+		LightningShuffleboard.setDouble("PointAtPoint", "Target Pose Y", targetPose.getY());
+		LightningShuffleboard.setDouble("PointAtPoint", "Target Pose X", targetPose.getX());
+		LightningShuffleboard.setDouble("PointAtPoint", "Pid Output", pidOutput);
+		LightningShuffleboard.setDouble("PointAtPoint", "Current", pose.getRotation().getDegrees());
 
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
@@ -93,6 +96,9 @@ public class PointAtPoint extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return false;
+		// if(DriverStation.isAutonomous()) {
+			return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()) < DrivetrainConstants.ALIGNMENT_TOLERANCE;
+		// }
+		// return false;
 	}
 }

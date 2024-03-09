@@ -6,6 +6,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -147,6 +148,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
+		NamedCommands.registerCommand("Point-At-Speaker", new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -170,7 +172,8 @@ public class RobotContainer extends LightningContainer {
 
 		// sets field relative forward to the direction the robot is facing
 		new Trigger(() -> driver.getStartButton() && driver.getBackButton())
-				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative)
+				.andThen(new InstantCommand(() -> drivetrain.setOperatorPerspectiveForward(new Rotation2d(Math.toRadians(0))))));
 
 		// makes the robot chase pieces
 		new Trigger(driver::getRightBumper)
@@ -190,8 +193,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getXButton)
 				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(VisionConstants.BLUE_SPEAKER_LOCATION.getX(),
-				VisionConstants.BLUE_SPEAKER_LOCATION.getY(), drivetrain, driver));
+		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
 
 		// new Trigger(driver::getYButton)
 		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));

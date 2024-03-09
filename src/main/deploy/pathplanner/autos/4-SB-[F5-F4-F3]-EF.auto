@@ -6,39 +6,162 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "SB-F5"
+            "name": "Cand-Sub"
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "F5-BL"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SB-F5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Collect-And-Go"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "BL-F4"
+            "commands": [
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "F5-BL"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Collect"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "F4-BL"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BL-F4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Collect-And-Go"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "BL-F3"
+            "commands": [
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "F4-BL"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Collect"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "F3-BL"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BL-F3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Collect-And-Go"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "F3-BL"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Collect"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              }
+            ]
           }
         }
       ]
