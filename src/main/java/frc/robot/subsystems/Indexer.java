@@ -30,10 +30,10 @@ public class Indexer extends SubsystemBase {
     private PieceState currentState = PieceState.NONE;
     private boolean didShoot = false;
 
-    private LightningShuffleboardPeriodic periodicShuffleboard;
-    
     private Debouncer entryDebouncer = new Debouncer(0.05);
     private Debouncer exitDebouncer = new Debouncer(0.05);
+
+    private LightningShuffleboardPeriodic periodicShuffleboard;
 
     public Indexer(Collector collector) {
         this.collector = collector;
