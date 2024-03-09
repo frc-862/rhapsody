@@ -71,7 +71,7 @@ public class RobotContainer extends LightningContainer {
 	public static XboxControllerFilter coPilot;
 
 	// Subsystems
-	private Swerve drivetrain;
+	public Swerve drivetrain;
 	private Limelights limelights;
 	private Collector collector;
 	private Flywheel flywheel;
