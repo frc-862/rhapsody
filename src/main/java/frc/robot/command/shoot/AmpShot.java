@@ -25,15 +25,15 @@ public class AmpShot extends Command {
 
 	@Override
 	public void initialize() {
-		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
-		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
+		flywheel.setTopMotorRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMotorRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 	}
 
 	@Override
 	public void execute() {
-		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
-		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
+		flywheel.setTopMotorRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMotorRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 	}
 

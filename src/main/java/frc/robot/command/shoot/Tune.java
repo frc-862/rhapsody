@@ -39,8 +39,8 @@ public class Tune extends Command {
 		LightningShuffleboard.setBool("TUNE", "Pivot On target", pivot.onTarget());
 
 		// flywheel.setAllMotorsRPM(flywheelTargetRPM);
-		flywheel.setTopMoterRPM(flywheelTargetRPMTop);
-		flywheel.setBottomMoterRPM(flywheelTargetRPMBottom);
+		flywheel.setTopMotorRPM(flywheelTargetRPMTop);
+		flywheel.setBottomMotorRPM(flywheelTargetRPMBottom);
 		pivot.setTargetAngle(pivotTargetAngle);
 	}
 
