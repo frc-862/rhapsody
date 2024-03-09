@@ -3,7 +3,9 @@ package frc.robot.command;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
@@ -17,6 +19,7 @@ public class PointAtPoint extends Command {
 	private double pidOutput;
 	private double targetHeading;
 	private Translation2d targetPose;
+	private Translation2d originalTargetPose;
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
@@ -31,14 +34,37 @@ public class PointAtPoint extends Command {
 	public PointAtPoint(double targetX, double targetY, Swerve drivetrain, XboxController driver) {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
-		this.targetPose = new Translation2d(targetX, targetY);
+		this.originalTargetPose = new Translation2d(targetX, targetY);
 
 		addRequirements(drivetrain);
+	}
+
+	public PointAtPoint(Translation2d targetPose, Swerve drivetrain, XboxController driver) {
+		this.drivetrain = drivetrain;
+		this.driver = driver;
+		this.originalTargetPose = targetPose;
+
+		addRequirements(drivetrain);
+	}
+
+	private boolean isBlueAlliance() {
+		var alliance = DriverStation.getAlliance();
+		return alliance.isPresent() && alliance.get() == Alliance.Blue;
+	}
+
+	private Translation2d swapAlliance(Translation2d pose) {
+		return new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY());
 	}
 
 	@Override
 	public void initialize() {
 		headingController.enableContinuousInput(-180, 180);
+
+		if (isBlueAlliance()) {
+			targetPose = originalTargetPose;
+		} else {
+			targetPose = swapAlliance(originalTargetPose);
+		}
 	}
 
 	@Override

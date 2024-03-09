@@ -328,7 +328,8 @@ public class Constants {
         public static final int SPEAKER_PIPELINE = 1;
         public static final int NOTE_PIPELINE = 2;
 
-        public static final Translation3d SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
+        public static final Translation3d BLUE_SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
+        public static final Translation3d RED_SPEAKER_LOCATION = new Translation3d(16.4592, 5.547593, 1.2);
 
         public class Pipelines { // TODO get real
             public static final int APRIL_TAG_3d = 0;
