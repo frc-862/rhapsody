@@ -32,14 +32,14 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
 
 /**
- * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
+ * Class that extends the Phoenix SwerveDrivetrain class and implements
+ * subsystem so it can be used
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric();
-    private final SwerveRequest.ApplyChassisSpeeds autoRequest =
-            new SwerveRequest.ApplyChassisSpeeds();
+    private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
     private boolean slowMode = false;
@@ -73,8 +73,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     /**
      * Apply a percentage Field centric request to the drivetrain
      * 
-     * @param x the x, percent of max velocity (-1,1)
-     * @param y the y, percent of max velocity (-1,1)
+     * @param x   the x, percent of max velocity (-1,1)
+     * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity (-1,1)
      * @return the request to drive for the drivetrain
      */
@@ -88,8 +88,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     /**
      * Apply a Field centric request to the drivetrain run in periodic
      * 
-     * @param x the x velocity m/s
-     * @param y the y velocity m/s
+     * @param x   the x velocity m/s
+     * @param y   the y velocity m/s
      * @param rot the rotational velocity in rad/s
      */
     public void setField(double x, double y, double rot) {
@@ -97,11 +97,12 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
-     * Apply a Field centric request to the drivetrain run in periodic, Allows driving normally and
+     * Apply a Field centric request to the drivetrain run in periodic, Allows
+     * driving normally and
      * pid control of rotation
      * 
-     * @param x the x, percent of max velocity (-1,1)
-     * @param y the y, percent of max velocity (-1,1)
+     * @param x   the x, percent of max velocity (-1,1)
+     * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity rad/s
      */
     public void setFieldDriver(double x, double y, double rot) {
@@ -112,8 +113,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     /**
      * Apply a percentage Robot centric request to the drivetrain
      * 
-     * @param x the x, percent of max velocity (-1,1)
-     * @param y the y, percent of max velocity (-1,1)
+     * @param x   the x, percent of max velocity (-1,1)
+     * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity (-1,1)
      * @return the request to drive for the drivetrain
      */
@@ -127,8 +128,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     /**
      * Apply a Robot centric request to the drivetrain run in periodic
      * 
-     * @param x the x velocity m/s
-     * @param y the y velocity m/s
+     * @param x   the x velocity m/s
+     * @param y   the y velocity m/s
      * @param rot the rotational velocity in rad/s
      */
     public void setRobot(double x, double y, double rot) {
@@ -140,6 +141,10 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public void brake() {
         this.setControl(brake);
+    }
+
+    public void stop() {
+        applyPercentRequestField(() -> 0d, () -> 0d, () -> 0d);
     }
 
     /**
@@ -279,7 +284,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     /**
      * Swaps the driver and copilot controllers
      * 
-     * @param driverC the driver controller
+     * @param driverC  the driver controller
      * @param copilotC the copilot controller
      */
     public void swap(XboxControllerFilter driverC, XboxControllerFilter copilotC) {

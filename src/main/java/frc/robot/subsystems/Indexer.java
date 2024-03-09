@@ -19,6 +19,8 @@ public class Indexer extends SubsystemBase {
     private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_EXIT_BEAMBREAK);
 
     private int exitIndexerIteration = 0;
+    private int entryIndexerIteration = 0;
+    private int entryCollectorIteration = 0;
 
     private double timeLastTriggered = 0d;
 
@@ -155,10 +157,17 @@ public class Indexer extends SubsystemBase {
                 setPieceState(PieceState.IN_INDEXER);
             }
         } else if (getEntryBeamBreakState()) {
-            setPieceState(PieceState.IN_PIVOT);
+            entryIndexerIteration++;
+            if (entryIndexerIteration >= 3){
+                setPieceState(PieceState.IN_PIVOT);
+            }
+
         } else if (collector.getEntryBeamBreakState()) {
-            timeLastTriggered = Timer.getFPGATimestamp();
-            setPieceState(PieceState.IN_COLLECT);
+            entryCollectorIteration++;
+            if (entryCollectorIteration >= 3){
+                timeLastTriggered = Timer.getFPGATimestamp();
+                setPieceState(PieceState.IN_COLLECT);
+            }
         } else if (Timer.getFPGATimestamp() - timeLastTriggered <= 1) {
             setPieceState(PieceState.IN_COLLECT);
         } else {

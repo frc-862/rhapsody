@@ -49,11 +49,11 @@ public class CollisionDetection extends Command {
     public void execute() {
         storeVelocities();
         // log values to shuffleboard
-        LightningShuffleboard.setDouble("Collision Detection", "pidgeon acceleration magnitude", getPigeonAcceleration()[2]);
-        LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", getPigeonAcceleration()[3]);
-        LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAcceleration()[4]);
-        LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getChassisAcceleration()[2]);
-        LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration", getChassisAcceleration()[4]);
+        // LightningShuffleboard.setDouble("Collision Detection", "pidgeon acceleration magnitude", getPigeonAcceleration()[2]);
+        // LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", getPigeonAcceleration()[3]);
+        // LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAcceleration()[4]);
+        // LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getChassisAcceleration()[2]);
+        // LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration", getChassisAcceleration()[4]);
         LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided()[3]);
     }
 

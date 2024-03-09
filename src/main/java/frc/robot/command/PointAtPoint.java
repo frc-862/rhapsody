@@ -90,6 +90,7 @@ public class PointAtPoint extends Command {
 		LightningShuffleboard.setDouble("PointAtPoint", "Target Pose X", targetPose.getX());
 		LightningShuffleboard.setDouble("PointAtPoint", "Pid Output", pidOutput);
 		LightningShuffleboard.setDouble("PointAtPoint", "Current", pose.getRotation().getDegrees());
+		LightningShuffleboard.setBool("PointAtPoint", "InTolerance", inTolerance());
 
 		if (!inTolerance() && Math.abs(pidOutput) < MIN_POWER) {
 			pidOutput = Math.signum(pidOutput) * MIN_POWER;

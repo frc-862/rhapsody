@@ -31,6 +31,7 @@ public class CollectAndGo extends Command {
 
 	@Override
 	public void initialize() {
+		System.out.println("AUTO - Collect and Go INIT");
 		flywheel.stop();
 		collector.setPower(CollectorConstants.COLLECTOR_GRABANDGO_POWER);
 		indexer.indexUp();
@@ -47,6 +48,7 @@ public class CollectAndGo extends Command {
 	public void end(boolean interrupted) {
 		collector.stop();
 		indexer.stop();
+		System.out.println("AUTO - Collect and Go END");
 	}
 
 	@Override

@@ -47,6 +47,7 @@ public class SmartShoot extends Command {
 
 	@Override
 	public void initialize() {
+		System.out.println("SHOOT - SMART SHOOT INIT");
 		//Always start with aiming
 		state = ShootingState.AIM;
 	}

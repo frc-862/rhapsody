@@ -56,6 +56,12 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "Point-At-Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "Smart-Shoot"
                 }
               }
@@ -107,6 +113,12 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "Point-At-Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "Smart-Shoot"
                 }
               }
@@ -153,6 +165,12 @@
                       }
                     }
                   ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point-At-Speaker"
                 }
               },
               {
