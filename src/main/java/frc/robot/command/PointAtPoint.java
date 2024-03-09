@@ -15,6 +15,7 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PointAtPoint extends Command {
 
+	private static final double MIN_POWER = 0.3;
 	private Swerve drivetrain;
 	private XboxController driver;
 
@@ -58,6 +59,10 @@ public class PointAtPoint extends Command {
 		return new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY());
 	}
 
+	private boolean inTolerance() {
+		return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()) < DrivetrainConstants.ALIGNMENT_TOLERANCE;
+	}
+
 	@Override
 	public void initialize() {
 		headingController.enableContinuousInput(0, 360);
@@ -74,10 +79,9 @@ public class PointAtPoint extends Command {
 		var deltaX = targetPose.getX() - pose.getX();
 		var deltaY = targetPose.getY() - pose.getY();
 
-		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
-		targetHeading += 180;
+		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 360 + 180;
 		targetHeading %= 360;
-		pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
+		pidOutput = headingController.calculate(pose.getRotation().getDegrees() % 360, targetHeading);
 
 		LightningShuffleboard.setDouble("PointAtPoint", "Delta Y", deltaY);
 		LightningShuffleboard.setDouble("PointAtPoint", "Delta X", deltaX);
@@ -86,6 +90,10 @@ public class PointAtPoint extends Command {
 		LightningShuffleboard.setDouble("PointAtPoint", "Target Pose X", targetPose.getX());
 		LightningShuffleboard.setDouble("PointAtPoint", "Pid Output", pidOutput);
 		LightningShuffleboard.setDouble("PointAtPoint", "Current", pose.getRotation().getDegrees());
+
+		if (!inTolerance() && Math.abs(pidOutput) < MIN_POWER) {
+			pidOutput = Math.signum(pidOutput) * MIN_POWER;
+		}
 
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
@@ -97,7 +105,7 @@ public class PointAtPoint extends Command {
 	@Override
 	public boolean isFinished() {
 		// if(DriverStation.isAutonomous()) {
-			return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()) < DrivetrainConstants.ALIGNMENT_TOLERANCE;
+			return inTolerance();
 		// }
 		// return false;
 	}
