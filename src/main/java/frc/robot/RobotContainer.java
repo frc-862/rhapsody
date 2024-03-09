@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -204,10 +205,10 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
 		// cand shots for the robot
-		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
-		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
-		// new Trigger(coPilot::getXButton).whileTrue(new Tune(flywheel, pivot));
-		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
+		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(coPilot::getXButton).whileTrue(new Tune(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
 		/* BIAS */
@@ -228,9 +229,12 @@ public class RobotContainer extends LightningContainer {
 
 		/* Other */
 		new Trigger(
-				() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()))
+				() -> ((limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()) && !DriverStation.isDisabled()))
 				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		new Trigger(() -> indexer.getPieceState() != PieceState.NONE)
+		new Trigger(
+				() -> (!(limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()) && DriverStation.isDisabled()))
+				.whileTrue(leds.enableState(LED_STATES.EMERGENCY));	
+		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState() || collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
