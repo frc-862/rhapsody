@@ -33,7 +33,11 @@ public class LEDs extends SubsystemBase {
 
 		ledStates = new HashMap<LEDsConstants.LED_STATES, Boolean>();
 
-		enableState(LED_STATES.START).withTimeout(3).schedule();
+		enableState(LED_STATES.START).withTimeout(7).schedule();
+
+		for (LED_STATES i : Arrays.asList(LED_STATES.values())) {
+			ledStates.put(i, false);
+		}
 	}
 
 	@Override
@@ -90,67 +94,47 @@ public class LEDs extends SubsystemBase {
 			case DEFAULT:
 			 	swirl(-1);
 				break;
+
+			default:
+				break;
 		}
 
 		if (DriverStation.isTest()) {
-			if (ledStates.get(LED_STATES.COLLECTOR_BEAMBREAK) != null) {
-				if (ledStates.get(LED_STATES.COLLECTOR_BEAMBREAK)) {
-					setStrandSingleHSV(0, 0, LEDsConstants.GREEN_HUE, 255, 255);
-					setStrandSingleHSV(1, 0, LEDsConstants.GREEN_HUE, 255, 255);
-				} else {
-					setStrandSingleHSV(0, 0, LEDsConstants.RED_HUE, 255, 255);
-					setStrandSingleHSV(1, 0, LEDsConstants.RED_HUE, 255, 255);
-				}
+			if (ledStates.get(LED_STATES.COLLECTOR_BEAMBREAK)) {
+				setStrandSingleHSV(0, 0, LEDsConstants.GREEN_HUE, 255, 255);
+				setStrandSingleHSV(1, 0, LEDsConstants.GREEN_HUE, 255, 255);
 			} else {
-				ledStates.put(LED_STATES.COLLECTOR_BEAMBREAK, false);
+				setStrandSingleHSV(0, 0, LEDsConstants.RED_HUE, 255, 255);
+				setStrandSingleHSV(1, 0, LEDsConstants.RED_HUE, 255, 255);
 			}
-			if (ledStates.get(LED_STATES.INDEXER_ENTER_BEAMBREAK) != null) {
-				if (ledStates.get(LED_STATES.INDEXER_ENTER_BEAMBREAK)) {
-					setStrandSingleHSV(0, 1, LEDsConstants.GREEN_HUE, 255, 255);
-					setStrandSingleHSV(1, 1, LEDsConstants.GREEN_HUE, 255, 255);
-				} else {
-					setStrandSingleHSV(0, 1, LEDsConstants.RED_HUE, 255, 255);
-					setStrandSingleHSV(1, 1, LEDsConstants.RED_HUE, 255, 255);
-				}
-			}  else {
-				ledStates.put(LED_STATES.INDEXER_ENTER_BEAMBREAK, false);
+			if (ledStates.get(LED_STATES.INDEXER_ENTER_BEAMBREAK)) {
+				setStrandSingleHSV(0, 1, LEDsConstants.GREEN_HUE, 255, 255);
+				setStrandSingleHSV(1, 1, LEDsConstants.GREEN_HUE, 255, 255);
+			} else {
+				setStrandSingleHSV(0, 1, LEDsConstants.RED_HUE, 255, 255);
+				setStrandSingleHSV(1, 1, LEDsConstants.RED_HUE, 255, 255);
 			}
-			if (ledStates.get(LED_STATES.INDEXER_EXIT_BEAMBREAK) != null) {
-				if (ledStates.get(LED_STATES.INDEXER_EXIT_BEAMBREAK)) {
-					setStrandSingleHSV(0, 2, LEDsConstants.GREEN_HUE, 255, 255);
-					setStrandSingleHSV(1, 2, LEDsConstants.GREEN_HUE, 255, 255);
-				} else {
-					setStrandSingleHSV(0, 2, LEDsConstants.RED_HUE, 255, 255);
-					setStrandSingleHSV(1, 2, LEDsConstants.RED_HUE, 255, 255);
-
-				}
-			}  else {
-				ledStates.put(LED_STATES.INDEXER_EXIT_BEAMBREAK, false);
+			if (ledStates.get(LED_STATES.INDEXER_EXIT_BEAMBREAK)) {
+				setStrandSingleHSV(0, 2, LEDsConstants.GREEN_HUE, 255, 255);
+				setStrandSingleHSV(1, 2, LEDsConstants.GREEN_HUE, 255, 255);
+			} else {
+				setStrandSingleHSV(0, 2, LEDsConstants.RED_HUE, 255, 255);
+				setStrandSingleHSV(1, 2, LEDsConstants.RED_HUE, 255, 255);
 			}
-			if (ledStates.get(LED_STATES.PIVOT_BOTTOM_SWITCH) != null) {
-				if (ledStates.get(LED_STATES.PIVOT_BOTTOM_SWITCH)) {
-					setStrandSingleHSV(0, 3, LEDsConstants.GREEN_HUE, 255, 255);
-					setStrandSingleHSV(1, 3, LEDsConstants.GREEN_HUE, 255, 255);
-				} else {
-					setStrandSingleHSV(0, 3, LEDsConstants.RED_HUE, 255, 255);
-					setStrandSingleHSV(1, 3, LEDsConstants.RED_HUE, 255, 255);
-
-				}
-			}  else {
-				ledStates.put(LED_STATES.PIVOT_BOTTOM_SWITCH, false);
+			if (ledStates.get(LED_STATES.PIVOT_BOTTOM_SWITCH)) {
+				setStrandSingleHSV(0, 3, LEDsConstants.GREEN_HUE, 255, 255);
+				setStrandSingleHSV(1, 3, LEDsConstants.GREEN_HUE, 255, 255);
+			} else {
+				setStrandSingleHSV(0, 3, LEDsConstants.RED_HUE, 255, 255);
+				setStrandSingleHSV(1, 3, LEDsConstants.RED_HUE, 255, 255);
 			}
-			if (ledStates.get(LED_STATES.PIVOT_TOP_SWITCH) != null) {
-				if (ledStates.get(LED_STATES.PIVOT_TOP_SWITCH)) {
-					setStrandSingleHSV(0, 4, LEDsConstants.GREEN_HUE, 255, 255);
-					setStrandSingleHSV(1, 4, LEDsConstants.GREEN_HUE, 255, 255);
-				} else {
-					setStrandSingleHSV(0, 4, LEDsConstants.RED_HUE, 255, 255);
-					setStrandSingleHSV(1, 4, LEDsConstants.RED_HUE, 255, 255);
-
-				}
-			} 
-		} else {
-			ledStates.put(LED_STATES.PIVOT_TOP_SWITCH, false);
+			if (ledStates.get(LED_STATES.PIVOT_TOP_SWITCH)) {
+				setStrandSingleHSV(0, 4, LEDsConstants.GREEN_HUE, 255, 255);
+				setStrandSingleHSV(1, 4, LEDsConstants.GREEN_HUE, 255, 255);
+			} else {
+				setStrandSingleHSV(0, 4, LEDsConstants.RED_HUE, 255, 255);
+				setStrandSingleHSV(1, 4, LEDsConstants.RED_HUE, 255, 255);
+			}
 		}
 		leds.setData(ledBuffer);
 	}
