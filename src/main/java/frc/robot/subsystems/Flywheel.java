@@ -57,9 +57,7 @@ public class Flywheel extends SubsystemBase {
             new Pair<String, Object>("Bottom on Target", (BooleanSupplier) this::bottomMotorRPMOnTarget),
             new Pair<String, Object>("Top Power", (DoubleSupplier) topMotor::get),
             new Pair<String, Object>("Bottom Power", (DoubleSupplier) bottomMotor::get),
-            new Pair<String, Object>("Bias", (DoubleSupplier) this::getBias)
-        );
-
+            new Pair<String, Object>("Bias", (DoubleSupplier) this::getBias));
     }
 
     @Override

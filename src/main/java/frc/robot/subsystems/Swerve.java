@@ -33,10 +33,16 @@ import frc.robot.Constants.CollisionConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
+import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
+
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+import edu.wpi.first.math.Pair;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
@@ -55,6 +61,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private boolean robotCentricControl = false;
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
+
+    private LightningShuffleboardPeriodic periodicShuffleboard;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             Limelights limelightSubsystem, SwerveModuleConstants... modules) {
@@ -185,23 +193,19 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         }
     }
 
+    @SuppressWarnings({"unchecked", "resource"})
     private void initLogging() {
-        // TODO Remove the unecessary shuffleboard stuff eventually
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPigeon2().getAngle());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getState().Pose.getX());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getState().Pose.getY());
-
-        LightningShuffleboard.setBoolSupplier("Swerve", "Slow mode", () -> slowMode);
-        LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
-
-        LightningShuffleboard.setBoolSupplier("Sweve", "Tipped", () -> isTipped());
-
-        LightningShuffleboard.setDoubleSupplier("Swerve", "velocity x",
-                () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "velocity y",
-                () -> getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Distance to Speaker", () -> distanceToSpeaker());
+        periodicShuffleboard = new LightningShuffleboardPeriodic("Swerve", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD, 
+        new Pair<String, Object>("Timer", (DoubleSupplier) Timer::getFPGATimestamp),
+                new Pair<String, Object>("Robot Heading", (DoubleSupplier) getPigeon2()::getAngle),
+                new Pair<String, Object>("Odo X", (DoubleSupplier) getState().Pose::getX),
+                new Pair<String, Object>("Odo Y", (DoubleSupplier) getState().Pose::getY),
+                new Pair<String, Object>("velocity x", (DoubleSupplier) getPigeon2().getAngularVelocityXDevice()::getValueAsDouble),
+                new Pair<String, Object>("velocity y", (DoubleSupplier) getPigeon2().getAngularVelocityYDevice()::getValueAsDouble),
+                new Pair<String, Object>("Distance to Speaker", (DoubleSupplier) this::distanceToSpeaker),
+                new Pair<String, Object>("Slow mode", (Supplier<Boolean>) this::inSlowMode),
+                new Pair<String, Object>("Robot Centric", (Supplier<Boolean>) this::isRobotCentricControl),
+                new Pair<String, Object>("Tipped", (Supplier<Boolean>) this::isTipped));
     }
 
     private void configurePathPlanner() {

@@ -62,27 +62,6 @@ public class Climber extends SubsystemBase {
 
     @SuppressWarnings("unchecked")
     private void initLogging() { // TODO test and fix once we have climber
-        // LightningShuffleboard.setDoubleSupplier("Climb", "Left Height", () -> getHeightL());
-        // LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
-        // LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
-        // LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
-        // LightningShuffleboard.set("Climb", "Left Lower Pose",
-        //         convertLowerPose(getHeightL(), false));
-        // LightningShuffleboard.set("Climb", "Right Lower Pose",
-        //         convertLowerPose(getHeightR(), true));
-        // LightningShuffleboard.set("Climb", "Left Upper Pose",
-        //         convertUpperPose(getHeightL(), false));
-        // LightningShuffleboard.set("Climb", "Right Upper Pose",
-        //         convertUpperPose(getHeightR(), true));
-        // LightningShuffleboard.set("Climb", "Left Lower Setpoint",
-        //         convertLowerPose(getSetpointL(), false));
-        // LightningShuffleboard.set("Climb", "Right Lower Setpoint",
-        //         convertLowerPose(getSetpointR(), true));
-        // LightningShuffleboard.set("Climb", "Left Upper Setpoint",
-        //         convertUpperPose(getSetpointL(), false));
-        // LightningShuffleboard.set("Climb", "Right Upper Setpoint",
-        //         convertUpperPose(getSetpointR(), true));
-
         periodicShuffleboard = new LightningShuffleboardPeriodic("Climb", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
             new Pair<String, Object>("Left Height", (DoubleSupplier) () -> getHeightL()),
             new Pair<String, Object>("Right Height", (DoubleSupplier) () -> getHeightR()),

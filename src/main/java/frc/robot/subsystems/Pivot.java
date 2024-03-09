@@ -18,6 +18,12 @@ import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.tuning.FalconTuner;
 import frc.robot.Constants.PivotConstants;
+import frc.robot.Constants.ShuffleboardPeriodicConstants;
+import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
+
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+import edu.wpi.first.math.Pair;
 
 public class Pivot extends SubsystemBase {
 
@@ -29,6 +35,8 @@ public class Pivot extends SubsystemBase {
     private double bias = 0;
 
     private double targetAngle = PivotConstants.STOW_ANGLE;
+
+    private LightningShuffleboardPeriodic periodicShuffleboard;
 
     public Pivot() {
         CANcoderConfiguration angleConfig = new CANcoderConfiguration();
@@ -64,19 +72,16 @@ public class Pivot extends SubsystemBase {
         setTargetAngle(targetAngle);
     }
 
+    @SuppressWarnings("unchecked")
     private void initLogging() {
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Current Angle", () -> getAngle());
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Target Angle", () -> targetAngle);
-
-        LightningShuffleboard.setBoolSupplier("Pivot", "On target", () -> onTarget());
-
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", this::getBias);
-
-        LightningShuffleboard.setBoolSupplier("Pivot", "Forward Limit", () -> getForwardLimit());
-        LightningShuffleboard.setBoolSupplier("Pivot", "Reverse Limit", () -> getReverseLimit());
-
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Power", () -> angleMotor.get());
-
+        periodicShuffleboard = new LightningShuffleboardPeriodic("Pivot", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
+                new Pair<String, Object>("Current Angle", (DoubleSupplier) this::getAngle),
+                new Pair<String, Object>("Target Angle", (DoubleSupplier) () -> targetAngle),
+                new Pair<String, Object>("On target", (Supplier<Boolean>) this::onTarget),
+                new Pair<String, Object>("Bias", (DoubleSupplier) this::getBias),
+                new Pair<String, Object>("Forward Limit", (Supplier<Boolean>) this::getForwardLimit),
+                new Pair<String, Object>("Reverse Limit", (Supplier<Boolean>) this::getReverseLimit),
+                new Pair<String, Object>("Power", (DoubleSupplier) angleMotor::get));
     }
 
     @Override

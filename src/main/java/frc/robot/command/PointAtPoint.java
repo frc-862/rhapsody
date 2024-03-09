@@ -1,13 +1,17 @@
 package frc.robot.command;
 
+import java.util.function.DoubleSupplier;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
 
 public class PointAtPoint extends Command {
 
@@ -19,6 +23,8 @@ public class PointAtPoint extends Command {
 	private Translation2d targetPose;
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
+
+	private LightningShuffleboardPeriodic periodicShuffleboard;
 
 	/**
 	 * Creates a new PointAtTag.
@@ -42,6 +48,15 @@ public class PointAtPoint extends Command {
 		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose Y", () -> targetPose.getY());
 		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Pose X", () -> targetPose.getX());
 		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Pid Output", () -> pidOutput);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void initLogging() {
+		periodicShuffleboard = new LightningShuffleboardPeriodic("PointAtTag", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
+			new Pair<String, Object>("Target Heading", (DoubleSupplier) () -> targetHeading),
+			new Pair<String, Object>("Target Pose Y", (DoubleSupplier) () -> targetPose.getY()),
+			new Pair<String, Object>("Target Pose X", (DoubleSupplier) () -> targetPose.getX()),
+			new Pair<String, Object>("Pid Output", (DoubleSupplier) () -> pidOutput));
 	}
 
 	@Override

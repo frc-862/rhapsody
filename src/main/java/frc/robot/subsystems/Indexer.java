@@ -2,13 +2,20 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
+
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+import edu.wpi.first.math.Pair;
 
 public class Indexer extends SubsystemBase {
 
@@ -24,6 +31,8 @@ public class Indexer extends SubsystemBase {
 
     private PieceState currentState = PieceState.NONE;
 
+    private LightningShuffleboardPeriodic periodicShuffleboard;
+
     public Indexer(Collector collector) {
         this.collector = collector;
 
@@ -35,16 +44,16 @@ public class Indexer extends SubsystemBase {
         initLogging();
     }
 
+    @SuppressWarnings("unchecked")
     private void initLogging() {
-        LightningShuffleboard.setDoubleSupplier("Indexer", "Indexer Power", () -> indexerMotor.get());
-
-        LightningShuffleboard.setBoolSupplier("Indexer", "Entry Beam Break", () -> getEntryBeamBreakState());
-        LightningShuffleboard.setBoolSupplier("Indexer", "Exit Beam Break", () -> getExitBeamBreakState());
-        LightningShuffleboard.setStringSupplier("Indexer", "Piece State", () -> getPieceState().toString());
-        LightningShuffleboard.setBoolSupplier("Indexer", "Has shot", () -> hasShot());
-
-        LightningShuffleboard.setBoolSupplier("Indexer", "Is Exiting", () -> isExiting());
-        LightningShuffleboard.setBoolSupplier("Indexer", "Has Piece", () -> getPieceState() == PieceState.IN_COLLECT);
+        periodicShuffleboard = new LightningShuffleboardPeriodic("Indexer", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
+                new Pair<String, Object>("Indexer Power", (DoubleSupplier) () -> indexerMotor.get()),
+                new Pair<String, Object>("Entry Beam Break", (Supplier<Boolean>) () -> getEntryBeamBreakState()),
+                new Pair<String, Object>("Exit Beam Break", (Supplier<Boolean>) () -> getExitBeamBreakState()),
+                new Pair<String, Object>("Piece State", (Supplier<String>) () -> getPieceState().toString()),
+                new Pair<String, Object>("Has shot", (Supplier<Boolean>) () -> hasShot()),
+                new Pair<String, Object>("Is Exiting", (Supplier<Boolean>) () -> isExiting()),
+                new Pair<String, Object>("Has Piece", (Supplier<Boolean>) () -> getPieceState() == PieceState.IN_COLLECT));
     }
 
     /**
