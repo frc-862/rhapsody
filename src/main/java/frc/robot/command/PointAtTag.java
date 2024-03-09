@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
@@ -63,9 +64,7 @@ public class PointAtTag extends Command {
 
 	@SuppressWarnings("unchecked")
 	private void initLogging() {
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Heading", () -> targetHeading);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Pid Output", () -> pidOutput);
-		periodicShuffleboard = new LightningShuffleboardPeriodic("PointAtTag", Constants.shuffleboardPeriod,
+		periodicShuffleboard = new LightningShuffleboardPeriodic("PointAtTag", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
 			new Pair<String, Object>("Target Heading", (DoubleSupplier) () -> targetHeading),
 			new Pair<String, Object>("PID Output", (DoubleSupplier) () -> pidOutput));
 	}

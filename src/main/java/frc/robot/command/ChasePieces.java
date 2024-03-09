@@ -6,11 +6,13 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Limelights;
@@ -78,7 +80,7 @@ public class ChasePieces extends Command {
 
 	@SuppressWarnings("unchecked")
 	private void initLogging() {
-		periodicShuffleboard = new LightningShuffleboardPeriodic("ChasePieces", Constants.shuffleboardPeriod,
+		periodicShuffleboard = new LightningShuffleboardPeriodic("ChasePieces", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
 				new Pair<String, Object>("On Target", (BooleanSupplier) () -> onTarget),
 				new Pair<String, Object>("Has Target", (BooleanSupplier) () -> hasTarget),
 				new Pair<String, Object>("Is Done", (BooleanSupplier) () -> isDone),

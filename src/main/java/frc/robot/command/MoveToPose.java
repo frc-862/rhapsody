@@ -6,8 +6,10 @@ package frc.robot.command;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
@@ -47,7 +49,7 @@ public class MoveToPose extends Command {
 
     @SuppressWarnings ("unchecked")
     private void initLogging() {
-        periodicShuffleboard = new LightningShuffleboardPeriodic("MoveToPose", Constants.importantShuffleboardPeriod,
+        periodicShuffleboard = new LightningShuffleboardPeriodic("MoveToPose", ShuffleboardPeriodicConstants.SHUFFLEBOARD_PERIOD_IMPORTANT,
                 new Pair<String, Object>("dx", (DoubleSupplier) () -> dx), 
                 new Pair<String, Object>("dy", (DoubleSupplier) () -> dy),
                 new Pair<String, Object>("targetX", (DoubleSupplier) () -> target.getX()), 

@@ -11,6 +11,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimbConstants;
+import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
@@ -82,7 +83,7 @@ public class Climber extends SubsystemBase {
         // LightningShuffleboard.set("Climb", "Right Upper Setpoint",
         //         convertUpperPose(getSetpointR(), true));
 
-        periodicShuffleboard = new LightningShuffleboardPeriodic("Climb", Constants.shuffleboardPeriod,
+        periodicShuffleboard = new LightningShuffleboardPeriodic("Climb", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
             new Pair<String, Object>("Left Height", (DoubleSupplier) () -> getHeightL()),
             new Pair<String, Object>("Right Height", (DoubleSupplier) () -> getHeightR()),
             new Pair<String, Object>("Left Setpoint", (DoubleSupplier) () -> getSetpointL()),

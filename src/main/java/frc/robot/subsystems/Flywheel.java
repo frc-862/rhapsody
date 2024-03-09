@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants;
 import frc.robot.Constants.FlywheelConstants;
+import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
@@ -47,7 +48,7 @@ public class Flywheel extends SubsystemBase {
     @SuppressWarnings("unchecked")
     private void initLogging() {
 
-        periodicShuffleboard = new LightningShuffleboardPeriodic("Flywheel", Constants.importantShuffleboardPeriod,
+        periodicShuffleboard = new LightningShuffleboardPeriodic("Flywheel", ShuffleboardPeriodicConstants.SHUFFLEBOARD_PERIOD_IMPORTANT,
             new Pair<String, Object>("Top RPM", (DoubleSupplier) () -> getTopMotorRPM()),
             new Pair<String, Object>("Bottom RPM", (DoubleSupplier) () -> getBottomMotorRPM()),
             new Pair<String, Object>("Target Top RPM", (DoubleSupplier) () -> this.topTargetRPS * 60),
