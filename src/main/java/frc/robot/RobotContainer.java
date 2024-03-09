@@ -182,7 +182,7 @@ public class RobotContainer extends LightningContainer {
 						// .deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
 		new Trigger(driver::getRightBumper)
-				.whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("C2-C1"), drivetrain, coPilot));
+				.whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain, driver));
 
 		// parks the robot
 		// new Trigger(driver::getXButton).whileTrue(new InstantCommand(() ->
