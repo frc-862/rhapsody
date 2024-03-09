@@ -12,17 +12,8 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,10 +21,8 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.CollisionConstants;
-import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
@@ -44,8 +33,6 @@ import frc.thunder.util.Pose4d;
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
-    private final Limelights limelightSubsystem;
-
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric();
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
@@ -58,14 +45,18 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
-            Limelights limelightSubsystem, SwerveModuleConstants... modules) {
+            SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
-
-        this.limelightSubsystem = limelightSubsystem;
 
         initLogging();
 
         configurePathPlanner();
+    }
+
+    public void applyVisionPose(Pose4d pose) {
+        if (!disableVision) {
+            addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), pose.getStdDevs());
+        }
     }
 
     /* DRIVE METHODS */
@@ -165,32 +156,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void simulationPeriodic() {
         /* Assume */
         updateSimState(0.01, 12);
-    }
-
-    @Override
-    public void periodic() {
-        // TODO Remove the unecessary shuffleboard stuff eventually
-        if (!disableVision) {
-            var pose = limelightSubsystem.getPoseQueue().poll();
-            while (pose != null) {
-                // High confidence => 0.3
-                // Low confidence => 18
-                // theta trust IMU, use 500 degrees
-
-                double confidence = 18.0;
-                if (pose.getMoreThanOneTarget() && pose.getDistance() < 3) {
-                    confidence = 0.3;
-                } else if (pose.getMoreThanOneTarget()) {
-                    confidence = 0.3 + ((pose.getDistance() - 3) / 5 * 18);
-                } else if (pose.getDistance() < 2) {
-                    confidence = 1.0 + (pose.getDistance() / 2 * 5.0);
-                }
-
-                addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(),
-                        VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
-                pose = limelightSubsystem.getPoseQueue().poll();
-            }
-        }
     }
 
     private void initLogging() {
