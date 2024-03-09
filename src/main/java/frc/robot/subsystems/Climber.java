@@ -10,7 +10,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimbConstants;
-import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
@@ -66,7 +65,7 @@ public class Climber extends SubsystemBase {
 
     @SuppressWarnings("unchecked")
     private void initLogging() { // TODO test and fix once we have climber
-        periodicShuffleboard = new LightningShuffleboardPeriodic("Climb", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
+        periodicShuffleboard = new LightningShuffleboardPeriodic("Climb", ClimbConstants.CLIMB_LOG_PERIOD,
             new Pair<String, Object>("Left Height", (DoubleSupplier) () -> getHeightL()),
             new Pair<String, Object>("Right Height", (DoubleSupplier) () -> getHeightR()),
             new Pair<String, Object>("Left Setpoint", (DoubleSupplier) () -> getSetpointL()),

@@ -10,9 +10,7 @@ import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants;
 import frc.robot.Constants.CollectorConstants;
-import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
 import edu.wpi.first.math.Pair;
 import java.util.function.DoubleSupplier;
@@ -49,8 +47,7 @@ public class Collector extends SubsystemBase {
 
 	@SuppressWarnings ("unchecked")
 	private void initLogging() {
-
-		periodicShuffleboard = new LightningShuffleboardPeriodic("Collector", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
+		periodicShuffleboard = new LightningShuffleboardPeriodic("Collector", CollectorConstants.COLLECTOR_LOG_PERIOD,
 				new Pair<String, Object>("Collector Power", (DoubleSupplier) () -> motor.get()),
 				new Pair<String, Object>("Beam Break", (BooleanSupplier) () -> getEntryBeamBreakState()),
 				new Pair<String, Object>("Has Piece", (BooleanSupplier) () -> hasPiece()));

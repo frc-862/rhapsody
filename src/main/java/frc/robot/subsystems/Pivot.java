@@ -18,7 +18,6 @@ import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.tuning.FalconTuner;
 import frc.robot.Constants.PivotConstants;
-import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
 
 import java.util.function.DoubleSupplier;
@@ -74,7 +73,7 @@ public class Pivot extends SubsystemBase {
 
     @SuppressWarnings("unchecked")
     private void initLogging() {
-        periodicShuffleboard = new LightningShuffleboardPeriodic("Pivot", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
+        periodicShuffleboard = new LightningShuffleboardPeriodic("Pivot", PivotConstants.PIVOT_LOG_PERIOD,
                 new Pair<String, Object>("Current Angle", (DoubleSupplier) this::getAngle),
                 new Pair<String, Object>("Target Angle", (DoubleSupplier) () -> targetAngle),
                 new Pair<String, Object>("On target", (Supplier<Boolean>) this::onTarget),

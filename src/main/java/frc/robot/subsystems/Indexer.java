@@ -2,15 +2,12 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IndexerConstants;
-import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
 
 import java.util.function.DoubleSupplier;
@@ -49,7 +46,7 @@ public class Indexer extends SubsystemBase {
 
     @SuppressWarnings("unchecked")
     private void initLogging() {
-        periodicShuffleboard = new LightningShuffleboardPeriodic("Indexer", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
+        periodicShuffleboard = new LightningShuffleboardPeriodic("Indexer", IndexerConstants.INDEXER_LOG_PERIOD,
                 new Pair<String, Object>("Indexer Power", (DoubleSupplier) () -> indexerMotor.get()),
                 new Pair<String, Object>("Entry Beam Break", (Supplier<Boolean>) () -> getEntryBeamBreakState()),
                 new Pair<String, Object>("Exit Beam Break", (Supplier<Boolean>) () -> getExitBeamBreakState()),

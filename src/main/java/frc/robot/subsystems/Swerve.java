@@ -26,10 +26,8 @@ import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.CollisionConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.thunder.filter.XboxControllerFilter;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
 import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
 
@@ -177,7 +175,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     @SuppressWarnings({"unchecked", "resource"})
     private void initLogging() {
-        periodicShuffleboard = new LightningShuffleboardPeriodic("Swerve", ShuffleboardPeriodicConstants.SHUFFLEBOARD_PERIOD_IMPORTANT,
+        periodicShuffleboard = new LightningShuffleboardPeriodic("Swerve", DrivetrainConstants.DRIVETRAIN_LOG_PERIOD,
                 new Pair<String, Object>("Timer", (DoubleSupplier) Timer::getFPGATimestamp),
                 new Pair<String, Object>("Robot Heading", (DoubleSupplier) getPigeon2()::getAngle),
                 new Pair<String, Object>("Odo X", (DoubleSupplier) getPose()::getX),
