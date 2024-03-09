@@ -4,6 +4,8 @@ import java.sql.Driver;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
@@ -58,6 +60,36 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
             speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
+        }
+
+        setRampRate();
+    }
+
+    private void setRampRate() {
+        var config = new TalonFXConfiguration();
+        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.1;
+        config.OpenLoopRamps.TorqueOpenLoopRampPeriod = 0.1;
+        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.1;
+        config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 0.1;
+        config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.1;
+        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
+
+        for (int i = 0; i < 4; ++i) {
+            var module = getModule(i);
+            var drive = module.getDriveMotor();
+            var steer = module.getSteerMotor();
+
+            StatusCode status = StatusCode.StatusCodeNotInitialized;
+            for (int j = 0; j < 5; ++j) {
+                status = drive.getConfigurator().apply(config);
+                if (status.isOK())
+                    break;
+            }
+            for (int j = 0; j < 5; ++j) {
+                status = steer.getConfigurator().apply(config);
+                if (status.isOK())
+                    break;
+            }
         }
     }
 
