@@ -352,7 +352,8 @@ public class RobotContainer extends LightningContainer {
 				driver.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
 			});
 		} else {
-			return new InstantCommand();}
+			return new InstantCommand();
+		}
 	}
 
 	public static Command hapticCopilotCommand() {
@@ -365,6 +366,7 @@ public class RobotContainer extends LightningContainer {
 				coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
 			});
 		} else {
-			return new InstantCommand();}	
+			return new InstantCommand();
+		}	
 	}
 }
