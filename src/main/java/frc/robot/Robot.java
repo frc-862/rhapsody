@@ -1,5 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.ADXL345_I2C.AllAxes;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.subsystems.Swerve;
 import frc.thunder.LightningRobot;
 
 /**
@@ -14,5 +18,17 @@ import frc.thunder.LightningRobot;
 public class Robot extends LightningRobot {
     public Robot() {
         super(new RobotContainer());
+    }
+
+    @Override
+    protected void allianceKnown(Alliance alliance) {
+        RobotContainer container = (RobotContainer) getContainer();
+        if (alliance == Alliance.Red) {
+            container.drivetrain
+                    .setOperatorPerspectiveForward(new Rotation2d(Math.toRadians(180)));
+        } else {
+            container.drivetrain
+                    .setOperatorPerspectiveForward(new Rotation2d(Math.toRadians(0)));
+        }
     }
 }
