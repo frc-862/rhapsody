@@ -182,9 +182,9 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(driver::getXButton).whileTrue(new InstantCommand(() -> drivetrain.brake()));
 
 		// smart shoot for the robot
-		new Trigger(driver::getAButton)
-			.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-			.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(driver::getAButton)
+		// 	.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
+		// 	.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// aim at amp and stage tags for the robot
 		new Trigger(driver::getXButton)
