@@ -56,11 +56,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
         configurePathPlanner();
 
-        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+        if (DriverStation.getAlliance().get() != null && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
             speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
         }
     }
-    
+
     public void applyVisionPose(Pose4d pose) {
         if (!disableVision) {
             addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), pose.getStdDevs());
