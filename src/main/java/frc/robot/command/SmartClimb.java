@@ -4,7 +4,9 @@ import java.util.function.DoubleSupplier;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 
 public class SmartClimb extends Command {
@@ -18,6 +20,8 @@ public class SmartClimb extends Command {
 
     private boolean buttonState;
     private boolean autoClimbEngaged;
+    
+    private Pivot pivot;
 
     /**
      * SmartClimb to control the climber using the B button and sticks
@@ -27,7 +31,7 @@ public class SmartClimb extends Command {
      * @param rightPower power to apply to right climber motor
      * @param bButton B button state
      */
-    public SmartClimb(Climber climber, Swerve drivetrain, DoubleSupplier leftPower, DoubleSupplier rightPower, BooleanSupplier bButton) {
+    public SmartClimb(Climber climber, Swerve drivetrain, DoubleSupplier leftPower, DoubleSupplier rightPower, BooleanSupplier bButton, Pivot pivot) {
         this.climber = climber;
         this.drivetrain = drivetrain;
         this.leftPower = leftPower;
@@ -35,12 +39,15 @@ public class SmartClimb extends Command {
         this.bButton = bButton;
         this.buttonState = false;
         this.autoClimbEngaged = false;
-
+        this.pivot = pivot;
         addRequirements(climber); // don't addrequirements for drivetrain because it's read only
     }
 
     @Override
     public void execute() {
+        if (pivot.getAngle() != PivotConstants.STOW_ANGLE) {
+             autoClimbEngaged = false;
+        } else{
         if (leftPower.getAsDouble() != 0d || rightPower.getAsDouble() != 0d) {
             // Engage Manual Climb whenever sticks are active
             climber.setPower(leftPower.getAsDouble(), rightPower.getAsDouble());
@@ -56,6 +63,7 @@ public class SmartClimb extends Command {
             // Auto deploy climb when B button is pressed and auto climb has not been engaged
             climber.deploy();
             buttonState = true;
+            }
         }
     }
 
