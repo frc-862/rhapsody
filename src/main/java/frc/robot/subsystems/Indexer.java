@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,16 +19,15 @@ public class Indexer extends SubsystemBase {
     private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_ENTER_BEAMBREAK);
     private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_EXIT_BEAMBREAK);
 
-    private int exitIndexerIteration = 0;
-    private int entryIndexerIteration = 0;
-    private int entryCollectorIteration = 0;
-
     private double timeLastTriggered = 0d;
 
     private double targetPower = 0;
 
     private PieceState currentState = PieceState.NONE;
     private boolean didShoot = false;
+
+    private Debouncer entryDebouncer = new Debouncer(0.05);
+    private Debouncer exitDebouncer = new Debouncer(0.05);
 
     public Indexer(Collector collector) {
         this.collector = collector;
@@ -110,7 +110,7 @@ public class Indexer extends SubsystemBase {
      * @return entry beambreak state
      */
     public boolean getEntryBeamBreakState() {
-        return !indexerSensorEntry.get();
+        return entryDebouncer.calculate(!indexerSensorEntry.get());
     }
 
     /**
@@ -119,14 +119,14 @@ public class Indexer extends SubsystemBase {
      * @return exit beambreak state
      */
     public boolean getExitBeamBreakState() {
-        return !indexerSensorExit.get();
+        return exitDebouncer.calculate(!indexerSensorExit.get());
     }
 
     /**
      * @return true if piece is exiting the indexer
      */
     public boolean isExiting() {
-        return exitIndexerIteration >= 1;
+        return getExitBeamBreakState() && getPieceState() == PieceState.IN_INDEXER;
     }
 
     /**
@@ -150,35 +150,20 @@ public class Indexer extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // Update piece state based on beambreaks
-        if (getExitBeamBreakState()) {
-            exitIndexerIteration++;
-            if (exitIndexerIteration >= 3) {
-                setPieceState(PieceState.IN_INDEXER);
-            }
-        } else if (getEntryBeamBreakState()) {
-            entryIndexerIteration++;
-            if (entryIndexerIteration >= 3){
-                setPieceState(PieceState.IN_PIVOT);
-            }
-
-        } else if (collector.getEntryBeamBreakState()) {
-            entryCollectorIteration++;
-            if (entryCollectorIteration >= 3){
-                timeLastTriggered = Timer.getFPGATimestamp();
-                setPieceState(PieceState.IN_COLLECT);
-            }
-        } else if (Timer.getFPGATimestamp() - timeLastTriggered <= 1) {
-            setPieceState(PieceState.IN_COLLECT);
-        } else {
-            didShoot = didShoot || hasNote();
-            setPieceState(PieceState.NONE);
-        }
-
-        // reset exitIndexerIteration
-        if (!getEntryBeamBreakState()) {
-            exitIndexerIteration = 0;
-        }
+       // Update piece state based on beambreaks
+       if (getExitBeamBreakState()) {
+        setPieceState(PieceState.IN_INDEXER);
+    } else if (getEntryBeamBreakState()) {
+        setPieceState(PieceState.IN_PIVOT);
+    } else if (collector.getEntryBeamBreakState()) {
+        timeLastTriggered = Timer.getFPGATimestamp();
+        setPieceState(PieceState.IN_COLLECT);
+    } else if (Timer.getFPGATimestamp() - timeLastTriggered <= 1) {
+        setPieceState(PieceState.IN_COLLECT);
+    } else {
+        didShoot = didShoot || hasNote();
+        setPieceState(PieceState.NONE);
+    }
     }
 
     public boolean hasNote() {
