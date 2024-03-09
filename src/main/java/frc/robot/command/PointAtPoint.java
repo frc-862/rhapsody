@@ -81,7 +81,7 @@ public class PointAtPoint extends Command {
 
 		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 360 + 180;
 		targetHeading %= 360;
-		pidOutput = headingController.calculate(pose.getRotation().getDegrees() % 360, targetHeading);
+		pidOutput = headingController.calculate((pose.getRotation().getDegrees() + 360) % 360, targetHeading);
 
 		LightningShuffleboard.setDouble("PointAtPoint", "Delta Y", deltaY);
 		LightningShuffleboard.setDouble("PointAtPoint", "Delta X", deltaX);
