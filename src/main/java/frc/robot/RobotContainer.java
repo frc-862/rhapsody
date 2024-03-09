@@ -343,22 +343,26 @@ public class RobotContainer extends LightningContainer {
 	}
 
 	public static Command hapticDriverCommand() {
-		return new StartEndCommand(() -> {
-			driver.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
-			driver.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
-		}, () -> {
-			driver.setRumble(GenericHID.RumbleType.kRightRumble, 0);
-			driver.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-		});
+		if (DriverStation.isAutonomous()) {
+			return new StartEndCommand(() -> {
+				driver.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
+				driver.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
+			}, () -> {
+				driver.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+				driver.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+			});
+		} else {return new InstantCommand();}
 	}
 
 	public static Command hapticCopilotCommand() {
-		return new StartEndCommand(() -> {
-			coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
-			coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
-		}, () -> {
-			coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 0);
-			coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-		});
+		if (DriverStation.isAutonomous()) {
+			return new StartEndCommand(() -> {
+				coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
+				coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
+			}, () -> {
+				coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+				coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+			});
+		} else {return new InstantCommand();}	
 	}
 }
