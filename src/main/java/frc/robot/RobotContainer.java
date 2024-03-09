@@ -71,7 +71,7 @@ public class RobotContainer extends LightningContainer {
 	public static XboxControllerFilter coPilot;
 
 	// Subsystems
-	private Swerve drivetrain;
+	public Swerve drivetrain;
 	private Limelights limelights;
 	private Collector collector;
 	private Flywheel flywheel;
@@ -101,8 +101,9 @@ public class RobotContainer extends LightningContainer {
 				Constants.ControllerConstants.DEADBAND, -1, 1,
 				XboxControllerFilter.filterMode.SQUARED); // CoPilot controller
 
+		drivetrain = TunerConstants.getDrivetrain();
 		limelights = new Limelights();
-		drivetrain = TunerConstants.getDrivetrain(limelights);
+		limelights.setApplyVisionUpdate(drivetrain::applyVisionPose);
 
 		collector = new Collector();
 		flywheel = new Flywheel();
@@ -188,9 +189,8 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getXButton)
 				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(driver::getLeftBumper)
-				.whileTrue(new PointAtPoint(VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d(),
-						drivetrain, driver));
+		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(VisionConstants.SPEAKER_LOCATION.getX(),
+				VisionConstants.SPEAKER_LOCATION.getY(), drivetrain, driver));
 
 		// new Trigger(driver::getYButton)
 		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));

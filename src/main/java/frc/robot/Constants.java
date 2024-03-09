@@ -300,14 +300,14 @@ public class Constants {
                 kBackRightEncoderOffsetRh, Units.inchesToMeters(kBackRightXPosInchesRh),
                 Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
 
-        public static final Swerve getDrivetrain(Limelights limelights) {
+        public static final Swerve getDrivetrain() {
             if (Constants.isMercury()) {
                 System.out.println("IS MERCURY");
-                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeft, FrontRight,
+                return new Swerve(DrivetrainConstants, 250, FrontLeft, FrontRight,
                         BackLeft, BackRight);
             } else {
                 System.out.println("IS RHAPSODY");
-                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeftRh, FrontRightRh,
+                return new Swerve(DrivetrainConstants, 250, FrontLeftRh, FrontRightRh,
                         BackLeftRh, BackRightRh);
             }
         }
