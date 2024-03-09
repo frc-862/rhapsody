@@ -147,14 +147,12 @@ public class Constants {
 
         public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
 
-        public static final PathConstraints PATH_CONSTRAINTS =
-                new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
-                                                       // constants
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
+                                                                                                      // constants
 
         // For Pathfinding
         // TODO get real poses to pathfind to
-        public static final Pose2d TARGET_POSE =
-                new Pose2d(new Translation2d(0, 0), new Rotation2d(0d));
+        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(0, 0), new Rotation2d(0d));
 
     }
 
@@ -168,17 +166,15 @@ public class Constants {
                 .withKD(0.2).withKS(0).withKV(1.5).withKA(0);
         // When using closed-loop control, the drive motor uses the control
         // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
-        private static final Slot0Configs driveGains =
-                new Slot0Configs().withKP(3).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0);
+        private static final Slot0Configs driveGains = new Slot0Configs().withKP(3).withKI(0).withKD(0).withKS(0)
+                .withKV(0).withKA(0);
 
         // The closed-loop output type to use for the steer motors;
         // This affects the PID/FF gains for the steer motors
-        private static final ClosedLoopOutputType steerClosedLoopOutput =
-                ClosedLoopOutputType.Voltage;
+        private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
         // The closed-loop output type to use for the drive motors;
         // This affects the PID/FF gains for the drive motors
-        private static final ClosedLoopOutputType driveClosedLoopOutput =
-                ClosedLoopOutputType.TorqueCurrentFOC;
+        private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.TorqueCurrentFOC;
 
         // The stator current at which the wheels start to slip;
         // This needs to be tuned to your individual robot
@@ -210,24 +206,24 @@ public class Constants {
         private static final double kSteerFrictionVoltage = 0.25;
         private static final double kDriveFrictionVoltage = 0.25;
 
-        private static final SwerveDrivetrainConstants DrivetrainConstants =
-                new SwerveDrivetrainConstants().withPigeon2Id(kPigeonId)
-                        .withCANbusName(kCANbusName);
+        private static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
+                .withPigeon2Id(kPigeonId)
+                .withCANbusName(kCANbusName);
 
-        private static final SwerveModuleConstantsFactory ConstantCreator =
-                new SwerveModuleConstantsFactory().withDriveMotorGearRatio(kDriveGearRatio)
-                        .withSteerMotorGearRatio(kSteerGearRatio)
-                        .withWheelRadius(kWheelRadiusInches).withSlipCurrent(kSlipCurrentA)
-                        .withSteerMotorGains(steerGains).withDriveMotorGains(driveGains)
-                        .withSteerMotorClosedLoopOutput(steerClosedLoopOutput)
-                        .withDriveMotorClosedLoopOutput(driveClosedLoopOutput)
-                        .withSpeedAt12VoltsMps(kSpeedAt12VoltsMps).withSteerInertia(kSteerInertia)
-                        .withDriveInertia(kDriveInertia)
-                        .withSteerFrictionVoltage(kSteerFrictionVoltage)
-                        .withDriveFrictionVoltage(kDriveFrictionVoltage)
-                        .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
-                        .withCouplingGearRatio(kCoupleRatio)
-                        .withSteerMotorInverted(kSteerMotorReversed);
+        private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
+                .withDriveMotorGearRatio(kDriveGearRatio)
+                .withSteerMotorGearRatio(kSteerGearRatio)
+                .withWheelRadius(kWheelRadiusInches).withSlipCurrent(kSlipCurrentA)
+                .withSteerMotorGains(steerGains).withDriveMotorGains(driveGains)
+                .withSteerMotorClosedLoopOutput(steerClosedLoopOutput)
+                .withDriveMotorClosedLoopOutput(driveClosedLoopOutput)
+                .withSpeedAt12VoltsMps(kSpeedAt12VoltsMps).withSteerInertia(kSteerInertia)
+                .withDriveInertia(kDriveInertia)
+                .withSteerFrictionVoltage(kSteerFrictionVoltage)
+                .withDriveFrictionVoltage(kDriveFrictionVoltage)
+                .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
+                .withCouplingGearRatio(kCoupleRatio)
+                .withSteerMotorInverted(kSteerMotorReversed);
 
         // OFFSETS Rhapsody
         private static final double kFrontLeftEncoderOffsetRh = 0.0546875;
@@ -263,55 +259,55 @@ public class Constants {
         private static final double kBackRightXPosInches = -10.825;
         private static final double kBackRightYPosInches = -10.825;
 
-        private static final SwerveModuleConstants FrontLeft =
-                ConstantCreator.createModuleConstants(CAN.kFrontLeftSteerMotorId,
-                        CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
-                        kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches),
-                        Units.inchesToMeters(kFrontLeftYPosInches), kInvertLeftSide);
-        private static final SwerveModuleConstants FrontRight =
-                ConstantCreator.createModuleConstants(CAN.kFrontRightSteerMotorId,
-                        CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
-                        kFrontRightEncoderOffset, Units.inchesToMeters(kFrontRightXPosInches),
-                        Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide);
+        private static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
+                CAN.kFrontLeftSteerMotorId,
+                CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
+                kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches),
+                Units.inchesToMeters(kFrontLeftYPosInches), kInvertLeftSide);
+        private static final SwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
+                CAN.kFrontRightSteerMotorId,
+                CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
+                kFrontRightEncoderOffset, Units.inchesToMeters(kFrontRightXPosInches),
+                Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide);
         private static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
                 CAN.kBackLeftSteerMotorId, CAN.kBackLeftDriveMotorId, CAN.kBackLeftEncoderId,
                 kBackLeftEncoderOffset, Units.inchesToMeters(kBackLeftXPosInches),
                 Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide);
-        private static final SwerveModuleConstants BackRight =
-                ConstantCreator.createModuleConstants(CAN.kBackRightSteerMotorId,
-                        CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
-                        kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches),
-                        Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
+        private static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
+                CAN.kBackRightSteerMotorId,
+                CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
+                kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches),
+                Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 
-        private static final SwerveModuleConstants FrontLeftRh =
-                ConstantCreator.createModuleConstants(CAN.kFrontLeftSteerMotorId,
-                        CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
-                        kFrontLeftEncoderOffsetRh, Units.inchesToMeters(kFrontLeftXPosInchesRh),
-                        Units.inchesToMeters(kFrontLeftYPosInchesRh), kInvertLeftSide);
-        private static final SwerveModuleConstants FrontRightRh =
-                ConstantCreator.createModuleConstants(CAN.kFrontRightSteerMotorId,
-                        CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
-                        kFrontRightEncoderOffsetRh, Units.inchesToMeters(kFrontRightXPosInchesRh),
-                        Units.inchesToMeters(kFrontRightYPosInchesRh), kInvertRightSide);
-        private static final SwerveModuleConstants BackLeftRh =
-                ConstantCreator.createModuleConstants(CAN.kBackLeftSteerMotorId,
-                        CAN.kBackLeftDriveMotorId, CAN.kBackLeftEncoderId, kBackLeftEncoderOffsetRh,
-                        Units.inchesToMeters(kBackLeftXPosInchesRh),
-                        Units.inchesToMeters(kBackLeftYPosInchesRh), kInvertLeftSide);
-        private static final SwerveModuleConstants BackRightRh =
-                ConstantCreator.createModuleConstants(CAN.kBackRightSteerMotorId,
-                        CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
-                        kBackRightEncoderOffsetRh, Units.inchesToMeters(kBackRightXPosInchesRh),
-                        Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
+        private static final SwerveModuleConstants FrontLeftRh = ConstantCreator.createModuleConstants(
+                CAN.kFrontLeftSteerMotorId,
+                CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
+                kFrontLeftEncoderOffsetRh, Units.inchesToMeters(kFrontLeftXPosInchesRh),
+                Units.inchesToMeters(kFrontLeftYPosInchesRh), kInvertLeftSide);
+        private static final SwerveModuleConstants FrontRightRh = ConstantCreator.createModuleConstants(
+                CAN.kFrontRightSteerMotorId,
+                CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
+                kFrontRightEncoderOffsetRh, Units.inchesToMeters(kFrontRightXPosInchesRh),
+                Units.inchesToMeters(kFrontRightYPosInchesRh), kInvertRightSide);
+        private static final SwerveModuleConstants BackLeftRh = ConstantCreator.createModuleConstants(
+                CAN.kBackLeftSteerMotorId,
+                CAN.kBackLeftDriveMotorId, CAN.kBackLeftEncoderId, kBackLeftEncoderOffsetRh,
+                Units.inchesToMeters(kBackLeftXPosInchesRh),
+                Units.inchesToMeters(kBackLeftYPosInchesRh), kInvertLeftSide);
+        private static final SwerveModuleConstants BackRightRh = ConstantCreator.createModuleConstants(
+                CAN.kBackRightSteerMotorId,
+                CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
+                kBackRightEncoderOffsetRh, Units.inchesToMeters(kBackRightXPosInchesRh),
+                Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
 
-        public static final Swerve getDrivetrain(Limelights limelights) {
+        public static final Swerve getDrivetrain() {
             if (Constants.isMercury()) {
                 System.out.println("IS MERCURY");
-                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeft, FrontRight,
+                return new Swerve(DrivetrainConstants, 250, FrontLeft, FrontRight,
                         BackLeft, BackRight);
             } else {
                 System.out.println("IS RHAPSODY");
-                return new Swerve(DrivetrainConstants, 250, limelights, FrontLeftRh, FrontRightRh,
+                return new Swerve(DrivetrainConstants, 250, FrontLeftRh, FrontRightRh,
                         BackLeftRh, BackRightRh);
             }
         }
@@ -321,10 +317,10 @@ public class Constants {
         // This is a magic number from gridlock, may need to be changed or removed
         // entirely
         public static final double PROCESS_LATENCY = 0.0472; // TODO test
-        public static final Translation2d FIELD_LIMIT =
-                new Translation2d(Units.feetToMeters(54.0), Units.feetToMeters(26.0));
-        public static final Translation2d VISION_LIMIT =
-                new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
+        public static final Translation2d FIELD_LIMIT = new Translation2d(Units.feetToMeters(54.0),
+                Units.feetToMeters(26.0));
+        public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
+                Units.feetToMeters(5));
         public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
@@ -332,7 +328,8 @@ public class Constants {
         public static final int SPEAKER_PIPELINE = 1;
         public static final int NOTE_PIPELINE = 2;
 
-        public static final Translation3d SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
+        public static final Translation3d BLUE_SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
+        public static final Translation3d RED_SPEAKER_LOCATION = new Translation3d(16.4592, 5.547593, 1.2);
 
         public class Pipelines { // TODO get real
             public static final int APRIL_TAG_3d = 0;
@@ -363,23 +360,20 @@ public class Constants {
     public class MusicConstants {
         public static final String BOH_RHAP_FILEPATH = "bohemianrhapsody.chrp";
         public static final String JEOPARDY_FILEPATH = "jeopardy.chrp";
-        public static final String BEWARE_THE_FOREST_MUSHROOMS_FILEPATH =
-                "bewaretheforestmushrooms.chrp";
+        public static final String BEWARE_THE_FOREST_MUSHROOMS_FILEPATH = "bewaretheforestmushrooms.chrp";
         public static final String UNDER_PRESSURE_FILEPATH = "underpressure.chrp";
         public static final String NATIONAL_PARK_FILEPATH = "nationalpark.chrp";
         public static final String ENCOUNTER_FILEPATH = "encounter.chrp";
         public static final String PIRATES_OF_THE_CARIBBEAN_FILEPATH = "piratesofthecaribbean.chrp";
-        public static final String CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH =
-                "crazylittlethingcalledlove.chrp";
-        public static final String ANOTHER_ONE_BITES_THE_DUST_FILEPATH =
-                "anotheronebitesthedust.chrp";
+        public static final String CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH = "crazylittlethingcalledlove.chrp";
+        public static final String ANOTHER_ONE_BITES_THE_DUST_FILEPATH = "anotheronebitesthedust.chrp";
         public static final String SWEET_CAROLINE_FILEPATH = "sweetcaroline.chrp";
         public static final String WE_ARE_THE_CHAMPIONS_FILEPATH = "wearethechampions.chrp";
-        public static final String[] SONG_NAMES = {BOH_RHAP_FILEPATH, JEOPARDY_FILEPATH,
+        public static final String[] SONG_NAMES = { BOH_RHAP_FILEPATH, JEOPARDY_FILEPATH,
                 BEWARE_THE_FOREST_MUSHROOMS_FILEPATH, UNDER_PRESSURE_FILEPATH,
                 NATIONAL_PARK_FILEPATH, ENCOUNTER_FILEPATH, PIRATES_OF_THE_CARIBBEAN_FILEPATH,
                 CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH, ANOTHER_ONE_BITES_THE_DUST_FILEPATH,
-                SWEET_CAROLINE_FILEPATH, WE_ARE_THE_CHAMPIONS_FILEPATH};
+                SWEET_CAROLINE_FILEPATH, WE_ARE_THE_CHAMPIONS_FILEPATH };
         public static final List<String> SET_LIST = Arrays.asList(SONG_NAMES);
     }
 
@@ -397,6 +391,7 @@ public class Constants {
         public static final double MOTOR_KA = 0;
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
+        public static final double COLLECTOR_GRABANDGO_POWER = 0.75;
     }
 
     public class FlywheelConstants { // TODO: get real
@@ -405,24 +400,39 @@ public class Constants {
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
 
-        // TUNED TOP
-        public static final double TOP_MOTOR_KP = 0.15;
-        public static final double TOP_MOTOR_KI = 0;
-        public static final double TOP_MOTOR_KD = 0;
-        public static final double TOP_MOTOR_KS = 0.3;
-        public static final double TOP_MOTOR_KV = 0.11;
-        public static final double TOP_MOTOR_KA = 0;
+        // SLOT 0 TOP, 0 - 49 RPS
+        public static final double TOP_0_MOTOR_KP = 0.155;
+        public static final double TOP_0_MOTOR_KI = 0;
+        public static final double TOP_0_MOTOR_KD = 0;
+        public static final double TOP_0_MOTOR_KS = 0.3;
+        public static final double TOP_0_MOTOR_KV = 0.11;
+        public static final double TOP_0_MOTOR_KA = 0;
 
-        // TUNED BOTTOM
-        public static final double BOTTOM_MOTOR_KP = 0.15;
-        public static final double BOTTOM_MOTOR_KI = 0;
-        public static final double BOTTOM_MOTOR_KD = 0;
-        public static final double BOTTOM_MOTOR_KS = 0.3;
-        public static final double BOTTOM_MOTOR_KV = 0.115;
-        public static final double BOTTOM_MOTOR_KA = 0;
+        // SLOT 1 TOP, 50 - 107 RPS
+        public static final double TOP_1_MOTOR_KP = 0.16;
+        public static final double TOP_1_MOTOR_KI = 0;
+        public static final double TOP_1_MOTOR_KD = 0;
+        public static final double TOP_1_MOTOR_KS = 0.3;
+        public static final double TOP_1_MOTOR_KV = 0.113;
+        public static final double TOP_1_MOTOR_KA = 0;
 
+        // SLOT 0 BOTTOM, 0 - 49 RPS
+        public static final double BOTTOM_0_MOTOR_KP = 0.15;
+        public static final double BOTTOM_0_MOTOR_KI = 0;
+        public static final double BOTTOM_0_MOTOR_KD = 0;
+        public static final double BOTTOM_0_MOTOR_KS = 0.3;
+        public static final double BOTTOM_0_MOTOR_KV = 0.115;
+        public static final double BOTTOM_0_MOTOR_KA = 0;
 
-        public static final double RPM_TOLERANCE = 100d;
+        // SLOT 1 BOTTOM, 50 - 107 RPS
+        public static final double BOTTOM_1_MOTOR_KP = 0.155;
+        public static final double BOTTOM_1_MOTOR_KI = 0;
+        public static final double BOTTOM_1_MOTOR_KD = 0;
+        public static final double BOTTOM_1_MOTOR_KS = 0.3;
+        public static final double BOTTOM_1_MOTOR_KV = 0.117;
+        public static final double BOTTOM_1_MOTOR_KA = 0;
+
+        public static final double RPM_TOLERANCE = 50d;
 
         public static final double BIAS_INCREMENT = 1.25; // RPS to bias by per button press
         public static final double COAST_VOLTAGE = 0.1;
@@ -464,8 +474,7 @@ public class Constants {
         public static final double ANGLE_TOLERANCE = 0.5d;
 
         public static final double ENCODER_OFFSET = 0.6118; // In rotations
-        public static final SensorDirectionValue ENCODER_DIRECTION =
-                SensorDirectionValue.Clockwise_Positive;
+        public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
 
@@ -493,6 +502,7 @@ public class Constants {
                 put(1.08d, 60d);
                 put(2.01d, 50d);
                 put(2.94d, 39d);
+                put(3.99d, 31d);
             }
         };
 
@@ -501,9 +511,9 @@ public class Constants {
             {
                 // As distance get smaller RPM gets smaller
                 put(1.08d, 2000d);
-                put(2.01d, 2250d);
+                put(2.01d, 2000d);
                 put(2.94d, 2500d);
-
+                put(3.99d, 3250d);
             }
         };
 
@@ -514,17 +524,17 @@ public class Constants {
 
     public class CandConstants { // TODO get real
         // Amp
-        public static final double AMP_TOP_RPM = 300; // 250?
-        public static final double AMP_BOTTOM_RPM = 450;
-        public static final double AMP_ANGLE = 103.5;
+        public static final double AMP_TOP_RPM = 300; // FRONT METHOD 250
+        public static final double AMP_BOTTOM_RPM = 450; // FRONT METHOD 1250
+        public static final double AMP_ANGLE = 103.5; // FRONT METHOD 55
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
         public static final double POINT_BLANK_ANGLE = 60;
 
         // Podium
-        public static final double PODIUM_RPM = 3000;
-        public static final double PODIUM_ANGLE = 45;
+        public static final double PODIUM_RPM = 3500;
+        public static final double PODIUM_ANGLE = 37;
 
         // C1
         public static final double C1_RPM = 0;
@@ -553,43 +563,24 @@ public class Constants {
 
     public class ClimbConstants { // TODO: find real values
         public static final boolean CLIMB_RIGHT_MOTOR_INVERT = false;
-        public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
-        public static final int CLIMB_MOTOR_SUPPLY_CURRENT_LIMIT = 0;
-        public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 0;
+        public static final boolean CLIMB_LEFT_MOTOR_INVERT = true;
+        public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean CLIMB_MOTOR_BRAKE_MODE = true;
-        public static final double EXTEND_KP = 0;
-        public static final double EXTEND_KI = 0;
-        public static final double EXTEND_KD = 0;
-        public static final double RETRACT_KP = 0;
-        public static final double RETRACT_KI = 0;
-        public static final double RETRACT_KD = 0;
-        public static final double GEAR_REDUCTION = 20d;
+        public static final double UNLOADED_KP = 10;
+        public static final double UNLOADED_KI = 0;
+        public static final double UNLOADED_KD = 0;
+        public static final double LOADED_KP = 0;
+        public static final double LOADED_KI = 0;
+        public static final double LOADED_KD = 0;
+        public static final double GEAR_REDUCTION = 12d;
         public static final double WINCH_DIAMETER_INCHES = 1d;
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
-        public static final double MAX_HEIGHT = 999d;
-        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of
-                                                       // lower arm in inches
-        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of
-                                                       // upper arm in inches
+        public static final double MAX_HEIGHT = 8.83; // In rotations
+        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of lower arm in inches
+        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
 
-        public static final Pose3d LOWER_OFFSET = new Pose3d(); // NOTE: Poses are in meters despite
-                                                                // george washington's
-                                                                // best efforts
-        public static final Pose3d UPPER_OFFSET = new Pose3d(); // NOTE 2: these poses should
-                                                                // exclude side to side
-                                                                // offset, since it gets set below
-
-        public static final Transform3d LEFT_RIGHT_OFFSET = new Transform3d(); // NOTE 3: this is
-                                                                               // the side to side
-                                                                               // offset of the
-                                                                               // pivot point of the
-                                                                               // arms,
-                                                                               // should exclude
-                                                                               // anything but side
-                                                                               // to
-                                                                               // side values
-        public static final double CLIMB_PID_SETPOINT_EXTENDED = 10; // TODO: find real values
+        public static final double CLIMB_PID_SETPOINT_EXTENDED = MAX_HEIGHT;
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
         public static final double CLIMB_RETRACTION_TOLERANCE = 0;
@@ -610,16 +601,16 @@ public class Constants {
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
                 put(-1, 0);
-                put(1, 0);
-                put(2, 14);
+                put(0, 0);
+                put(1, 14);
             }
         };
 
         public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
             {
                 put(-1, LEDsConstants.LED_LENGTH);
-                put(1, 14);
-                put(2, 12);
+                put(0, 11);
+                put(1, 12);
             }
         };
 
@@ -632,9 +623,25 @@ public class Constants {
         public static final int PINK_HUE = 355;
 
         public enum LED_STATES {
-            CUSTOMCONTROL(0), DISABLED(1), EMERGENCY(2), START(3), COLLECTED(4), SHOT(
-                    5), FINISHED_CLIMB(6), SHOOTING(7), COLLECTING(8), CHASING(
-                            9), CLIMBING(10), HAS_PIECE(11), HAS_VISION(12), DEFAULT(13);
+            CUSTOMCONTROL(0),
+            DISABLED(1),
+            EMERGENCY(2),
+            START(3),
+            COLLECTED(4),
+            SHOT(5),
+            FINISHED_CLIMB(6),
+            SHOOTING(7),
+            COLLECTING(8),
+            CHASING(9),
+            CLIMBING(10),
+            HAS_PIECE(12),
+            HAS_VISION(11),
+            PIVOT_BOTTOM_SWITCH(13),
+            PIVOT_TOP_SWITCH(13),
+            COLLECTOR_BEAMBREAK(13),
+            INDEXER_ENTER_BEAMBREAK(13),
+            INDEXER_EXIT_BEAMBREAK(13),
+            DEFAULT(13);
 
             private final int priority;
 

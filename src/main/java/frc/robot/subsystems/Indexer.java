@@ -29,7 +29,10 @@ public class Indexer extends SubsystemBase {
 
     private double timeLastTriggered = 0d;
 
+    private double targetPower = 0;
+
     private PieceState currentState = PieceState.NONE;
+    private boolean didShoot = false;
 
     private LightningShuffleboardPeriodic periodicShuffleboard;
 
@@ -58,6 +61,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Get current state of piece
+     * 
      * @return current state of piece
      */
     public PieceState getPieceState() {
@@ -66,6 +70,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Set the current state of the piece
+     * 
      * @param state new state of piece
      */
     public void setPieceState(PieceState state) {
@@ -74,9 +79,11 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Set raw power to the indexer motor
+     * 
      * @param power
      */
     public void setPower(double power) {
+        targetPower = power;
         indexerMotor.set(power);
     }
 
@@ -103,6 +110,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Gets the current beam brake state
+     * 
      * @return entry beambreak state
      */
     public boolean getEntryBeamBreakState() {
@@ -111,6 +119,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Gets the current beam brake state
+     * 
      * @return exit beambreak state
      */
     public boolean getExitBeamBreakState() {
@@ -120,16 +129,27 @@ public class Indexer extends SubsystemBase {
     /**
      * @return true if piece is exiting the indexer
      */
-    public boolean isExiting(){
+    public boolean isExiting() {
         return exitIndexerIteration >= 1;
     }
 
     /**
-     * TO BE IMPLEMENTED
+     * Will return true after shooting (or really anytime we no longer have a note,
+     * after previously having one)
+     * 
      * @return boolean
      */
     public boolean hasShot() {
-        return false; // TODO add actual logic
+        return didShoot;
+    }
+
+    /**
+     * Has shot flag stays on until
+     * cleared, will be false on
+     * robot init
+     */
+    public void clearHasShot() {
+        didShoot = false;
     }
 
     @Override
@@ -137,7 +157,7 @@ public class Indexer extends SubsystemBase {
         // Update piece state based on beambreaks
         if (getExitBeamBreakState()) {
             exitIndexerIteration++;
-            if(exitIndexerIteration >= 3){
+            if (exitIndexerIteration >= 3) {
                 setPieceState(PieceState.IN_INDEXER);
             }
         } else if (getEntryBeamBreakState()) {
@@ -147,14 +167,18 @@ public class Indexer extends SubsystemBase {
             setPieceState(PieceState.IN_COLLECT);
         } else if (Timer.getFPGATimestamp() - timeLastTriggered <= 1) {
             setPieceState(PieceState.IN_COLLECT);
-
         } else {
+            didShoot = didShoot || hasNote();
             setPieceState(PieceState.NONE);
         }
 
         // reset exitIndexerIteration
-        if (!getEntryBeamBreakState()){
+        if (!getEntryBeamBreakState()) {
             exitIndexerIteration = 0;
         }
+    }
+
+    public boolean hasNote() {
+        return getPieceState() != PieceState.NONE;
     }
 }

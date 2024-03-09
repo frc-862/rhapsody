@@ -5,15 +5,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Indexer;
 
 public class PointBlankShotAuton extends Command {
+
 	private final Flywheel flywheel;
 	private final Pivot pivot;
 	private final Indexer indexer;
+
 	private boolean shot = false;
+	private double startTime = 0;
 	private double shotTime = 0;
+
+	private boolean startIndexing = false;
 
 	/**
 	 * Creates a new PointBlankShot.
@@ -26,20 +31,27 @@ public class PointBlankShotAuton extends Command {
 		this.pivot = pivot;
 		this.indexer = indexer;
 
-		addRequirements(pivot, flywheel, indexer);
+		addRequirements(flywheel, pivot, indexer);
 	}
 
 	@Override
 	public void initialize() {
 		shot = false;
+		startIndexing = false;
+		startTime = Timer.getFPGATimestamp();
 		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
 	}
 
 	@Override
 	public void execute() {
-		// Checks if autonomous and if the pivot and flywheel are on target then shoots
-		if(pivot.onTarget() && flywheel.allMotorsOnTarget()) {
+		// Checks if the pivot and flywheel are on target then shoots
+		// also checks whether or not the flywheel's target RPM is greater than 0
+		if (pivot.onTarget() && flywheel.allMotorsOnTarget() && (flywheel.getTopMotorRPM() != 0 && flywheel.getBottomMotorRPM() != 0)) {
+			startIndexing = true;
+		}
+
+		if(startIndexing) {
 			shot = true;
 			shotTime = Timer.getFPGATimestamp();
 			indexer.indexUp();
@@ -58,6 +70,6 @@ public class PointBlankShotAuton extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
+		return shot && shotTime - startTime >= CandConstants.TIME_TO_SHOOT;
 	}
 }

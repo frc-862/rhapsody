@@ -8,13 +8,13 @@ import frc.robot.subsystems.Pivot;
 
 public class AmpShot extends Command {
 
-	private Pivot pivot;
-	private Flywheel flywheel;
+	private final Flywheel flywheel;
+	private final Pivot pivot;
 
 	/**
 	 * Creates a new AmpShot
-	 * @param pivot subsystem
 	 * @param flywheel subsystem
+	 * @param pivot subsystem
 	 */
 	public AmpShot(Flywheel flywheel, Pivot pivot) {
 		this.flywheel = flywheel;
@@ -25,16 +25,16 @@ public class AmpShot extends Command {
 
 	@Override
 	public void initialize() {
-		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
-		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
+		flywheel.setTopMotorRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMotorRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 	}
 
 	@Override
 	public void execute() {
+		flywheel.setTopMotorRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMotorRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
-		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
-		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 	}
 
 	@Override

@@ -3,19 +3,22 @@ package frc.robot.command.shoot.AutonCand;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Indexer;
 
 public class CandC3 extends Command {
 
 	private final Flywheel flywheel;
 	private final Pivot pivot;
 	private final Indexer indexer;
+
 	private boolean shot = false;
 	private double shotTime = 0;
+	private double startTime = 0;
+
+	private boolean startIndexing = false;
 
 	/**
 	 * Creates a new CandC3.
@@ -28,23 +31,34 @@ public class CandC3 extends Command {
 		this.pivot = pivot;
 		this.indexer = indexer;
 
-		addRequirements(pivot, flywheel, indexer);
+		addRequirements(flywheel, pivot, indexer);
 	}
 
 	@Override
 	public void initialize() {
 		shot = false;
-		flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
-		pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
+		startIndexing = false;
+		startTime = Timer.getFPGATimestamp();
+		flywheel.setAllMotorsRPM(CandConstants.C3_RPM + flywheel.getBias());
+		pivot.setTargetAngle(CandConstants.C3_ANGLE + pivot.getBias());
 	}
 
 	@Override
 	public void execute() {
-		if(pivot.onTarget() && flywheel.allMotorsOnTarget()) {
-			indexer.setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
+		// Checks if the pivot and flywheel are on target then shoots
+		// also checks whether or not the flywheel's target RPM is greater than 0
+		if (pivot.onTarget() && flywheel.allMotorsOnTarget() && (flywheel.getTopMotorRPM() != 0 && flywheel.getBottomMotorRPM() != 0)) {
+			startIndexing = true;
+		}
+
+		if(startIndexing) {
 			shot = true;
 			shotTime = Timer.getFPGATimestamp();
+			indexer.indexUp();
 		}
+
+		flywheel.setAllMotorsRPM(CandConstants.C3_RPM + flywheel.getBias());
+		pivot.setTargetAngle(CandConstants.C3_ANGLE + pivot.getBias());
 	}
 
 	@Override
@@ -56,6 +70,6 @@ public class CandC3 extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return shot && Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT;
+		return shot && shotTime - startTime >= CandConstants.TIME_TO_SHOOT;
 	}
 }
