@@ -473,10 +473,10 @@ public class Constants {
 
         public static final double ANGLE_TOLERANCE = 0.5d;
 
-        public static final double ENCODER_OFFSET = 0.6118; // In rotations
+        public static final double ENCODER_OFFSET = 0.227d; // In rotations //TODO: find this value (NEEDS TO BE DONE BEFORE PR)
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
-        public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
+        public static final double ROTOR_TO_ENCODER_RATIO = 275d;
 
         public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO
                                                         // get amount to bias by
@@ -485,7 +485,7 @@ public class Constants {
 
         public static final double MAX_INDEX_ANGLE = 40d;
 
-        public static final double MIN_ANGLE = 25d;
+        public static final double MIN_ANGLE = 27d;
         public static final double MAX_ANGLE = 105d;
 
         public static final double PIVOT_SYSTEST_ANGLE = 90d;
