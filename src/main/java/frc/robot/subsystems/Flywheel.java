@@ -84,7 +84,7 @@ public class Flywheel extends SubsystemBase {
      * Sets the RPM of top flywheel
      * @param rpm RPM of the flywheel
      */
-    public void setTopMoterRPM(double rpm) {
+    public void setTopMotorRPM(double rpm) {
         coast(false);
         topTargetRPS = rpm / 60;
     }
@@ -93,7 +93,7 @@ public class Flywheel extends SubsystemBase {
      * Sets the RPM of bottom flywheel
      * @param rpm RPM of the flywheel
      */
-    public void setBottomMoterRPM(double rpm) {
+    public void setBottomMotorRPM(double rpm) {
         coast(false);
         bottomTargetRPS = rpm / 60;
     }
