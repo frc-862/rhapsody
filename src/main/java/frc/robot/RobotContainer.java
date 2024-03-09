@@ -229,17 +229,17 @@ public class RobotContainer extends LightningContainer {
 
 		/* Other */
 		new Trigger(
-				() -> ((limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()) && !DriverStation.isDisabled()))
+				() -> ((limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()) && DriverStation.isEnabled()))
 				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		new Trigger(
-				() -> (!(limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()) && DriverStation.isDisabled()))
+				() -> (((!limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())) && !DriverStation.isEnabled()))
 				.whileTrue(leds.enableState(LED_STATES.EMERGENCY));	
 		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState() || collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
-		new Trigger(() -> !(drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond > 0.1d || drivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond > 0.1d) && 
-					DriverStation.isDisabled() && 
-					(limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()))
+		new Trigger(() -> !drivetrain.isStable()
+					&& !DriverStation.isEnabled()
+					&& (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()))
 				.whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
 
 		new Trigger(() -> collector.getEntryBeamBreakState())

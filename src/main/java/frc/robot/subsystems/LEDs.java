@@ -25,6 +25,8 @@ public class LEDs extends SubsystemBase {
 	private Map<LED_STATES, Boolean> ledStates;
 
 	public LEDs() {
+		LEDsConstants.getLEDConstants();
+	
 		leds = new AddressableLED(PWM.LED_PORT);
 		ledBuffer = new AddressableLEDBuffer(LEDsConstants.LED_LENGTH);
 
@@ -33,7 +35,7 @@ public class LEDs extends SubsystemBase {
 
 		ledStates = new HashMap<LEDsConstants.LED_STATES, Boolean>();
 
-		enableState(LED_STATES.START).withTimeout(7).schedule();
+		// enableState(LED_STATES.START).withTimeout(7).schedule();
 
 		for (LED_STATES i : Arrays.asList(LED_STATES.values())) {
 			ledStates.put(i, false);

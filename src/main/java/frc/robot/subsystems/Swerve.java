@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -12,7 +14,10 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -24,6 +29,7 @@ import frc.robot.Constants.CollisionConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.thunder.filter.XboxControllerFilter;
+import frc.thunder.math.LightningMath;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
 
@@ -43,7 +49,10 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private boolean robotCentricControl = false;
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
-
+    private ArrayList<Translation2d> lastPose = new ArrayList<Translation2d>();
+    private LinearFilter xfilter = LinearFilter.singlePoleIIR(2, 0.01);
+    private LinearFilter yfilter = LinearFilter.singlePoleIIR(2, 0.01);
+    private LinearFilter rotfilter = LinearFilter.singlePoleIIR(2, 0.01);
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
@@ -51,8 +60,24 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         initLogging();
 
         configurePathPlanner();
+
+        lastPose.add(new Translation2d(0, 0));
+        lastPose.add(new Translation2d(0, 0));
     }
 
+    @Override
+    public void periodic() {
+        xfilter.calculate(getPose().getX());
+        yfilter.calculate(getPose().getY());
+        rotfilter.calculate(getPose().getRotation().getDegrees());
+        LightningShuffleboard.setDouble("Swerve", "xfilter Delta", xfilter.lastValue() - getPose().getX());
+        LightningShuffleboard.setDouble("Swerve", "yfilter Delta", yfilter.lastValue() - getPose().getY());
+        LightningShuffleboard.setDouble("Swerve", "rotfilter Delta", rotfilter.lastValue() - getPose().getRotation().getDegrees());
+        LightningShuffleboard.setDouble("Swerve", "xfilter Value", xfilter.lastValue());
+        LightningShuffleboard.setDouble("Swerve", "yfilter Value", yfilter.lastValue());
+        LightningShuffleboard.setDouble("Swerve", "rotfilter Value", rotfilter.lastValue());
+    }
+ 
     public void applyVisionPose(Pose4d pose) {
         if (!disableVision) {
             addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), pose.getStdDevs());
@@ -207,6 +232,12 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             return new Pose2d();
         }
         return state.Pose;
+    }
+
+    public boolean isStable() {
+        return (Math.abs(rotfilter.lastValue() - getPose().getRotation().getDegrees())  < 0.1
+            && Math.abs(xfilter.lastValue() - getPose().getX()) < 0.1
+            && Math.abs(yfilter.lastValue() - getPose().getY()) < 0.1);
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
