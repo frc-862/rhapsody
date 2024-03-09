@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.sql.Driver;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -14,9 +15,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -27,6 +26,7 @@ import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.CollisionConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
@@ -46,8 +46,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private boolean disableVision = false;
     private boolean robotCentricControl = false;
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
-    private double maxAngularRate =
-            DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
+    private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
+    private Translation2d speakerPose = VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d();
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
@@ -56,6 +56,10 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         initLogging();
 
         configurePathPlanner();
+
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+            speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
+        }
     }
 
     public void applyVisionPose(Pose4d pose) {
@@ -303,6 +307,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public double distanceToSpeaker() {
-        return DrivetrainConstants.SPEAKER_POSE.getDistance(getPose().getTranslation());
+        return speakerPose.getDistance(getPose().getTranslation());
     }
 }
