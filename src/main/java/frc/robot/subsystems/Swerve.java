@@ -82,13 +82,15 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             StatusCode status = StatusCode.StatusCodeNotInitialized;
             for (int j = 0; j < 5; ++j) {
                 status = drive.getConfigurator().apply(config);
-                if (status.isOK())
+                if (status.isOK()) {
                     break;
+                }
             }
             for (int j = 0; j < 5; ++j) {
                 status = steer.getConfigurator().apply(config);
-                if (status.isOK())
+                if (status.isOK()) {
                     break;
+                }
             }
         }
     }
