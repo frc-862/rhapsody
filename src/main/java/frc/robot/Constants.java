@@ -466,6 +466,9 @@ public class Constants {
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KG = 0.359;
+        public static final double MOTOR_KV = 0d;
+        public static final double MOTOR_KS = 0d;
+        public static final double MOTOR_KA = 0d;
 
         public static final double MAGIC_CRUISE_VEL = 0.01; // TODO: get real value
         public static final double MAGIC_ACCEL = 0.02; // TODO: get real value

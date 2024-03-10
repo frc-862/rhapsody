@@ -41,9 +41,9 @@ public class Pivot extends SubsystemBase {
         motorConfig.Slot0.kP = PivotConstants.MOTOR_KP;
         motorConfig.Slot0.kI = PivotConstants.MOTOR_KI;
         motorConfig.Slot0.kD = PivotConstants.MOTOR_KD;
-        motorConfig.Slot0.kS = 0d;
-        motorConfig.Slot0.kV = 0d;
-        motorConfig.Slot0.kA = 0d;
+        motorConfig.Slot0.kS = PivotConstants.MOTOR_KS;
+        motorConfig.Slot0.kV = PivotConstants.MOTOR_KV;
+        motorConfig.Slot0.kA = PivotConstants.MOTOR_KA;
         motorConfig.Slot0.kG = PivotConstants.MOTOR_KG;
         motorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
