@@ -113,7 +113,6 @@ public class Pivot extends SubsystemBase {
      */
     public void setTargetAngle(double angle) {
         targetAngle = MathUtil.clamp(angle + bias, PivotConstants.MIN_ANGLE, PivotConstants.MAX_ANGLE);
-        angleMotor.setControl(anglePID.withPosition(targetAngle));
     }
 
     /*
