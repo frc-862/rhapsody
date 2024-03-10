@@ -65,7 +65,8 @@ public class Pivot extends SubsystemBase {
 
     private void initLogging() {
         LightningShuffleboard.setDoubleSupplier("Pivot", "Current Angle", () -> getAngle());
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Target Angle", () -> targetAngle);
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Target Angle (Rot)", () -> targetAngle);
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Target Angle (Deg)", () -> targetAngle * 360);
 
         LightningShuffleboard.setBoolSupplier("Pivot", "On target", () -> onTarget());
 
@@ -109,10 +110,10 @@ public class Pivot extends SubsystemBase {
 
     /**
      * Sets the target angle of the pivot
-     * @param angle Angle of the pivot
+     * @param angle Angle of the pivot in degrees
      */
     public void setTargetAngle(double angle) {
-        targetAngle = MathUtil.clamp(angle + bias, PivotConstants.MIN_ANGLE, PivotConstants.MAX_ANGLE);
+        targetAngle = (MathUtil.clamp(angle + bias, PivotConstants.MIN_ANGLE, PivotConstants.MAX_ANGLE) / 360);
     }
 
     /*

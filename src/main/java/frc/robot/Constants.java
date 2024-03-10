@@ -397,7 +397,7 @@ public class Constants {
     }
 
     public class FlywheelConstants { // TODO: get real
-        public static final boolean MOTOR_TOP_INVERT = true;
+        public static final boolean MOTOR_TOP_INVERT = false;
         public static final boolean MOTOR_BOTTOM_INVERT = false;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
@@ -484,7 +484,7 @@ public class Constants {
         public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO
                                                         // get amount to bias by
 
-        public static final double STOW_ANGLE = 28d;
+        public static final double STOW_ANGLE = 27d;
 
         public static final double MAX_INDEX_ANGLE = 40d;
 
