@@ -462,12 +462,13 @@ public class Constants {
         public static final boolean MOTOR_INVERT = true; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
-        public static final double MOTOR_KP = 0;
+        public static final double MOTOR_KP = 120; //TODO this can be cranked higher
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
-        public static final double MOTOR_KS = 0;
-        public static final double MOTOR_KV = 3;
-        public static final double MOTOR_KA = 0;
+        public static final double MOTOR_KG = 0.359;
+        public static final double MOTOR_KV = 0d;
+        public static final double MOTOR_KS = 0d;
+        public static final double MOTOR_KA = 0d;
 
         public static final double MAGIC_CRUISE_VEL = 0.01; // TODO: get real value
         public static final double MAGIC_ACCEL = 0.02; // TODO: get real value
@@ -475,10 +476,10 @@ public class Constants {
 
         public static final double ANGLE_TOLERANCE = 0.5d;
 
-        public static final double ENCODER_OFFSET = 0.6118; // In rotations
+        public static final double ENCODER_OFFSET = 0.282; // In rotations //TODO: find this value (NEEDS TO BE DONE BEFORE PR)
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
-        public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
+        public static final double ROTOR_TO_ENCODER_RATIO = 275d;
 
         public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO
                                                         // get amount to bias by
@@ -487,7 +488,7 @@ public class Constants {
 
         public static final double MAX_INDEX_ANGLE = 40d;
 
-        public static final double MIN_ANGLE = 25d;
+        public static final double MIN_ANGLE = 27d;
         public static final double MAX_ANGLE = 105d;
 
         public static final double PIVOT_SYSTEST_ANGLE = 90d;
