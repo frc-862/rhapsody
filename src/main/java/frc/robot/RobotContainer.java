@@ -38,6 +38,7 @@ import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
+import frc.robot.command.stopDrive;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
@@ -150,7 +151,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
 		NamedCommands.registerCommand("Point-At-Speaker", new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
 		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
-		NamedCommands.registerCommand("Stop-Drive", new InstantCommand(() -> drivetrain.stop()));
+		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -209,9 +210,9 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
 		// cand shots for the robot
-		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
-		new Trigger(coPilot::getAButton).whileTrue(new InstantCommand(() -> drivetrain.stop()));
-			new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
+		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
+		// new Trigger(coPilot::getAButton).whileTrue(new InstantCommand(() -> drivetrain.stop()));
+		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
 		// new Trigger(coPilot::getXButton).whileTrue(new Tune(flywheel, pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
 		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
