@@ -62,7 +62,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
         }
 
-        setRampRate();
+        // setRampRate();
     }
 
     private void setRampRate() {
