@@ -150,9 +150,6 @@ public class Constants {
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
                                                                                                       // constants
 
-        // For Pathfinding
-        // TODO get real poses to pathfind to
-        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(0, 0), new Rotation2d(0d));
 
     }
 
@@ -336,6 +333,11 @@ public class Constants {
             public static final int APRIL_TAG_2d = 1;
             public static final int CHASE_PIECE = 2; // FOR the collector
         }
+    }
+
+    public class PathFindingConstants {
+        public static final Pose2d TEST_POSE = new Pose2d(9, 4, new Rotation2d(90));
+        public static final Translation2d RED_ORIGIN = new Translation2d(16.4592, 0);
     }
 
     public class CollisionConstants {
