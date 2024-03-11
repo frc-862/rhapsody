@@ -396,7 +396,7 @@ public class Constants {
         public static final double COLLECTOR_GRABANDGO_POWER = 0.75;
     }
 
-    public class FlywheelConstants { // TODO: get real
+    public class FlywheelConstants {
         public static final boolean MOTOR_TOP_INVERT_Rhapsody = false;
         public static final boolean MOTOR_TOP_INVERT_Mercury = true;
         
