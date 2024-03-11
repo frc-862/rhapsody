@@ -2,6 +2,7 @@ package frc.robot.command;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.IndexerConstants;
@@ -30,7 +31,9 @@ public class ChasePieces extends Command {
 	private double previousTargetHeading;
 
 	private double targetPitch;
-	private double power;
+	private double collectPower;
+	private double maxCollectPower;
+	private double drivePower;
 
     private boolean onTarget;
 	private boolean hasPiece;
@@ -66,8 +69,16 @@ public class ChasePieces extends Command {
 	@Override
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
-		power = 0d;
-		smartCollect = new SmartCollect(() -> power, () -> power, collector, indexer, pivot, flywheel);
+		collectPower = 0d;
+		smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
+
+		if (DriverStation.isAutonomous()){
+			drivePower = 1.5d;
+			maxCollectPower = 0.5d;
+		} else {
+			maxCollectPower = 0.65d;
+			drivePower = 3d;
+		}
 
 		initLogging();
 		smartCollect.initialize();
@@ -82,13 +93,12 @@ public class ChasePieces extends Command {
 		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Heading", () -> targetHeading);
 		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Y", () -> targetPitch);
 		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Pid Output", () -> pidOutput);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "SmartCollectPower", () -> power);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "SmartCollectPower", () -> collectPower);
 	}
 
 	@Override
 	public void execute() {
 		hasTarget = limelight.hasTarget();
-		flywheel.setAllMotorsRPM(-300);
 		smartCollect.execute();
 
 		if (hasTarget){
@@ -105,17 +115,18 @@ public class ChasePieces extends Command {
 		if (!hasPiece){
 			if (hasTarget){
 				if (trustValues()){
-					power = 0.65d;
+					collectPower = maxCollectPower;
 					if (!onTarget) {
-						drivetrain.setRobot(3, 0, -pidOutput);
+						drivetrain.setRobot(drivePower, 0, -pidOutput);
 					} else {
-						drivetrain.setRobot(3, 0, 0);
+						drivetrain.setRobot(drivePower, 0, 0);
 					}
 				}
 			} else {
-				drivetrain.setRobot(3, 0, 0);
+				drivetrain.setRobot(drivePower, 0, 0);
 			}
 		} else {
+			collectPower = 0d;
 			drivetrain.setRobot(0, 0, 0);
 		}
 
@@ -123,7 +134,7 @@ public class ChasePieces extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		power = 0d;
+		collectPower = 0d;
 		smartCollect.end(interrupted);
 	}
 
