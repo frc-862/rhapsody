@@ -155,6 +155,14 @@ public class ChasePieces extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return smartCollect.isFinished();
+		if (DriverStation.isAutonomous()){
+			if (drivetrain.getPose().getX() > 9d){
+				return true;
+			} else {
+				return smartCollect.isFinished();
+			}
+		} else {
+			return smartCollect.isFinished();
+		}
 	}
 }
