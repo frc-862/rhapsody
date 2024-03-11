@@ -51,6 +51,7 @@ public class SmartClimb extends Command {
             // Engage Manual Climb whenever sticks are active
             climber.setPower(leftPower.getAsDouble(), rightPower.getAsDouble());
             autoClimbEngaged = false;
+            readyToLineUp = true;
         } else if ((buttonState && !bButton.getAsBoolean()) || (drivetrain.isTipped()  && !autoClimbEngaged)) {
             // Auto retract on the falling edge of the B button or if the robot is tipped
             climber.retract();
@@ -59,13 +60,11 @@ public class SmartClimb extends Command {
                 autoClimbEngaged = true; // trigger autoClimbEngaged to prevent auto deploy from re-engaging
             }
         } else if (bButton.getAsBoolean() && !autoClimbEngaged) {
-            // Auto deploy climb when B button is pressed and auto climb has not been engaged
+            // line up if not currently lining up
             if (readyToLineUp) {
                 lineUp();
             }
-            if (pathFind.isFinished()) {
-                readyToLineUp = true;
-            }
+            // Auto deploy climb when B button is pressed and auto climb has not been engaged
             climber.deploy();
             buttonState = true;
         }
@@ -81,7 +80,10 @@ public class SmartClimb extends Command {
         return false;
     }
 
-    public Command lineUp() {
+    /**
+     * Line up the robot to climb
+     */
+    public void lineUp() {
         readyToLineUp = false;
 
         // Determine which path to take based on the robot's current position
@@ -116,6 +118,5 @@ public class SmartClimb extends Command {
         }
         
         pathFind.schedule();
-        return pathFind;
     }
 }
