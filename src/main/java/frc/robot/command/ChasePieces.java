@@ -94,6 +94,10 @@ public class ChasePieces extends Command {
 		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Y", () -> targetPitch);
 		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Pid Output", () -> pidOutput);
 		LightningShuffleboard.setDoubleSupplier("ChasePieces", "SmartCollectPower", () -> collectPower);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "DrivePower", () -> drivePower);
+		LightningShuffleboard.setDoubleSupplier("ChasePieces", "MaxCollectPower", () -> maxCollectPower);
+
+
 	}
 
 	@Override
