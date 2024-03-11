@@ -4,6 +4,8 @@ import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
@@ -20,6 +22,7 @@ import frc.robot.Constants.CollisionConstants.CollisionType;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.PathFindingConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.TunerConstants;
@@ -30,6 +33,8 @@ import frc.robot.command.CollectAndGo;
 import frc.robot.command.CollisionDetection;
 import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
+import frc.robot.command.PathFindToAuton;
+import frc.robot.command.PathToPose;
 import frc.robot.command.PointAtPoint;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
@@ -147,7 +152,7 @@ public class RobotContainer extends LightningContainer {
 				new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot, flywheel)
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
-		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
+		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain, driver));
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
 
 		// make sure named commands are initialized before autobuilder!
@@ -178,6 +183,9 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getRightBumper)
 				.whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights)
 						.deadlineWith(leds.enableState(LED_STATES.CHASING)));
+
+		// new Trigger(driver::getRightBumper)
+				// .whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain, driver));
 
 		// parks the robot
 		// new Trigger(driver::getXButton).whileTrue(new InstantCommand(() ->

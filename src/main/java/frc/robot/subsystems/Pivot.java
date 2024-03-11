@@ -9,14 +9,13 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
-import frc.thunder.tuning.FalconTuner;
 import frc.robot.Constants.PivotConstants;
 import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
 
@@ -28,11 +27,8 @@ public class Pivot extends SubsystemBase {
 
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
-    // private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
-    // private final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(0);
-    private final PIDController angleController = new PIDController(0.06, 0, 0);
+    private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
     private double bias = 0;
-
     private double targetAngle = PivotConstants.STOW_ANGLE;
 
     private LightningShuffleboardPeriodic periodicShuffleboard;
@@ -48,24 +44,27 @@ public class Pivot extends SubsystemBase {
 
         angleMotor = new ThunderBird(CAN.PIVOT_ANGLE_MOTOR, CAN.CANBUS_FD, PivotConstants.MOTOR_INVERT,
                         PivotConstants.MOTOR_STATOR_CURRENT_LIMIT, PivotConstants.MOTOR_BRAKE_MODE);
-        angleMotor.configPIDF(0, PivotConstants.MOTOR_KP, PivotConstants.MOTOR_KI,
-                PivotConstants.MOTOR_KD, PivotConstants.MOTOR_KS, PivotConstants.MOTOR_KV);
         TalonFXConfiguration motorConfig = angleMotor.getConfig();
+        motorConfig.Slot0.kP = PivotConstants.MOTOR_KP;
+        motorConfig.Slot0.kI = PivotConstants.MOTOR_KI;
+        motorConfig.Slot0.kD = PivotConstants.MOTOR_KD;
+        motorConfig.Slot0.kS = PivotConstants.MOTOR_KS;
+        motorConfig.Slot0.kV = PivotConstants.MOTOR_KV;
+        motorConfig.Slot0.kA = PivotConstants.MOTOR_KA;
+        motorConfig.Slot0.kG = PivotConstants.MOTOR_KG;
+        motorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
         motorConfig.Feedback.FeedbackRemoteSensorID = angleEncoder.getDeviceID();
         motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         motorConfig.Feedback.SensorToMechanismRatio = PivotConstants.ENCODER_TO_MECHANISM_RATIO;
         motorConfig.Feedback.RotorToSensorRatio = PivotConstants.ROTOR_TO_ENCODER_RATIO;
 
-        MotionMagicConfigs motionMagicConfigs = motorConfig.MotionMagic;
-        motionMagicConfigs.MotionMagicCruiseVelocity = PivotConstants.MAGIC_CRUISE_VEL;
-        motionMagicConfigs.MotionMagicAcceleration = PivotConstants.MAGIC_ACCEL;
-        motionMagicConfigs.MotionMagicJerk = PivotConstants.MAGIC_JERK;
+        // MotionMagicConfigs motionMagicConfigs = motorConfig.MotionMagic;
+        // motionMagicConfigs.MotionMagicCruiseVelocity = PivotConstants.MAGIC_CRUISE_VEL;
+        // motionMagicConfigs.MotionMagicAcceleration = PivotConstants.MAGIC_ACCEL;
+        // motionMagicConfigs.MotionMagicJerk = PivotConstants.MAGIC_JERK;
 
         angleMotor.applyConfig(motorConfig);
-
-        angleController.setIntegratorRange(0.02, 1);
-        angleController.setTolerance(PivotConstants.ANGLE_TOLERANCE);
 
         initLogging();
         setTargetAngle(targetAngle);
@@ -124,8 +123,7 @@ public class Pivot extends SubsystemBase {
      * Moves pivot motor toward target angle
      */
     private void moveToTarget(){
-        double pidOutput = angleController.calculate(getAngle(), targetAngle);
-        setPower(pidOutput);
+        angleMotor.setControl(anglePID.withPosition(targetAngle));
     }
 
     public void setPower(double power){
