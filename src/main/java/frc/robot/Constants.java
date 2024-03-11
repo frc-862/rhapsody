@@ -397,21 +397,23 @@ public class Constants {
     }
 
     public class FlywheelConstants { // TODO: get real
-        public static final boolean MOTOR_TOP_INVERT = false;
+        public static final boolean MOTOR_TOP_INVERT_Rhapsody = false;
+        public static final boolean MOTOR_TOP_INVERT_Mercury = true;
+        
         public static final boolean MOTOR_BOTTOM_INVERT = false;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
 
         // SLOT 0 TOP, 0 - 49 RPS
-        public static final double TOP_0_MOTOR_KP = 0.155;
+        public static final double TOP_0_MOTOR_KP = 0.157;
         public static final double TOP_0_MOTOR_KI = 0;
         public static final double TOP_0_MOTOR_KD = 0;
         public static final double TOP_0_MOTOR_KS = 0.3;
-        public static final double TOP_0_MOTOR_KV = 0.11;
+        public static final double TOP_0_MOTOR_KV = 0.115;
         public static final double TOP_0_MOTOR_KA = 0;
 
         // SLOT 1 TOP, 50 - 107 RPS
-        public static final double TOP_1_MOTOR_KP = 0.16;
+        public static final double TOP_1_MOTOR_KP = 0.163;
         public static final double TOP_1_MOTOR_KI = 0;
         public static final double TOP_1_MOTOR_KD = 0;
         public static final double TOP_1_MOTOR_KS = 0.3;
@@ -423,15 +425,15 @@ public class Constants {
         public static final double BOTTOM_0_MOTOR_KI = 0;
         public static final double BOTTOM_0_MOTOR_KD = 0;
         public static final double BOTTOM_0_MOTOR_KS = 0.3;
-        public static final double BOTTOM_0_MOTOR_KV = 0.115;
+        public static final double BOTTOM_0_MOTOR_KV = 0.11;
         public static final double BOTTOM_0_MOTOR_KA = 0;
 
         // SLOT 1 BOTTOM, 50 - 107 RPS
-        public static final double BOTTOM_1_MOTOR_KP = 0.155;
+        public static final double BOTTOM_1_MOTOR_KP = 0.16;
         public static final double BOTTOM_1_MOTOR_KI = 0;
         public static final double BOTTOM_1_MOTOR_KD = 0;
         public static final double BOTTOM_1_MOTOR_KS = 0.3;
-        public static final double BOTTOM_1_MOTOR_KV = 0.117;
+        public static final double BOTTOM_1_MOTOR_KV = 0.1155;
         public static final double BOTTOM_1_MOTOR_KA = 0;
 
         public static final double RPM_TOLERANCE = 50d;
