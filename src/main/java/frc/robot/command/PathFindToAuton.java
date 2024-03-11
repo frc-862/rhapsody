@@ -23,7 +23,6 @@ import frc.thunder.filter.XboxControllerFilter;
 public class PathFindToAuton extends Command {
 
   private Swerve drivetrain;
-  private XboxControllerFilter controller; // Driver Controller
   private AutoBuilder autoBuilder;
   private Command pathFindCommand;
   private PathPlannerPath autonPath;
@@ -32,11 +31,9 @@ public class PathFindToAuton extends Command {
    * Pathfinds to a specific pose given
    * @param pathfindingPose The pose to pathfind to
    * @param drivetrain The drivetrain subsystem
-   * @param controller The driver controller
    */
-  public PathFindToAuton(PathPlannerPath autonPath, Swerve drivetrain, XboxControllerFilter controller) {
+  public PathFindToAuton(PathPlannerPath autonPath, Swerve drivetrain) {
     this.drivetrain = drivetrain;
-    this.controller = controller;
     this.autonPath = autonPath;
     autoBuilder = new AutoBuilder();
 
