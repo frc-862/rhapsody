@@ -593,9 +593,9 @@ public class Constants {
 
         public static final double CLIMB_SYSTEST_POWER = 0.1;
 
-        public enum CLIMBER_STATES {
-            CLIMBED, GROUNDED, STOW
-        }
+        public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE = new Pose2d(7.43, 4.16, new Rotation2d(Math.PI));
+        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE = new Pose2d(3.55, 6.16, new Rotation2d(Units.degreesToRadians(-53.13)));
+        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE = new Pose2d(3.54, 1.91, new Rotation2d(Units.degreesToRadians(63.43)));
     }
 
     public class LEDsConstants {
