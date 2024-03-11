@@ -35,7 +35,6 @@ import frc.robot.command.MoveToPose;
 import frc.robot.command.PathFindToAuton;
 import frc.robot.command.PathToPose;
 import frc.robot.command.PointAtPoint;
-import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
