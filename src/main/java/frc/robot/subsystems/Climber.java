@@ -6,9 +6,13 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
+import com.ctre.phoenix6.signals.ReverseLimitValue;
 
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
+import frc.robot.Constants.MercuryPivotConstants;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -122,6 +126,15 @@ public class Climber extends SubsystemBase {
         setPower(0d);
     }
 
+    public boolean getForwardLimit(TalonFX climbMotor) {
+        return climbMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
+    }
+
+    public boolean getReverseLimit(TalonFX climbMotor) {
+        return climbMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
+    }
+
+
     /**
      * @return height of right climb arm
      */
@@ -155,8 +168,16 @@ public class Climber extends SubsystemBase {
         // zeroes height if the limit switch is pressed or position is negative
         for (TalonFX motor : new TalonFX[] {climbMotorR, climbMotorL}) {
             if (motor.getPosition().getValueAsDouble() < 0
-                    || motor.getReverseLimit().getValueAsDouble() == 0) {
+                    || getReverseLimit(motor)) {
                 motor.setPosition(0d);
+            }
+            
+            if (getForwardLimit(motor)) {
+                if (motor == climbMotorR) {
+                    setSetpoint(ClimbConstants.MAX_HEIGHT);
+                } else {
+                    setSetpoint(ClimbConstants.MAX_HEIGHT);
+                }
             }
         }
     }
