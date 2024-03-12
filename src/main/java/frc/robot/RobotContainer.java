@@ -65,6 +65,8 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.PivotMercury;
+import frc.robot.subsystems.PivotRhapsody;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.LightningContainer;
 import frc.thunder.filter.XboxControllerFilter;
@@ -112,7 +114,11 @@ public class RobotContainer extends LightningContainer {
 
 		collector = new Collector();
 		flywheel = new Flywheel();
-		pivot = new Pivot();
+		if(Constants.isMercury()) {
+			pivot = new PivotMercury();
+		} else {
+			pivot = new PivotRhapsody();
+		}
 		indexer = new Indexer(collector);
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();

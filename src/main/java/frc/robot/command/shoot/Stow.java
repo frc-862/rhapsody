@@ -1,7 +1,6 @@
 package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Flywheel;
 
@@ -24,13 +23,13 @@ public class Stow extends Command {
 
 	@Override
 	public void initialize() {
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		pivot.setTargetAngle(pivot.getStowAnlge());
 		flywheel.coast(true);
 	}
 
 	@Override
 	public void execute() {
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		pivot.setTargetAngle(pivot.getStowAnlge());
 	}
 
 	@Override

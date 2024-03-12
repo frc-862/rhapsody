@@ -1,7 +1,6 @@
 package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -12,7 +11,7 @@ public class Tune extends Command {
 
 	private double flywheelTargetRPMTop = 0;
 	private double flywheelTargetRPMBottom = 0;
-	private double pivotTargetAngle = PivotConstants.STOW_ANGLE;
+	private double pivotTargetAngle;
 
 	/**
 	 * Creates a new PointBlankShot.
@@ -28,7 +27,9 @@ public class Tune extends Command {
 	}
 
 	@Override
-	public void initialize() {}
+	public void initialize() {
+		pivotTargetAngle = pivot.getStowAnlge();
+	}
 
 	@Override
 	public void execute() {
@@ -47,7 +48,7 @@ public class Tune extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		pivot.setTargetAngle(pivot.getStowAnlge());
 	}
 
 	@Override
