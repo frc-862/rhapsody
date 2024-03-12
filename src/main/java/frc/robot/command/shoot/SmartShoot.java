@@ -6,7 +6,6 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.ShooterConstants.ShootingState;
-import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
@@ -95,7 +94,7 @@ public class SmartShoot extends Command {
 	public void end(boolean interrupted) {
 		System.out.println("SHOOT - SMART SHOOT END");
 		flywheel.coast(true);
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		pivot.setTargetAngle(pivot.getStowAngle());
 		indexer.stop();
 	}
 

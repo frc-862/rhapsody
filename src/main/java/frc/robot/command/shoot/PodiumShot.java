@@ -2,7 +2,6 @@ package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
-import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 
@@ -13,8 +12,9 @@ public class PodiumShot extends Command {
 
 	/**
 	 * Creates a new PodiumShot.
+	 * 
 	 * @param flywheel subsystem
-	 * @param pivot subsystem
+	 * @param pivot    subsystem
 	 */
 	public PodiumShot(Flywheel flywheel, Pivot pivot) {
 		this.flywheel = flywheel;
@@ -24,7 +24,8 @@ public class PodiumShot extends Command {
 	}
 
 	@Override
-	public void initialize() {}
+	public void initialize() {
+	}
 
 	@Override
 	public void execute() {
@@ -35,6 +36,6 @@ public class PodiumShot extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		pivot.setTargetAngle(pivot.getStowAngle());
 	}
 }
