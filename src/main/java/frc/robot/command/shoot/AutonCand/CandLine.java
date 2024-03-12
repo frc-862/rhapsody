@@ -21,9 +21,10 @@ public class CandLine extends Command {
 
 	/**
 	 * Creates a new CandLine.
+	 * 
 	 * @param flywheel subsystem
-	 * @param pivot subsystem 
-	 * @param indexer subsystem
+	 * @param pivot    subsystem
+	 * @param indexer  subsystem
 	 */
 	public CandLine(Flywheel flywheel, Pivot pivot, Indexer indexer) {
 		this.flywheel = flywheel;
@@ -46,11 +47,12 @@ public class CandLine extends Command {
 	public void execute() {
 		// Checks if the pivot and flywheel are on target then shoots
 		// also checks whether or not the flywheel's target RPM is greater than 0
-		if (pivot.onTarget() && flywheel.allMotorsOnTarget() && (flywheel.getTopMotorRPM() != 0 && flywheel.getBottomMotorRPM() != 0)) {
+		if (pivot.onTarget() && flywheel.allMotorsOnTarget()
+				&& (flywheel.getTopMotorRPM() != 0 && flywheel.getBottomMotorRPM() != 0)) {
 			startIndexing = true;
 		}
 
-		if(startIndexing) {
+		if (startIndexing) {
 			shot = true;
 			shotTime = Timer.getFPGATimestamp();
 			indexer.indexUp();
@@ -63,7 +65,7 @@ public class CandLine extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
-		pivot.setTargetAngle(pivot.getStowAnlge());
+		pivot.setTargetAngle(pivot.getStowAngle());
 		indexer.stop();
 	}
 

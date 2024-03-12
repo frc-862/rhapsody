@@ -194,7 +194,7 @@ public class PivotMercury extends SubsystemBase implements Pivot {
     /**
      * @return current stow angle
      */
-    public double getStowAnlge() {
+    public double getStowAlnge() {
         return MercuryPivotConstants.STOW_ANGLE;
     }
 

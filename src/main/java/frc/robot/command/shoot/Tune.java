@@ -17,7 +17,7 @@ public class Tune extends Command {
 	 * Creates a new PointBlankShot.
 	 * 
 	 * @param flywheel subsystem
-	 * @param pivot subsystem
+	 * @param pivot    subsystem
 	 */
 	public Tune(Flywheel flywheel, Pivot pivot) {
 		this.flywheel = flywheel;
@@ -28,7 +28,7 @@ public class Tune extends Command {
 
 	@Override
 	public void initialize() {
-		pivotTargetAngle = pivot.getStowAnlge();
+		pivotTargetAngle = pivot.getStowAngle();
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class Tune extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
-		pivot.setTargetAngle(pivot.getStowAnlge());
+		pivot.setTargetAngle(pivot.getStowAngle());
 	}
 
 	@Override

@@ -11,7 +11,8 @@ public class Stow extends Command {
 
 	/**
 	 * Creates a new Stow.
-	 * @param pivot subsystem
+	 * 
+	 * @param pivot    subsystem
 	 * @param flywheel subsystem
 	 */
 	public Stow(Flywheel flywheel, Pivot pivot) {
@@ -23,13 +24,13 @@ public class Stow extends Command {
 
 	@Override
 	public void initialize() {
-		pivot.setTargetAngle(pivot.getStowAnlge());
+		pivot.setTargetAngle(pivot.getStowAngle());
 		flywheel.coast(true);
 	}
 
 	@Override
 	public void execute() {
-		pivot.setTargetAngle(pivot.getStowAnlge());
+		pivot.setTargetAngle(pivot.getStowAngle());
 	}
 
 	@Override

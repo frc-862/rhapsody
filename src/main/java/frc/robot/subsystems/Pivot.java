@@ -2,10 +2,11 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public interface Pivot extends Subsystem{
+public interface Pivot extends Subsystem {
 
-	/**
+    /**
      * Sets the target angle of the pivot
+     * 
      * @param angle Angle of the pivot
      */
     public void setTargetAngle(double angle);
@@ -24,12 +25,14 @@ public interface Pivot extends Subsystem{
 
     /**
      * Gets forward limit switch
+     * 
      * @return true if pressed
      */
     public boolean getForwardLimit();
 
     /**
      * Gets reverse limit switch
+     * 
      * @return true if pressed
      */
     public boolean getReverseLimit();
@@ -62,7 +65,7 @@ public interface Pivot extends Subsystem{
     /**
      * @return current stow angle
      */
-    public double getStowAnlge();
+    public double getStowAlnge();
 
     /**
      * @return max Index Angle

@@ -10,6 +10,7 @@ public class PivotAngleTest extends SystemTestCommand {
 
     /**
      * Sets pivot to a certain angle
+     * 
      * @param pivot subsystem
      * @param angle angle to set pivot to (degrees)
      */
@@ -26,11 +27,12 @@ public class PivotAngleTest extends SystemTestCommand {
     }
 
     @Override
-    public void executeTest() {}
+    public void executeTest() {
+    }
 
     @Override
     public void endTest(boolean interrupted) {
-        pivot.setTargetAngle(pivot.getStowAnlge());
+        pivot.setTargetAngle(pivot.getStowAngle());
     }
 
     @Override

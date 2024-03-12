@@ -12,7 +12,8 @@ public class PointBlankShot extends Command {
 
 	/**
 	 * Creates a new PointBlankShot.
-	 * @param pivot subsystem
+	 * 
+	 * @param pivot    subsystem
 	 * @param flywheel subsystem
 	 */
 	public PointBlankShot(Flywheel flywheel, Pivot pivot) {
@@ -37,7 +38,7 @@ public class PointBlankShot extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
-		pivot.setTargetAngle(pivot.getStowAnlge());
+		pivot.setTargetAngle(pivot.getStowAngle());
 	}
 
 	@Override

@@ -211,7 +211,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     /**
      * @return current stow angle
      */
-    public double getStowAnlge() {
+    public double getStowAngle() {
         return RhapsodyPivotConstants.STOW_ANGLE;
     }
 

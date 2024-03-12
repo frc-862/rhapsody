@@ -12,8 +12,9 @@ public class AmpShot extends Command {
 
 	/**
 	 * Creates a new AmpShot
+	 * 
 	 * @param flywheel subsystem
-	 * @param pivot subsystem
+	 * @param pivot    subsystem
 	 */
 	public AmpShot(Flywheel flywheel, Pivot pivot) {
 		this.flywheel = flywheel;
@@ -39,7 +40,7 @@ public class AmpShot extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
-		pivot.setTargetAngle(pivot.getStowAnlge());
+		pivot.setTargetAngle(pivot.getStowAngle());
 	}
 
 	@Override
