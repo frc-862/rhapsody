@@ -55,6 +55,8 @@ public class Constants {
         public static final double SYS_TEST_SPEED_TURN = 0.7d;
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
+
+        public static final double ALIGNMENT_TOLERANCE = 10d;
     }
 
     public class RobotMap {

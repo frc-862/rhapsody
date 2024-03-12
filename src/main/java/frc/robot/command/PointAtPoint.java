@@ -1,5 +1,6 @@
 package frc.robot.command;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -7,12 +8,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PointAtPoint extends Command {
 
+	private static final double MIN_POWER = 0.3;
 	private Swerve drivetrain;
 	private XboxController driver;
 
@@ -25,7 +28,6 @@ public class PointAtPoint extends Command {
 
 	/**
 	 * Creates a new PointAtTag.
-	 * 
 	 * @param targetX    the x coordinate of the target
 	 * @param targetY    the y coordinate of the target
 	 * @param drivetrain to request movement
@@ -56,10 +58,13 @@ public class PointAtPoint extends Command {
 		return new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY());
 	}
 
+	private boolean inTolerance() {
+		return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()) % 360 < DrivetrainConstants.ALIGNMENT_TOLERANCE;
+	}
+
 	@Override
 	public void initialize() {
-		headingController.enableContinuousInput(-180, 180);
-
+		headingController.enableContinuousInput(0, 360);
 		if (isBlueAlliance()) {
 			targetPose = originalTargetPose;
 		} else {
@@ -73,16 +78,23 @@ public class PointAtPoint extends Command {
 		var deltaX = targetPose.getX() - pose.getX();
 		var deltaY = targetPose.getY() - pose.getY();
 
-		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
-		targetHeading += 180;
-		pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
+		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 360 + 180;
+		targetHeading %= 360;
+		pidOutput = headingController.calculate((pose.getRotation().getDegrees() + 360) % 360, targetHeading);
 
-		LightningShuffleboard.setDouble("PointAtTag", "Delta Y", deltaY);
-		LightningShuffleboard.setDouble("PointAtTag", "Delta X", deltaX);
-		LightningShuffleboard.setDouble("PointAtTag", "Target Heading", targetHeading);
-		LightningShuffleboard.setDouble("PointAtTag", "Target Pose Y", targetPose.getY());
-		LightningShuffleboard.setDouble("PointAtTag", "Target Pose X", targetPose.getX());
-		LightningShuffleboard.setDouble("PointAtTag", "Pid Output", pidOutput);
+		LightningShuffleboard.setDouble("PointAtPoint", "Delta Y", deltaY);
+		LightningShuffleboard.setDouble("PointAtPoint", "Delta X", deltaX);
+		LightningShuffleboard.setDouble("PointAtPoint", "Target Heading", targetHeading);
+		LightningShuffleboard.setDouble("PointAtPoint", "Target Pose Y", targetPose.getY());
+		LightningShuffleboard.setDouble("PointAtPoint", "Target Pose X", targetPose.getX());
+		LightningShuffleboard.setDouble("PointAtPoint", "Pid Output", pidOutput);
+		LightningShuffleboard.setDouble("PointAtPoint", "target minus current heading", Math.abs(targetHeading - pose.getRotation().getDegrees()));
+		LightningShuffleboard.setDouble("PointAtPoint", "Current", pose.getRotation().getDegrees());
+		LightningShuffleboard.setBool("PointAtPoint", "InTolerance", inTolerance());
+
+		if (!inTolerance() && Math.abs(pidOutput) < MIN_POWER) {
+			pidOutput = Math.signum(pidOutput) * MIN_POWER;
+		}
 
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
@@ -93,6 +105,9 @@ public class PointAtPoint extends Command {
 
 	@Override
 	public boolean isFinished() {
+		if(DriverStation.isAutonomous()) {
+			return inTolerance();
+		}
 		return false;
 	}
 }
