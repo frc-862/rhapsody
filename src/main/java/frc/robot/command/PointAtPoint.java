@@ -2,6 +2,7 @@ package frc.robot.command;
 
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -10,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ShuffleboardPeriodicConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -17,6 +19,7 @@ import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
 
 public class PointAtPoint extends Command {
 
+	private static final double MIN_POWER = 0.3;
 	private Swerve drivetrain;
 	private XboxController driver;
 
@@ -31,7 +34,6 @@ public class PointAtPoint extends Command {
 
 	/**
 	 * Creates a new PointAtTag.
-	 * 
 	 * @param targetX    the x coordinate of the target
 	 * @param targetY    the y coordinate of the target
 	 * @param drivetrain to request movement
@@ -62,6 +64,10 @@ public class PointAtPoint extends Command {
 		return new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY());
 	}
 
+	private boolean inTolerance() {
+		return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()) % 360 < DrivetrainConstants.ALIGNMENT_TOLERANCE;
+	}
+
 	@Override
 	public void initialize() {
 		headingController.enableContinuousInput(-180, 180);
@@ -75,6 +81,7 @@ public class PointAtPoint extends Command {
 			new Pair<String, Object>("Target Pose X", (DoubleSupplier) () -> targetPose.getX()),
 			new Pair<String, Object>("Pid Output", (DoubleSupplier) () -> pidOutput));
 
+		headingController.enableContinuousInput(0, 360);
 		if (isBlueAlliance()) {
 			targetPose = originalTargetPose;
 		} else {
@@ -88,12 +95,13 @@ public class PointAtPoint extends Command {
 		var deltaX = targetPose.getX() - pose.getX();
 		var deltaY = targetPose.getY() - pose.getY();
 
-		// LightningShuffleboard.setDouble("PointAtTag", "Delta Y", deltaY);
-		// LightningShuffleboard.setDouble("PointAtTag", "Delta X", deltaX);
+		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 360 + 180;
+		targetHeading %= 360;
+		pidOutput = headingController.calculate((pose.getRotation().getDegrees() + 360) % 360, targetHeading);
 
-		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX));
-		targetHeading += 180;
-		pidOutput = headingController.calculate(pose.getRotation().getDegrees(), targetHeading);
+		if (!inTolerance() && Math.abs(pidOutput) < MIN_POWER) {
+			pidOutput = Math.signum(pidOutput) * MIN_POWER;
+		}
 
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 	}
@@ -104,6 +112,9 @@ public class PointAtPoint extends Command {
 
 	@Override
 	public boolean isFinished() {
+		if(DriverStation.isAutonomous()) {
+			return inTolerance();
+		}
 		return false;
 	}
 }

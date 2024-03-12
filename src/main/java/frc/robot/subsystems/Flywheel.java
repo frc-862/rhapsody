@@ -26,9 +26,15 @@ public class Flywheel extends SubsystemBase {
     private LightningShuffleboardPeriodic periodicShuffleboard;
 
     public Flywheel() {
+        boolean topMotorInvert = FlywheelConstants.MOTOR_TOP_INVERT_Rhapsody;
+
+        if(Constants.isMercury()) {
+            topMotorInvert = FlywheelConstants.MOTOR_TOP_INVERT_Mercury;
+        }
+
         /* TEST after kettering basic stuff for now */
         topMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD,
-            FlywheelConstants.MOTOR_TOP_INVERT, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
+            topMotorInvert, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
             FlywheelConstants.MOTOR_BRAKE_MODE);
         bottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD,
             FlywheelConstants.MOTOR_BOTTOM_INVERT, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
