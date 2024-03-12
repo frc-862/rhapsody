@@ -2,9 +2,12 @@ package frc.robot.subsystems;
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.sql.Driver;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
@@ -28,6 +31,7 @@ import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.CollisionConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.math.LightningMath;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -49,10 +53,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private boolean robotCentricControl = false;
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
-    private ArrayList<Translation2d> lastPose = new ArrayList<Translation2d>();
     private LinearFilter xfilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter yfilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter rotfilter = LinearFilter.singlePoleIIR(2, 0.01);
+    private Translation2d speakerPose = VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d();
+
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
@@ -61,8 +66,41 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
         configurePathPlanner();
 
-        lastPose.add(new Translation2d(0, 0));
-        lastPose.add(new Translation2d(0, 0));
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+            speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
+        }
+
+        // setRampRate();
+    }
+
+    private void setRampRate() {
+        var config = new TalonFXConfiguration();
+        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.1;
+        config.OpenLoopRamps.TorqueOpenLoopRampPeriod = 0.1;
+        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.1;
+        config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 0.1;
+        config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.1;
+        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
+
+        for (int i = 0; i < 4; ++i) {
+            var module = getModule(i);
+            var drive = module.getDriveMotor();
+            var steer = module.getSteerMotor();
+
+            StatusCode status = StatusCode.StatusCodeNotInitialized;
+            for (int j = 0; j < 5; ++j) {
+                status = drive.getConfigurator().apply(config);
+                if (status.isOK()) {
+                    break;
+                }
+            }
+            for (int j = 0; j < 5; ++j) {
+                status = steer.getConfigurator().apply(config);
+                if (status.isOK()) {
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -193,7 +231,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         LightningShuffleboard.setBoolSupplier("Swerve", "Slow mode", () -> slowMode);
         LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
 
-        LightningShuffleboard.setBoolSupplier("Sweve", "Tipped", () -> isTipped());
+        LightningShuffleboard.setBoolSupplier("Swerve", "Tipped", () -> isTipped());
 
         LightningShuffleboard.setDoubleSupplier("Swerve", "velocity x",
                 () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
@@ -333,6 +371,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public double distanceToSpeaker() {
-        return DrivetrainConstants.SPEAKER_POSE.getDistance(getPose().getTranslation());
+        return speakerPose.getDistance(getPose().getTranslation());
     }
 }

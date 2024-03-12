@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
+import frc.robot.Constants;
 import frc.robot.Constants.FlywheelConstants;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -20,9 +21,15 @@ public class Flywheel extends SubsystemBase {
     private boolean coast = false;
 
     public Flywheel() {
+        boolean topMotorInvert = FlywheelConstants.MOTOR_TOP_INVERT_Rhapsody;
+
+        if(Constants.isMercury()) {
+            topMotorInvert = FlywheelConstants.MOTOR_TOP_INVERT_Mercury;
+        }
+
         /* TEST after kettering basic stuff for now */
         topMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD,
-            FlywheelConstants.MOTOR_TOP_INVERT, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
+            topMotorInvert, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
             FlywheelConstants.MOTOR_BRAKE_MODE);
         bottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD,
             FlywheelConstants.MOTOR_BOTTOM_INVERT, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
@@ -84,7 +91,7 @@ public class Flywheel extends SubsystemBase {
      * Sets the RPM of top flywheel
      * @param rpm RPM of the flywheel
      */
-    public void setTopMoterRPM(double rpm) {
+    public void setTopMotorRPM(double rpm) {
         coast(false);
         topTargetRPS = rpm / 60;
     }
@@ -93,7 +100,7 @@ public class Flywheel extends SubsystemBase {
      * Sets the RPM of bottom flywheel
      * @param rpm RPM of the flywheel
      */
-    public void setBottomMoterRPM(double rpm) {
+    public void setBottomMotorRPM(double rpm) {
         coast(false);
         bottomTargetRPS = rpm / 60;
     }
