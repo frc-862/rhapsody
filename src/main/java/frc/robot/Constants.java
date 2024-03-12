@@ -55,6 +55,8 @@ public class Constants {
         public static final double SYS_TEST_SPEED_TURN = 0.7d;
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
+
+        public static final double ALIGNMENT_TOLERANCE = 10d;
     }
 
     public class RobotMap {
@@ -135,6 +137,9 @@ public class Constants {
 
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
                                                                                                       // constants
+
+        public static final double BLUE_CHASE_BOUNDARY = 8.2; // The highest X value the robot can be at before ending. Prevents going over center line.
+        public static final double RED_CHASE_BOUNDARY = 8.7;
 
     }
 

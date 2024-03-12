@@ -158,6 +158,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain, driver));
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
+		NamedCommands.registerCommand("Point-At-Speaker", new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -204,8 +205,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getXButton)
 				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(VisionConstants.BLUE_SPEAKER_LOCATION.getX(),
-				VisionConstants.BLUE_SPEAKER_LOCATION.getY(), drivetrain, driver));
+		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
 
 		// new Trigger(driver::getYButton)
 		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
