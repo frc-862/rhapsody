@@ -28,7 +28,6 @@ public class PointAtPoint extends Command {
 
 	/**
 	 * Creates a new PointAtTag.
-	 * 
 	 * @param targetX    the x coordinate of the target
 	 * @param targetY    the y coordinate of the target
 	 * @param drivetrain to request movement
@@ -60,7 +59,7 @@ public class PointAtPoint extends Command {
 	}
 
 	private boolean inTolerance() {
-		return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()) < DrivetrainConstants.ALIGNMENT_TOLERANCE;
+		return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()) % 360 < DrivetrainConstants.ALIGNMENT_TOLERANCE;
 	}
 
 	@Override
@@ -89,6 +88,7 @@ public class PointAtPoint extends Command {
 		LightningShuffleboard.setDouble("PointAtPoint", "Target Pose Y", targetPose.getY());
 		LightningShuffleboard.setDouble("PointAtPoint", "Target Pose X", targetPose.getX());
 		LightningShuffleboard.setDouble("PointAtPoint", "Pid Output", pidOutput);
+		LightningShuffleboard.setDouble("PointAtPoint", "target minus current heading", Math.abs(targetHeading - pose.getRotation().getDegrees()));
 		LightningShuffleboard.setDouble("PointAtPoint", "Current", pose.getRotation().getDegrees());
 		LightningShuffleboard.setBool("PointAtPoint", "InTolerance", inTolerance());
 
@@ -105,9 +105,9 @@ public class PointAtPoint extends Command {
 
 	@Override
 	public boolean isFinished() {
-		// if(DriverStation.isAutonomous()) {
+		if(DriverStation.isAutonomous()) {
 			return inTolerance();
-		// }
-		// return false;
+		}
+		return false;
 	}
 }
