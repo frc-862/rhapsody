@@ -295,7 +295,9 @@ public class RobotContainer extends LightningContainer {
 		// drivetrain,
 		// () -> -coPilot.getLeftY(),
 		// () -> -coPilot.getRightY(),
-		// coPilot::getBButton));
+		// coPilot::getBButton, 
+		// leds
+		// ).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
 	}
 

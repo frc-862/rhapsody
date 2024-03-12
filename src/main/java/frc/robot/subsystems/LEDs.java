@@ -35,8 +35,6 @@ public class LEDs extends SubsystemBase {
 
 		ledStates = new HashMap<LEDsConstants.LED_STATES, Boolean>();
 
-		// enableState(LED_STATES.START).withTimeout(7).schedule();
-
 		for (LED_STATES i : Arrays.asList(LED_STATES.values())) {
 			ledStates.put(i, false);
 		}
@@ -66,7 +64,7 @@ public class LEDs extends SubsystemBase {
 				break;
 
 			case FINISHED_CLIMB:
-				pulse(-1, LEDsConstants.GREEN_HUE);
+				rainbow(-1);
 				break;
 
 			case SHOOTING:
