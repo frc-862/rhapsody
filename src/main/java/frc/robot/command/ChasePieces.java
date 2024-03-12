@@ -3,8 +3,10 @@ package frc.robot.command;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
@@ -130,7 +132,6 @@ public class ChasePieces extends Command {
 				drivetrain.setRobot(drivePower, 0, 0);
 			}
 		} else {
-			collectPower = 0d;
 			drivetrain.setRobot(0, 0, 0);
 		}
 
@@ -156,11 +157,16 @@ public class ChasePieces extends Command {
 	@Override
 	public boolean isFinished() {
 		if (DriverStation.isAutonomous()){
-			if (drivetrain.getPose().getX() > 9d){
-				return true;
+			if (DriverStation.getAlliance().get() == Alliance.Blue){
+				if (drivetrain.getPose().getX() > AutonomousConstants.BLUE_CHASE_BOUNDARY) {
+					return true;
+				}
 			} else {
-				return smartCollect.isFinished();
+				if (drivetrain.getPose().getX() < AutonomousConstants.RED_CHASE_BOUNDARY) {
+					return true;
+				}
 			}
+			return smartCollect.isFinished();
 		} else {
 			return smartCollect.isFinished();
 		}
