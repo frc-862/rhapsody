@@ -2,73 +2,73 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public interface Pivot extends Subsystem {
+interface Pivot extends Subsystem {
 
     /**
      * Sets the target angle of the pivot
      * 
      * @param angle Angle of the pivot
      */
-    public void setTargetAngle(double angle);
+    void setTargetAngle(double angle);
 
-    public void setPower(double power);
+    void setPower(double power);
 
     /**
      * @return The current angle of the pivot in degrees
      */
-    public double getAngle();
+    double getAngle();
 
     /**
      * @return Whether or not the pivot is on target, within Angle tolerance
      */
-    public boolean onTarget();
+    boolean onTarget();
 
     /**
      * Gets forward limit switch
      * 
      * @return true if pressed
      */
-    public boolean getForwardLimit();
+    boolean getForwardLimit();
 
     /**
      * Gets reverse limit switch
      * 
      * @return true if pressed
      */
-    public boolean getReverseLimit();
+    boolean getReverseLimit();
 
     /**
      * @return The bias to add to the target angle of the pivot
      */
-    public double getBias();
+    double getBias();
 
     /**
      * Increases the bias of the pivot by set amount
      */
-    public void increaseBias();
+    void increaseBias();
 
     /**
      * Decreases the bias of the pivot by set amount
      */
-    public void decreaseBias();
+    void decreaseBias();
 
     /**
      * Resets the bias of the pivot
      */
-    public void resetBias();
+    void resetBias();
 
     /**
      * @param angle angle to set the pivot angle to
      */
-    public void resetAngle(double angle);
+    void resetAngle(double angle);
 
     /**
      * @return current stow angle
      */
-    public double getStowAlnge();
+    double getStowAngle();
 
     /**
      * @return max Index Angle
      */
-    public double getMaxIndexAngle();
+    double getMaxIndexAngle();
 }
