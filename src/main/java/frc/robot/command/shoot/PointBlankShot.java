@@ -2,7 +2,6 @@ package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
-import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 
@@ -13,7 +12,8 @@ public class PointBlankShot extends Command {
 
 	/**
 	 * Creates a new PointBlankShot.
-	 * @param pivot subsystem
+	 * 
+	 * @param pivot    subsystem
 	 * @param flywheel subsystem
 	 */
 	public PointBlankShot(Flywheel flywheel, Pivot pivot) {
@@ -38,7 +38,7 @@ public class PointBlankShot extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		pivot.setTargetAngle(pivot.getStowAngle());
 	}
 
 	@Override

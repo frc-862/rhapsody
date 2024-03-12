@@ -6,7 +6,6 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.ShooterConstants.ShootingState;
-import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
@@ -29,11 +28,12 @@ public class SmartShoot extends Command {
 
 	/**
 	 * SmartShoot to control flywheel, pivot, drivetrain, and indexer
-	 * @param flywheel subsystem to set target RPM
-	 * @param pivot subsystem to set target angle
+	 * 
+	 * @param flywheel   subsystem to set target RPM
+	 * @param pivot      subsystem to set target angle
 	 * @param drivetrain subsystem to get distance from speaker
-	 * @param indexer subsystem to set power
-	 * @param leds subsystem to provide driver feedback
+	 * @param indexer    subsystem to set power
+	 * @param leds       subsystem to provide driver feedback
 	 */
 	public SmartShoot(Flywheel flywheel, Pivot pivot, Swerve drivetrain, Indexer indexer, LEDs leds) {
 		this.flywheel = flywheel;
@@ -47,7 +47,7 @@ public class SmartShoot extends Command {
 
 	@Override
 	public void initialize() {
-		//Always start with aiming
+		// Always start with aiming
 		state = ShootingState.AIM;
 	}
 
@@ -60,7 +60,7 @@ public class SmartShoot extends Command {
 		LightningShuffleboard.setDouble("Smart-Shoot", "Distance", distance);
 		LightningShuffleboard.setString("Smart-Shoot", "State", state.toString());
 
-		switch(state) {
+		switch (state) {
 			case AIM:
 				// Default state remains here until pivot + Flywheel are on target
 				pivot.setTargetAngle(calculateTargetAngle(distance));
@@ -69,29 +69,29 @@ public class SmartShoot extends Command {
 					state = ShootingState.SHOOT;
 					shotTime = Timer.getFPGATimestamp();
 				}
-			break;
+				break;
 			case SHOOT:
 				// Continues aiming, indexs to shoot
 				pivot.setTargetAngle(calculateTargetAngle(distance));
 				flywheel.setAllMotorsRPM(calculateTargetRPM(distance));
 				indexer.indexUp();
 				// Once shoot critera met moves to shot
-				if(Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT){
+				if (Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT) {
 					state = ShootingState.SHOT;
 				}
-			break;
+				break;
 			case SHOT:
 				// Provides driver feed back and ends command
 				new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
 				leds.enableState(LED_STATES.SHOT).withTimeout(2).schedule();
-			break;
+				break;
 		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		pivot.setTargetAngle(pivot.getStowAngle());
 		indexer.stop();
 	}
 
@@ -102,6 +102,7 @@ public class SmartShoot extends Command {
 
 	/**
 	 * Checks if Flywheel and Pivot are in range of target angle
+	 * 
 	 * @return boolean on Target
 	 */
 	public boolean onTarget() {
@@ -110,6 +111,7 @@ public class SmartShoot extends Command {
 
 	/**
 	 * Calculate Pivot Target angle (in degrees)
+	 * 
 	 * @param distance from the speaker
 	 * @return Angle to set pivot to
 	 */
@@ -119,6 +121,7 @@ public class SmartShoot extends Command {
 
 	/**
 	 * Calculate Flywheel Target RPM (in RPM)
+	 * 
 	 * @param distance from the speaker
 	 * @return RPM to set the Flywheels
 	 */
