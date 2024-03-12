@@ -24,8 +24,6 @@ public class PointAtPoint extends Command {
 	private Translation2d targetPose;
 	private Translation2d originalTargetPose;
 
-	private boolean applyingMinPower = false;
-
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
 	/**
@@ -61,12 +59,11 @@ public class PointAtPoint extends Command {
 	}
 
 	private boolean inTolerance() {
-		return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()) < DrivetrainConstants.ALIGNMENT_TOLERANCE;
+		return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()) % 360 < DrivetrainConstants.ALIGNMENT_TOLERANCE;
 	}
 
 	@Override
 	public void initialize() {
-		applyingMinPower = false;
 		headingController.enableContinuousInput(0, 360);
 		if (isBlueAlliance()) {
 			targetPose = originalTargetPose;
@@ -91,14 +88,12 @@ public class PointAtPoint extends Command {
 		LightningShuffleboard.setDouble("PointAtPoint", "Target Pose Y", targetPose.getY());
 		LightningShuffleboard.setDouble("PointAtPoint", "Target Pose X", targetPose.getX());
 		LightningShuffleboard.setDouble("PointAtPoint", "Pid Output", pidOutput);
-		LightningShuffleboard.setBool("PointAtPoint", "Applying Min Power", applyingMinPower);
 		LightningShuffleboard.setDouble("PointAtPoint", "target minus current heading", Math.abs(targetHeading - pose.getRotation().getDegrees()));
 		LightningShuffleboard.setDouble("PointAtPoint", "Current", pose.getRotation().getDegrees());
 		LightningShuffleboard.setBool("PointAtPoint", "InTolerance", inTolerance());
 
 		if (!inTolerance() && Math.abs(pidOutput) < MIN_POWER) {
 			pidOutput = Math.signum(pidOutput) * MIN_POWER;
-			applyingMinPower = true;
 		}
 
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
