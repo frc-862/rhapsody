@@ -136,6 +136,9 @@ public class Constants {
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
                                                                                                       // constants
 
+        public static final double BLUE_CHASE_BOUNDARY = 8.2; // The highest X value the robot can be at before ending. Prevents going over center line.
+        public static final double RED_CHASE_BOUNDARY = 8.7;
+
     }
 
     public static class TunerConstants {
