@@ -105,9 +105,9 @@ public class PointAtPoint extends Command {
 
 	@Override
 	public boolean isFinished() {
-		// if(DriverStation.isAutonomous()) {
+		if(DriverStation.isAutonomous()) {
 			return inTolerance();
-		// }
-		// return false;
+		}
+		return false;
 	}
 }
