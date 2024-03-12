@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-interface Pivot extends Subsystem {
+public interface Pivot extends Subsystem {
 
     /**
      * Sets the target angle of the pivot
