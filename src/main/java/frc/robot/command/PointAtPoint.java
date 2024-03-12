@@ -1,8 +1,9 @@
 package frc.robot.command;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -10,8 +11,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -70,23 +71,26 @@ public class PointAtPoint extends Command {
 
 	@Override
 	public void initialize() {
-		headingController.enableContinuousInput(-180, 180);
-	}
-
-	@SuppressWarnings("unchecked")
-	public void initLogging() {
-		periodicShuffleboard = new LightningShuffleboardPeriodic("PointAtTag", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
-			new Pair<String, Object>("Target Heading", (DoubleSupplier) () -> targetHeading),
-			new Pair<String, Object>("Target Pose Y", (DoubleSupplier) () -> targetPose.getY()),
-			new Pair<String, Object>("Target Pose X", (DoubleSupplier) () -> targetPose.getX()),
-			new Pair<String, Object>("Pid Output", (DoubleSupplier) () -> pidOutput));
-
 		headingController.enableContinuousInput(0, 360);
 		if (isBlueAlliance()) {
 			targetPose = originalTargetPose;
 		} else {
 			targetPose = swapAlliance(originalTargetPose);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void initLogging(){
+		periodicShuffleboard = new LightningShuffleboardPeriodic("PointAtPoint", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
+				new Pair<String, Object>("Delta Y", (DoubleSupplier) () -> targetPose.getY() - drivetrain.getPose().getY()),
+				new Pair<String, Object>("Delta X", (DoubleSupplier) () -> targetPose.getX() - drivetrain.getPose().getX()),
+				new Pair<String, Object>("Target Heading", (DoubleSupplier) () -> targetHeading),
+				new Pair<String, Object>("Target Pose Y", (DoubleSupplier) () -> targetPose.getY()),
+				new Pair<String, Object>("Target Pose X", (DoubleSupplier) () -> targetPose.getX()),
+				new Pair<String, Object>("Pid Output", (DoubleSupplier) () -> pidOutput),
+				new Pair<String, Object>("target minus current heading", (DoubleSupplier) () -> Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees())),
+				new Pair<String, Object>("Current", (DoubleSupplier) () -> drivetrain.getPose().getRotation().getDegrees()),
+				new Pair<String, Object>("InTolerance", (BooleanSupplier) () -> inTolerance()));
 	}
 
 	@Override

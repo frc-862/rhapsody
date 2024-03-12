@@ -2,16 +2,12 @@ package frc.robot.command;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.AutonomousConstants;
@@ -105,10 +101,13 @@ public class ChasePieces extends Command {
 				new Pair<String, Object>("Has Target", (BooleanSupplier) () -> hasTarget),
 				new Pair<String, Object>("Is Done", (BooleanSupplier) () -> isDone),
 				new Pair<String, Object>("Has Piece", (BooleanSupplier) () -> hasPiece),
+
 				new Pair<String, Object>("Target Heading", (DoubleSupplier) () -> targetHeading),
 				new Pair<String, Object>("Target Y", (DoubleSupplier) () -> targetPitch),
 				new Pair<String, Object>("Pid Output", (DoubleSupplier) () -> pidOutput),
-				new Pair<String, Object>("SmartCollectPower", (DoubleSupplier) () -> power));
+				new Pair<String, Object>("SmartCollectPower", (DoubleSupplier) () -> collectPower),
+				new Pair<String, Object>("DrivePower", (DoubleSupplier) () -> drivePower),
+				new Pair<String, Object>("MaxCollectPower", (DoubleSupplier) () -> maxCollectPower));
 	}
 
 	@Override
