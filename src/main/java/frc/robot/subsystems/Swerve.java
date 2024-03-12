@@ -58,11 +58,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
         configurePathPlanner();
 
-        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
             speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
         }
 
-        // setRampRate();
+        setRampRate();
     }
 
     private void setRampRate() {
@@ -80,15 +80,20 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             var steer = module.getSteerMotor();
 
             StatusCode status = StatusCode.StatusCodeNotInitialized;
+            StatusCode status1 = StatusCode.StatusCodeNotInitialized;
             for (int j = 0; j < 5; ++j) {
+                // Theory is like, it'll refresh, and then apply.
+                status1 = drive.getConfigurator().refresh(config);
+                // kyle said try refresh, but im pretty surei ts for reading only
                 status = drive.getConfigurator().apply(config);
-                if (status.isOK()) {
+                if (status.isOK() && status1.isOK()) {
                     break;
                 }
             }
             for (int j = 0; j < 5; ++j) {
+                status1 = steer.getConfigurator().refresh(config);
                 status = steer.getConfigurator().apply(config);
-                if (status.isOK()) {
+                if (status.isOK() && status1.isOK()) {
                     break;
                 }
             }
