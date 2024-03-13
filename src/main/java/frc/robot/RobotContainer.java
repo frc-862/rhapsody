@@ -7,7 +7,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
-import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -99,8 +98,6 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeSubsystems() {
-		int roboro1 = HALUtil.RUNTIME_ROBORIO;
-		int roboro2 = HALUtil.RUNTIME_ROBORIO2;
 		// SignalLogger.setPath(Constants.HOOT_PATH);
 		// SignalLogger.enableAutoLogging(true);
 
@@ -275,8 +272,8 @@ public class RobotContainer extends LightningContainer {
 		drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(
-				() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX())
-				.alongWith(new CollisionDetection(drivetrain, CollisionType.TELEOP)));
+				() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
+				// .alongWith(new CollisionDetection(drivetrain, CollisionType.TELEOP)));
 
 		/* copilot */
 		collector.setDefaultCommand(
