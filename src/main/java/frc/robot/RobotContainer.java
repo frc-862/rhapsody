@@ -28,8 +28,6 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PathFindingConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
-import frc.robot.command.AlignToAmp;
-import frc.robot.command.AmpAlign;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.command.ChasePieces;
@@ -202,9 +200,9 @@ public class RobotContainer extends LightningContainer {
 		// drivetrain.brake()));
 
 		// smart shoot for the robot
-		// new Trigger(driver::getAButton)
-		// 		.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-		// 				.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		new Trigger(driver::getAButton)
+				.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
+						.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// aim at amp and stage tags for the robot
 		new Trigger(driver::getXButton)
@@ -217,7 +215,6 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
-		new Trigger(driver::getAButton).whileTrue(new AmpAlign(drivetrain));
 		
 		// Test auto align
 		/* copilot */
@@ -227,7 +224,7 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
 		// cand shots for the robot
-		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
+		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, drivetrain));
 		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
 		// new Trigger(coPilot::getXButton).whileTrue(new Tune(flywheel, pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
