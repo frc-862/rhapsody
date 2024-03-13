@@ -4,12 +4,16 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Indexer extends SubsystemBase {
 
@@ -29,6 +33,14 @@ public class Indexer extends SubsystemBase {
     private Debouncer entryDebouncer = new Debouncer(0.05);
     private Debouncer exitDebouncer = new Debouncer(0.05);
 
+    private DoubleLogEntry indexerPowerLog;
+    private BooleanLogEntry entryBeamBreakLog;
+    private BooleanLogEntry exitBeamBreakLog;
+    private StringLogEntry pieceStateLog;
+    private BooleanLogEntry hasShotLog;
+    private BooleanLogEntry isExitingLog;
+    private BooleanLogEntry hasPieceLog;
+
     public Indexer(Collector collector) {
         this.collector = collector;
 
@@ -37,22 +49,23 @@ public class Indexer extends SubsystemBase {
                 IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
 
         indexerMotor.applyConfig();
+
         initLogging();
     }
 
+    /**
+     * initialize logging
+     */
     private void initLogging() {
-        LightningShuffleboard.setDoubleSupplier("Indexer", "Indexer Power", () -> indexerMotor.get());
-        LightningShuffleboard.setDoubleSupplier("Indexer", "Indexer Target Power", () -> targetPower);
+        DataLog log = DataLogManager.getLog();
 
-        LightningShuffleboard.setBoolSupplier("Indexer", "Entry Beam Break", () -> getEntryBeamBreakState());
-        LightningShuffleboard.setBoolSupplier("Indexer", "Exit Beam Break", () -> getExitBeamBreakState());
-        LightningShuffleboard.setStringSupplier("Indexer", "Piece State", () -> getPieceState().toString());
-        LightningShuffleboard.setBoolSupplier("Indexer", "Has shot", () -> hasShot());
-
-        LightningShuffleboard.setBoolSupplier("Indexer", "Is Exiting", () -> isExiting());
-        LightningShuffleboard.setBoolSupplier("Indexer", "Has Piece", () -> getPieceState() == PieceState.IN_COLLECT);
-        LightningShuffleboard.setBoolSupplier("Indexer", "In Pivot", () -> getPieceState() == PieceState.IN_PIVOT);
-        LightningShuffleboard.setStringSupplier("Indexer", "Current Piece State", () -> getPieceState().toString());
+        indexerPowerLog = new DoubleLogEntry(log, "/Indexer/Power");
+        entryBeamBreakLog = new BooleanLogEntry(log, "/Indexer/EntryBeamBreak");
+        exitBeamBreakLog = new BooleanLogEntry(log, "/Indexer/ExitBeamBreak");
+        pieceStateLog = new StringLogEntry(log, "/Indexer/PieceState");
+        hasShotLog = new BooleanLogEntry(log, "/Indexer/HasShot");
+        isExitingLog = new BooleanLogEntry(log, "/Indexer/IsExiting");
+        hasPieceLog = new BooleanLogEntry(log, "/Indexer/HasPiece");
     }
 
     /**
@@ -150,20 +163,35 @@ public class Indexer extends SubsystemBase {
 
     @Override
     public void periodic() {
-       // Update piece state based on beambreaks
-       if (getExitBeamBreakState()) {
-        setPieceState(PieceState.IN_INDEXER);
-    } else if (getEntryBeamBreakState()) {
-        setPieceState(PieceState.IN_PIVOT);
-    } else if (collector.getEntryBeamBreakState()) {
-        timeLastTriggered = Timer.getFPGATimestamp();
-        setPieceState(PieceState.IN_COLLECT);
-    } else if (Timer.getFPGATimestamp() - timeLastTriggered <= 1) {
-        setPieceState(PieceState.IN_COLLECT);
-    } else {
-        didShoot = didShoot || hasNote();
-        setPieceState(PieceState.NONE);
+        // Update piece state based on beambreaks
+        if (getExitBeamBreakState()) {
+            setPieceState(PieceState.IN_INDEXER);
+        } else if (getEntryBeamBreakState()) {
+            setPieceState(PieceState.IN_PIVOT);
+        } else if (collector.getEntryBeamBreakState()) {
+            timeLastTriggered = Timer.getFPGATimestamp();
+            setPieceState(PieceState.IN_COLLECT);
+        } else if (Timer.getFPGATimestamp() - timeLastTriggered <= 1) {
+            setPieceState(PieceState.IN_COLLECT);
+        } else {
+            didShoot = didShoot || hasNote();
+            setPieceState(PieceState.NONE);
+        }
+
+        updateLogging();
     }
+
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        indexerPowerLog.append(indexerMotor.get());
+        entryBeamBreakLog.append(getEntryBeamBreakState());
+        exitBeamBreakLog.append(getExitBeamBreakState());
+        pieceStateLog.append(getPieceState().toString());
+        hasShotLog.append(hasShot());
+        isExitingLog.append(isExiting());
+        hasPieceLog.append(hasNote());
     }
 
     public boolean hasNote() {

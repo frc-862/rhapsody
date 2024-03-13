@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import javax.xml.crypto.Data;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -11,11 +12,15 @@ import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.tuning.FalconTuner;
 import frc.robot.Constants.MercuryPivotConstants;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PivotMercury extends SubsystemBase implements Pivot {
 
@@ -27,6 +32,14 @@ public class PivotMercury extends SubsystemBase implements Pivot {
     private double bias = 0;
 
     private double targetAngle = MercuryPivotConstants.STOW_ANGLE;
+
+    private DoubleLogEntry currentAngleLog;
+    private DoubleLogEntry targetAngleLog;
+    private BooleanLogEntry onTargetLog;
+    private DoubleLogEntry biasLog;
+    private BooleanLogEntry forwardLimitLog;
+    private BooleanLogEntry reverseLimitLog;
+    private DoubleLogEntry powerLog;
 
     public PivotMercury() {
         System.out.println("MERCURY PIVOT");
@@ -59,23 +72,27 @@ public class PivotMercury extends SubsystemBase implements Pivot {
         angleController.setIntegratorRange(0.02, 1);
         angleController.setTolerance(MercuryPivotConstants.ANGLE_TOLERANCE);
 
-        initLogging();
         setTargetAngle(targetAngle);
+
+        initLogging();
     }
 
+    /**
+     * initialize logging
+     */
     private void initLogging() {
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Current Angle", () -> getAngle());
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Target Angle", () -> targetAngle);
+        DataLog log = DataLogManager.getLog();
 
-        LightningShuffleboard.setBoolSupplier("Pivot", "On target", () -> onTarget());
+        currentAngleLog = new DoubleLogEntry(log, "/Pivot/CurrentAngle");
+        targetAngleLog = new DoubleLogEntry(log, "/Pivot/TargetAngle");
+        onTargetLog = new BooleanLogEntry(log, "/Pivot/OnTarget");
 
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", this::getBias);
+        biasLog = new DoubleLogEntry(log, "/Pivot/Bias");
 
-        LightningShuffleboard.setBoolSupplier("Pivot", "Forward Limit", () -> getForwardLimit());
-        LightningShuffleboard.setBoolSupplier("Pivot", "Reverse Limit", () -> getReverseLimit());
+        forwardLimitLog = new BooleanLogEntry(log, "/Pivot/ForwardLimit");
+        reverseLimitLog = new BooleanLogEntry(log, "/Pivot/ReverseLimit");
 
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Power", () -> angleMotor.get());
-
+        powerLog = new DoubleLogEntry(log, "/Pivot/Power");
     }
 
     @Override
@@ -101,6 +118,23 @@ public class PivotMercury extends SubsystemBase implements Pivot {
 
         moveToTarget();
 
+        updateLogging();
+    }
+
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        currentAngleLog.append(getAngle());
+        targetAngleLog.append(targetAngle);
+        onTargetLog.append(onTarget());
+
+        biasLog.append(bias);
+
+        forwardLimitLog.append(getForwardLimit());
+        reverseLimitLog.append(getReverseLimit());
+
+        powerLog.append(angleMotor.get());
     }
 
     /**
