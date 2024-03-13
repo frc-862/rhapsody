@@ -57,9 +57,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private boolean robotCentricControl = false;
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
-    private LinearFilter xfilter = LinearFilter.singlePoleIIR(2, 0.01);
-    private LinearFilter yfilter = LinearFilter.singlePoleIIR(2, 0.01);
-    private LinearFilter rotfilter = LinearFilter.singlePoleIIR(2, 0.01);
+    private LinearFilter xFilter = LinearFilter.singlePoleIIR(2, 0.01);
+    private LinearFilter yFilter = LinearFilter.singlePoleIIR(2, 0.01);
+    private LinearFilter rotFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private Translation2d speakerPose = VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d();
 
     private DoubleLogEntry timerLog;
@@ -138,9 +138,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
-        xfilter.calculate(getPose().getX());
-        yfilter.calculate(getPose().getY());
-        rotfilter.calculate(getPose().getRotation().getDegrees());
+        xFilter.calculate(getPose().getX());
+        yFilter.calculate(getPose().getY());
+        rotFilter.calculate(getPose().getRotation().getDegrees());
 
         updateLogging();
     }
@@ -299,9 +299,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public boolean isStable() {
-        return (Math.abs(rotfilter.lastValue() - getPose().getRotation().getDegrees())  < 0.1
-            && Math.abs(xfilter.lastValue() - getPose().getX()) < 0.1
-            && Math.abs(yfilter.lastValue() - getPose().getY()) < 0.1);
+        return (Math.abs(rotFilter.lastValue() - getPose().getRotation().getDegrees()) < 0.1
+            && Math.abs(xFilter.lastValue() - getPose().getX()) < 0.1
+            && Math.abs(yFilter.lastValue() - getPose().getY()) < 0.1);
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
