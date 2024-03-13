@@ -56,7 +56,6 @@ public class Constants {
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
 
-        public static final double DRIVETRAIN_LOG_PERIOD = 0.1; // TODO: get real value
         public static final double ALIGNMENT_TOLERANCE = 10d;
     }
 
@@ -385,8 +384,6 @@ public class Constants {
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
         public static final double COLLECTOR_GRABANDGO_POWER = 0.75;
-
-        public static final double COLLECTOR_LOG_PERIOD = 0.5; // TODO: get real value
     }
 
     public class FlywheelConstants {
@@ -435,8 +432,6 @@ public class Constants {
         public static final double COAST_VOLTAGE = 0.1;
 
         public static final double FLYWHEEL_SYSTEST_RPM = 1000;
-
-        public static final double FLYWHEEL_LOG_PERIOD = 0.1; // TODO: get real value
     }
 
     public class IndexerConstants { // TODO: get real
@@ -453,8 +448,6 @@ public class Constants {
         public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
 
         public static final double INDEXER_SYSTEST_POWER = 0.25d;
-
-        public static final double INDEXER_LOG_PERIOD = 0.5; // TODO: get real value
     }
 
     public class MercuryPivotConstants {
@@ -526,8 +519,6 @@ public class Constants {
         public static final double MAX_ANGLE = 105d;
 
         public static final double PIVOT_SYSTEST_ANGLE = 90d;
-
-        public static final double PIVOT_LOG_PERIOD = 0.5; // TODO: get real value
     }
 
     public class ShooterConstants {
@@ -626,7 +617,6 @@ public class Constants {
         public static final double CLIMB_RETURN_TO_GROUND_MAX_POWER = 0.05;
 
         public static final double CLIMB_SYSTEST_POWER = 0.1;
-        public static final double CLIMB_LOG_PERIOD = 0.5; // TODO: get real value
 
         public enum CLIMBER_STATES {
             CLIMBED, GROUNDED, STOW
@@ -693,10 +683,5 @@ public class Constants {
                 return priority;
             }
         }
-    }
-
-    public class ShuffleboardPeriodicConstants {
-        public static final double DEFAULT_SHUFFLEBOARD_PERIOD = 0.5;
-        public static final double SHUFFLEBOARD_PERIOD_IMPORTANT = .1;
     }
 }
