@@ -66,6 +66,10 @@ public class Climber extends SubsystemBase {
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Applied", () -> climbMotorL.getMotorVoltage().getValueAsDouble());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Applied", () -> climbMotorR.getMotorVoltage().getValueAsDouble());
+         LightningShuffleboard.setBoolSupplier("Climb", "Foward Limit Left", () -> getForwardLimitLeft());
+        LightningShuffleboard.setBoolSupplier("Climb", "Foward Limit Right", () -> getForwardLimitRight());
+        LightningShuffleboard.setBoolSupplier("Climb", "Reverse Limit Left", () -> getReverseLimitLeft());
+        LightningShuffleboard.setBoolSupplier("Climb", "Reverse Limit Right", () -> getReverseLimitRight());
         }
 
     /**
