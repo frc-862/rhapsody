@@ -2,6 +2,10 @@ package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
@@ -13,7 +17,6 @@ import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.command.TimedCommand;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class SmartShoot extends Command {
 
@@ -22,9 +25,13 @@ public class SmartShoot extends Command {
 	final Swerve drivetrain;
 	final Indexer indexer;
 	final LEDs leds;
+	private double distance = 0d;
 
 	private ShootingState state = ShootingState.AIM;
 	private double shotTime = 0d;
+
+	private DoubleLogEntry distanceLog;
+	private StringLogEntry stateLog;
 
 	/**
 	 * SmartShoot to control flywheel, pivot, drivetrain, and indexer
@@ -43,6 +50,8 @@ public class SmartShoot extends Command {
 		this.leds = leds;
 
 		addRequirements(pivot, flywheel, indexer);
+
+		initLogging();
 	}
 
 	@Override
@@ -51,14 +60,20 @@ public class SmartShoot extends Command {
 		state = ShootingState.AIM;
 	}
 
+	/**
+	 * initialize logging
+	 */
+	private void initLogging() {
+		DataLog log = DataLogManager.getLog();
+
+		distanceLog = new DoubleLogEntry(log, "/SmartShoot/distance");
+		stateLog = new StringLogEntry(log, "/SmartShoot/state");
+	}
+	
 	@Override
 	public void execute() {
 		// Distance from current pose to speaker pose
-		double distance = drivetrain.distanceToSpeaker();
-
-		// Logging
-		LightningShuffleboard.setDouble("Smart-Shoot", "Distance", distance);
-		LightningShuffleboard.setString("Smart-Shoot", "State", state.toString());
+		distance = drivetrain.distanceToSpeaker();
 
 		switch (state) {
 			case AIM:
@@ -86,6 +101,16 @@ public class SmartShoot extends Command {
 				leds.enableState(LED_STATES.SHOT).withTimeout(2).schedule();
 				break;
 		}
+
+		updateLogging();
+	}
+
+	/**
+	 * update logging
+	 */
+	private void updateLogging() {
+		distanceLog.append(distance);
+		stateLog.append(state.toString());
 	}
 
 	@Override

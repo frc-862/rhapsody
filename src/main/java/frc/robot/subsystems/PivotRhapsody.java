@@ -13,6 +13,10 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -25,6 +29,15 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
     private double bias = 0;
     private double targetAngle = RhapsodyPivotConstants.STOW_ANGLE;
+
+    private DoubleLogEntry currentAngleLog;
+    private DoubleLogEntry targetAngleRotLog;
+    private DoubleLogEntry targetAngleDegLog;
+    private BooleanLogEntry onTargetLog;
+    private DoubleLogEntry biasLog;
+    private BooleanLogEntry forwardLimitLog;
+    private BooleanLogEntry reverseLimitLog;
+    private DoubleLogEntry powerLog;
 
     public PivotRhapsody() {
         System.out.println("RHAPSODY PIVOT");
@@ -61,24 +74,29 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
         angleMotor.applyConfig(motorConfig);
 
-        initLogging();
         setTargetAngle(targetAngle);
+
+        initLogging();
     }
 
+    /**
+     * initialize logging
+     */
     private void initLogging() {
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Current Angle", () -> getAngle());
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Target Angle (Rot)", () -> targetAngle);
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Target Angle (Deg)", () -> targetAngle * 360);
+        DataLog log = DataLogManager.getLog();
 
-        LightningShuffleboard.setBoolSupplier("Pivot", "On target", () -> onTarget());
+        currentAngleLog = new DoubleLogEntry(log, "/Pivot/CurrentAngle");
+        targetAngleRotLog = new DoubleLogEntry(log, "/Pivot/TargetAngleRot");
+        targetAngleDegLog = new DoubleLogEntry(log, "/Pivot/TargetAngleDeg");
 
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", this::getBias);
+        onTargetLog = new BooleanLogEntry(log, "/Pivot/OnTarget");
 
-        LightningShuffleboard.setBoolSupplier("Pivot", "Forward Limit", () -> getForwardLimit());
-        LightningShuffleboard.setBoolSupplier("Pivot", "Reverse Limit", () -> getReverseLimit());
+        biasLog = new DoubleLogEntry(log, "/Pivot/Bias");
 
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Power", () -> angleMotor.get());
+        forwardLimitLog = new BooleanLogEntry(log, "/Pivot/ForwardLimit");
+        reverseLimitLog = new BooleanLogEntry(log, "/Pivot/ReverseLimit");
 
+        powerLog = new DoubleLogEntry(log, "/Pivot/Power");
     }
 
     @Override
@@ -118,6 +136,25 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
         moveToTarget();
 
+        updateLogging();
+    }
+
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        currentAngleLog.append(getAngle());
+        targetAngleRotLog.append(targetAngle);
+        targetAngleDegLog.append(targetAngle * 360);
+
+        onTargetLog.append(onTarget());
+
+        biasLog.append(bias);
+
+        forwardLimitLog.append(getForwardLimit());
+        reverseLimitLog.append(getReverseLimit());
+
+        powerLog.append(angleMotor.get());
     }
 
     /**
@@ -145,7 +182,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
      * @return The current angle of the pivot in degrees
      */
     public double getAngle() {
-        return angleMotor.getPosition().getValue() * 360;
+        return angleMotor.getPosition().getValue();
     }
 
     /**
