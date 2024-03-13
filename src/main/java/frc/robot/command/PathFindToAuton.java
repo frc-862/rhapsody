@@ -34,7 +34,7 @@ public class PathFindToAuton extends Command {
    * @param drivetrain The drivetrain subsystem
    * @param controller The driver controller
    */
-  public PathFindToAuton(PathPlannerPath autonPath, Swerve drivetrain, XboxControllerFilter controller) {
+  public PathFindToAuton(PathPlannerPath autonPath, Swerve drivetrain) {
     this.drivetrain = drivetrain;
     this.controller = controller;
     this.autonPath = autonPath;
