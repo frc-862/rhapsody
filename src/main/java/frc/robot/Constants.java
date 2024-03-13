@@ -42,23 +42,9 @@ public class Constants {
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x
-                                                                                         // distance
-                                                                                         // from
-                                                                                         // center
-                                                                                         // of robot
-                                                                                         // to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free
-                                                                                              // speed
-                                                                                              // /
-                                                                                              // circumference
-                                                                                              // of
-                                                                                              // circle
-                                                                                              // with
-                                                                                              // radius
-                                                                                              // of
-                                                                                              // wheelbase
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
 
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
@@ -69,6 +55,8 @@ public class Constants {
         public static final double SYS_TEST_SPEED_TURN = 0.7d;
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
+
+        public static final double ALIGNMENT_TOLERANCE = 10d;
     }
 
     public class RobotMap {
@@ -150,15 +138,8 @@ public class Constants {
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
                                                                                                       // constants
 
-        // For Pathfinding
-        // TODO get real poses to pathfind to
-
-        // For AlignToTag      1.85, 6.5
-        public static final Pose2d AMP_POSE_BLUE_ALLIANCE = new Pose2d(new Translation2d(3, 5), new Rotation2d(0d));
-        public static final Pose2d AMP_POSE_RED_ALLIANCE = new Pose2d(new Translation2d(13, 5), new Rotation2d(0d));
-        public static final double AMP_TOLERANCE = 0.1; 
-
-        public static final Pose2d TARGET_POSE = new Pose2d(new Translation2d(0, 0), new Rotation2d(0d));
+        public static final double BLUE_CHASE_BOUNDARY = 8.2; // The highest X value the robot can be at before ending. Prevents going over center line.
+        public static final double RED_CHASE_BOUNDARY = 8.7;
 
     }
 
@@ -334,13 +315,19 @@ public class Constants {
         public static final int SPEAKER_PIPELINE = 1;
         public static final int NOTE_PIPELINE = 2;
 
-        public static final Translation3d SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
+        public static final Translation3d BLUE_SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
+        public static final Translation3d RED_SPEAKER_LOCATION = new Translation3d(16.4592, 5.547593, 1.2);
 
         public class Pipelines { // TODO get real
             public static final int APRIL_TAG_3d = 0;
             public static final int APRIL_TAG_2d = 1;
             public static final int CHASE_PIECE = 2; // FOR the collector
         }
+    }
+
+    public class PathFindingConstants {
+        public static final Pose2d TEST_POSE = new Pose2d(9, 4, new Rotation2d(90));
+        public static final Translation2d RED_ORIGIN = new Translation2d(16.4592, 0);
     }
 
     public class CollisionConstants {
@@ -399,22 +386,24 @@ public class Constants {
         public static final double COLLECTOR_GRABANDGO_POWER = 0.75;
     }
 
-    public class FlywheelConstants { // TODO: get real
-        public static final boolean MOTOR_TOP_INVERT = true;
+    public class FlywheelConstants {
+        public static final boolean MOTOR_TOP_INVERT_Rhapsody = false;
+        public static final boolean MOTOR_TOP_INVERT_Mercury = true;
+
         public static final boolean MOTOR_BOTTOM_INVERT = false;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
 
         // SLOT 0 TOP, 0 - 49 RPS
-        public static final double TOP_0_MOTOR_KP = 0.155;
+        public static final double TOP_0_MOTOR_KP = 0.157;
         public static final double TOP_0_MOTOR_KI = 0;
         public static final double TOP_0_MOTOR_KD = 0;
         public static final double TOP_0_MOTOR_KS = 0.3;
-        public static final double TOP_0_MOTOR_KV = 0.11;
+        public static final double TOP_0_MOTOR_KV = 0.115;
         public static final double TOP_0_MOTOR_KA = 0;
 
         // SLOT 1 TOP, 50 - 107 RPS
-        public static final double TOP_1_MOTOR_KP = 0.16;
+        public static final double TOP_1_MOTOR_KP = 0.163;
         public static final double TOP_1_MOTOR_KI = 0;
         public static final double TOP_1_MOTOR_KD = 0;
         public static final double TOP_1_MOTOR_KS = 0.3;
@@ -426,15 +415,15 @@ public class Constants {
         public static final double BOTTOM_0_MOTOR_KI = 0;
         public static final double BOTTOM_0_MOTOR_KD = 0;
         public static final double BOTTOM_0_MOTOR_KS = 0.3;
-        public static final double BOTTOM_0_MOTOR_KV = 0.115;
+        public static final double BOTTOM_0_MOTOR_KV = 0.11;
         public static final double BOTTOM_0_MOTOR_KA = 0;
 
         // SLOT 1 BOTTOM, 50 - 107 RPS
-        public static final double BOTTOM_1_MOTOR_KP = 0.155;
+        public static final double BOTTOM_1_MOTOR_KP = 0.16;
         public static final double BOTTOM_1_MOTOR_KI = 0;
         public static final double BOTTOM_1_MOTOR_KD = 0;
         public static final double BOTTOM_1_MOTOR_KS = 0.3;
-        public static final double BOTTOM_1_MOTOR_KV = 0.117;
+        public static final double BOTTOM_1_MOTOR_KV = 0.1155;
         public static final double BOTTOM_1_MOTOR_KA = 0;
 
         public static final double RPM_TOLERANCE = 50d;
@@ -461,7 +450,7 @@ public class Constants {
         public static final double INDEXER_SYSTEST_POWER = 0.25d;
     }
 
-    public class PivotConstants { // TODO: get real
+    public class MercuryPivotConstants {
         public static final boolean MOTOR_INVERT = true; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
@@ -478,19 +467,55 @@ public class Constants {
 
         public static final double ANGLE_TOLERANCE = 0.5d;
 
-        public static final double ENCODER_OFFSET = 0.6118; // In rotations
+        public static final double ENCODER_OFFSET = 0.61095; // In rotations
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO
-                                                        // get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
 
         public static final double STOW_ANGLE = 28d;
 
         public static final double MAX_INDEX_ANGLE = 40d;
 
         public static final double MIN_ANGLE = 25d;
+        public static final double MAX_ANGLE = 105d;
+
+        public static final double PIVOT_SYSTEST_ANGLE = 90d;
+    }
+
+    public class RhapsodyPivotConstants { // TODO: get real
+        public static final boolean MOTOR_INVERT = true; // POS power is up
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
+        public static final boolean MOTOR_BRAKE_MODE = true;
+        public static final double MOTOR_KP = 120; // TODO this can be cranked higher
+        public static final double MOTOR_KI = 0;
+        public static final double MOTOR_KD = 0;
+        public static final double MOTOR_KG = 0.359;
+        public static final double MOTOR_KV = 0d;
+        public static final double MOTOR_KS = 0d;
+        public static final double MOTOR_KA = 0d;
+
+        public static final double MAGIC_CRUISE_VEL = 0.01; // TODO: get real value
+        public static final double MAGIC_ACCEL = 0.02; // TODO: get real value
+        public static final double MAGIC_JERK = 0.2; // TODO: get real value
+
+        public static final double ANGLE_TOLERANCE = 0.5d;
+
+        public static final double ENCODER_OFFSET = 0.282; // In rotations //TODO: find this value (NEEDS TO BE DONE
+                                                           // BEFORE PR)
+        public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
+        public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
+        public static final double ROTOR_TO_ENCODER_RATIO = 275d;
+
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias
+                                                        // by
+
+        public static final double STOW_ANGLE = 27d;
+
+        public static final double MAX_INDEX_ANGLE = 40d;
+
+        public static final double MIN_ANGLE = 27d;
         public static final double MAX_ANGLE = 105d;
 
         public static final double PIVOT_SYSTEST_ANGLE = 90d;
@@ -659,5 +684,4 @@ public class Constants {
             }
         }
     }
-
 }

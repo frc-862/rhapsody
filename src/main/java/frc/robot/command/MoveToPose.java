@@ -4,10 +4,15 @@
 
 package frc.robot.command;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class MoveToPose extends Command {
 
@@ -23,6 +28,11 @@ public class MoveToPose extends Command {
     private double powerx;
     private double powery;
 
+    private DoubleLogEntry dxLog;
+    private DoubleLogEntry dyLog;
+    private DoubleLogEntry targetXLog;
+    private DoubleLogEntry targetYLog;
+
     /**
      * @param target     The target pose to move to
      * @param drivetrain The drivetrain subsystem
@@ -32,18 +42,23 @@ public class MoveToPose extends Command {
         this.drivetrain = drivetrain;
 
         addRequirements(drivetrain);
-    }
 
-    @Override
-    public void initialize() {
         initLogging();
     }
 
+    @Override
+    public void initialize() {}
+
+    /**
+     * initialize logging
+     */
     private void initLogging() {
-        LightningShuffleboard.setDoubleSupplier("MoveToPose", "dx", () -> dx);
-        LightningShuffleboard.setDoubleSupplier("MoveToPose", "dy", () -> dy);
-        LightningShuffleboard.setDoubleSupplier("MoveToPose", "targetX", () -> target.getX());
-        LightningShuffleboard.setDoubleSupplier("MoveToPose", "targetY", () -> target.getY());
+        DataLog log = DataLogManager.getLog();
+
+        dxLog = new DoubleLogEntry(log, "/MoveToPose/dx");
+        dyLog = new DoubleLogEntry(log, "/MoveToPose/dy");
+        targetXLog = new DoubleLogEntry(log, "/MoveToPose/targetX");
+        targetYLog = new DoubleLogEntry(log, "/MoveToPose/targetY");
     }
 
     @Override
@@ -80,6 +95,18 @@ public class MoveToPose extends Command {
         }
 
         drivetrain.setField(powerx, powery, 0); // TODO test
+
+        updateLogging();
+    }
+
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        dxLog.append(dx);
+        dyLog.append(dy);
+        targetXLog.append(target.getTranslation().getX());
+        targetYLog.append(target.getTranslation().getY());
     }
 
     @Override
