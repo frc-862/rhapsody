@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.hardware.core.CoreTalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
@@ -65,7 +66,7 @@ public class Climber extends SubsystemBase {
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Applied", () -> climbMotorL.getMotorVoltage().getValueAsDouble());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Applied", () -> climbMotorR.getMotorVoltage().getValueAsDouble());
-    }
+        }
 
     /**
      * Sets power to both climb motors
@@ -180,5 +181,33 @@ public class Climber extends SubsystemBase {
                 }
             }
         }
+    }
+    /**
+     * Gets forward limit switch
+     * 
+     * @return true if pressed
+     */
+    public boolean getForwardLimitLeft() {
+        return climbMotorL.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
+    }
+    /**
+     * @return true if pressed
+     */
+    public boolean getForwardLimitRight() {
+        return climbMotorR.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
+    }
+    /**
+     * Gets reverse limit switch
+     * 
+     * @return true if pressed
+     */
+    public boolean getReverseLimitLeft() {
+        return climbMotorL.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
+    }
+    /**
+     * @return true if pressed
+     */
+    public boolean getReverseLimitRight() {
+        return climbMotorR.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
     }
 }
