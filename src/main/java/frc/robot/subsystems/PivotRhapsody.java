@@ -182,7 +182,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
      * @return The current angle of the pivot in degrees
      */
     public double getAngle() {
-        return angleMotor.getPosition().getValue() * 360;
+        return angleMotor.getPosition().getValue();
     }
 
     /**
