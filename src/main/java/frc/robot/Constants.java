@@ -624,7 +624,7 @@ public class Constants {
     }
 
     public class LEDsConstants {
-        public static int LED_LENGTH = 31;
+        public static final int LED_LENGTH = 31;
 
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
