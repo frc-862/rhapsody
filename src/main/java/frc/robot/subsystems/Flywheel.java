@@ -2,14 +2,14 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants;
 import frc.robot.Constants.FlywheelConstants;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
-import edu.wpi.first.math.Pair;
-import java.util.function.DoubleSupplier;
-import java.util.function.BooleanSupplier;
 
 public class Flywheel extends SubsystemBase {
     private ThunderBird topMotor;
@@ -23,7 +23,15 @@ public class Flywheel extends SubsystemBase {
     private double bias = 0;
     private boolean coast = false;
 
-    private LightningShuffleboardPeriodic periodicShuffleboard;
+    private DoubleLogEntry topRPMLog;
+    private DoubleLogEntry bottomRPMLog;
+    private DoubleLogEntry topTargetRPMLog;
+    private DoubleLogEntry bottomTargetRPMLog;
+    private BooleanLogEntry topOnTargetLog;
+    private BooleanLogEntry bottomOnTargetLog;
+    private DoubleLogEntry topPowerLog;
+    private DoubleLogEntry bottomPowerLog;
+    private DoubleLogEntry biasLog;
 
     public Flywheel() {
         boolean topMotorInvert = FlywheelConstants.MOTOR_TOP_INVERT_Rhapsody;
@@ -51,22 +59,25 @@ public class Flywheel extends SubsystemBase {
 
         topMotor.applyConfig();
         bottomMotor.applyConfig();
+
         initLogging();
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * initialize logging
+     */
     private void initLogging() {
+        DataLog log = DataLogManager.getLog();
 
-        periodicShuffleboard = new LightningShuffleboardPeriodic("Flywheel", FlywheelConstants.FLYWHEEL_LOG_PERIOD,
-            new Pair<String, Object>("Top RPM", (DoubleSupplier) () -> getTopMotorRPM()),
-            new Pair<String, Object>("Bottom RPM", (DoubleSupplier) () -> getBottomMotorRPM()),
-            new Pair<String, Object>("Target Top RPM", (DoubleSupplier) () -> this.topTargetRPS * 60),
-            new Pair<String, Object>("Target Bottom RPM", (DoubleSupplier) () -> this.bottomTargetRPS * 60),
-            new Pair<String, Object>("Top on Target", (BooleanSupplier) this::topMotorRPMOnTarget),
-            new Pair<String, Object>("Bottom on Target", (BooleanSupplier) this::bottomMotorRPMOnTarget),
-            new Pair<String, Object>("Top Power", (DoubleSupplier) topMotor::get),
-            new Pair<String, Object>("Bottom Power", (DoubleSupplier) bottomMotor::get),
-            new Pair<String, Object>("Bias", (DoubleSupplier) this::getBias));
+        topRPMLog = new DoubleLogEntry(log, "/Flywheel/TopRPM");
+        bottomRPMLog = new DoubleLogEntry(log, "/Flywheel/BottomRPM");
+        topTargetRPMLog = new DoubleLogEntry(log, "/Flywheel/TopTargetRPM");
+        bottomTargetRPMLog = new DoubleLogEntry(log, "/Flywheel/BottomTargetRPM");
+        topOnTargetLog = new BooleanLogEntry(log, "/Flywheel/TopOnTarget");
+        bottomOnTargetLog = new BooleanLogEntry(log, "/Flywheel/BottomOnTarget");
+        topPowerLog = new DoubleLogEntry(log, "/Flywheel/TopPower");
+        bottomPowerLog = new DoubleLogEntry(log, "/Flywheel/BottomPower");
+        biasLog = new DoubleLogEntry(log, "/Flywheel/Bias");
     }
 
     @Override
@@ -78,6 +89,23 @@ public class Flywheel extends SubsystemBase {
             applyPowerTop(topTargetRPS + bias);
             applyPowerBottom(bottomTargetRPS + bias);
         }
+
+        updateLogging();
+    }
+
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        topRPMLog.append(getTopMotorRPM());
+        bottomRPMLog.append(getBottomMotorRPM());
+        topTargetRPMLog.append(topMotorTargetRPM());
+        bottomTargetRPMLog.append(bottomMotorTargetRPM());
+        topOnTargetLog.append(topMotorRPMOnTarget());
+        bottomOnTargetLog.append(bottomMotorRPMOnTarget());
+        topPowerLog.append(topMotor.get());
+        bottomPowerLog.append(bottomMotor.get());
+        biasLog.append(getBias());
     }
 
     /**

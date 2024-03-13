@@ -8,13 +8,14 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.shuffleboard.LightningShuffleboard;
-import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
 
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -30,7 +31,12 @@ public class Climber extends SubsystemBase {
 
     private DutyCycleOut manualControl = new DutyCycleOut(0d);
 
-    private LightningShuffleboardPeriodic periodicShuffleboard;
+    private DoubleLogEntry leftHeightLog;
+    private DoubleLogEntry rightHeightLog;
+    private DoubleLogEntry leftSetpointLog;
+    private DoubleLogEntry rightSetpointLog;
+    private DoubleLogEntry leftAppliedLog;
+    private DoubleLogEntry rightAppliedLog;
 
     public Climber() {
         // configure climb motors
@@ -57,21 +63,24 @@ public class Climber extends SubsystemBase {
         climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConf));
         climbMotorR.applyConfig(climbMotorR.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConf));
 
-        initLogging();
-
         climbMotorL.setPosition(0d);
         climbMotorR.setPosition(0d);
+
+        initLogging();
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * initialize logging
+     */
     private void initLogging() { // TODO test and fix once we have climber
-        periodicShuffleboard = new LightningShuffleboardPeriodic("Climb", ClimbConstants.CLIMB_LOG_PERIOD,
-            new Pair<String, Object>("Left Height", (DoubleSupplier) () -> getHeightL()),
-            new Pair<String, Object>("Right Height", (DoubleSupplier) () -> getHeightR()),
-            new Pair<String, Object>("Left Setpoint", (DoubleSupplier) () -> getSetpointL()),
-            new Pair<String, Object>("Right Setpoint", (DoubleSupplier) () -> getSetpointR()),
-            new Pair<String, Object>("Left Applied", (DoubleSupplier) () -> climbMotorL.getMotorVoltage().getValueAsDouble()),
-            new Pair<String, Object>("Right Applied", (DoubleSupplier) () -> climbMotorR.getMotorVoltage().getValueAsDouble()));
+        DataLog log = DataLogManager.getLog();
+
+        leftHeightLog = new DoubleLogEntry(log, "/Climb/LeftHeight");
+        rightHeightLog = new DoubleLogEntry(log, "/Climb/RightHeight");
+        leftSetpointLog = new DoubleLogEntry(log, "/Climb/LeftSetpoint");
+        rightSetpointLog = new DoubleLogEntry(log, "/Climb/RightSetpoint");
+        leftAppliedLog = new DoubleLogEntry(log, "/Climb/LeftApplied");
+        rightAppliedLog = new DoubleLogEntry(log, "/Climb/RightApplied");
     }
 
     /**
@@ -170,5 +179,19 @@ public class Climber extends SubsystemBase {
                 motor.setPosition(0d);
             }
         }
+
+        updateLogging();
+    }
+
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        leftHeightLog.append(getHeightL());
+        rightHeightLog.append(getHeightR());
+        leftSetpointLog.append(getSetpointL());
+        rightSetpointLog.append(getSetpointR());
+        leftAppliedLog.append(climbMotorL.getMotorVoltage().getValueAsDouble());
+        rightAppliedLog.append(climbMotorR.getMotorVoltage().getValueAsDouble());
     }
 }

@@ -1,33 +1,35 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants;
 import frc.robot.Constants.CollectorConstants;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
-import edu.wpi.first.math.Pair;
-import java.util.function.DoubleSupplier;
-import java.util.function.BooleanSupplier;
 
 public class Collector extends SubsystemBase {
 
 	// Declare collector hardware
 	private ThunderBird motor;
 	private DigitalInput beamBreak;
-	private LightningShuffleboardPeriodic periodicShuffleboard;
 
 	private final VelocityVoltage velocityVoltage = new VelocityVoltage(
 			0, 0, true, CollectorConstants.MOTOR_KV,
 			0, false, false, false);
 
 	private boolean hasPiece;
+
+	private DoubleLogEntry collectorPowerLog;
+	private BooleanLogEntry beamBreakLog;
+	private BooleanLogEntry hasPieceLog;
 
 	public Collector() {
 		motor = new ThunderBird(
@@ -45,12 +47,15 @@ public class Collector extends SubsystemBase {
 		initLogging();
 	}
 
-	@SuppressWarnings ("unchecked")
+	/**
+	 * initialize logging
+	 */
 	private void initLogging() {
-		periodicShuffleboard = new LightningShuffleboardPeriodic("Collector", CollectorConstants.COLLECTOR_LOG_PERIOD,
-				new Pair<String, Object>("Collector Power", (DoubleSupplier) () -> motor.get()),
-				new Pair<String, Object>("Beam Break", (BooleanSupplier) () -> getEntryBeamBreakState()),
-				new Pair<String, Object>("Has Piece", (BooleanSupplier) () -> hasPiece()));
+		DataLog log = DataLogManager.getLog();
+
+		collectorPowerLog = new DoubleLogEntry(log, "/Collector/Power");
+		beamBreakLog = new BooleanLogEntry(log, "/Collector/BeamBreak");
+		hasPieceLog = new BooleanLogEntry(log, "/Collector/HasPiece");
 	}
 
 	/**
@@ -75,6 +80,16 @@ public class Collector extends SubsystemBase {
 	public void periodic() {
 		// tells robot if we have a piece in collector
 		hasPiece = getEntryBeamBreakState();
+		updateLogging();
+	}
+
+	/**
+	 * update logging
+	 */
+	public void updateLogging() {
+		collectorPowerLog.append(motor.get());
+		beamBreakLog.append(getEntryBeamBreakState());
+		hasPieceLog.append(hasPiece());
 	}
 
 	/**

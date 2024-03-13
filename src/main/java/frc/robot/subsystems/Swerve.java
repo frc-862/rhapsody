@@ -1,10 +1,9 @@
 package frc.robot.subsystems;
 
 import java.sql.Driver;
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-
+import javax.xml.crypto.Data;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
@@ -23,6 +22,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.CollisionConstants;
@@ -31,11 +35,6 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.util.Pose4d;
-import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
-
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-import edu.wpi.first.math.Pair;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements
@@ -55,13 +54,20 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
     private Translation2d speakerPose = VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d();
 
-    private LightningShuffleboardPeriodic periodicShuffleboard;
+    private DoubleLogEntry timerLog;
+    private DoubleLogEntry robotHeadingLog;
+    private DoubleLogEntry odoXLog;
+    private DoubleLogEntry odoYLog;
+    private BooleanLogEntry slowModeLog;
+    private BooleanLogEntry robotCentricLog;
+    private BooleanLogEntry tippedLog;
+    private DoubleLogEntry velocityXLog;
+    private DoubleLogEntry velocityYLog;
+    private DoubleLogEntry distanceToSpeakerLog;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
-
-        initLogging();
 
         configurePathPlanner();
 
@@ -70,6 +76,26 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         }
 
         // setRampRate();
+
+        initLogging();
+    }
+
+    /**
+     * initialize logging
+     */
+    private void initLogging() {
+        DataLog log = DataLogManager.getLog();
+
+        timerLog = new DoubleLogEntry(log, "/Swerve/Timer");
+        robotHeadingLog = new DoubleLogEntry(log, "/Swerve/Robot Heading");
+        odoXLog = new DoubleLogEntry(log, "/Swerve/Odo X");
+        odoYLog = new DoubleLogEntry(log, "/Swerve/Odo Y");
+        slowModeLog = new BooleanLogEntry(log, "/Swerve/Slow mode");
+        robotCentricLog = new BooleanLogEntry(log, "/Swerve/Robot Centric");
+        tippedLog = new BooleanLogEntry(log, "/Swerve/Tipped");
+        velocityXLog = new DoubleLogEntry(log, "/Swerve/velocity x");
+        velocityYLog = new DoubleLogEntry(log, "/Swerve/velocity y");
+        distanceToSpeakerLog = new DoubleLogEntry(log, "/Swerve/Distance to Speaker");
     }
 
     private void setRampRate() {
@@ -207,19 +233,25 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         updateSimState(0.01, 12);
     }
 
-    @SuppressWarnings({"unchecked", "resource"})
-    private void initLogging() {
-        periodicShuffleboard = new LightningShuffleboardPeriodic("Swerve", DrivetrainConstants.DRIVETRAIN_LOG_PERIOD,
-                new Pair<String, Object>("Timer", (DoubleSupplier) Timer::getFPGATimestamp),
-                new Pair<String, Object>("Robot Heading", (DoubleSupplier) getPigeon2()::getAngle),
-                new Pair<String, Object>("Odo X", (DoubleSupplier) getPose()::getX),
-                new Pair<String, Object>("Odo Y", (DoubleSupplier) getPose()::getY),
-                new Pair<String, Object>("Slow mode", (BooleanSupplier) this::inSlowMode),
-                new Pair<String, Object>("Robot Centric", (BooleanSupplier) this::isRobotCentricControl),
-                new Pair<String, Object>("Tipped", (BooleanSupplier) this::isTipped),
-                new Pair<String, Object>("velocity x", (DoubleSupplier) getPigeon2().getAngularVelocityXDevice()::getValueAsDouble),
-                new Pair<String, Object>("velocity y", (DoubleSupplier) getPigeon2().getAngularVelocityYDevice()::getValueAsDouble),
-                new Pair<String, Object>("Distance to Speaker", (DoubleSupplier) this::distanceToSpeaker));
+    @Override
+    public void periodic() {
+        updateLogging();
+    }
+
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        timerLog.append(Timer.getFPGATimestamp());
+        robotHeadingLog.append(getPigeon2().getAngle());
+        odoXLog.append(getPose().getX());
+        odoYLog.append(getPose().getY());
+        slowModeLog.append(inSlowMode());
+        robotCentricLog.append(isRobotCentricControl());
+        tippedLog.append(isTipped());
+        velocityXLog.append(getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
+        velocityYLog.append(getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
+        distanceToSpeakerLog.append(distanceToSpeaker());
     }
 
     private void configurePathPlanner() {

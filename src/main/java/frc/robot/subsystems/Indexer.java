@@ -4,16 +4,16 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
-
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-import edu.wpi.first.math.Pair;
 
 public class Indexer extends SubsystemBase {
 
@@ -33,7 +33,13 @@ public class Indexer extends SubsystemBase {
     private Debouncer entryDebouncer = new Debouncer(0.05);
     private Debouncer exitDebouncer = new Debouncer(0.05);
 
-    private LightningShuffleboardPeriodic periodicShuffleboard;
+    private DoubleLogEntry indexerPowerLog;
+    private BooleanLogEntry entryBeamBreakLog;
+    private BooleanLogEntry exitBeamBreakLog;
+    private StringLogEntry pieceStateLog;
+    private BooleanLogEntry hasShotLog;
+    private BooleanLogEntry isExitingLog;
+    private BooleanLogEntry hasPieceLog;
 
     public Indexer(Collector collector) {
         this.collector = collector;
@@ -43,19 +49,23 @@ public class Indexer extends SubsystemBase {
                 IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
 
         indexerMotor.applyConfig();
+
         initLogging();
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * initialize logging
+     */
     private void initLogging() {
-        periodicShuffleboard = new LightningShuffleboardPeriodic("Indexer", IndexerConstants.INDEXER_LOG_PERIOD,
-                new Pair<String, Object>("Indexer Power", (DoubleSupplier) () -> indexerMotor.get()),
-                new Pair<String, Object>("Entry Beam Break", (Supplier<Boolean>) () -> getEntryBeamBreakState()),
-                new Pair<String, Object>("Exit Beam Break", (Supplier<Boolean>) () -> getExitBeamBreakState()),
-                new Pair<String, Object>("Piece State", (Supplier<String>) () -> getPieceState().toString()),
-                new Pair<String, Object>("Has shot", (Supplier<Boolean>) () -> hasShot()),
-                new Pair<String, Object>("Is Exiting", (Supplier<Boolean>) () -> isExiting()),
-                new Pair<String, Object>("Has Piece", (Supplier<Boolean>) () -> getPieceState() == PieceState.IN_COLLECT));
+        DataLog log = DataLogManager.getLog();
+
+        indexerPowerLog = new DoubleLogEntry(log, "/Indexer/Power");
+        entryBeamBreakLog = new BooleanLogEntry(log, "/Indexer/EntryBeamBreak");
+        exitBeamBreakLog = new BooleanLogEntry(log, "/Indexer/ExitBeamBreak");
+        pieceStateLog = new StringLogEntry(log, "/Indexer/PieceState");
+        hasShotLog = new BooleanLogEntry(log, "/Indexer/HasShot");
+        isExitingLog = new BooleanLogEntry(log, "/Indexer/IsExiting");
+        hasPieceLog = new BooleanLogEntry(log, "/Indexer/HasPiece");
     }
 
     /**
@@ -167,6 +177,21 @@ public class Indexer extends SubsystemBase {
             didShoot = didShoot || hasNote();
             setPieceState(PieceState.NONE);
         }
+
+        updateLogging();
+    }
+
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        indexerPowerLog.append(indexerMotor.get());
+        entryBeamBreakLog.append(getEntryBeamBreakState());
+        exitBeamBreakLog.append(getExitBeamBreakState());
+        pieceStateLog.append(getPieceState().toString());
+        hasShotLog.append(hasShot());
+        isExitingLog.append(isExiting());
+        hasPieceLog.append(hasNote());
     }
 
     public boolean hasNote() {

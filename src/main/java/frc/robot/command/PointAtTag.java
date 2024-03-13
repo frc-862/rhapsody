@@ -1,21 +1,18 @@
 package frc.robot.command;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
 import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
-import frc.thunder.shuffleboard.LightningShuffleboard;
-import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
 import frc.thunder.vision.Limelight;
 
 public class PointAtTag extends Command {
@@ -31,7 +28,8 @@ public class PointAtTag extends Command {
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
-	private LightningShuffleboardPeriodic periodicShuffleboard;
+	private DoubleLogEntry deltaYLog;
+    private DoubleLogEntry deltaXLog;
 
 	/**
 	 * Creates a new PointAtTag.
@@ -51,6 +49,8 @@ public class PointAtTag extends Command {
 		}
 
 		addRequirements(drivetrain);
+
+		initLogging();
 	}
 
 	@Override
@@ -58,15 +58,16 @@ public class PointAtTag extends Command {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 
 		headingController.enableContinuousInput(-180, 180);
-
-		initLogging();
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * initialize logging
+	 */
 	private void initLogging() {
-		periodicShuffleboard = new LightningShuffleboardPeriodic("PointAtTag", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
-			new Pair<String, Object>("Target Heading", (DoubleSupplier) () -> targetHeading),
-			new Pair<String, Object>("PID Output", (DoubleSupplier) () -> pidOutput));
+		DataLog log = DataLogManager.getLog();
+
+		deltaYLog = new DoubleLogEntry(log, "/PointAtTag/deltaY");
+		deltaXLog = new DoubleLogEntry(log, "/PointAtTag/deltaX");
 	}
 
 	@Override
@@ -80,6 +81,16 @@ public class PointAtTag extends Command {
 			driver.getLeftY(),
 			driver.getLeftX(),
 			-pidOutput);
+		
+		updateLogging();
+	}
+
+	/**
+	 * update logging
+	*/
+	public void updateLogging(){
+		deltaYLog.append(limelight.getTargetY());
+		deltaXLog.append(limelight.getTargetX());
 	}
 
 	@Override

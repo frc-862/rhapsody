@@ -2,6 +2,7 @@ package frc.robot.command;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import javax.xml.crypto.Data;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
@@ -11,12 +12,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
-import frc.thunder.shuffleboard.LightningShuffleboard;
-import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
 
 public class PointAtPoint extends Command {
 
@@ -30,9 +33,16 @@ public class PointAtPoint extends Command {
 	private Translation2d originalTargetPose;
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
-
-	private LightningShuffleboardPeriodic periodicShuffleboard;
-
+	
+	private DoubleLogEntry deltaYLog;
+	private DoubleLogEntry deltaXLog;
+	private DoubleLogEntry targetHeadingLog;
+	private DoubleLogEntry targetYLog;
+	private DoubleLogEntry targetXLog;
+	private DoubleLogEntry pidOutputLog;
+    private DoubleLogEntry targetMinusCurrentHeadingLog;
+	private DoubleLogEntry currentLog;
+	private BooleanLogEntry inToleranceLog;
 	/**
 	 * Creates a new PointAtTag.
 	 * @param targetX    the x coordinate of the target
@@ -46,6 +56,8 @@ public class PointAtPoint extends Command {
 		this.originalTargetPose = new Translation2d(targetX, targetY);
 
 		addRequirements(drivetrain);
+
+		initLogging();
 	}
 
 	public PointAtPoint(Translation2d targetPose, Swerve drivetrain, XboxController driver) {
@@ -54,6 +66,8 @@ public class PointAtPoint extends Command {
 		this.originalTargetPose = targetPose;
 
 		addRequirements(drivetrain);
+
+		initLogging();
 	}
 
 	private boolean isBlueAlliance() {
@@ -79,18 +93,21 @@ public class PointAtPoint extends Command {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * update logging
+	 */
 	public void initLogging(){
-		periodicShuffleboard = new LightningShuffleboardPeriodic("PointAtPoint", ShuffleboardPeriodicConstants.DEFAULT_SHUFFLEBOARD_PERIOD,
-				new Pair<String, Object>("Delta Y", (DoubleSupplier) () -> targetPose.getY() - drivetrain.getPose().getY()),
-				new Pair<String, Object>("Delta X", (DoubleSupplier) () -> targetPose.getX() - drivetrain.getPose().getX()),
-				new Pair<String, Object>("Target Heading", (DoubleSupplier) () -> targetHeading),
-				new Pair<String, Object>("Target Pose Y", (DoubleSupplier) () -> targetPose.getY()),
-				new Pair<String, Object>("Target Pose X", (DoubleSupplier) () -> targetPose.getX()),
-				new Pair<String, Object>("Pid Output", (DoubleSupplier) () -> pidOutput),
-				new Pair<String, Object>("target minus current heading", (DoubleSupplier) () -> Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees())),
-				new Pair<String, Object>("Current", (DoubleSupplier) () -> drivetrain.getPose().getRotation().getDegrees()),
-				new Pair<String, Object>("InTolerance", (BooleanSupplier) () -> inTolerance()));
+		DataLog log = DataLogManager.getLog();
+
+		deltaYLog = new DoubleLogEntry(log, "/PointAtPoint/Delta Y");
+		deltaXLog = new DoubleLogEntry(log, "/PointAtPoint/Delta X");
+		targetHeadingLog = new DoubleLogEntry(log, "/PointAtPoint/Target Heading");
+		targetYLog = new DoubleLogEntry(log, "/PointAtPoint/Target Pose Y");
+		targetXLog = new DoubleLogEntry(log, "/PointAtPoint/Target Pose X");
+		pidOutputLog = new DoubleLogEntry(log, "/PointAtPoint/Pid Output");
+		targetMinusCurrentHeadingLog = new DoubleLogEntry(log, "/PointAtPoint/target minus current heading");
+		currentLog = new DoubleLogEntry(log, "/PointAtPoint/Current");
+		inToleranceLog = new BooleanLogEntry(log, "/PointAtPoint/InTolerance");
 	}
 
 	@Override
@@ -108,6 +125,23 @@ public class PointAtPoint extends Command {
 		}
 
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
+
+		updateLogging();
+	}
+
+	/**
+	 * update logging
+	 */
+	public void updateLogging(){
+		deltaYLog.append(targetPose.getY() - drivetrain.getPose().getY());
+		deltaXLog.append(targetPose.getX() - drivetrain.getPose().getX());
+		targetHeadingLog.append(targetHeading);
+		targetYLog.append(targetPose.getY());
+		targetXLog.append(targetPose.getX());
+		pidOutputLog.append(pidOutput);
+		targetMinusCurrentHeadingLog.append(Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()));
+		currentLog.append(drivetrain.getPose().getRotation().getDegrees());
+		inToleranceLog.append(inTolerance());
 	}
 
 	@Override

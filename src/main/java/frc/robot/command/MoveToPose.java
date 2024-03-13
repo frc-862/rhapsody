@@ -8,12 +8,11 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
 import frc.robot.Constants;
-import frc.robot.Constants.ShuffleboardPeriodicConstants;
 import frc.robot.subsystems.Swerve;
-import frc.thunder.shuffleboard.LightningShuffleboard;
-import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
-import java.util.function.DoubleSupplier;
 
 public class MoveToPose extends Command {
 
@@ -29,7 +28,10 @@ public class MoveToPose extends Command {
     private double powerx;
     private double powery;
 
-    private LightningShuffleboardPeriodic periodicShuffleboard;
+    private DoubleLogEntry dxLog;
+    private DoubleLogEntry dyLog;
+    private DoubleLogEntry targetXLog;
+    private DoubleLogEntry targetYLog;
 
     /**
      * @param target     The target pose to move to
@@ -40,20 +42,23 @@ public class MoveToPose extends Command {
         this.drivetrain = drivetrain;
 
         addRequirements(drivetrain);
-    }
 
-    @Override
-    public void initialize() {
         initLogging();
     }
 
-    @SuppressWarnings ("unchecked")
+    @Override
+    public void initialize() {}
+
+    /**
+     * initialize logging
+     */
     private void initLogging() {
-        periodicShuffleboard = new LightningShuffleboardPeriodic("MoveToPose", ShuffleboardPeriodicConstants.SHUFFLEBOARD_PERIOD_IMPORTANT,
-                new Pair<String, Object>("dx", (DoubleSupplier) () -> dx), 
-                new Pair<String, Object>("dy", (DoubleSupplier) () -> dy),
-                new Pair<String, Object>("targetX", (DoubleSupplier) () -> target.getX()), 
-                new Pair<String, Object>("targetY", (DoubleSupplier) () -> target.getY()));
+        DataLog log = DataLogManager.getLog();
+
+        dxLog = new DoubleLogEntry(log, "/MoveToPose/dx");
+        dyLog = new DoubleLogEntry(log, "/MoveToPose/dy");
+        targetXLog = new DoubleLogEntry(log, "/MoveToPose/targetX");
+        targetYLog = new DoubleLogEntry(log, "/MoveToPose/targetY");
     }
 
     @Override
@@ -90,6 +95,18 @@ public class MoveToPose extends Command {
         }
 
         drivetrain.setField(powerx, powery, 0); // TODO test
+
+        updateLogging();
+    }
+
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        dxLog.append(dx);
+        dyLog.append(dy);
+        targetXLog.append(target.getTranslation().getX());
+        targetYLog.append(target.getTranslation().getY());
     }
 
     @Override
