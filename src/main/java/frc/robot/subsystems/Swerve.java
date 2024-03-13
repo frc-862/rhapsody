@@ -1,8 +1,11 @@
 package frc.robot.subsystems;
 
+import java.sql.Driver;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-
+import javax.xml.crypto.Data;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
@@ -12,30 +15,25 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.CollisionConstants;
-import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.thunder.filter.XboxControllerFilter;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
 
 /**
@@ -44,8 +42,6 @@ import frc.thunder.util.Pose4d;
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
-    private final Limelights limelightSubsystem;
-
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric();
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
@@ -56,16 +52,91 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private boolean robotCentricControl = false;
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
+    private Translation2d speakerPose = VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d();
+
+    private DoubleLogEntry timerLog;
+    private DoubleLogEntry robotHeadingLog;
+    private DoubleLogEntry odoXLog;
+    private DoubleLogEntry odoYLog;
+    private BooleanLogEntry slowModeLog;
+    private BooleanLogEntry robotCentricLog;
+    private BooleanLogEntry tippedLog;
+    private DoubleLogEntry velocityXLog;
+    private DoubleLogEntry velocityYLog;
+    private DoubleLogEntry distanceToSpeakerLog;
 
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
-            Limelights limelightSubsystem, SwerveModuleConstants... modules) {
+            SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
 
-        this.limelightSubsystem = limelightSubsystem;
+        configurePathPlanner();
+
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+            speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
+        }
+
+        setRampRate();
 
         initLogging();
+    }
 
-        configurePathPlanner();
+    /**
+     * initialize logging
+     */
+    private void initLogging() {
+        DataLog log = DataLogManager.getLog();
+
+        timerLog = new DoubleLogEntry(log, "/Swerve/Timer");
+        robotHeadingLog = new DoubleLogEntry(log, "/Swerve/Robot Heading");
+        odoXLog = new DoubleLogEntry(log, "/Swerve/Odo X");
+        odoYLog = new DoubleLogEntry(log, "/Swerve/Odo Y");
+        slowModeLog = new BooleanLogEntry(log, "/Swerve/Slow mode");
+        robotCentricLog = new BooleanLogEntry(log, "/Swerve/Robot Centric");
+        tippedLog = new BooleanLogEntry(log, "/Swerve/Tipped");
+        velocityXLog = new DoubleLogEntry(log, "/Swerve/velocity x");
+        velocityYLog = new DoubleLogEntry(log, "/Swerve/velocity y");
+        distanceToSpeakerLog = new DoubleLogEntry(log, "/Swerve/Distance to Speaker");
+    }
+
+    private void setRampRate() {
+        var config = new TalonFXConfiguration();
+        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.1;
+        config.OpenLoopRamps.TorqueOpenLoopRampPeriod = 0.1;
+        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.1;
+        config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 0.1;
+        config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.1;
+        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
+
+        for (int i = 0; i < 4; ++i) {
+            var module = getModule(i);
+            var drive = module.getDriveMotor();
+            var steer = module.getSteerMotor();
+
+            StatusCode status = StatusCode.StatusCodeNotInitialized;
+            StatusCode status1 = StatusCode.StatusCodeNotInitialized;
+            for (int j = 0; j < 5; ++j) {
+                // Theory is like, it'll refresh, and then apply.
+                status1 = drive.getConfigurator().refresh(config);
+                // kyle said try refresh, but im pretty sure it's for reading only.
+                status = drive.getConfigurator().apply(config);
+                if (status.isOK() && status1.isOK()) {
+                    break;
+                }
+            }
+            for (int j = 0; j < 5; ++j) {
+                status1 = steer.getConfigurator().refresh(config);
+                status = steer.getConfigurator().apply(config);
+                if (status.isOK() && status1.isOK()) {
+                    break;
+                }
+            }
+        }
+    }
+
+    public void applyVisionPose(Pose4d pose) {
+        if (!disableVision) {
+            addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), pose.getStdDevs());
+        }
     }
 
     /* DRIVE METHODS */
@@ -169,47 +240,23 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
-        // TODO Remove the unecessary shuffleboard stuff eventually
-        if (!disableVision) {
-            var pose = limelightSubsystem.getPoseQueue().poll();
-            while (pose != null) {
-                // High confidence => 0.3
-                // Low confidence => 18
-                // theta trust IMU, use 500 degrees
-
-                double confidence = 18.0;
-                if (pose.getMoreThanOneTarget() && pose.getDistance() < 3) {
-                    confidence = 0.3;
-                } else if (pose.getMoreThanOneTarget()) {
-                    confidence = 0.3 + ((pose.getDistance() - 3) / 5 * 18);
-                } else if (pose.getDistance() < 2) {
-                    confidence = 1.0 + (pose.getDistance() / 2 * 5.0);
-                }
-
-                addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(),
-                        VecBuilder.fill(confidence, confidence, Math.toRadians(500)));
-                pose = limelightSubsystem.getPoseQueue().poll();
-            }
-        }
+        updateLogging();
     }
 
-    private void initLogging() {
-        // TODO Remove the unecessary shuffleboard stuff eventually
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Timer", () -> Timer.getFPGATimestamp());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPigeon2().getAngle());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo X", () -> getPose().getX());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odo Y", () -> getPose().getY());
-
-        LightningShuffleboard.setBoolSupplier("Swerve", "Slow mode", () -> slowMode);
-        LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
-
-        LightningShuffleboard.setBoolSupplier("Sweve", "Tipped", () -> isTipped());
-
-        LightningShuffleboard.setDoubleSupplier("Swerve", "velocity x",
-                () -> getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "velocity y",
-                () -> getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Distance to Speaker", () -> distanceToSpeaker());
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        timerLog.append(Timer.getFPGATimestamp());
+        robotHeadingLog.append(getPigeon2().getAngle());
+        odoXLog.append(getPose().getX());
+        odoYLog.append(getPose().getY());
+        slowModeLog.append(inSlowMode());
+        robotCentricLog.append(isRobotCentricControl());
+        tippedLog.append(isTipped());
+        velocityXLog.append(getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
+        velocityYLog.append(getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
+        distanceToSpeakerLog.append(distanceToSpeaker());
     }
 
     private void configurePathPlanner() {
@@ -337,6 +384,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public double distanceToSpeaker() {
-        return DrivetrainConstants.SPEAKER_POSE.getDistance(getPose().getTranslation());
+        return speakerPose.getDistance(getPose().getTranslation());
     }
 }

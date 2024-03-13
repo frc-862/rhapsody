@@ -25,7 +25,7 @@ public class CycleSytemTest extends SystemTestCommandGroup {
         super(
             new SequentialCommandGroup(
                 new WaitCommand(0.5),
-                new TimedCommand(new SmartCollect(collectorPower, indexerPower, collector, indexer, pivot), 3), // Run smart collect for 3
+                new TimedCommand(new SmartCollect(collectorPower, indexerPower, collector, indexer, pivot, flywheel), 3), // Run smart collect for 3
                 new WaitCommand(1),
                 new TimedCommand(new ParallelCommandGroup( // Run two commands for 2 seconds
                     new StartEndCommand(() -> flywheel.setAllMotorsRPM(flywheelRPM.getAsDouble()), // Starts by setting flywheel RPM to flywheel RPM

@@ -1,17 +1,29 @@
 package frc.robot.command;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.Collector;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Limelights;
-import frc.robot.subsystems.Pivot;
+import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.subsystems.Swerve;
-import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Limelights;
 import frc.thunder.vision.Limelight;
 
 public class ChasePieces extends Command {
@@ -19,6 +31,7 @@ public class ChasePieces extends Command {
 	private Swerve drivetrain;
 	private Collector collector;
 	private Indexer indexer;
+	private Flywheel flywheel;
 	private Pivot pivot;
 	private Limelight limelight;
 
@@ -27,7 +40,9 @@ public class ChasePieces extends Command {
 	private double previousTargetHeading;
 
 	private double targetPitch;
-	private double power;
+	private double collectPower;
+	private double maxCollectPower;
+	private double drivePower;
 
     private boolean onTarget;
 	private boolean hasPiece;
@@ -39,50 +54,80 @@ public class ChasePieces extends Command {
 
 	private Debouncer debouncer = new Debouncer(IndexerConstants.INDEXER_DEBOUNCE_TIME);
 
+	private BooleanLogEntry onTargetLog;
+	private BooleanLogEntry hasTargetLog;
+	private BooleanLogEntry isDoneLog;
+	private BooleanLogEntry hasPieceLog;
+
+	private DoubleLogEntry targetHeadingLog;
+	private DoubleLogEntry targetYLog;
+	private DoubleLogEntry pidOutputLog;
+	private DoubleLogEntry smartCollectPowerLog;
+    private DoubleLogEntry drivePowerLog;
+	private DoubleLogEntry maxCollectPowerLog;
+
 	/**
 	 * Creates a new ChasePieces.
 	 * @param drivetrain to request movement
 	 * @param collector for smart collect
 	 * @param indexer for smart collect
+	 * @param flywheel for stopping the flywheels before collecting / for smart collect
 	 * @param pivot for smart collect
 	 * @param limelights to get vision data from dust
 	 */
-
-	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Limelights limelights) {
+	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel, Limelights limelights) {
 		this.drivetrain = drivetrain;
 		this.collector = collector;
 		this.indexer = indexer;
+		this.flywheel = flywheel;
 		this.pivot = pivot;
 
-		limelight = limelights.getDust();
+		this.limelight = limelights.getDust();
 
-		addRequirements(drivetrain);
+		addRequirements(drivetrain, collector, indexer, flywheel);
+		
+		initLogging();
 	}
 
 	@Override
 	public void initialize() {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
-		power = 0d;
-		smartCollect =  new SmartCollect(() -> power, () -> power, collector, indexer, pivot);
-		initLogging();
-		smartCollect.schedule();
+		collectPower = 0d;
+		smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
+
+		if (DriverStation.isAutonomous()){
+			drivePower = 1.5d;
+			maxCollectPower = 0.5d;
+		} else {
+			maxCollectPower = 0.65d;
+			drivePower = 3d;
+		}
+		smartCollect.initialize();
 	}
 
+	/**
+	 * Initialize logging
+	 */
 	private void initLogging() {
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "On Target", () -> onTarget);
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Target", () -> hasTarget);
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "Is Done", () -> isDone);
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Piece", () -> hasPiece);
+		DataLog log = DataLogManager.getLog();
 
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Heading", () -> targetHeading);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Y", () -> targetPitch);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Pid Output", () -> pidOutput);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "SmartCollectPower", () -> power);
+		onTargetLog = new BooleanLogEntry(log, "/ChasePieces/On Target");
+		hasTargetLog = new BooleanLogEntry(log, "/ChasePieces/Has Target");
+		isDoneLog = new BooleanLogEntry(log, "/ChasePieces/Is Done");
+		hasPieceLog = new BooleanLogEntry(log, "/ChasePieces/Has Piece");
+
+		targetHeadingLog = new DoubleLogEntry(log, "/ChasePieces/Target Heading");
+		targetYLog = new DoubleLogEntry(log, "/ChasePieces/Target Y");
+		pidOutputLog = new DoubleLogEntry(log, "/ChasePieces/Pid Output");
+		smartCollectPowerLog = new DoubleLogEntry(log, "/ChasePieces/SmartCollectPower");
+		drivePowerLog = new DoubleLogEntry(log, "/ChasePieces/DrivePower");
+		maxCollectPowerLog = new DoubleLogEntry(log, "/ChasePieces/MaxCollectPower");
 	}
 
 	@Override
 	public void execute() {
 		hasTarget = limelight.hasTarget();
+		smartCollect.execute();
 
 		if (hasTarget){
 			previousTargetHeading = targetHeading;
@@ -91,7 +136,6 @@ public class ChasePieces extends Command {
 		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		isDone = smartCollect.isFinished();
 		hasPiece = debouncer.calculate(indexer.getEntryBeamBreakState()) || collector.getEntryBeamBreakState();
 
 		pidOutput = headingController.calculate(0, targetHeading);
@@ -99,25 +143,43 @@ public class ChasePieces extends Command {
 		if (!hasPiece){
 			if (hasTarget){
 				if (trustValues()){
-					power = 0.65d;
+					collectPower = maxCollectPower;
 					if (!onTarget) {
-						drivetrain.setRobot(3, 0, -pidOutput);
+						drivetrain.setRobot(drivePower, 0, -pidOutput);
 					} else {
-						drivetrain.setRobot(3, 0, 0);
+						drivetrain.setRobot(drivePower, 0, 0);
 					}
 				}
 			} else {
-				drivetrain.setRobot(3, 0, 0);
+				drivetrain.setRobot(drivePower, 0, 0);
 			}
 		} else {
 			drivetrain.setRobot(0, 0, 0);
 		}
 
+		updateLogging();
+	}
+
+	/**
+	 * Update logging
+	 */
+	private void updateLogging() {
+		onTargetLog.append(onTarget);
+		hasTargetLog.append(hasTarget);
+		isDoneLog.append(isDone);
+		hasPieceLog.append(hasPiece);
+
+		targetHeadingLog.append(targetHeading);
+		targetYLog.append(targetPitch);
+		pidOutputLog.append(pidOutput);
+		smartCollectPowerLog.append(collectPower);
+		drivePowerLog.append(drivePower);
+		maxCollectPowerLog.append(maxCollectPower);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		power = 0d;
+		collectPower = 0d;
 		smartCollect.end(interrupted);
 	}
 
@@ -134,6 +196,19 @@ public class ChasePieces extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return isDone;
+		if (DriverStation.isAutonomous()){
+			if (DriverStation.getAlliance().get() == Alliance.Blue){
+				if (drivetrain.getPose().getX() > AutonomousConstants.BLUE_CHASE_BOUNDARY) {
+					return true;
+				}
+			} else {
+				if (drivetrain.getPose().getX() < AutonomousConstants.RED_CHASE_BOUNDARY) {
+					return true;
+				}
+			}
+			return smartCollect.isFinished();
+		} else {
+			return smartCollect.isFinished();
+		}
 	}
 }

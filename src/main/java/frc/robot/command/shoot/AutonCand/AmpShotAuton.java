@@ -3,7 +3,6 @@ package frc.robot.command.shoot.AutonCand;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
-import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Indexer;
@@ -22,9 +21,10 @@ public class AmpShotAuton extends Command {
 
 	/**
 	 * Creates a new AmpShot
+	 * 
 	 * @param flywheel subsystem
-	 * @param pivot subsystem
-	 * @param indexer subsystem
+	 * @param pivot    subsystem
+	 * @param indexer  subsystem
 	 */
 	public AmpShotAuton(Flywheel flywheel, Pivot pivot, Indexer indexer) {
 		this.flywheel = flywheel;
@@ -39,8 +39,8 @@ public class AmpShotAuton extends Command {
 		shot = false;
 		startIndexing = false;
 		startTime = Timer.getFPGATimestamp();
-		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
-		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
+		flywheel.setTopMotorRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMotorRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 	}
 
@@ -48,25 +48,26 @@ public class AmpShotAuton extends Command {
 	public void execute() {
 		// Checks if the pivot and flywheel are on target then shoots
 		// also checks whether or not the flywheel's target RPM is greater than 0
-		if (pivot.onTarget() && flywheel.allMotorsOnTarget() && (flywheel.getTopMotorRPM() != 0 && flywheel.getBottomMotorRPM() != 0)) {
+		if (pivot.onTarget() && flywheel.allMotorsOnTarget()
+				&& (flywheel.getTopMotorRPM() != 0 && flywheel.getBottomMotorRPM() != 0)) {
 			startIndexing = true;
 		}
 
-		if(startIndexing) {
+		if (startIndexing) {
 			shot = true;
 			shotTime = Timer.getFPGATimestamp();
 			indexer.indexUp();
 		}
 
-		flywheel.setTopMoterRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
-		flywheel.setBottomMoterRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
+		flywheel.setTopMotorRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMotorRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
 		pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		pivot.setTargetAngle(pivot.getStowAngle());
 		indexer.stop();
 	}
 
