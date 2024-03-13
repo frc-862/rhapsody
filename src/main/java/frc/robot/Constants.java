@@ -635,25 +635,26 @@ public class Constants {
     }
 
     public class LEDsConstants {
-        public static final int LED_LENGTH = 26;
-
-        public static final int SWIRL_SEGMENT_SIZE = 5;
+        public static final int LED_LENGTH = 31;
 
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
                 put(-1, 0);
                 put(0, 0);
-                put(1, 14);
+                put(1, 16);
             }
         };
 
-        public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
+        public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>(){
             {
-                put(-1, LEDsConstants.LED_LENGTH);
-                put(0, 11);
-                put(1, 12);
+            put(-1, LEDsConstants.LED_LENGTH);
+            put(0, 16);
+            put(1, 15);
             }
         };
+
+        public static final int SWIRL_SEGMENT_SIZE = 5;
+
 
         public static final int RED_HUE = 0;
         public static final int ORANGE_HUE = 5;
@@ -668,21 +669,22 @@ public class Constants {
             DISABLED(1),
             EMERGENCY(2),
             START(3),
-            COLLECTED(4),
-            SHOT(5),
-            FINISHED_CLIMB(6),
-            SHOOTING(7),
-            COLLECTING(8),
-            CHASING(9),
-            CLIMBING(10),
+            GOOD_POSE(4),
+            COLLECTED(5),
+            SHOT(6),
+            FINISHED_CLIMB(7),
+            SHOOTING(8),
+            COLLECTING(9),
+            CHASING(10),
+            CLIMBING(11),
             HAS_PIECE(12),
-            HAS_VISION(11),
-            PIVOT_BOTTOM_SWITCH(13),
-            PIVOT_TOP_SWITCH(13),
-            COLLECTOR_BEAMBREAK(13),
-            INDEXER_ENTER_BEAMBREAK(13),
-            INDEXER_EXIT_BEAMBREAK(13),
-            DEFAULT(13);
+            HAS_VISION(13),
+            DEFAULT(14),
+            PIVOT_BOTTOM_SWITCH(15),
+            PIVOT_TOP_SWITCH(16),
+            COLLECTOR_BEAMBREAK(17),
+            INDEXER_ENTER_BEAMBREAK(18),
+            INDEXER_EXIT_BEAMBREAK(19);
 
             private final int priority;
 
