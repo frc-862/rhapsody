@@ -1,15 +1,17 @@
 package frc.robot.command;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 
 public class PointAtTag extends Command {
@@ -24,6 +26,9 @@ public class PointAtTag extends Command {
 	private double previousTargetHeading;
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
+
+	private DoubleLogEntry deltaYLog;
+    private DoubleLogEntry deltaXLog;
 
 	/**
 	 * Creates a new PointAtTag.
@@ -43,6 +48,8 @@ public class PointAtTag extends Command {
 		}
 
 		addRequirements(drivetrain);
+
+		initLogging();
 	}
 
 	@Override
@@ -50,13 +57,16 @@ public class PointAtTag extends Command {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 
 		headingController.enableContinuousInput(-180, 180);
-
-		initLogging();
 	}
 
+	/**
+	 * initialize logging
+	 */
 	private void initLogging() {
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Target Heading", () -> targetHeading);
-		LightningShuffleboard.setDoubleSupplier("PointAtTag", "Pid Output", () -> pidOutput);
+		DataLog log = DataLogManager.getLog();
+
+		deltaYLog = new DoubleLogEntry(log, "/PointAtTag/deltaY");
+		deltaXLog = new DoubleLogEntry(log, "/PointAtTag/deltaX");
 	}
 
 	@Override
@@ -70,6 +80,16 @@ public class PointAtTag extends Command {
 			driver.getLeftY(),
 			driver.getLeftX(),
 			-pidOutput);
+		
+		updateLogging();
+	}
+
+	/**
+	 * update logging
+	*/
+	public void updateLogging(){
+		deltaYLog.append(limelight.getTargetY());
+		deltaXLog.append(limelight.getTargetX());
 	}
 
 	@Override

@@ -42,23 +42,9 @@ public class Constants {
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x
-                                                                                         // distance
-                                                                                         // from
-                                                                                         // center
-                                                                                         // of robot
-                                                                                         // to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free
-                                                                                              // speed
-                                                                                              // /
-                                                                                              // circumference
-                                                                                              // of
-                                                                                              // circle
-                                                                                              // with
-                                                                                              // radius
-                                                                                              // of
-                                                                                              // wheelbase
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
 
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
@@ -69,6 +55,8 @@ public class Constants {
         public static final double SYS_TEST_SPEED_TURN = 0.7d;
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
+
+        public static final double ALIGNMENT_TOLERANCE = 10d;
     }
 
     public class RobotMap {
@@ -150,6 +138,8 @@ public class Constants {
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
                                                                                                       // constants
 
+        public static final double BLUE_CHASE_BOUNDARY = 8.2; // The highest X value the robot can be at before ending. Prevents going over center line.
+        public static final double RED_CHASE_BOUNDARY = 8.7;
 
     }
 
@@ -399,7 +389,7 @@ public class Constants {
     public class FlywheelConstants {
         public static final boolean MOTOR_TOP_INVERT_Rhapsody = false;
         public static final boolean MOTOR_TOP_INVERT_Mercury = true;
-        
+
         public static final boolean MOTOR_BOTTOM_INVERT = false;
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean MOTOR_BRAKE_MODE = false;
@@ -460,11 +450,45 @@ public class Constants {
         public static final double INDEXER_SYSTEST_POWER = 0.25d;
     }
 
-    public class PivotConstants { // TODO: get real
+    public class MercuryPivotConstants {
         public static final boolean MOTOR_INVERT = true; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
-        public static final double MOTOR_KP = 120; //TODO this can be cranked higher
+        public static final double MOTOR_KP = 0;
+        public static final double MOTOR_KI = 0;
+        public static final double MOTOR_KD = 0;
+        public static final double MOTOR_KS = 0;
+        public static final double MOTOR_KV = 3;
+        public static final double MOTOR_KA = 0;
+
+        public static final double MAGIC_CRUISE_VEL = 0.01; // TODO: get real value
+        public static final double MAGIC_ACCEL = 0.02; // TODO: get real value
+        public static final double MAGIC_JERK = 0.2; // TODO: get real value
+
+        public static final double ANGLE_TOLERANCE = 0.5d;
+
+        public static final double ENCODER_OFFSET = 0.61095; // In rotations
+        public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
+        public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
+        public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
+
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
+
+        public static final double STOW_ANGLE = 28d;
+
+        public static final double MAX_INDEX_ANGLE = 40d;
+
+        public static final double MIN_ANGLE = 25d;
+        public static final double MAX_ANGLE = 105d;
+
+        public static final double PIVOT_SYSTEST_ANGLE = 90d;
+    }
+
+    public class RhapsodyPivotConstants { // TODO: get real
+        public static final boolean MOTOR_INVERT = true; // POS power is up
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
+        public static final boolean MOTOR_BRAKE_MODE = true;
+        public static final double MOTOR_KP = 120; // TODO this can be cranked higher
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KG = 0.359;
@@ -478,13 +502,14 @@ public class Constants {
 
         public static final double ANGLE_TOLERANCE = 0.5d;
 
-        public static final double ENCODER_OFFSET = 0.282; // In rotations //TODO: find this value (NEEDS TO BE DONE BEFORE PR)
+        public static final double ENCODER_OFFSET = 0.282; // In rotations //TODO: find this value (NEEDS TO BE DONE
+                                                           // BEFORE PR)
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 275d;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO
-                                                        // get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias
+                                                        // by
 
         public static final double STOW_ANGLE = 27d;
 
@@ -659,5 +684,4 @@ public class Constants {
             }
         }
     }
-
 }
