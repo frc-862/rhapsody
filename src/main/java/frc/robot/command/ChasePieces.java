@@ -1,9 +1,17 @@
 package frc.robot.command;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.AutonomousConstants;
@@ -16,7 +24,6 @@ import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Limelights;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 
 public class ChasePieces extends Command {
@@ -47,6 +54,18 @@ public class ChasePieces extends Command {
 
 	private Debouncer debouncer = new Debouncer(IndexerConstants.INDEXER_DEBOUNCE_TIME);
 
+	private BooleanLogEntry onTargetLog;
+	private BooleanLogEntry hasTargetLog;
+	private BooleanLogEntry isDoneLog;
+	private BooleanLogEntry hasPieceLog;
+
+	private DoubleLogEntry targetHeadingLog;
+	private DoubleLogEntry targetYLog;
+	private DoubleLogEntry pidOutputLog;
+	private DoubleLogEntry smartCollectPowerLog;
+    private DoubleLogEntry drivePowerLog;
+	private DoubleLogEntry maxCollectPowerLog;
+
 	/**
 	 * Creates a new ChasePieces.
 	 * @param drivetrain to request movement
@@ -66,6 +85,8 @@ public class ChasePieces extends Command {
 		this.limelight = limelights.getDust();
 
 		addRequirements(drivetrain, collector, indexer, flywheel);
+		
+		initLogging();
 	}
 
 	@Override
@@ -81,25 +102,26 @@ public class ChasePieces extends Command {
 			maxCollectPower = 0.65d;
 			drivePower = 3d;
 		}
-
-		initLogging();
 		smartCollect.initialize();
 	}
 
+	/**
+	 * Initialize logging
+	 */
 	private void initLogging() {
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "On Target", () -> onTarget);
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Target", () -> hasTarget);
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "Is Done", () -> isDone);
-		LightningShuffleboard.setBoolSupplier("ChasePieces", "Has Piece", () -> hasPiece);
+		DataLog log = DataLogManager.getLog();
 
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Heading", () -> targetHeading);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Target Y", () -> targetPitch);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "Pid Output", () -> pidOutput);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "SmartCollectPower", () -> collectPower);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "DrivePower", () -> drivePower);
-		LightningShuffleboard.setDoubleSupplier("ChasePieces", "MaxCollectPower", () -> maxCollectPower);
+		onTargetLog = new BooleanLogEntry(log, "/ChasePieces/On Target");
+		hasTargetLog = new BooleanLogEntry(log, "/ChasePieces/Has Target");
+		isDoneLog = new BooleanLogEntry(log, "/ChasePieces/Is Done");
+		hasPieceLog = new BooleanLogEntry(log, "/ChasePieces/Has Piece");
 
-
+		targetHeadingLog = new DoubleLogEntry(log, "/ChasePieces/Target Heading");
+		targetYLog = new DoubleLogEntry(log, "/ChasePieces/Target Y");
+		pidOutputLog = new DoubleLogEntry(log, "/ChasePieces/Pid Output");
+		smartCollectPowerLog = new DoubleLogEntry(log, "/ChasePieces/SmartCollectPower");
+		drivePowerLog = new DoubleLogEntry(log, "/ChasePieces/DrivePower");
+		maxCollectPowerLog = new DoubleLogEntry(log, "/ChasePieces/MaxCollectPower");
 	}
 
 	@Override
@@ -135,6 +157,24 @@ public class ChasePieces extends Command {
 			drivetrain.setRobot(0, 0, 0);
 		}
 
+		updateLogging();
+	}
+
+	/**
+	 * Update logging
+	 */
+	private void updateLogging() {
+		onTargetLog.append(onTarget);
+		hasTargetLog.append(hasTarget);
+		isDoneLog.append(isDone);
+		hasPieceLog.append(hasPiece);
+
+		targetHeadingLog.append(targetHeading);
+		targetYLog.append(targetPitch);
+		pidOutputLog.append(pidOutput);
+		smartCollectPowerLog.append(collectPower);
+		drivePowerLog.append(drivePower);
+		maxCollectPowerLog.append(maxCollectPower);
 	}
 
 	@Override

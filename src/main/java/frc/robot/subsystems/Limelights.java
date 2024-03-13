@@ -34,6 +34,7 @@ public class Limelights extends SubsystemBase {
             while (true) {
                 try {
                     monitor(stopMe);
+                    monitor(champs);
                     Thread.sleep(5);
                 } catch (InterruptedException e) {
                     System.err.println("Vision loop error: " + e.toString());
