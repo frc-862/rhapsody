@@ -141,12 +141,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         xfilter.calculate(getPose().getX());
         yfilter.calculate(getPose().getY());
         rotfilter.calculate(getPose().getRotation().getDegrees());
-        LightningShuffleboard.setDouble("Swerve", "xfilter Delta", xfilter.lastValue() - getPose().getX());
-        LightningShuffleboard.setDouble("Swerve", "yfilter Delta", yfilter.lastValue() - getPose().getY());
-        LightningShuffleboard.setDouble("Swerve", "rotfilter Delta", rotfilter.lastValue() - getPose().getRotation().getDegrees());
-        LightningShuffleboard.setDouble("Swerve", "xfilter Value", xfilter.lastValue());
-        LightningShuffleboard.setDouble("Swerve", "yfilter Value", yfilter.lastValue());
-        LightningShuffleboard.setDouble("Swerve", "rotfilter Value", rotfilter.lastValue());
+
+        updateLogging();
     }
  
     public void applyVisionPose(Pose4d pose) {
@@ -252,11 +248,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void simulationPeriodic() {
         /* Assume */
         updateSimState(0.01, 12);
-    }
-
-    @Override
-    public void periodic() {
-        updateLogging();
     }
 
     /**

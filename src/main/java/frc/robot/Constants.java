@@ -624,37 +624,25 @@ public class Constants {
     }
 
     public class LEDsConstants {
-            public static int LED_LENGTH;
-        
-            public static Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {};
-    
-            public static Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>(){};
-            
-        public static final void getLEDConstants(){
-            if (Constants.isMercury()) {
-                LED_LENGTH = 31;
-                
-                STRAND_START.put(-1, 0);
-                STRAND_START.put(0, 0);
-                STRAND_START.put(1, 14);
+        public static int LED_LENGTH = 31;
 
-                STRAND_LENGTH.put(-1, LEDsConstants.LED_LENGTH);
-                STRAND_LENGTH.put(0, 14);
-                STRAND_LENGTH.put(1, 12);
-            } else {
-                LED_LENGTH = 31;
-                
-                STRAND_START.put(-1, 0);
-                STRAND_START.put(0, 0);
-                STRAND_START.put(1, 16);
-
-                STRAND_LENGTH.put(-1, LEDsConstants.LED_LENGTH);
-                STRAND_LENGTH.put(0, 16);
-                STRAND_LENGTH.put(1, 15);
+        public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
+            {
+                put(-1, 0);
+                put(0, 0);
+                put(1, 16);
             }
-        }
+        };
 
-        public static int SWIRL_SEGMENT_SIZE = 5;
+        public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>(){
+            {
+            put(-1, LEDsConstants.LED_LENGTH);
+            put(0, 16);
+            put(1, 15);
+            }
+        };
+
+        public static final int SWIRL_SEGMENT_SIZE = 5;
 
 
         public static final int RED_HUE = 0;

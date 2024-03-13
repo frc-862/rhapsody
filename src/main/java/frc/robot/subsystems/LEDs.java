@@ -24,9 +24,7 @@ public class LEDs extends SubsystemBase {
 	private LED_STATES state = LED_STATES.DEFAULT;
 	private Map<LED_STATES, Boolean> ledStates;
 
-	public LEDs() {
-		LEDsConstants.getLEDConstants();
-	
+	public LEDs() {	
 		leds = new AddressableLED(PWM.LED_PORT);
 		ledBuffer = new AddressableLEDBuffer(LEDsConstants.LED_LENGTH);
 
