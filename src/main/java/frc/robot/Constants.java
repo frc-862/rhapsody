@@ -598,8 +598,7 @@ public class Constants {
         public static final double SOURCE_ANGLE = 45d; // TODO test
 
         // TODO find time to shoot
-        public static final double TIME_TO_SHOOT = .5d; // Time in seconds it takes from indexer
-                                                        // start to flywheel exit
+        public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer start to flywheel exit
     }
 
     public class ClimbConstants { // TODO: find real values
@@ -618,10 +617,8 @@ public class Constants {
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
         public static final double MAX_HEIGHT = 8.83; // In rotations
-        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of
-                                                       // lower arm in inches
-        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of
-                                                       // upper arm in inches
+        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of lower arm in inches
+        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
 
         public static final double CLIMB_PID_SETPOINT_EXTENDED = MAX_HEIGHT;
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;

@@ -50,6 +50,7 @@ import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.shoot.SourceCollect;
 import frc.robot.command.shoot.Stow;
 import frc.robot.command.shoot.Tune;
+import frc.robot.command.shoot.preAim;
 import frc.robot.command.shoot.AutonCand.AmpShotAuton;
 import frc.robot.command.shoot.AutonCand.CandC1;
 import frc.robot.command.shoot.AutonCand.CandC2;
@@ -151,7 +152,8 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
 		NamedCommands.registerCommand("Smart-Shoot",
 				new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-						.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
+					.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
+		NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
 		NamedCommands.registerCommand("Chase-Pieces",
 				new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
 		NamedCommands.registerCommand("Smart-Collect",

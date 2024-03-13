@@ -8,7 +8,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Cand-Sub"
+            "name": "Smart-Shoot"
           }
         },
         {
@@ -45,9 +45,22 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "sequential",
                       "data": {
-                        "name": "Smart-Collect"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Smart-Collect"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "preAim"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -102,9 +115,22 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "sequential",
                       "data": {
-                        "name": "Smart-Collect"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Smart-Collect"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "preAim"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -159,9 +185,22 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "sequential",
                       "data": {
-                        "name": "Smart-Collect"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Smart-Collect"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "preAim"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
