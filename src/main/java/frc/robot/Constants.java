@@ -443,8 +443,8 @@ public class Constants {
         }
 
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
-        public static final double INDEXER_DEFAULT_POWER = 0.6d;
-        public static final double INDEXER_MANUAL_POWER = 0.75d;
+        public static final double INDEXER_DEFAULT_POWER = 1d;
+        public static final double INDEXER_MANUAL_POWER = 1d;
         public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
 
         public static final double INDEXER_SYSTEST_POWER = 0.25d;
@@ -529,10 +529,15 @@ public class Constants {
         public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {
             {
                 // As distance gets smaller angle goes up
-                put(1.08d, 60d);
-                put(2.01d, 50d);
-                put(2.94d, 39d);
-                put(3.99d, 31d);
+                put(1.21d, 52d);
+                put(2d, 45d);
+                put(2.5d, 41.5d);
+                put(3d, 37d);
+                put(3.5d, 34.3d);
+                put(4d, 32.3d);
+                put(4.5d, 30d);
+                put(5d, 28.5d);
+
             }
         };
 
@@ -540,10 +545,14 @@ public class Constants {
         public static final InterpolationMap SPEED_MAP = new InterpolationMap() {
             {
                 // As distance get smaller RPM gets smaller
-                put(1.08d, 2000d);
-                put(2.01d, 2000d);
-                put(2.94d, 2500d);
-                put(3.99d, 3250d);
+                put(1.21d, 2000d);
+                put(2d, 2500d);
+                put(2.5d, 3000d);
+                put(3d, 3500d);
+                put(3.5d, 4000d);
+                put(4d, 4500d);
+                put(4.5d, 5300d);
+                put(5d, 5500d);
             }
         };
 

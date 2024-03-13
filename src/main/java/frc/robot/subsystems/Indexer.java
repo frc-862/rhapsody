@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
@@ -22,6 +25,8 @@ public class Indexer extends SubsystemBase {
     private ThunderBird indexerMotor;
     private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_ENTER_BEAMBREAK);
     private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_EXIT_BEAMBREAK);
+
+    private DutyCycleOut dutyCycleControl = new DutyCycleOut(0).withEnableFOC(true);
 
     private double timeLastTriggered = 0d;
 
@@ -47,6 +52,8 @@ public class Indexer extends SubsystemBase {
         indexerMotor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
                 IndexerConstants.MOTOR_INVERT, IndexerConstants.MOTOR_STATOR_CURRENT_LIMIT,
                 IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
+        indexerMotor.configSupplyLimit(0d);
+        indexerMotor.configStatorLimit(80d);
 
         indexerMotor.applyConfig();
 
@@ -93,7 +100,7 @@ public class Indexer extends SubsystemBase {
      */
     public void setPower(double power) {
         targetPower = power;
-        indexerMotor.set(power);
+        indexerMotor.setControl(dutyCycleControl.withOutput(power));
     }
 
     /**
@@ -123,7 +130,7 @@ public class Indexer extends SubsystemBase {
      * @return entry beambreak state
      */
     public boolean getEntryBeamBreakState() {
-        return entryDebouncer.calculate(!indexerSensorEntry.get());
+        return entryDebouncer.calculate(indexerSensorEntry.get());
     }
 
     /**
