@@ -117,7 +117,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             for (int j = 0; j < 5; ++j) {
                 // Theory is like, it'll refresh, and then apply.
                 status1 = drive.getConfigurator().refresh(config);
-                // kyle said try refresh, but im pretty surei ts for reading only
+                // kyle said try refresh, but im pretty sure it's for reading only.
                 status = drive.getConfigurator().apply(config);
                 if (status.isOK() && status1.isOK()) {
                     break;
