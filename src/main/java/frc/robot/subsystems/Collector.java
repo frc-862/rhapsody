@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -62,20 +63,25 @@ public class Collector extends SubsystemBase {
 		hasPieceLog = new BooleanLogEntry(log, "/Collector/HasPiece");
 
 		LightningShuffleboard.setDoubleSupplier("Collector", "Power", () -> motor.get());
-		LightningShuffleboard.setBoolSupplier("Collector", "BeamBreak", () -> beamBreak.get());
+		LightningShuffleboard.setBoolSupplier("Collector", "BeamBreak", () -> getEntryBeamBreakState());
 		LightningShuffleboard.setBoolSupplier("Collector", "HasPiece", () -> hasPiece());
 	}
 
 	/**
 	 * Entrance of Collector Beam Break
+	 * 
 	 * @return When an object is present, returns true, otherwise returns false
 	 */
 	public boolean getEntryBeamBreakState() {
+		if (Constants.isMercury()) {
+			return entryDebouncer.calculate(!beamBreak.get());
+		}
 		return entryDebouncer.calculate(!beamBreak.get());
 	}
 
 	/**
 	 * Sets the power of both collector motors
+	 * 
 	 * @param power Double value from -1.0 to 1.0 (positive collects inwards)
 	 */
 	public void setPower(double power) {
@@ -102,6 +108,7 @@ public class Collector extends SubsystemBase {
 
 	/**
 	 * Has piece
+	 * 
 	 * @return boolean, true if collector has piece
 	 */
 	public boolean hasPiece() {

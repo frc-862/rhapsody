@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
+import frc.robot.Constants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.RobotMap.CAN;
@@ -81,7 +82,7 @@ public class Indexer extends SubsystemBase {
         LightningShuffleboard.setBoolSupplier("Indexer", "ExitBeamBreak", () -> getExitBeamBreakState());
 
         LightningShuffleboard.setStringSupplier("Indexer", "PieceState", () -> getPieceState().toString());
-        
+
         LightningShuffleboard.setBoolSupplier("Indexer", "HasShot", () -> hasShot());
         LightningShuffleboard.setBoolSupplier("Indexer", "IsExiting", () -> isExiting());
         LightningShuffleboard.setBoolSupplier("Indexer", "HasPiece", () -> hasNote());
@@ -142,6 +143,9 @@ public class Indexer extends SubsystemBase {
      * @return entry beambreak state
      */
     public boolean getEntryBeamBreakState() {
+        if (Constants.isMercury()) {
+            return entryDebouncer.calculate(!indexerSensorEntry.get());
+        }
         return entryDebouncer.calculate(indexerSensorEntry.get());
     }
 
