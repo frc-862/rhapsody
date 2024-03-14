@@ -97,6 +97,12 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         reverseLimitLog = new BooleanLogEntry(log, "/Pivot/ReverseLimit");
 
         powerLog = new DoubleLogEntry(log, "/Pivot/Power");
+
+        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> getAngle());
+        LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle);
+        LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
+
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
     }
 
     @Override
@@ -137,10 +143,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         moveToTarget();
 
         updateLogging();
-        
-        LightningShuffleboard.setDouble("Pivot", "Target ", targetAngle);
-        LightningShuffleboard.setDouble("Pivot", "Current angle", getAngle());
-        LightningShuffleboard.setDouble("Pivot", "BIAS", bias);
     }
 
     /**

@@ -80,6 +80,17 @@ public class Flywheel extends SubsystemBase {
         topPowerLog = new DoubleLogEntry(log, "/Flywheel/TopPower");
         bottomPowerLog = new DoubleLogEntry(log, "/Flywheel/BottomPower");
         biasLog = new DoubleLogEntry(log, "/Flywheel/Bias");
+
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Top RPM", () -> getTopMotorRPM());
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom RPM", () -> getBottomMotorRPM());
+        
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Top Target RPM", () -> topMotorTargetRPM());
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Target RPM", () -> bottomMotorTargetRPM());
+
+        LightningShuffleboard.setBoolSupplier("Flywheel", "Top on Target", () -> topMotorRPMOnTarget());
+        LightningShuffleboard.setBoolSupplier("Flywheel", "Bottom on Target", () -> bottomMotorRPMOnTarget());
+
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", () -> getBias());
     }
 
     @Override

@@ -16,7 +16,7 @@ import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ClimbConstants.CLIMBER_STATES;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
-
+import frc.thunder.shuffleboard.LightningShuffleboard;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import edu.wpi.first.math.Pair;
@@ -81,6 +81,15 @@ public class Climber extends SubsystemBase {
         rightSetpointLog = new DoubleLogEntry(log, "/Climb/RightSetpoint");
         leftAppliedLog = new DoubleLogEntry(log, "/Climb/LeftApplied");
         rightAppliedLog = new DoubleLogEntry(log, "/Climb/RightApplied");
+
+        LightningShuffleboard.setDoubleSupplier("Climber", "LeftHeight", () -> getHeightL());
+        LightningShuffleboard.setDoubleSupplier("Climber", "RightHeight", () -> getHeightR());
+
+        LightningShuffleboard.setDoubleSupplier("Climber", "LeftSetpoint", () -> getSetpointL());
+        LightningShuffleboard.setDoubleSupplier("Climber", "RightSetpoint", () -> getSetpointR());
+        
+        LightningShuffleboard.setDoubleSupplier("Climber", "LeftApplied", () -> climbMotorL.getMotorVoltage().getValueAsDouble());
+        LightningShuffleboard.setDoubleSupplier("Climber", "RightApplied", () -> climbMotorR.getMotorVoltage().getValueAsDouble());
     }
 
     /**
