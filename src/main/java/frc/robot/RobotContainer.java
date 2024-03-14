@@ -193,7 +193,7 @@ public class RobotContainer extends LightningContainer {
 				// .whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain, driver));
 
 		// parks the robot
-		new Trigger(driver::getYButton).whileTrue(new RunCommand(() ->
+		new Trigger(driver::getXButton).whileTrue(new RunCommand(() ->
 		drivetrain.brake()));
 
 		// smart shoot for the robot
@@ -202,7 +202,7 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// aim at amp and stage tags for the robot
-		new Trigger(driver::getXButton)
+		new Trigger(driver::getYButton)
 				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
 		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
