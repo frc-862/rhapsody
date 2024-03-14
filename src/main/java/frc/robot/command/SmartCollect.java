@@ -54,7 +54,7 @@ public class SmartCollect extends Command {
 
 	@Override
 	public void execute() {
-		allowIndex = pivot.getAngle() < Constants.PivotConstants.MAX_INDEX_ANGLE;
+		allowIndex = pivot.getAngle() < pivot.getMaxIndexAngle();
 
 		switch (indexer.getPieceState()) {
 			case NONE: /* Note not passing any beambreaks */

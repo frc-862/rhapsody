@@ -2,8 +2,11 @@ package frc.robot;
 
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -12,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonomousConstants;
@@ -19,6 +23,7 @@ import frc.robot.Constants.CollisionConstants.CollisionType;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.PathFindingConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.TunerConstants;
@@ -29,6 +34,8 @@ import frc.robot.command.CollectAndGo;
 import frc.robot.command.CollisionDetection;
 import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
+import frc.robot.command.PathFindToAuton;
+import frc.robot.command.PathToPose;
 import frc.robot.command.PointAtPoint;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
@@ -60,6 +67,8 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.PivotMercury;
+import frc.robot.subsystems.PivotRhapsody;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.LightningContainer;
 import frc.thunder.filter.XboxControllerFilter;
@@ -71,7 +80,7 @@ public class RobotContainer extends LightningContainer {
 	public static XboxControllerFilter coPilot;
 
 	// Subsystems
-	private Swerve drivetrain;
+	public Swerve drivetrain;
 	private Limelights limelights;
 	private Collector collector;
 	private Flywheel flywheel;
@@ -107,7 +116,11 @@ public class RobotContainer extends LightningContainer {
 
 		collector = new Collector();
 		flywheel = new Flywheel();
-		pivot = new Pivot();
+		if(Constants.isMercury()) {
+			pivot = new PivotMercury();
+		} else {
+			pivot = new PivotRhapsody();
+		}
 		indexer = new Indexer(collector);
 		// climber = new Climber(drivetrain);
 		leds = new LEDs();
@@ -144,8 +157,9 @@ public class RobotContainer extends LightningContainer {
 				new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot, flywheel)
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
-		NamedCommands.registerCommand("PathFind", new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
+		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain, driver));
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
+		NamedCommands.registerCommand("Point-At-Speaker", new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -176,9 +190,12 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights)
 						.deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
+		// new Trigger(driver::getRightBumper)
+				// .whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain, driver));
+
 		// parks the robot
-		// new Trigger(driver::getXButton).whileTrue(new InstantCommand(() ->
-		// drivetrain.brake()));
+		new Trigger(driver::getXButton).whileTrue(new RunCommand(() ->
+		drivetrain.brake()));
 
 		// smart shoot for the robot
 		new Trigger(driver::getAButton)
@@ -186,11 +203,10 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// aim at amp and stage tags for the robot
-		new Trigger(driver::getXButton)
+		new Trigger(driver::getYButton)
 				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(VisionConstants.SPEAKER_LOCATION.getX(),
-				VisionConstants.SPEAKER_LOCATION.getY(), drivetrain, driver));
+		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
 
 		// new Trigger(driver::getYButton)
 		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
@@ -204,10 +220,10 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
 		// cand shots for the robot
-		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
-		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
-		// new Trigger(coPilot::getXButton).whileTrue(new Tune(flywheel, pivot));
-		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
+		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
 		/* BIAS */
@@ -228,11 +244,17 @@ public class RobotContainer extends LightningContainer {
 
 		/* Other */
 		new Trigger(
-				() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()))
+				() -> ((limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()) && DriverStation.isEnabled()))
 				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		new Trigger(() -> indexer.getPieceState() != PieceState.NONE)
+		new Trigger(
+				() -> (((!limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())) && !DriverStation.isEnabled()))
+				.whileTrue(leds.enableState(LED_STATES.EMERGENCY));	
+		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState() || collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+		new Trigger(() -> (!(limelights.getChamps().hasTarget() || limelights.getStopMe().hasTarget()) && DriverStation.isDisabled())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
+
+		new Trigger(() -> (!drivetrain.isStable() && DriverStation.isDisabled())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
 
 		new Trigger(() -> collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
@@ -258,8 +280,8 @@ public class RobotContainer extends LightningContainer {
 		drivetrain.registerTelemetry(logger::telemeterize);
 
 		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(
-				() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX())
-				.alongWith(new CollisionDetection(drivetrain, CollisionType.TELEOP)));
+				() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
+				// .alongWith(new CollisionDetection(drivetrain, CollisionType.TELEOP)));
 
 		/* copilot */
 		collector.setDefaultCommand(
@@ -273,7 +295,9 @@ public class RobotContainer extends LightningContainer {
 		// drivetrain,
 		// () -> -coPilot.getLeftY(),
 		// () -> -coPilot.getRightY(),
-		// coPilot::getBButton));
+		// coPilot::getBButton, 
+		// leds
+		// ).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
 	}
 
@@ -343,22 +367,30 @@ public class RobotContainer extends LightningContainer {
 	}
 
 	public static Command hapticDriverCommand() {
-		return new StartEndCommand(() -> {
-			driver.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
-			driver.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
-		}, () -> {
-			driver.setRumble(GenericHID.RumbleType.kRightRumble, 0);
-			driver.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-		});
+		if (DriverStation.isAutonomous()) {
+			return new StartEndCommand(() -> {
+				driver.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
+				driver.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
+			}, () -> {
+				driver.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+				driver.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+			});
+		} else {
+			return new InstantCommand();
+		}
 	}
 
 	public static Command hapticCopilotCommand() {
-		return new StartEndCommand(() -> {
-			coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
-			coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
-		}, () -> {
-			coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 0);
-			coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-		});
+		if (DriverStation.isAutonomous()) {
+			return new StartEndCommand(() -> {
+				coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
+				coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
+			}, () -> {
+				coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+				coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+			});
+		} else {
+			return new InstantCommand();
+		}	
 	}
 }
