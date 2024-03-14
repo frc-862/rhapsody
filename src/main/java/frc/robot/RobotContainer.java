@@ -45,6 +45,7 @@ import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
+import frc.robot.command.shoot.AmpAlign;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
@@ -215,6 +216,8 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
+		new Trigger(driver::getBButton).whileTrue(new AmpAlign(drivetrain));
+
 		
 		// Test auto align
 		/* copilot */
@@ -224,7 +227,7 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
 		// cand shots for the robot
-		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot, drivetrain));
+		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
 		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
 		// new Trigger(coPilot::getXButton).whileTrue(new Tune(flywheel, pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
