@@ -43,11 +43,13 @@ public class ChasePieces extends Command {
 	private double collectPower;
 	private double maxCollectPower;
 	private double drivePower;
+	private double rotPower;
 
     private boolean onTarget;
 	private boolean hasPiece;
 	private boolean isDone;
 	private boolean hasTarget;
+	private boolean isAuton;
 
 	private Command smartCollect;
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
@@ -94,15 +96,19 @@ public class ChasePieces extends Command {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 		collectPower = 0d;
 		smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
+		isAuton = DriverStation.isAutonomous();
 
-		if (DriverStation.isAutonomous()){
+		if (isAuton){
 			drivePower = 1.5d;
+			rotPower = 0.1d; //TODO: get real >:)
 			maxCollectPower = 0.5d;
 		} else {
 			maxCollectPower = 0.65d;
 			drivePower = 3d;
+			rotPower = 0.1d; //TODO: get real >:)
 		}
 		smartCollect.initialize();
+
 	}
 
 	/**
@@ -140,6 +146,17 @@ public class ChasePieces extends Command {
 
 		pidOutput = headingController.calculate(0, targetHeading);
 
+
+		if (isAuton){
+			autonChase();
+		} else {
+			teleopChase();
+		}
+
+		updateLogging();
+	}
+
+	public void teleopChase(){
 		if (!hasPiece){
 			if (hasTarget){
 				if (trustValues()){
@@ -156,8 +173,27 @@ public class ChasePieces extends Command {
 		} else {
 			drivetrain.setRobot(0, 0, 0);
 		}
+	}
 
-		updateLogging();
+	public void autonChase(){
+		if (!hasPiece){
+			if (hasTarget){
+				if (trustValues()){
+					collectPower = maxCollectPower;
+					if (!onTarget) {
+						drivetrain.setRobot(drivePower, 0, -pidOutput);
+					} else {
+						drivetrain.setRobot(drivePower, 0, 0);
+					}
+				}
+			} else {
+				if (drivetrain.getPose().getY() > 5){
+					drivetrain.setRobot(0, 0, rotPower);
+				} else {
+					drivetrain.setRobot(0, 0, -rotPower);
+				}
+			}
+		}
 	}
 
 	/**
@@ -196,7 +232,7 @@ public class ChasePieces extends Command {
 
 	@Override
 	public boolean isFinished() {
-		if (DriverStation.isAutonomous()){
+		if (isAuton){
 			if (DriverStation.getAlliance().get() == Alliance.Blue){
 				if (drivetrain.getPose().getX() > AutonomousConstants.BLUE_CHASE_BOUNDARY) {
 					return true;
