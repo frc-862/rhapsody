@@ -90,16 +90,16 @@ public class Climber extends SubsystemBase {
     /**
      * initialize logging
      */
-    private void initLogging() { // TODO test and fix once we have climber
-        DataLog log = DataLogManager.getLog();
+    // private void initLogging() { // TODO test and fix once we have climber
+    //     DataLog log = DataLogManager.getLog();
 
-        leftHeightLog = new DoubleLogEntry(log, "/Climb/LeftHeight");
-        rightHeightLog = new DoubleLogEntry(log, "/Climb/RightHeight");
-        leftSetpointLog = new DoubleLogEntry(log, "/Climb/LeftSetpoint");
-        rightSetpointLog = new DoubleLogEntry(log, "/Climb/RightSetpoint");
-        leftAppliedLog = new DoubleLogEntry(log, "/Climb/LeftApplied");
-        rightAppliedLog = new DoubleLogEntry(log, "/Climb/RightApplied");
-    }
+    //     leftHeightLog = new DoubleLogEntry(log, "/Climb/LeftHeight");
+    //     rightHeightLog = new DoubleLogEntry(log, "/Climb/RightHeight");
+    //     leftSetpointLog = new DoubleLogEntry(log, "/Climb/LeftSetpoint");
+    //     rightSetpointLog = new DoubleLogEntry(log, "/Climb/RightSetpoint");
+    //     leftAppliedLog = new DoubleLogEntry(log, "/Climb/LeftApplied");
+    //     rightAppliedLog = new DoubleLogEntry(log, "/Climb/RightApplied");
+    // }
 
     /**
      * Sets power to both climb motors
