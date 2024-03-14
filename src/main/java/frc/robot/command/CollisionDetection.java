@@ -6,14 +6,16 @@ package frc.robot.command;
 
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.CollisionConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.CollisionConstants.CollisionType;
 import frc.robot.subsystems.Swerve;
-import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class CollisionDetection extends Command {
 
@@ -34,9 +36,13 @@ public class CollisionDetection extends Command {
     double minAccelerationDiff;
     CollisionType type;
 
+    private Object collidedLog;
+
     public CollisionDetection(Swerve drivetrain, CollisionType type) {
         this.drivetrain = drivetrain;
         this.type = type;
+
+        initLogging();
     }
 
     @Override
@@ -45,16 +51,27 @@ public class CollisionDetection extends Command {
         setDisplayAccelerationTolerances(type); // set acceleration tolerance based on type
     }
 
+    /**
+     * initialize logging
+     */
+    public void initLogging(){
+        DataLog log = DataLogManager.getLog();
+
+        collidedLog = new BooleanLogEntry(log, "/CollisionDetection/collided");
+    }
+
     @Override
     public void execute() {
         storeVelocities();
-        // log values to shuffleboard
-        LightningShuffleboard.setDouble("Collision Detection", "pidgeon acceleration magnitude", getPigeonAcceleration()[2]);
-        LightningShuffleboard.setDouble("Collision Detection", "pigeon accelaration direction", getPigeonAcceleration()[3]);
-        LightningShuffleboard.setDouble("Collision Detection", "pigeon anglular acceleration", getPigeonAcceleration()[4]);
-        LightningShuffleboard.setDouble("Collision Detection", "motor acceleration magnitude", getChassisAcceleration()[2]);
-        LightningShuffleboard.setDouble("Collision Detection", "motor angular acceleration", getChassisAcceleration()[4]);
-        LightningShuffleboard.setBool("Collision Detection", "collided", getIfCollided()[3]);
+        
+        updateLogging();
+    }
+
+    /**
+     * update logging
+     */
+    public void updateLogging(){
+        ((BooleanLogEntry) collidedLog).append(getIfCollided()[3]);
     }
 
     @Override

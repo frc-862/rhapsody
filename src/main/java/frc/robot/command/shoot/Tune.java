@@ -1,7 +1,6 @@
 package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -12,13 +11,13 @@ public class Tune extends Command {
 
 	private double flywheelTargetRPMTop = 0;
 	private double flywheelTargetRPMBottom = 0;
-	private double pivotTargetAngle = PivotConstants.STOW_ANGLE;
+	private double pivotTargetAngle;
 
 	/**
 	 * Creates a new PointBlankShot.
 	 * 
 	 * @param flywheel subsystem
-	 * @param pivot subsystem
+	 * @param pivot    subsystem
 	 */
 	public Tune(Flywheel flywheel, Pivot pivot) {
 		this.flywheel = flywheel;
@@ -28,15 +27,18 @@ public class Tune extends Command {
 	}
 
 	@Override
-	public void initialize() {}
+	public void initialize() {
+		pivotTargetAngle = pivot.getStowAngle();
+	}
 
 	@Override
 	public void execute() {
-		flywheelTargetRPMTop = LightningShuffleboard.getDouble("TUNE", "Target RPM TOP", flywheelTargetRPMTop);
-		flywheelTargetRPMBottom = LightningShuffleboard.getDouble("TUNE", "Target RPM BOTTOM", flywheelTargetRPMBottom);
-		pivotTargetAngle = LightningShuffleboard.getDouble("TUNE", "Target Angle", pivotTargetAngle);
-		LightningShuffleboard.setBool("TUNE", "Flywheel On target", flywheel.allMotorsOnTarget());
-		LightningShuffleboard.setBool("TUNE", "Pivot On target", pivot.onTarget());
+		// commented out for now
+		// flywheelTargetRPMTop = LightningShuffleboard.getDouble("TUNE", "Target RPM TOP", flywheelTargetRPMTop);
+		// flywheelTargetRPMBottom = LightningShuffleboard.getDouble("TUNE", "Target RPM BOTTOM", flywheelTargetRPMBottom);
+		// pivotTargetAngle = LightningShuffleboard.getDouble("TUNE", "Target Angle", pivotTargetAngle);
+		// LightningShuffleboard.setBool("TUNE", "Flywheel On target", flywheel.allMotorsOnTarget());
+		// LightningShuffleboard.setBool("TUNE", "Pivot On target", pivot.onTarget());
 
 		// flywheel.setAllMotorsRPM(flywheelTargetRPM);
 		flywheel.setTopMotorRPM(flywheelTargetRPMTop);
@@ -47,7 +49,7 @@ public class Tune extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		pivot.setTargetAngle(pivot.getStowAngle());
 	}
 
 	@Override
