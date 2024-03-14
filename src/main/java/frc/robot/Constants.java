@@ -454,8 +454,8 @@ public class Constants {
         }
 
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
-        public static final double INDEXER_DEFAULT_POWER = 0.6d;
-        public static final double INDEXER_MANUAL_POWER = 0.75d;
+        public static final double INDEXER_DEFAULT_POWER = 1d;
+        public static final double INDEXER_MANUAL_POWER = 1d;
         public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
 
         public static final double INDEXER_SYSTEST_POWER = 0.25d;
@@ -540,10 +540,15 @@ public class Constants {
         public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {
             {
                 // As distance gets smaller angle goes up
-                put(1.08d, 60d);
-                put(2.01d, 50d);
-                put(2.94d, 39d);
-                put(3.99d, 31d);
+                put(1.21d, 52d);
+                put(2d, 45d);
+                put(2.5d, 41.5d);
+                put(3d, 37d);
+                put(3.5d, 34.3d);
+                put(4d, 32.3d);
+                put(4.5d, 30d);
+                put(5d, 28.5d);
+
             }
         };
 
@@ -551,10 +556,14 @@ public class Constants {
         public static final InterpolationMap SPEED_MAP = new InterpolationMap() {
             {
                 // As distance get smaller RPM gets smaller
-                put(1.08d, 2000d);
-                put(2.01d, 2000d);
-                put(2.94d, 2500d);
-                put(3.99d, 3250d);
+                put(1.21d, 2000d);
+                put(2d, 2500d);
+                put(2.5d, 3000d);
+                put(3d, 3500d);
+                put(3.5d, 4000d);
+                put(4d, 4500d);
+                put(4.5d, 5300d);
+                put(5d, 5500d);
             }
         };
 
@@ -634,25 +643,26 @@ public class Constants {
     }
 
     public class LEDsConstants {
-        public static final int LED_LENGTH = 26;
-
-        public static final int SWIRL_SEGMENT_SIZE = 5;
+        public static final int LED_LENGTH = 31;
 
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
                 put(-1, 0);
                 put(0, 0);
-                put(1, 14);
+                put(1, 16);
             }
         };
 
-        public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
+        public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>(){
             {
-                put(-1, LEDsConstants.LED_LENGTH);
-                put(0, 11);
-                put(1, 12);
+            put(-1, LEDsConstants.LED_LENGTH);
+            put(0, 16);
+            put(1, 15);
             }
         };
+
+        public static final int SWIRL_SEGMENT_SIZE = 5;
+
 
         public static final int RED_HUE = 0;
         public static final int ORANGE_HUE = 5;
@@ -663,12 +673,26 @@ public class Constants {
         public static final int PINK_HUE = 355;
 
         public enum LED_STATES {
-            CUSTOMCONTROL(0), DISABLED(1), EMERGENCY(2), START(3), COLLECTED(4), SHOT(
-                    5), FINISHED_CLIMB(6), SHOOTING(7), COLLECTING(8), CHASING(9), CLIMBING(
-                            10), HAS_PIECE(12), HAS_VISION(11), PIVOT_BOTTOM_SWITCH(
-                                    13), PIVOT_TOP_SWITCH(13), COLLECTOR_BEAMBREAK(
-                                            13), INDEXER_ENTER_BEAMBREAK(
-                                                    13), INDEXER_EXIT_BEAMBREAK(13), DEFAULT(13);
+            CUSTOMCONTROL(0),
+            DISABLED(1),
+            EMERGENCY(2),
+            START(3),
+            GOOD_POSE(4),
+            COLLECTED(5),
+            SHOT(6),
+            FINISHED_CLIMB(7),
+            SHOOTING(8),
+            COLLECTING(9),
+            CHASING(10),
+            CLIMBING(11),
+            HAS_PIECE(12),
+            HAS_VISION(13),
+            DEFAULT(14),
+            PIVOT_BOTTOM_SWITCH(15),
+            PIVOT_TOP_SWITCH(16),
+            COLLECTOR_BEAMBREAK(17),
+            INDEXER_ENTER_BEAMBREAK(18),
+            INDEXER_EXIT_BEAMBREAK(19);
 
             private final int priority;
 
