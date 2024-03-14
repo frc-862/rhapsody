@@ -187,7 +187,7 @@ public class ChasePieces extends Command {
 					}
 				}
 			} else {
-				if (drivetrain.getPose().getY() > 5){
+				if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT){
 					drivetrain.setRobot(0, 0, rotPower);
 				} else {
 					drivetrain.setRobot(0, 0, -rotPower);
