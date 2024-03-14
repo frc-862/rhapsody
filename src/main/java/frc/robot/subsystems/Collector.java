@@ -15,6 +15,7 @@ import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants;
 import frc.robot.Constants.CollectorConstants;
 import frc.thunder.hardware.ThunderBird;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Collector extends SubsystemBase {
 
@@ -59,6 +60,10 @@ public class Collector extends SubsystemBase {
 		collectorPowerLog = new DoubleLogEntry(log, "/Collector/Power");
 		beamBreakLog = new BooleanLogEntry(log, "/Collector/BeamBreak");
 		hasPieceLog = new BooleanLogEntry(log, "/Collector/HasPiece");
+
+		LightningShuffleboard.setDoubleSupplier("Collector", "Power", () -> motor.get());
+		LightningShuffleboard.setBoolSupplier("Collector", "BeamBreak", () -> beamBreak.get());
+		LightningShuffleboard.setBoolSupplier("Collector", "HasPiece", () -> hasPiece());
 	}
 
 	/**
