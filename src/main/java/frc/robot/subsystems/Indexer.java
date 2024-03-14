@@ -17,6 +17,7 @@ import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.thunder.hardware.ThunderBird;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Indexer extends SubsystemBase {
 
@@ -73,6 +74,17 @@ public class Indexer extends SubsystemBase {
         hasShotLog = new BooleanLogEntry(log, "/Indexer/HasShot");
         isExitingLog = new BooleanLogEntry(log, "/Indexer/IsExiting");
         hasPieceLog = new BooleanLogEntry(log, "/Indexer/HasPiece");
+
+        LightningShuffleboard.setDoubleSupplier("Indexer", "Power", () -> indexerMotor.get());
+
+        LightningShuffleboard.setBoolSupplier("Indexer", "EntryBeamBreak", () -> getEntryBeamBreakState());
+        LightningShuffleboard.setBoolSupplier("Indexer", "ExitBeamBreak", () -> getExitBeamBreakState());
+
+        LightningShuffleboard.setStringSupplier("Indexer", "PieceState", () -> getPieceState().toString());
+        
+        LightningShuffleboard.setBoolSupplier("Indexer", "HasShot", () -> hasShot());
+        LightningShuffleboard.setBoolSupplier("Indexer", "IsExiting", () -> isExiting());
+        LightningShuffleboard.setBoolSupplier("Indexer", "HasPiece", () -> hasNote());
     }
 
     /**
