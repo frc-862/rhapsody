@@ -97,18 +97,6 @@ public class PivotMercury extends SubsystemBase implements Pivot {
 
     @Override
     public void periodic() {
-        angleMotor.getConfig().MotionMagic.MotionMagicCruiseVelocity = LightningShuffleboard.getDouble("Pivot",
-                "cruiseVelocity", MercuryPivotConstants.MAGIC_CRUISE_VEL);
-        angleMotor.getConfig().MotionMagic.MotionMagicAcceleration = LightningShuffleboard.getDouble("Pivot",
-                "acceleration", MercuryPivotConstants.MAGIC_ACCEL);
-        angleMotor.getConfig().MotionMagic.MotionMagicJerk = LightningShuffleboard.getDouble("Pivot", "jerk",
-                MercuryPivotConstants.MAGIC_JERK);
-
-        // pivotTuner.update();
-
-        // setTargetAngle(LightningShuffleboard.getDouble("Pivot", "settargetAngle",
-        // targetAngle));
-
         // SETS angle to angle of limit switch on press
         if (getForwardLimit()) {
             resetAngle(MercuryPivotConstants.MIN_ANGLE);
@@ -119,6 +107,10 @@ public class PivotMercury extends SubsystemBase implements Pivot {
         moveToTarget();
 
         updateLogging();
+
+        LightningShuffleboard.setDouble("Pivot", "Target ", targetAngle);
+        LightningShuffleboard.setDouble("Pivot", "Current angle", getAngle());
+        LightningShuffleboard.setDouble("Pivot", "BIAS", bias);
     }
 
     /**

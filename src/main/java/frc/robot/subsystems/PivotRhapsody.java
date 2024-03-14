@@ -137,6 +137,10 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         moveToTarget();
 
         updateLogging();
+        
+        LightningShuffleboard.setDouble("Pivot", "Target ", targetAngle);
+        LightningShuffleboard.setDouble("Pivot", "Current angle", getAngle());
+        LightningShuffleboard.setDouble("Pivot", "BIAS", bias);
     }
 
     /**
@@ -163,8 +167,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
      * @param angle Angle of the pivot in degrees
      */
     public void setTargetAngle(double angle) {
-        targetAngle = (MathUtil.clamp(angle + bias, RhapsodyPivotConstants.MIN_ANGLE, RhapsodyPivotConstants.MAX_ANGLE)
-                / 360);
+        targetAngle = (MathUtil.clamp(angle + bias, RhapsodyPivotConstants.MIN_ANGLE, RhapsodyPivotConstants.MAX_ANGLE) / 360);
     }
 
     /*
