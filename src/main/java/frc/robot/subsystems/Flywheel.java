@@ -9,7 +9,9 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants;
 import frc.robot.Constants.FlywheelConstants;
+import frc.thunder.LightningContainer;
 import frc.thunder.hardware.ThunderBird;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Flywheel extends SubsystemBase {
     private ThunderBird topMotor;
@@ -78,6 +80,17 @@ public class Flywheel extends SubsystemBase {
         topPowerLog = new DoubleLogEntry(log, "/Flywheel/TopPower");
         bottomPowerLog = new DoubleLogEntry(log, "/Flywheel/BottomPower");
         biasLog = new DoubleLogEntry(log, "/Flywheel/Bias");
+
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Top RPM", () -> getTopMotorRPM());
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom RPM", () -> getBottomMotorRPM());
+        
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Top Target RPM", () -> topMotorTargetRPM());
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Target RPM", () -> bottomMotorTargetRPM());
+
+        LightningShuffleboard.setBoolSupplier("Flywheel", "Top on Target", () -> topMotorRPMOnTarget());
+        LightningShuffleboard.setBoolSupplier("Flywheel", "Bottom on Target", () -> bottomMotorRPMOnTarget());
+
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", () -> getBias());
     }
 
     @Override
@@ -91,6 +104,13 @@ public class Flywheel extends SubsystemBase {
         }
 
         updateLogging();
+
+        LightningShuffleboard.setDouble("Flywheel", "TOP RPM", getTopMotorRPM());
+        LightningShuffleboard.setDouble("Flywheel", "BOTTOM RPM", getBottomMotorRPM());
+        LightningShuffleboard.setDouble("Flywheel", "TOP RPM Target", topTargetRPS * 60);
+        LightningShuffleboard.setDouble("Flywheel", "BOTTOM RPM Target", bottomTargetRPS * 60);
+        LightningShuffleboard.setDouble("Flywheel", "BIAS", bias);
+        LightningShuffleboard.setBool("Flywheel", "ON TARGET", allMotorsOnTarget());
     }
 
     /**

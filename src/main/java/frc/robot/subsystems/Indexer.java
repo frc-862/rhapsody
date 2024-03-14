@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
@@ -14,6 +17,7 @@ import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.thunder.hardware.ThunderBird;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Indexer extends SubsystemBase {
 
@@ -22,6 +26,8 @@ public class Indexer extends SubsystemBase {
     private ThunderBird indexerMotor;
     private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_ENTER_BEAMBREAK);
     private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_EXIT_BEAMBREAK);
+
+    private DutyCycleOut dutyCycleControl = new DutyCycleOut(0).withEnableFOC(true);
 
     private double timeLastTriggered = 0d;
 
@@ -47,6 +53,8 @@ public class Indexer extends SubsystemBase {
         indexerMotor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
                 IndexerConstants.MOTOR_INVERT, IndexerConstants.MOTOR_STATOR_CURRENT_LIMIT,
                 IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
+        indexerMotor.configSupplyLimit(0d);
+        indexerMotor.configStatorLimit(80d);
 
         indexerMotor.applyConfig();
 
@@ -66,6 +74,17 @@ public class Indexer extends SubsystemBase {
         hasShotLog = new BooleanLogEntry(log, "/Indexer/HasShot");
         isExitingLog = new BooleanLogEntry(log, "/Indexer/IsExiting");
         hasPieceLog = new BooleanLogEntry(log, "/Indexer/HasPiece");
+
+        LightningShuffleboard.setDoubleSupplier("Indexer", "Power", () -> indexerMotor.get());
+
+        LightningShuffleboard.setBoolSupplier("Indexer", "EntryBeamBreak", () -> getEntryBeamBreakState());
+        LightningShuffleboard.setBoolSupplier("Indexer", "ExitBeamBreak", () -> getExitBeamBreakState());
+
+        LightningShuffleboard.setStringSupplier("Indexer", "PieceState", () -> getPieceState().toString());
+        
+        LightningShuffleboard.setBoolSupplier("Indexer", "HasShot", () -> hasShot());
+        LightningShuffleboard.setBoolSupplier("Indexer", "IsExiting", () -> isExiting());
+        LightningShuffleboard.setBoolSupplier("Indexer", "HasPiece", () -> hasNote());
     }
 
     /**
@@ -93,7 +112,7 @@ public class Indexer extends SubsystemBase {
      */
     public void setPower(double power) {
         targetPower = power;
-        indexerMotor.set(power);
+        indexerMotor.setControl(dutyCycleControl.withOutput(power));
     }
 
     /**
@@ -123,7 +142,7 @@ public class Indexer extends SubsystemBase {
      * @return entry beambreak state
      */
     public boolean getEntryBeamBreakState() {
-        return entryDebouncer.calculate(!indexerSensorEntry.get());
+        return entryDebouncer.calculate(indexerSensorEntry.get());
     }
 
     /**

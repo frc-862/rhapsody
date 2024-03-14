@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonomousConstants;
@@ -192,8 +194,8 @@ public class RobotContainer extends LightningContainer {
 				// .whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain, driver));
 
 		// parks the robot
-		// new Trigger(driver::getXButton).whileTrue(new InstantCommand(() ->
-		// drivetrain.brake()));
+		new Trigger(driver::getXButton).whileTrue(new RunCommand(() ->
+		drivetrain.brake()));
 
 		// smart shoot for the robot
 		new Trigger(driver::getAButton)
@@ -201,7 +203,7 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// aim at amp and stage tags for the robot
-		new Trigger(driver::getXButton)
+		new Trigger(driver::getYButton)
 				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
 		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
@@ -218,10 +220,10 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
 		// cand shots for the robot
-		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot));
-		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot));
-		// new Trigger(coPilot::getXButton).whileTrue(new Tune(flywheel, pivot));
-		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
+		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
 		/* BIAS */
@@ -242,11 +244,17 @@ public class RobotContainer extends LightningContainer {
 
 		/* Other */
 		new Trigger(
-				() -> (limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()))
+				() -> ((limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()) && DriverStation.isEnabled()))
 				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		new Trigger(() -> indexer.getPieceState() != PieceState.NONE)
+		new Trigger(
+				() -> (((!limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())) && !DriverStation.isEnabled()))
+				.whileTrue(leds.enableState(LED_STATES.EMERGENCY));	
+		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState() || collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+		new Trigger(() -> (!(limelights.getChamps().hasTarget() || limelights.getStopMe().hasTarget()) && DriverStation.isDisabled())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
+
+		new Trigger(() -> (!drivetrain.isStable() && DriverStation.isDisabled())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
 
 		new Trigger(() -> collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
@@ -287,7 +295,9 @@ public class RobotContainer extends LightningContainer {
 		// drivetrain,
 		// () -> -coPilot.getLeftY(),
 		// () -> -coPilot.getRightY(),
-		// coPilot::getBButton));
+		// coPilot::getBButton, 
+		// leds
+		// ).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
 	}
 

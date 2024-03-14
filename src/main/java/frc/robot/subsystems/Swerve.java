@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.sql.Driver;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -15,6 +17,8 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -25,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutonomousConstants;
@@ -34,6 +37,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.thunder.filter.XboxControllerFilter;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
 
 /**
@@ -52,6 +56,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private boolean robotCentricControl = false;
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
+    private LinearFilter xFilter = LinearFilter.singlePoleIIR(2, 0.01);
+    private LinearFilter yFilter = LinearFilter.singlePoleIIR(2, 0.01);
+    private LinearFilter rotFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private Translation2d speakerPose = VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d();
 
     private DoubleLogEntry timerLog;
@@ -71,11 +78,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
         configurePathPlanner();
 
-        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
             speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
         }
 
-        // setRampRate();
+        setRampRate();
 
         initLogging();
     }
@@ -96,6 +103,15 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         velocityXLog = new DoubleLogEntry(log, "/Swerve/velocity x");
         velocityYLog = new DoubleLogEntry(log, "/Swerve/velocity y");
         distanceToSpeakerLog = new DoubleLogEntry(log, "/Swerve/Distance to Speaker");
+
+        LightningShuffleboard.setBoolSupplier("Swerve", "Slow Mode", () -> inSlowMode());
+        LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
+        LightningShuffleboard.setBoolSupplier("Swerve", "Tipped", () -> isTipped());
+
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Odometry X", () -> getPose().getX());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Odometry Y", () -> getPose().getY());
+
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPose().getRotation().getDegrees());
     }
 
     private void setRampRate() {
@@ -113,21 +129,35 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             var steer = module.getSteerMotor();
 
             StatusCode status = StatusCode.StatusCodeNotInitialized;
+            StatusCode status1 = StatusCode.StatusCodeNotInitialized;
             for (int j = 0; j < 5; ++j) {
+                // Theory is like, it'll refresh, and then apply.
+                status1 = drive.getConfigurator().refresh(config);
+                // kyle said try refresh, but im pretty sure it's for reading only.
                 status = drive.getConfigurator().apply(config);
-                if (status.isOK()) {
+                if (status.isOK() && status1.isOK()) {
                     break;
                 }
             }
             for (int j = 0; j < 5; ++j) {
+                status1 = steer.getConfigurator().refresh(config);
                 status = steer.getConfigurator().apply(config);
-                if (status.isOK()) {
+                if (status.isOK() && status1.isOK()) {
                     break;
                 }
             }
         }
     }
 
+    @Override
+    public void periodic() {
+        xFilter.calculate(getPose().getX());
+        yFilter.calculate(getPose().getY());
+        rotFilter.calculate(getPose().getRotation().getDegrees());
+
+        updateLogging();
+    }
+ 
     public void applyVisionPose(Pose4d pose) {
         if (!disableVision) {
             addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), pose.getStdDevs());
@@ -212,7 +242,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     /**
      * Sets the robot in park mode
      */
-    public void brake() {
+    public void brake() {        
         this.setControl(brake);
     }
 
@@ -231,11 +261,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void simulationPeriodic() {
         /* Assume */
         updateSimState(0.01, 12);
-    }
-
-    @Override
-    public void periodic() {
-        updateLogging();
     }
 
     /**
@@ -284,6 +309,12 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             return new Pose2d();
         }
         return state.Pose;
+    }
+
+    public boolean isStable() {
+        return (Math.abs(rotFilter.lastValue() - getPose().getRotation().getDegrees()) < 0.1
+            && Math.abs(xFilter.lastValue() - getPose().getX()) < 0.1
+            && Math.abs(yFilter.lastValue() - getPose().getY()) < 0.1);
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
