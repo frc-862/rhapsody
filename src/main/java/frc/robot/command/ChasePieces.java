@@ -1,5 +1,6 @@
 package frc.robot.command;
 
+import java.sql.Driver;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.Pair;
@@ -43,6 +44,7 @@ public class ChasePieces extends Command {
 	private double collectPower;
 	private double maxCollectPower;
 	private double drivePower;
+	private double rotPower;
 
 	private boolean onTarget;
 	private boolean hasPiece;
@@ -87,6 +89,16 @@ public class ChasePieces extends Command {
 
 		this.limelight = limelights.getDust();
 
+		if (DriverStation.isAutonomous()){
+			this.drivePower = 1.5d;
+			this.rotPower = 1.5d; //TODO: get real >:)
+			this.maxCollectPower = 0.8d;
+		} else {
+			this.maxCollectPower = 0.65d;
+			this.drivePower = 3d;
+			this.rotPower = 1.5d; //TODO: get real >:)
+		}
+
 		addRequirements(drivetrain, collector, indexer, flywheel);
 
 		initLogging();
@@ -99,15 +111,8 @@ public class ChasePieces extends Command {
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 		collectPower = 0d;
 		smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
-
-		if (DriverStation.isAutonomous()) {
-			drivePower = 1.5d;
-			maxCollectPower = 0.5d;
-		} else {
-			maxCollectPower = 0.65d;
-			drivePower = 3d;
-		}
 		smartCollect.initialize();
+
 	}
 
 	/**
@@ -141,25 +146,55 @@ public class ChasePieces extends Command {
 		}
 
 		onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-		hasPiece = debouncer.calculate(indexer.getEntryBeamBreakState()) || collector.getEntryBeamBreakState();
+		hasPiece = indexer.getEntryBeamBreakState() || collector.getEntryBeamBreakState();
 
 		pidOutput = headingController.calculate(0, targetHeading);
 
-		if (!hasPiece) {
-			if (hasTarget) {
-				if (trustValues()) {
-					collectPower = maxCollectPower;
-					if (!onTarget) {
-						drivetrain.setRobot(drivePower, 0, -pidOutput);
+
+		if (DriverStation.isAutonomousEnabled()){
+			if (!hasPiece){
+				if (hasTarget){
+					if (trustValues()){
+						collectPower = maxCollectPower;
+						if (!onTarget) {
+							drivetrain.setRobot(drivePower, 0, -pidOutput);
+						} else {
+							drivetrain.setRobot(drivePower, 0, 0);
+						}
+					}
+				} else {
+					if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT){
+						if (DriverStation.getAlliance().get() == Alliance.Blue){
+							drivetrain.setRobot(0, 0, -rotPower);
+						} else {
+							drivetrain.setRobot(0, 0, rotPower);
+						}
 					} else {
-						drivetrain.setRobot(drivePower, 0, 0);
+						if (DriverStation.getAlliance().get() == Alliance.Blue){
+							drivetrain.setRobot(0, 0, rotPower);
+						} else {
+							drivetrain.setRobot(0, 0, -rotPower);
+						}					
 					}
 				}
-			} else {
-				drivetrain.setRobot(drivePower, 0, 0);
 			}
 		} else {
-			drivetrain.setRobot(0, 0, 0);
+			if (!hasPiece){
+				if (hasTarget){
+					if (trustValues()){
+						collectPower = maxCollectPower;
+						if (!onTarget) {
+							drivetrain.setRobot(drivePower, 0, -pidOutput);
+						} else {
+							drivetrain.setRobot(drivePower, 0, 0);
+						}
+					}
+				} else {
+					drivetrain.setRobot(drivePower, 0, 0);
+				}
+			} else {
+				drivetrain.setRobot(0, 0, 0);
+			}
 		}
 
 		updateLogging();
