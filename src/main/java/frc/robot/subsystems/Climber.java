@@ -74,6 +74,7 @@ public class Climber extends SubsystemBase {
         climbMotorR.setPosition(0d);
 
         initOldLogging();
+        initLogging();
     }
 
     private void initOldLogging() {
@@ -88,11 +89,12 @@ public class Climber extends SubsystemBase {
         LightningShuffleboard.setBoolSupplier("Climb", "Reverse Limit Left", () -> getReverseLimitLeft());
         LightningShuffleboard.setBoolSupplier("Climb", "Reverse Limit Right", () -> getReverseLimitRight());
     }
+
     /**
      * initialize logging
      */
-    // private void initLogging() { // TODO test and fix once we have climber
-    //     DataLog log = DataLogManager.getLog();
+    private void initLogging() { // TODO test and fix once we have climber
+        DataLog log = DataLogManager.getLog();
 
         leftHeightLog = new DoubleLogEntry(log, "/Climb/LeftHeight");
         rightHeightLog = new DoubleLogEntry(log, "/Climb/RightHeight");
