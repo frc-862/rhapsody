@@ -61,6 +61,8 @@ public class SmartClimb extends Command {
             // Auto deploy climb when B button is pressed and auto climb has not been engaged
             climber.deploy();
             buttonState = true;
+        } else if (climber.isManual()) {
+            climber.setPower(0d);
         }
     }
 

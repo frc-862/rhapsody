@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ControlModeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -177,6 +178,11 @@ public class Climber extends SubsystemBase {
      */
     public double getSetpointL() {
         return this.setPointControlL.Position;
+    }
+
+    public boolean isManual() {
+        return climbMotorL.getControlMode().getValue().equals(ControlModeValue.DutyCycleOut) |
+               climbMotorR.getControlMode().getValue().equals(ControlModeValue.DutyCycleOut);
     }
 
     @Override
