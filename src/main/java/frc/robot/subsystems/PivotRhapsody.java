@@ -98,8 +98,8 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
         powerLog = new DoubleLogEntry(log, "/Pivot/Power");
 
-        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> getAngle());
-        LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle);
+        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> getAngle() * 360);
+        LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle * 360);
         LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
 
         LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
@@ -166,7 +166,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     /**
      * Sets the target angle of the pivot
      * 
-     * @param angle Angle of the pivot in degrees
+     * @param angle Angle of the pivot in rotations
      */
     public void setTargetAngle(double angle) {
         targetAngle = (MathUtil.clamp(angle + bias, RhapsodyPivotConstants.MIN_ANGLE, RhapsodyPivotConstants.MAX_ANGLE) / 360);
@@ -184,7 +184,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     }
 
     /**
-     * @return The current angle of the pivot in degrees
+     * @return The current angle of the pivot in rotations
      */
     public double getAngle() {
         return angleMotor.getPosition().getValue();

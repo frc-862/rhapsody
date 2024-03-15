@@ -103,6 +103,8 @@ public class ChasePieces extends Command {
 
 	@Override
 	public void initialize() {
+		System.out.println("AUTO - Chase pieces INIT");
+
 		headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 		collectPower = 0d;
 		smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
@@ -216,6 +218,8 @@ public class ChasePieces extends Command {
 	public void end(boolean interrupted) {
 		collectPower = 0d;
 		smartCollect.end(interrupted);
+		// drivetrain.stop();
+		System.out.println("AUTO - Chase pieces END");
 	}
 
 	/**
