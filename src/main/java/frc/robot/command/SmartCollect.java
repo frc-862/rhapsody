@@ -49,6 +49,7 @@ public class SmartCollect extends Command {
 
 	@Override
 	public void initialize() {
+		System.out.println("COLLECT - Smart Collect INIT");
 		reversedFromExit = false;
 	}
 
@@ -103,6 +104,7 @@ public class SmartCollect extends Command {
 		collector.stop();
 		indexer.stop();
 		flywheel.coast(true);
+		System.out.println("COLLECT - Smart Collect END");
 	}
 
 	@Override

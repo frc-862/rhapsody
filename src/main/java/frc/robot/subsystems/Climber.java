@@ -6,6 +6,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.core.CoreTalonFX;
+import com.ctre.phoenix6.signals.ControlModeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
@@ -93,13 +94,22 @@ public class Climber extends SubsystemBase {
     // private void initLogging() { // TODO test and fix once we have climber
     //     DataLog log = DataLogManager.getLog();
 
-    //     leftHeightLog = new DoubleLogEntry(log, "/Climb/LeftHeight");
-    //     rightHeightLog = new DoubleLogEntry(log, "/Climb/RightHeight");
-    //     leftSetpointLog = new DoubleLogEntry(log, "/Climb/LeftSetpoint");
-    //     rightSetpointLog = new DoubleLogEntry(log, "/Climb/RightSetpoint");
-    //     leftAppliedLog = new DoubleLogEntry(log, "/Climb/LeftApplied");
-    //     rightAppliedLog = new DoubleLogEntry(log, "/Climb/RightApplied");
-    // }
+        leftHeightLog = new DoubleLogEntry(log, "/Climb/LeftHeight");
+        rightHeightLog = new DoubleLogEntry(log, "/Climb/RightHeight");
+        leftSetpointLog = new DoubleLogEntry(log, "/Climb/LeftSetpoint");
+        rightSetpointLog = new DoubleLogEntry(log, "/Climb/RightSetpoint");
+        leftAppliedLog = new DoubleLogEntry(log, "/Climb/LeftApplied");
+        rightAppliedLog = new DoubleLogEntry(log, "/Climb/RightApplied");
+
+        LightningShuffleboard.setDoubleSupplier("Climber", "LeftHeight", () -> getHeightL());
+        LightningShuffleboard.setDoubleSupplier("Climber", "RightHeight", () -> getHeightR());
+
+        LightningShuffleboard.setDoubleSupplier("Climber", "LeftSetpoint", () -> getSetpointL());
+        LightningShuffleboard.setDoubleSupplier("Climber", "RightSetpoint", () -> getSetpointR());
+        
+        LightningShuffleboard.setDoubleSupplier("Climber", "LeftApplied", () -> climbMotorL.getMotorVoltage().getValueAsDouble());
+        LightningShuffleboard.setDoubleSupplier("Climber", "RightApplied", () -> climbMotorR.getMotorVoltage().getValueAsDouble());
+    }
 
     /**
      * Sets power to both climb motors
@@ -195,6 +205,11 @@ public class Climber extends SubsystemBase {
      */
     public double getSetpointL() {
         return this.setPointControlL.Position;
+    }
+
+    public boolean isManual() {
+        return climbMotorL.getControlMode().getValue().equals(ControlModeValue.DutyCycleOut) |
+               climbMotorR.getControlMode().getValue().equals(ControlModeValue.DutyCycleOut);
     }
 
     @Override

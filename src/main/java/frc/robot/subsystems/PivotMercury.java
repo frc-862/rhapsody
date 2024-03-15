@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import javax.xml.crypto.Data;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -18,7 +17,6 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.tuning.FalconTuner;
 import frc.robot.Constants.MercuryPivotConstants;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
@@ -93,22 +91,16 @@ public class PivotMercury extends SubsystemBase implements Pivot {
         reverseLimitLog = new BooleanLogEntry(log, "/Pivot/ReverseLimit");
 
         powerLog = new DoubleLogEntry(log, "/Pivot/Power");
+
+        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> getAngle());
+        LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle);
+        LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
+
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
     }
 
     @Override
     public void periodic() {
-        angleMotor.getConfig().MotionMagic.MotionMagicCruiseVelocity = LightningShuffleboard.getDouble("Pivot",
-                "cruiseVelocity", MercuryPivotConstants.MAGIC_CRUISE_VEL);
-        angleMotor.getConfig().MotionMagic.MotionMagicAcceleration = LightningShuffleboard.getDouble("Pivot",
-                "acceleration", MercuryPivotConstants.MAGIC_ACCEL);
-        angleMotor.getConfig().MotionMagic.MotionMagicJerk = LightningShuffleboard.getDouble("Pivot", "jerk",
-                MercuryPivotConstants.MAGIC_JERK);
-
-        // pivotTuner.update();
-
-        // setTargetAngle(LightningShuffleboard.getDouble("Pivot", "settargetAngle",
-        // targetAngle));
-
         // SETS angle to angle of limit switch on press
         if (getForwardLimit()) {
             resetAngle(MercuryPivotConstants.MIN_ANGLE);
@@ -119,6 +111,10 @@ public class PivotMercury extends SubsystemBase implements Pivot {
         moveToTarget();
 
         updateLogging();
+
+        LightningShuffleboard.setDouble("Pivot", "Target ", targetAngle);
+        LightningShuffleboard.setDouble("Pivot", "Current angle", getAngle());
+        LightningShuffleboard.setDouble("Pivot", "BIAS", bias);
     }
 
     /**
@@ -139,7 +135,6 @@ public class PivotMercury extends SubsystemBase implements Pivot {
 
     /**
      * Sets the target angle of the pivot
-     * 
      * @param angle Angle of the pivot
      */
     public void setTargetAngle(double angle) {
@@ -174,20 +169,18 @@ public class PivotMercury extends SubsystemBase implements Pivot {
 
     /**
      * Gets forward limit switch
-     * 
      * @return true if pressed
      */
     public boolean getForwardLimit() {
-        return angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
+        return false;//angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
     }
 
     /**
      * Gets reverse limit switch
-     * 
      * @return true if pressed
      */
     public boolean getReverseLimit() {
-        return angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
+        return false;//angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
     }
 
     /**

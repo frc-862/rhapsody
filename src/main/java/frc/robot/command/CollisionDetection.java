@@ -42,8 +42,6 @@ public class CollisionDetection extends Command {
         this.drivetrain = drivetrain;
         this.type = type;
 
-        addRequirements(drivetrain);
-
         initLogging();
     }
 

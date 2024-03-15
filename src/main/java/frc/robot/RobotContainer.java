@@ -9,12 +9,14 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonomousConstants;
@@ -31,6 +33,7 @@ import frc.robot.command.ChasePieces;
 import frc.robot.command.Collect;
 import frc.robot.command.CollectAndGo;
 import frc.robot.command.CollisionDetection;
+import frc.robot.command.HasPieceAuto;
 import frc.robot.command.Index;
 import frc.robot.command.MoveToPose;
 import frc.robot.command.PathFindToAuton;
@@ -42,12 +45,14 @@ import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
+import frc.robot.command.stopDrive;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.shoot.SourceCollect;
 import frc.robot.command.shoot.Stow;
 import frc.robot.command.shoot.Tune;
+import frc.robot.command.shoot.preAim;
 import frc.robot.command.shoot.AutonCand.AmpShotAuton;
 import frc.robot.command.shoot.AutonCand.CandC1;
 import frc.robot.command.shoot.AutonCand.CandC2;
@@ -149,7 +154,8 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
 		NamedCommands.registerCommand("Smart-Shoot",
 				new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-						.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
+					.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
+		NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
 		NamedCommands.registerCommand("Chase-Pieces",
 				new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
 		NamedCommands.registerCommand("Smart-Collect",
@@ -159,6 +165,9 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain, driver));
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
 		NamedCommands.registerCommand("Point-At-Speaker", new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
+		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
+		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
+		NamedCommands.registerCommand("Stop-Flywheel", new SourceCollect(flywheel, pivot));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -182,7 +191,8 @@ public class RobotContainer extends LightningContainer {
 
 		// sets field relative forward to the direction the robot is facing
 		new Trigger(() -> driver.getStartButton() && driver.getBackButton())
-				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative)
+				.andThen(new InstantCommand(() -> drivetrain.setOperatorPerspectiveForward(new Rotation2d(Math.toRadians(0))))));
 
 		// makes the robot chase pieces
 		new Trigger(driver::getRightBumper)
@@ -193,8 +203,8 @@ public class RobotContainer extends LightningContainer {
 				// .whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain, driver));
 
 		// parks the robot
-		// new Trigger(driver::getXButton).whileTrue(new InstantCommand(() ->
-		// drivetrain.brake()));
+		new Trigger(driver::getXButton).whileTrue(new RunCommand(() ->
+		drivetrain.brake()));
 
 		// smart shoot for the robot
 		new Trigger(driver::getAButton)
@@ -202,7 +212,7 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// aim at amp and stage tags for the robot
-		new Trigger(driver::getXButton)
+		new Trigger(driver::getYButton)
 				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
 		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
@@ -221,7 +231,7 @@ public class RobotContainer extends LightningContainer {
 		// cand shots for the robot
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-		// new Trigger(coPilot::getXButton).whileTrue(new Tune(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
@@ -239,7 +249,8 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(coPilot::getRightBumper)
 				.whileTrue(new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		new Trigger(coPilot::getLeftBumper)
-				.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
+				.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer)
+				.deadlineWith(new SourceCollect(flywheel, pivot)));
 
 		/* Other */
 		new Trigger(
@@ -247,7 +258,7 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		new Trigger(
 				() -> (((!limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())) && !DriverStation.isEnabled()))
-				.whileTrue(leds.enableState(LED_STATES.EMERGENCY));	
+				.whileTrue(leds.enableState(LED_STATES.EMERGENCY));
 		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState() || collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
@@ -390,6 +401,6 @@ public class RobotContainer extends LightningContainer {
 			});
 		} else {
 			return new InstantCommand();
-		}	
+		}
 	}
 }
