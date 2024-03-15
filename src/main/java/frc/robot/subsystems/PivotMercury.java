@@ -93,6 +93,9 @@ public class PivotMercury extends SubsystemBase implements Pivot {
         reverseLimitLog = new BooleanLogEntry(log, "/Pivot/ReverseLimit");
 
         powerLog = new DoubleLogEntry(log, "/Pivot/Power");
+
+        LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle);
+        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> angleEncoder.getPosition().getValue() * 360);
     }
 
     @Override
