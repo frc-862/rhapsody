@@ -1,7 +1,6 @@
 package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Flywheel;
 
@@ -12,7 +11,8 @@ public class Stow extends Command {
 
 	/**
 	 * Creates a new Stow.
-	 * @param pivot subsystem
+	 * 
+	 * @param pivot    subsystem
 	 * @param flywheel subsystem
 	 */
 	public Stow(Flywheel flywheel, Pivot pivot) {
@@ -24,13 +24,13 @@ public class Stow extends Command {
 
 	@Override
 	public void initialize() {
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		pivot.setTargetAngle(pivot.getStowAngle());
 		flywheel.coast(true);
 	}
 
 	@Override
 	public void execute() {
-		pivot.setTargetAngle(PivotConstants.STOW_ANGLE);
+		pivot.setTargetAngle(pivot.getStowAngle());
 	}
 
 	@Override

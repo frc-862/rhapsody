@@ -43,7 +43,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Collect"
+                  "name": "Smart-Collect"
                 }
               }
             ]
@@ -81,7 +81,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Collect"
+                  "name": "Smart-Collect"
                 }
               }
             ]
@@ -119,7 +119,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Collect"
+                  "name": "Smart-Collect"
                 }
               }
             ]
@@ -157,7 +157,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Collect"
+                  "name": "Smart-Collect"
                 }
               }
             ]
@@ -166,6 +166,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Ann Arbor Top",
   "choreoAuto": false
 }
