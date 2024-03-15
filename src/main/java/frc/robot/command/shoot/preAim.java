@@ -8,9 +8,9 @@ import frc.robot.subsystems.Swerve;
 
 public class preAim extends Command {
 
-	Flywheel flywheel; 
-	Pivot pivot;
-	Swerve drivetrain;
+	private Flywheel flywheel;
+	private Pivot pivot;
+	private Swerve drivetrain;
 
 	public preAim(Flywheel flywheel, Pivot pivot, Swerve drivetrain) {
 		this.flywheel = flywheel;
@@ -20,13 +20,11 @@ public class preAim extends Command {
 		addRequirements(flywheel, pivot);
 	}
 
-	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
 		System.out.println("AUTO - PRE AIM START");
 	}
 
-	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 		double distance = drivetrain.distanceToSpeaker();
@@ -34,13 +32,11 @@ public class preAim extends Command {
 		flywheel.setAllMotorsRPM(calculateTargetRPM(distance));
 	}
 
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
 		System.out.println("AUTO - PRE AIM END");
 	}
 
-	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
 		return false;
@@ -48,7 +44,6 @@ public class preAim extends Command {
 
 	/**
 	 * Calculate Pivot Target angle (in degrees)
-	 * 
 	 * @param distance from the speaker
 	 * @return Angle to set pivot to
 	 */
@@ -58,7 +53,6 @@ public class preAim extends Command {
 
 	/**
 	 * Calculate Flywheel Target RPM (in RPM)
-	 * 
 	 * @param distance from the speaker
 	 * @return RPM to set the Flywheels
 	 */

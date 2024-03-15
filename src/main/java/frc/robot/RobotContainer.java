@@ -258,7 +258,7 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		new Trigger(
 				() -> (((!limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())) && !DriverStation.isEnabled()))
-				.whileTrue(leds.enableState(LED_STATES.EMERGENCY));	
+				.whileTrue(leds.enableState(LED_STATES.EMERGENCY));
 		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState() || collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
@@ -305,7 +305,7 @@ public class RobotContainer extends LightningContainer {
 		// drivetrain,
 		// () -> -coPilot.getLeftY(),
 		// () -> -coPilot.getRightY(),
-		// coPilot::getBButton, 
+		// coPilot::getBButton,
 		// leds
 		// ).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
@@ -401,6 +401,6 @@ public class RobotContainer extends LightningContainer {
 			});
 		} else {
 			return new InstantCommand();
-		}	
+		}
 	}
 }

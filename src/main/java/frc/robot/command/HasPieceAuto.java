@@ -7,11 +7,13 @@ import frc.robot.subsystems.Indexer;
 
 public class HasPieceAuto extends Command {
 
-	Indexer indexer;
-	Debouncer hasNoteDebouncer = new Debouncer(0.1, DebounceType.kFalling);
+	private Indexer indexer;
+	private Debouncer hasNoteDebouncer = new Debouncer(0.1, DebounceType.kFalling);
 
 	/**
-	 * Creates a new HasPieceAuto A race condition to move to next collect if we miss the piece
+	 * Creates a new HasPieceAuto
+	 * A race condition to move to next collect if we miss the piece
+	 * @param indexer subsystem
 	 */
 	public HasPieceAuto(Indexer indexer) {
 		this.indexer = indexer;
@@ -22,12 +24,11 @@ public class HasPieceAuto extends Command {
 		System.out.println("AUTO - Has Piece INIT");
 	}
 
-	@Override 
+	@Override
 	public void end(boolean interrupted) {
 		System.out.println("AUTO - Has Piece END");
 	}
- 
-	// Returns true when the command should end.
+
 	@Override
 	public boolean isFinished() {
 		return !hasNoteDebouncer.calculate(indexer.hasNote());

@@ -165,7 +165,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     /**
      * Sets the target angle of the pivot
-     * 
      * @param angle Angle of the pivot in rotations
      */
     public void setTargetAngle(double angle) {
@@ -199,7 +198,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     /**
      * Gets forward limit switch
-     * 
      * @return true if pressed
      */
     public boolean getForwardLimit() {
@@ -208,7 +206,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     /**
      * Gets reverse limit switch
-     * 
      * @return true if pressed
      */
     public boolean getReverseLimit() {

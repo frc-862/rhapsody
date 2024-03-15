@@ -17,7 +17,7 @@ public class CollectAndGo extends Command {
 	private final Flywheel flywheel;
 	private final Indexer indexer;
 
-	/** Creates a new CollectAndGo. 
+	/** Creates a new CollectAndGo.
 	 * @param collector subsystem
 	 * @param flywheel subsystem
 	 * @param indexer subsystem

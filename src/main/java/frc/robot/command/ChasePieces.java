@@ -1,9 +1,5 @@
 package frc.robot.command;
 
-import java.sql.Driver;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.util.datalog.DataLog;
@@ -12,13 +8,10 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
@@ -71,7 +64,6 @@ public class ChasePieces extends Command {
 
 	/**
 	 * Creates a new ChasePieces.
-	 * 
 	 * @param drivetrain to request movement
 	 * @param collector  for smart collect
 	 * @param indexer    for smart collect
@@ -90,7 +82,7 @@ public class ChasePieces extends Command {
 
 		this.limelight = limelights.getDust();
 
-		if (DriverStation.isAutonomous()){
+		if (DriverStation.isAutonomous()) {
 			this.drivePower = 1.5d;
 			this.rotPower = 1.5d; //TODO: get real >:)
 			this.maxCollectPower = 0.8d;
@@ -154,11 +146,11 @@ public class ChasePieces extends Command {
 		pidOutput = headingController.calculate(0, targetHeading);
 
 
-		if (DriverStation.isAutonomousEnabled()){
+		if (DriverStation.isAutonomousEnabled()) {
 			collectPower = maxCollectPower;
-			if (!hasPiece){
-				if (hasTarget){
-					if (trustValues()){
+			if (!hasPiece) {
+				if (hasTarget) {
+					if (trustValues()) {
 						hasSeenTarget = true;
 						if (!onTarget) {
 							drivetrain.setRobot(drivePower, 0, -pidOutput);
@@ -167,19 +159,19 @@ public class ChasePieces extends Command {
 						}
 					}
 				} else {
-					if (!hasSeenTarget){
-						if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT){
-							if (DriverStation.getAlliance().get() == Alliance.Blue){
+					if (!hasSeenTarget) {
+						if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT) {
+							if (DriverStation.getAlliance().get() == Alliance.Blue) {
 								drivetrain.setRobot(0, 0, -rotPower);
 							} else {
 								drivetrain.setRobot(0, 0, rotPower);
 							}
 						} else {
-							if (DriverStation.getAlliance().get() == Alliance.Blue){
+							if (DriverStation.getAlliance().get() == Alliance.Blue) {
 								drivetrain.setRobot(0, 0, rotPower);
 							} else {
 								drivetrain.setRobot(0, 0, -rotPower);
-							}					
+							}
 						}
 					} else {
 						drivetrain.setRobot(drivePower, 0, 0);
@@ -187,9 +179,9 @@ public class ChasePieces extends Command {
 				}
 			}
 		} else {
-			if (!hasPiece){
-				if (hasTarget){
-					if (trustValues()){
+			if (!hasPiece) {
+				if (hasTarget) {
+					if (trustValues()) {
 						collectPower = maxCollectPower;
 						if (!onTarget) {
 							drivetrain.setRobot(drivePower, 0, -pidOutput);
@@ -236,7 +228,6 @@ public class ChasePieces extends Command {
 	/**
 	 * Makes sure that the robot isn't jerking over to a different side while
 	 * chasing pieces.
-	 * 
 	 * @return t/f if the robot should trust the values
 	 */
 	public boolean trustValues() {

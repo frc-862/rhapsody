@@ -35,7 +35,6 @@ public class SmartShoot extends Command {
 
 	/**
 	 * SmartShoot to control flywheel, pivot, drivetrain, and indexer
-	 * 
 	 * @param flywheel   subsystem to set target RPM
 	 * @param pivot      subsystem to set target angle
 	 * @param drivetrain subsystem to get distance from speaker
@@ -71,7 +70,7 @@ public class SmartShoot extends Command {
 		distanceLog = new DoubleLogEntry(log, "/SmartShoot/distance");
 		stateLog = new StringLogEntry(log, "/SmartShoot/state");
 	}
-	
+
 	@Override
 	public void execute() {
 		// Distance from current pose to speaker pose
@@ -130,7 +129,6 @@ public class SmartShoot extends Command {
 
 	/**
 	 * Checks if Flywheel and Pivot are in range of target angle
-	 * 
 	 * @return boolean on Target
 	 */
 	public boolean onTarget() {
@@ -139,7 +137,6 @@ public class SmartShoot extends Command {
 
 	/**
 	 * Calculate Pivot Target angle (in degrees)
-	 * 
 	 * @param distance from the speaker
 	 * @return Angle to set pivot to
 	 */
@@ -149,7 +146,6 @@ public class SmartShoot extends Command {
 
 	/**
 	 * Calculate Flywheel Target RPM (in RPM)
-	 * 
 	 * @param distance from the speaker
 	 * @return RPM to set the Flywheels
 	 */
