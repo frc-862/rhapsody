@@ -142,7 +142,7 @@ public class Indexer extends SubsystemBase {
      * @return entry beambreak state
      */
     public boolean getEntryBeamBreakState() {
-        return entryDebouncer.calculate(indexerSensorEntry.get());
+        return entryDebouncer.calculate(!indexerSensorEntry.get());
     }
 
     /**
