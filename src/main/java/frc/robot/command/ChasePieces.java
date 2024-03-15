@@ -1,9 +1,5 @@
 package frc.robot.command;
 
-import java.sql.Driver;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.util.datalog.DataLog;
@@ -12,13 +8,10 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
@@ -46,10 +39,11 @@ public class ChasePieces extends Command {
 	private double drivePower;
 	private double rotPower;
 
-    private boolean onTarget;
+	private boolean onTarget;
 	private boolean hasPiece;
 	private boolean isDone;
 	private boolean hasTarget;
+	private boolean hasSeenTarget;
 
 	private Command smartCollect;
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
@@ -65,19 +59,21 @@ public class ChasePieces extends Command {
 	private DoubleLogEntry targetYLog;
 	private DoubleLogEntry pidOutputLog;
 	private DoubleLogEntry smartCollectPowerLog;
-    private DoubleLogEntry drivePowerLog;
+	private DoubleLogEntry drivePowerLog;
 	private DoubleLogEntry maxCollectPowerLog;
 
 	/**
 	 * Creates a new ChasePieces.
 	 * @param drivetrain to request movement
-	 * @param collector for smart collect
-	 * @param indexer for smart collect
-	 * @param flywheel for stopping the flywheels before collecting / for smart collect
-	 * @param pivot for smart collect
+	 * @param collector  for smart collect
+	 * @param indexer    for smart collect
+	 * @param flywheel   for stopping the flywheels before collecting / for smart
+	 *                   collect
+	 * @param pivot      for smart collect
 	 * @param limelights to get vision data from dust
 	 */
-	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel, Limelights limelights) {
+	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel,
+			Limelights limelights) {
 		this.drivetrain = drivetrain;
 		this.collector = collector;
 		this.indexer = indexer;
@@ -86,7 +82,7 @@ public class ChasePieces extends Command {
 
 		this.limelight = limelights.getDust();
 
-		if (DriverStation.isAutonomous()){
+		if (DriverStation.isAutonomous()) {
 			this.drivePower = 1.5d;
 			this.rotPower = 1.5d; //TODO: get real >:)
 			this.maxCollectPower = 0.8d;
@@ -97,7 +93,7 @@ public class ChasePieces extends Command {
 		}
 
 		addRequirements(drivetrain, collector, indexer, flywheel);
-		
+
 		initLogging();
 	}
 
@@ -109,6 +105,8 @@ public class ChasePieces extends Command {
 		collectPower = 0d;
 		smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
 		smartCollect.initialize();
+
+		hasSeenTarget = false;
 
 	}
 
@@ -136,7 +134,7 @@ public class ChasePieces extends Command {
 		hasTarget = limelight.hasTarget();
 		smartCollect.execute();
 
-		if (hasTarget){
+		if (hasTarget) {
 			previousTargetHeading = targetHeading;
 			targetHeading = limelight.getTargetX();
 			targetPitch = limelight.getTargetY();
@@ -148,11 +146,12 @@ public class ChasePieces extends Command {
 		pidOutput = headingController.calculate(0, targetHeading);
 
 
-		if (DriverStation.isAutonomousEnabled()){
-			if (!hasPiece){
-				if (hasTarget){
-					if (trustValues()){
-						collectPower = maxCollectPower;
+		if (DriverStation.isAutonomousEnabled()) {
+			collectPower = maxCollectPower;
+			if (!hasPiece) {
+				if (hasTarget) {
+					if (trustValues()) {
+						hasSeenTarget = true;
 						if (!onTarget) {
 							drivetrain.setRobot(drivePower, 0, -pidOutput);
 						} else {
@@ -160,25 +159,29 @@ public class ChasePieces extends Command {
 						}
 					}
 				} else {
-					if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT){
-						if (DriverStation.getAlliance().get() == Alliance.Blue){
-							drivetrain.setRobot(0, 0, -rotPower);
+					if (!hasSeenTarget) {
+						if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT) {
+							if (DriverStation.getAlliance().get() == Alliance.Blue) {
+								drivetrain.setRobot(0, 0, -rotPower);
+							} else {
+								drivetrain.setRobot(0, 0, rotPower);
+							}
 						} else {
-							drivetrain.setRobot(0, 0, rotPower);
+							if (DriverStation.getAlliance().get() == Alliance.Blue) {
+								drivetrain.setRobot(0, 0, rotPower);
+							} else {
+								drivetrain.setRobot(0, 0, -rotPower);
+							}
 						}
 					} else {
-						if (DriverStation.getAlliance().get() == Alliance.Blue){
-							drivetrain.setRobot(0, 0, rotPower);
-						} else {
-							drivetrain.setRobot(0, 0, -rotPower);
-						}					
+						drivetrain.setRobot(drivePower, 0, 0);
 					}
 				}
 			}
 		} else {
-			if (!hasPiece){
-				if (hasTarget){
-					if (trustValues()){
+			if (!hasPiece) {
+				if (hasTarget) {
+					if (trustValues()) {
 						collectPower = maxCollectPower;
 						if (!onTarget) {
 							drivetrain.setRobot(drivePower, 0, -pidOutput);
@@ -223,11 +226,12 @@ public class ChasePieces extends Command {
 	}
 
 	/**
-	 * Makes sure that the robot isn't jerking over to a different side while chasing pieces.
+	 * Makes sure that the robot isn't jerking over to a different side while
+	 * chasing pieces.
 	 * @return t/f if the robot should trust the values
 	 */
-	public boolean trustValues(){
-		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6){
+	public boolean trustValues() {
+		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6) {
 			return true;
 		}
 		return false;
@@ -235,13 +239,13 @@ public class ChasePieces extends Command {
 
 	@Override
 	public boolean isFinished() {
-		if (DriverStation.isAutonomous()){
-			if (DriverStation.getAlliance().get() == Alliance.Blue){
-				if (drivetrain.getPose().getX() > AutonomousConstants.BLUE_CHASE_BOUNDARY) {
+		if (DriverStation.isAutonomous()) {
+			if (DriverStation.getAlliance().get() == Alliance.Blue) {
+				if (drivetrain.getPose().getX() > AutonomousConstants.CHASE_BOUNDARY) {
 					return true;
 				}
 			} else {
-				if (drivetrain.getPose().getX() < AutonomousConstants.RED_CHASE_BOUNDARY) {
+				if (drivetrain.getPose().getX() < AutonomousConstants.CHASE_BOUNDARY) {
 					return true;
 				}
 			}

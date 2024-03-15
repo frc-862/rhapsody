@@ -83,7 +83,7 @@ public class Flywheel extends SubsystemBase {
 
         LightningShuffleboard.setDoubleSupplier("Flywheel", "Top RPM", () -> getTopMotorRPM());
         LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom RPM", () -> getBottomMotorRPM());
-        
+
         LightningShuffleboard.setDoubleSupplier("Flywheel", "Top Target RPM", () -> topMotorTargetRPM());
         LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Target RPM", () -> bottomMotorTargetRPM());
 
@@ -209,7 +209,7 @@ public class Flywheel extends SubsystemBase {
     public void stop() {
         setAllMotorsRPM(0);
     }
-    
+
     /**
      * @return The bias to add to the target RPM of the flywheel
      */
@@ -240,7 +240,7 @@ public class Flywheel extends SubsystemBase {
 
     /**
      * Sets target RPS to the bottom motor, using the proper slots and FOC
-     * @param targetRPS 
+     * @param targetRPS
      */
     private void applyPowerTop(double targetRPS) {
         if(targetRPS > 95) {

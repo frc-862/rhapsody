@@ -35,7 +35,6 @@ public class Collector extends SubsystemBase {
 
 	private Debouncer entryDebouncer = new Debouncer(0.05);
 
-
 	public Collector() {
 		motor = new ThunderBird(
 				CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
@@ -69,19 +68,17 @@ public class Collector extends SubsystemBase {
 
 	/**
 	 * Entrance of Collector Beam Break
-	 * 
 	 * @return When an object is present, returns true, otherwise returns false
 	 */
 	public boolean getEntryBeamBreakState() {
 		if (Constants.isMercury()) {
 			return entryDebouncer.calculate(!beamBreak.get());
 		}
-		return entryDebouncer.calculate(!beamBreak.get());
+		return entryDebouncer.calculate(beamBreak.get());
 	}
 
 	/**
 	 * Sets the power of both collector motors
-	 * 
 	 * @param power Double value from -1.0 to 1.0 (positive collects inwards)
 	 */
 	public void setPower(double power) {
@@ -108,7 +105,6 @@ public class Collector extends SubsystemBase {
 
 	/**
 	 * Has piece
-	 * 
 	 * @return boolean, true if collector has piece
 	 */
 	public boolean hasPiece() {
