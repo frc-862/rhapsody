@@ -104,13 +104,6 @@ public class Flywheel extends SubsystemBase {
         }
 
         updateLogging();
-
-        LightningShuffleboard.setDouble("Flywheel", "TOP RPM", getTopMotorRPM());
-        LightningShuffleboard.setDouble("Flywheel", "BOTTOM RPM", getBottomMotorRPM());
-        LightningShuffleboard.setDouble("Flywheel", "TOP RPM Target", topTargetRPS * 60);
-        LightningShuffleboard.setDouble("Flywheel", "BOTTOM RPM Target", bottomTargetRPS * 60);
-        LightningShuffleboard.setDouble("Flywheel", "BIAS", bias);
-        LightningShuffleboard.setBool("Flywheel", "ON TARGET", allMotorsOnTarget());
     }
 
     /**
