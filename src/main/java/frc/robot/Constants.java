@@ -138,8 +138,8 @@ public class Constants {
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
                                                                                                       // constants
 
-        public static final double BLUE_CHASE_BOUNDARY = 8.2; // The highest X value the robot can be at before ending. Prevents going over center line.
-        public static final double RED_CHASE_BOUNDARY = 8.7;
+        public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can be at before ending. Prevents going over center line.
+        public static final double RED_CHASE_BOUNDARY = 8;
 
     }
 
@@ -314,6 +314,8 @@ public class Constants {
         public static final int TAG_PIPELINE = 0;
         public static final int SPEAKER_PIPELINE = 1;
         public static final int NOTE_PIPELINE = 2;
+
+        public static final double HALF_FIELD_HEIGHT = Units.feetToMeters(13);
 
         public static final Translation3d BLUE_SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
         public static final Translation3d RED_SPEAKER_LOCATION = new Translation3d(16.4592, 5.547593, 1.2);
