@@ -9,7 +9,6 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
@@ -23,8 +22,6 @@ public class Collector extends SubsystemBase {
 	// Declare collector hardware
 	private ThunderBird motor;
 	private DigitalInput beamBreak;
-	
-	private Debouncer entryDebouncer = new Debouncer(0.05);
 
 	private final VelocityVoltage velocityVoltage = new VelocityVoltage(
 			0, 0, true, CollectorConstants.MOTOR_KV,
@@ -35,6 +32,9 @@ public class Collector extends SubsystemBase {
 	private DoubleLogEntry collectorPowerLog;
 	private BooleanLogEntry beamBreakLog;
 	private BooleanLogEntry hasPieceLog;
+
+	private Debouncer entryDebouncer = new Debouncer(0.05);
+
 
 	public Collector() {
 		motor = new ThunderBird(

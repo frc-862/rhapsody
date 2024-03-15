@@ -44,7 +44,7 @@ public class ChasePieces extends Command {
 	private double maxCollectPower;
 	private double drivePower;
 
-    private boolean onTarget;
+	private boolean onTarget;
 	private boolean hasPiece;
 	private boolean isDone;
 	private boolean hasTarget;
@@ -63,19 +63,22 @@ public class ChasePieces extends Command {
 	private DoubleLogEntry targetYLog;
 	private DoubleLogEntry pidOutputLog;
 	private DoubleLogEntry smartCollectPowerLog;
-    private DoubleLogEntry drivePowerLog;
+	private DoubleLogEntry drivePowerLog;
 	private DoubleLogEntry maxCollectPowerLog;
 
 	/**
 	 * Creates a new ChasePieces.
+	 * 
 	 * @param drivetrain to request movement
-	 * @param collector for smart collect
-	 * @param indexer for smart collect
-	 * @param flywheel for stopping the flywheels before collecting / for smart collect
-	 * @param pivot for smart collect
+	 * @param collector  for smart collect
+	 * @param indexer    for smart collect
+	 * @param flywheel   for stopping the flywheels before collecting / for smart
+	 *                   collect
+	 * @param pivot      for smart collect
 	 * @param limelights to get vision data from dust
 	 */
-	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel, Limelights limelights) {
+	public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel,
+			Limelights limelights) {
 		this.drivetrain = drivetrain;
 		this.collector = collector;
 		this.indexer = indexer;
@@ -85,7 +88,7 @@ public class ChasePieces extends Command {
 		this.limelight = limelights.getDust();
 
 		addRequirements(drivetrain, collector, indexer, flywheel);
-		
+
 		initLogging();
 	}
 
@@ -97,7 +100,7 @@ public class ChasePieces extends Command {
 		collectPower = 0d;
 		smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
 
-		if (DriverStation.isAutonomous()){
+		if (DriverStation.isAutonomous()) {
 			drivePower = 1.5d;
 			maxCollectPower = 0.5d;
 		} else {
@@ -131,7 +134,7 @@ public class ChasePieces extends Command {
 		hasTarget = limelight.hasTarget();
 		smartCollect.execute();
 
-		if (hasTarget){
+		if (hasTarget) {
 			previousTargetHeading = targetHeading;
 			targetHeading = limelight.getTargetX();
 			targetPitch = limelight.getTargetY();
@@ -142,9 +145,9 @@ public class ChasePieces extends Command {
 
 		pidOutput = headingController.calculate(0, targetHeading);
 
-		if (!hasPiece){
-			if (hasTarget){
-				if (trustValues()){
+		if (!hasPiece) {
+			if (hasTarget) {
+				if (trustValues()) {
 					collectPower = maxCollectPower;
 					if (!onTarget) {
 						drivetrain.setRobot(drivePower, 0, -pidOutput);
@@ -188,11 +191,13 @@ public class ChasePieces extends Command {
 	}
 
 	/**
-	 * Makes sure that the robot isn't jerking over to a different side while chasing pieces.
+	 * Makes sure that the robot isn't jerking over to a different side while
+	 * chasing pieces.
+	 * 
 	 * @return t/f if the robot should trust the values
 	 */
-	public boolean trustValues(){
-		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6){
+	public boolean trustValues() {
+		if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6) {
 			return true;
 		}
 		return false;
@@ -200,13 +205,13 @@ public class ChasePieces extends Command {
 
 	@Override
 	public boolean isFinished() {
-		if (DriverStation.isAutonomous()){
-			if (DriverStation.getAlliance().get() == Alliance.Blue){
-				if (drivetrain.getPose().getX() > AutonomousConstants.BLUE_CHASE_BOUNDARY) {
+		if (DriverStation.isAutonomous()) {
+			if (DriverStation.getAlliance().get() == Alliance.Blue) {
+				if (drivetrain.getPose().getX() > AutonomousConstants.CHASE_BOUNDARY) {
 					return true;
 				}
 			} else {
-				if (drivetrain.getPose().getX() < AutonomousConstants.RED_CHASE_BOUNDARY) {
+				if (drivetrain.getPose().getX() < AutonomousConstants.CHASE_BOUNDARY) {
 					return true;
 				}
 			}

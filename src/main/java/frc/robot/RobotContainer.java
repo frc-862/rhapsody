@@ -167,6 +167,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Point-At-Speaker", new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
 		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
 		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
+		NamedCommands.registerCommand("Stop-Flywheel", new SourceCollect(flywheel, pivot));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
