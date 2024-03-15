@@ -249,7 +249,8 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(coPilot::getRightBumper)
 				.whileTrue(new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		new Trigger(coPilot::getLeftBumper)
-				.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
+				.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer)
+				.deadlineWith(new SourceCollect(flywheel, pivot)));
 
 		/* Other */
 		new Trigger(

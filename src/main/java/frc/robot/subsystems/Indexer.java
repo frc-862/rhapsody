@@ -184,6 +184,15 @@ public class Indexer extends SubsystemBase {
         didShoot = false;
     }
 
+    /**
+     * Get the current power of the indexer motor
+     * 
+     * @return current power of the indexer motor
+     */
+    public double getIndexerPower() {
+        return indexerMotor.get();
+    }
+
     @Override
     public void periodic() {
         // Update piece state based on beambreaks
