@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutonomousConstants;
@@ -104,6 +103,15 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         velocityXLog = new DoubleLogEntry(log, "/Swerve/velocity x");
         velocityYLog = new DoubleLogEntry(log, "/Swerve/velocity y");
         distanceToSpeakerLog = new DoubleLogEntry(log, "/Swerve/Distance to Speaker");
+
+        LightningShuffleboard.setBoolSupplier("Swerve", "Slow Mode", () -> inSlowMode());
+        LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
+        LightningShuffleboard.setBoolSupplier("Swerve", "Tipped", () -> isTipped());
+
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Odometry X", () -> getPose().getX());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Odometry Y", () -> getPose().getY());
+
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPose().getRotation().getDegrees());
     }
 
     private void setRampRate() {
@@ -234,7 +242,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     /**
      * Sets the robot in park mode
      */
-    public void brake() {
+    public void brake() {        
         this.setControl(brake);
     }
 
