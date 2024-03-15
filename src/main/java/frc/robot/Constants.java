@@ -572,9 +572,9 @@ public class Constants {
 
     public class CandConstants { // TODO get real
         // Amp
-        public static final double AMP_TOP_RPM = 300; // FRONT METHOD 250
-        public static final double AMP_BOTTOM_RPM = 450; // FRONT METHOD 1250
-        public static final double AMP_ANGLE = 103.5; // FRONT METHOD 55
+        public static final double AMP_TOP_RPM = 50; 
+        public static final double AMP_BOTTOM_RPM = 2000;
+        public static final double AMP_ANGLE = 45;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
