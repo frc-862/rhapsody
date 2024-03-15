@@ -169,7 +169,8 @@ public class ChasePieces extends Command {
 							drivetrain.setRobot(0, 0, rotPower);
 						} else {
 							drivetrain.setRobot(0, 0, -rotPower);
-						}					}
+						}					
+					}
 				}
 			}
 		} else {
