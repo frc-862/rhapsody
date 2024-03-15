@@ -42,9 +42,13 @@ public class Constants {
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center
+                                                                                         // of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed /
+                                                                                              // circumference of circle
+                                                                                              // with radius of
+                                                                                              // wheelbase
 
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
@@ -134,13 +138,15 @@ public class Constants {
 
         public static final double CONTROL_LOOP_PERIOD = 0.01;
 
-        public static final PathConstraints PATH_CONSTRAINTS =
-                new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
+                                                                                                      // constants
 
-        public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can be at before ending. Prevents going over center line.
+        public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can be at before ending.
+                                                              // Prevents going over center line.
         public static final double RED_CHASE_BOUNDARY = 8;
 
-        public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at before ending. Prevents going over center line.
+        public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at before ending.
+                                                         // Prevents going over center line.
     }
 
     public static class TunerConstants {
@@ -153,17 +159,15 @@ public class Constants {
                 .withKD(0.2).withKS(0).withKV(1.5).withKA(0);
         // When using closed-loop control, the drive motor uses the control
         // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
-        private static final Slot0Configs driveGains =
-                new Slot0Configs().withKP(3).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0);
+        private static final Slot0Configs driveGains = new Slot0Configs().withKP(3).withKI(0).withKD(0).withKS(0)
+                .withKV(0).withKA(0);
 
         // The closed-loop output type to use for the steer motors;
         // This affects the PID/FF gains for the steer motors
-        private static final ClosedLoopOutputType steerClosedLoopOutput =
-                ClosedLoopOutputType.Voltage;
+        private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
         // The closed-loop output type to use for the drive motors;
         // This affects the PID/FF gains for the drive motors
-        private static final ClosedLoopOutputType driveClosedLoopOutput =
-                ClosedLoopOutputType.TorqueCurrentFOC;
+        private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.TorqueCurrentFOC;
 
         // The stator current at which the wheels start to slip;
         // This needs to be tuned to your individual robot
@@ -195,24 +199,24 @@ public class Constants {
         private static final double kSteerFrictionVoltage = 0.25;
         private static final double kDriveFrictionVoltage = 0.25;
 
-        private static final SwerveDrivetrainConstants DrivetrainConstants =
-                new SwerveDrivetrainConstants().withPigeon2Id(kPigeonId)
-                        .withCANbusName(kCANbusName);
+        private static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
+                .withPigeon2Id(kPigeonId)
+                .withCANbusName(kCANbusName);
 
-        private static final SwerveModuleConstantsFactory ConstantCreator =
-                new SwerveModuleConstantsFactory().withDriveMotorGearRatio(kDriveGearRatio)
-                        .withSteerMotorGearRatio(kSteerGearRatio)
-                        .withWheelRadius(kWheelRadiusInches).withSlipCurrent(kSlipCurrentA)
-                        .withSteerMotorGains(steerGains).withDriveMotorGains(driveGains)
-                        .withSteerMotorClosedLoopOutput(steerClosedLoopOutput)
-                        .withDriveMotorClosedLoopOutput(driveClosedLoopOutput)
-                        .withSpeedAt12VoltsMps(kSpeedAt12VoltsMps).withSteerInertia(kSteerInertia)
-                        .withDriveInertia(kDriveInertia)
-                        .withSteerFrictionVoltage(kSteerFrictionVoltage)
-                        .withDriveFrictionVoltage(kDriveFrictionVoltage)
-                        .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
-                        .withCouplingGearRatio(kCoupleRatio)
-                        .withSteerMotorInverted(kSteerMotorReversed);
+        private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
+                .withDriveMotorGearRatio(kDriveGearRatio)
+                .withSteerMotorGearRatio(kSteerGearRatio)
+                .withWheelRadius(kWheelRadiusInches).withSlipCurrent(kSlipCurrentA)
+                .withSteerMotorGains(steerGains).withDriveMotorGains(driveGains)
+                .withSteerMotorClosedLoopOutput(steerClosedLoopOutput)
+                .withDriveMotorClosedLoopOutput(driveClosedLoopOutput)
+                .withSpeedAt12VoltsMps(kSpeedAt12VoltsMps).withSteerInertia(kSteerInertia)
+                .withDriveInertia(kDriveInertia)
+                .withSteerFrictionVoltage(kSteerFrictionVoltage)
+                .withDriveFrictionVoltage(kDriveFrictionVoltage)
+                .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
+                .withCouplingGearRatio(kCoupleRatio)
+                .withSteerMotorInverted(kSteerMotorReversed);
 
         // OFFSETS Rhapsody
         private static final double kFrontLeftEncoderOffsetRh = 0.0546875;
@@ -248,46 +252,46 @@ public class Constants {
         private static final double kBackRightXPosInches = -10.825;
         private static final double kBackRightYPosInches = -10.825;
 
-        private static final SwerveModuleConstants FrontLeft =
-                ConstantCreator.createModuleConstants(CAN.kFrontLeftSteerMotorId,
-                        CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
-                        kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches),
-                        Units.inchesToMeters(kFrontLeftYPosInches), kInvertLeftSide);
-        private static final SwerveModuleConstants FrontRight =
-                ConstantCreator.createModuleConstants(CAN.kFrontRightSteerMotorId,
-                        CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
-                        kFrontRightEncoderOffset, Units.inchesToMeters(kFrontRightXPosInches),
-                        Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide);
+        private static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
+                CAN.kFrontLeftSteerMotorId,
+                CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
+                kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches),
+                Units.inchesToMeters(kFrontLeftYPosInches), kInvertLeftSide);
+        private static final SwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
+                CAN.kFrontRightSteerMotorId,
+                CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
+                kFrontRightEncoderOffset, Units.inchesToMeters(kFrontRightXPosInches),
+                Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide);
         private static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
                 CAN.kBackLeftSteerMotorId, CAN.kBackLeftDriveMotorId, CAN.kBackLeftEncoderId,
                 kBackLeftEncoderOffset, Units.inchesToMeters(kBackLeftXPosInches),
                 Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide);
-        private static final SwerveModuleConstants BackRight =
-                ConstantCreator.createModuleConstants(CAN.kBackRightSteerMotorId,
-                        CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
-                        kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches),
-                        Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
+        private static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
+                CAN.kBackRightSteerMotorId,
+                CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
+                kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches),
+                Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 
-        private static final SwerveModuleConstants FrontLeftRh =
-                ConstantCreator.createModuleConstants(CAN.kFrontLeftSteerMotorId,
-                        CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
-                        kFrontLeftEncoderOffsetRh, Units.inchesToMeters(kFrontLeftXPosInchesRh),
-                        Units.inchesToMeters(kFrontLeftYPosInchesRh), kInvertLeftSide);
-        private static final SwerveModuleConstants FrontRightRh =
-                ConstantCreator.createModuleConstants(CAN.kFrontRightSteerMotorId,
-                        CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
-                        kFrontRightEncoderOffsetRh, Units.inchesToMeters(kFrontRightXPosInchesRh),
-                        Units.inchesToMeters(kFrontRightYPosInchesRh), kInvertRightSide);
-        private static final SwerveModuleConstants BackLeftRh =
-                ConstantCreator.createModuleConstants(CAN.kBackLeftSteerMotorId,
-                        CAN.kBackLeftDriveMotorId, CAN.kBackLeftEncoderId, kBackLeftEncoderOffsetRh,
-                        Units.inchesToMeters(kBackLeftXPosInchesRh),
-                        Units.inchesToMeters(kBackLeftYPosInchesRh), kInvertLeftSide);
-        private static final SwerveModuleConstants BackRightRh =
-                ConstantCreator.createModuleConstants(CAN.kBackRightSteerMotorId,
-                        CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
-                        kBackRightEncoderOffsetRh, Units.inchesToMeters(kBackRightXPosInchesRh),
-                        Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
+        private static final SwerveModuleConstants FrontLeftRh = ConstantCreator.createModuleConstants(
+                CAN.kFrontLeftSteerMotorId,
+                CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
+                kFrontLeftEncoderOffsetRh, Units.inchesToMeters(kFrontLeftXPosInchesRh),
+                Units.inchesToMeters(kFrontLeftYPosInchesRh), kInvertLeftSide);
+        private static final SwerveModuleConstants FrontRightRh = ConstantCreator.createModuleConstants(
+                CAN.kFrontRightSteerMotorId,
+                CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
+                kFrontRightEncoderOffsetRh, Units.inchesToMeters(kFrontRightXPosInchesRh),
+                Units.inchesToMeters(kFrontRightYPosInchesRh), kInvertRightSide);
+        private static final SwerveModuleConstants BackLeftRh = ConstantCreator.createModuleConstants(
+                CAN.kBackLeftSteerMotorId,
+                CAN.kBackLeftDriveMotorId, CAN.kBackLeftEncoderId, kBackLeftEncoderOffsetRh,
+                Units.inchesToMeters(kBackLeftXPosInchesRh),
+                Units.inchesToMeters(kBackLeftYPosInchesRh), kInvertLeftSide);
+        private static final SwerveModuleConstants BackRightRh = ConstantCreator.createModuleConstants(
+                CAN.kBackRightSteerMotorId,
+                CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
+                kBackRightEncoderOffsetRh, Units.inchesToMeters(kBackRightXPosInchesRh),
+                Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
 
         public static final Swerve getDrivetrain() {
             if (Constants.isMercury()) {
@@ -306,10 +310,10 @@ public class Constants {
         // This is a magic number from gridlock, may need to be changed or removed
         // entirely
         public static final double PROCESS_LATENCY = 0.0472; // TODO test
-        public static final Translation2d FIELD_LIMIT =
-                new Translation2d(Units.feetToMeters(54.0), Units.feetToMeters(26.0));
-        public static final Translation2d VISION_LIMIT =
-                new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
+        public static final Translation2d FIELD_LIMIT = new Translation2d(Units.feetToMeters(54.0),
+                Units.feetToMeters(26.0));
+        public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
+                Units.feetToMeters(5));
         public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0, 0.01);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
@@ -356,23 +360,20 @@ public class Constants {
     public class MusicConstants {
         public static final String BOH_RHAP_FILEPATH = "bohemianrhapsody.chrp";
         public static final String JEOPARDY_FILEPATH = "jeopardy.chrp";
-        public static final String BEWARE_THE_FOREST_MUSHROOMS_FILEPATH =
-                "bewaretheforestmushrooms.chrp";
+        public static final String BEWARE_THE_FOREST_MUSHROOMS_FILEPATH = "bewaretheforestmushrooms.chrp";
         public static final String UNDER_PRESSURE_FILEPATH = "underpressure.chrp";
         public static final String NATIONAL_PARK_FILEPATH = "nationalpark.chrp";
         public static final String ENCOUNTER_FILEPATH = "encounter.chrp";
         public static final String PIRATES_OF_THE_CARIBBEAN_FILEPATH = "piratesofthecaribbean.chrp";
-        public static final String CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH =
-                "crazylittlethingcalledlove.chrp";
-        public static final String ANOTHER_ONE_BITES_THE_DUST_FILEPATH =
-                "anotheronebitesthedust.chrp";
+        public static final String CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH = "crazylittlethingcalledlove.chrp";
+        public static final String ANOTHER_ONE_BITES_THE_DUST_FILEPATH = "anotheronebitesthedust.chrp";
         public static final String SWEET_CAROLINE_FILEPATH = "sweetcaroline.chrp";
         public static final String WE_ARE_THE_CHAMPIONS_FILEPATH = "wearethechampions.chrp";
-        public static final String[] SONG_NAMES = {BOH_RHAP_FILEPATH, JEOPARDY_FILEPATH,
+        public static final String[] SONG_NAMES = { BOH_RHAP_FILEPATH, JEOPARDY_FILEPATH,
                 BEWARE_THE_FOREST_MUSHROOMS_FILEPATH, UNDER_PRESSURE_FILEPATH,
                 NATIONAL_PARK_FILEPATH, ENCOUNTER_FILEPATH, PIRATES_OF_THE_CARIBBEAN_FILEPATH,
                 CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH, ANOTHER_ONE_BITES_THE_DUST_FILEPATH,
-                SWEET_CAROLINE_FILEPATH, WE_ARE_THE_CHAMPIONS_FILEPATH};
+                SWEET_CAROLINE_FILEPATH, WE_ARE_THE_CHAMPIONS_FILEPATH };
         public static final List<String> SET_LIST = Arrays.asList(SONG_NAMES);
     }
 
@@ -479,7 +480,8 @@ public class Constants {
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias
+                                                        // by
 
         public static final double STOW_ANGLE = 28d;
 
@@ -540,10 +542,10 @@ public class Constants {
                 put(2d, 45d);
                 put(2.5d, 41.5d);
                 put(3d, 37d);
-                put(3.5d, 34.3d);
-                put(4d, 32.3d);
-                put(4.5d, 30d);
-                put(5d, 28.5d);
+                put(3.5d, 35.3d);
+                put(4d, 33.3d);
+                put(4.5d, 32.5d);
+                put(5d, 30d);
 
             }
         };
@@ -649,16 +651,15 @@ public class Constants {
             }
         };
 
-        public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>(){
+        public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
             {
-            put(-1, LEDsConstants.LED_LENGTH);
-            put(0, 16);
-            put(1, 15);
+                put(-1, LEDsConstants.LED_LENGTH);
+                put(0, 16);
+                put(1, 15);
             }
         };
 
         public static final int SWIRL_SEGMENT_SIZE = 5;
-
 
         public static final int RED_HUE = 0;
         public static final int ORANGE_HUE = 5;

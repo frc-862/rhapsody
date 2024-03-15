@@ -35,7 +35,6 @@ public class Collector extends SubsystemBase {
 
 	private Debouncer entryDebouncer = new Debouncer(0.05);
 
-
 	public Collector() {
 		motor = new ThunderBird(
 				CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
@@ -76,7 +75,7 @@ public class Collector extends SubsystemBase {
 		if (Constants.isMercury()) {
 			return entryDebouncer.calculate(!beamBreak.get());
 		}
-		return entryDebouncer.calculate(!beamBreak.get());
+		return entryDebouncer.calculate(beamBreak.get());
 	}
 
 	/**

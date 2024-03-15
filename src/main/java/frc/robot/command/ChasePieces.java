@@ -50,6 +50,7 @@ public class ChasePieces extends Command {
 	private boolean hasPiece;
 	private boolean isDone;
 	private boolean hasTarget;
+	private boolean hasSeenTarget;
 
 	private Command smartCollect;
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
@@ -113,6 +114,8 @@ public class ChasePieces extends Command {
 		smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
 		smartCollect.initialize();
 
+		hasSeenTarget = false;
+
 	}
 
 	/**
@@ -152,10 +155,11 @@ public class ChasePieces extends Command {
 
 
 		if (DriverStation.isAutonomousEnabled()){
+			collectPower = maxCollectPower;
 			if (!hasPiece){
 				if (hasTarget){
 					if (trustValues()){
-						collectPower = maxCollectPower;
+						hasSeenTarget = true;
 						if (!onTarget) {
 							drivetrain.setRobot(drivePower, 0, -pidOutput);
 						} else {
@@ -163,18 +167,22 @@ public class ChasePieces extends Command {
 						}
 					}
 				} else {
-					if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT){
-						if (DriverStation.getAlliance().get() == Alliance.Blue){
-							drivetrain.setRobot(0, 0, -rotPower);
+					if (!hasSeenTarget){
+						if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT){
+							if (DriverStation.getAlliance().get() == Alliance.Blue){
+								drivetrain.setRobot(0, 0, -rotPower);
+							} else {
+								drivetrain.setRobot(0, 0, rotPower);
+							}
 						} else {
-							drivetrain.setRobot(0, 0, rotPower);
+							if (DriverStation.getAlliance().get() == Alliance.Blue){
+								drivetrain.setRobot(0, 0, rotPower);
+							} else {
+								drivetrain.setRobot(0, 0, -rotPower);
+							}					
 						}
 					} else {
-						if (DriverStation.getAlliance().get() == Alliance.Blue){
-							drivetrain.setRobot(0, 0, rotPower);
-						} else {
-							drivetrain.setRobot(0, 0, -rotPower);
-						}					
+						drivetrain.setRobot(drivePower, 0, 0);
 					}
 				}
 			}
