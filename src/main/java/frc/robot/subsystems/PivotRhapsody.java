@@ -97,6 +97,12 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         reverseLimitLog = new BooleanLogEntry(log, "/Pivot/ReverseLimit");
 
         powerLog = new DoubleLogEntry(log, "/Pivot/Power");
+
+        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> getAngle() * 360);
+        LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle * 360);
+        LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
+
+        LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
     }
 
     @Override
@@ -137,10 +143,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         moveToTarget();
 
         updateLogging();
-        
-        LightningShuffleboard.setDouble("Pivot", "Target ", targetAngle);
-        LightningShuffleboard.setDouble("Pivot", "Current angle", getAngle());
-        LightningShuffleboard.setDouble("Pivot", "BIAS", bias);
     }
 
     /**
@@ -163,8 +165,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     /**
      * Sets the target angle of the pivot
-     * 
-     * @param angle Angle of the pivot in degrees
+     * @param angle Angle of the pivot in rotations
      */
     public void setTargetAngle(double angle) {
         targetAngle = (MathUtil.clamp(angle + bias, RhapsodyPivotConstants.MIN_ANGLE, RhapsodyPivotConstants.MAX_ANGLE) / 360);
@@ -182,7 +183,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     }
 
     /**
-     * @return The current angle of the pivot in degrees
+     * @return The current angle of the pivot in rotations
      */
     public double getAngle() {
         return angleMotor.getPosition().getValue();
@@ -197,20 +198,18 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     /**
      * Gets forward limit switch
-     * 
      * @return true if pressed
      */
     public boolean getForwardLimit() {
-        return angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
+        return false; //angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
     }
 
     /**
      * Gets reverse limit switch
-     * 
      * @return true if pressed
      */
     public boolean getReverseLimit() {
-        return angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
+        return false; //angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
     }
 
     /**

@@ -80,6 +80,17 @@ public class Flywheel extends SubsystemBase {
         topPowerLog = new DoubleLogEntry(log, "/Flywheel/TopPower");
         bottomPowerLog = new DoubleLogEntry(log, "/Flywheel/BottomPower");
         biasLog = new DoubleLogEntry(log, "/Flywheel/Bias");
+
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Top RPM", () -> getTopMotorRPM());
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom RPM", () -> getBottomMotorRPM());
+
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Top Target RPM", () -> topMotorTargetRPM());
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Target RPM", () -> bottomMotorTargetRPM());
+
+        LightningShuffleboard.setBoolSupplier("Flywheel", "Top on Target", () -> topMotorRPMOnTarget());
+        LightningShuffleboard.setBoolSupplier("Flywheel", "Bottom on Target", () -> bottomMotorRPMOnTarget());
+
+        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", () -> getBias());
     }
 
     @Override
@@ -93,13 +104,6 @@ public class Flywheel extends SubsystemBase {
         }
 
         updateLogging();
-
-        LightningShuffleboard.setDouble("Flywheel", "TOP RPM", getTopMotorRPM());
-        LightningShuffleboard.setDouble("Flywheel", "BOTTOM RPM", getBottomMotorRPM());
-        LightningShuffleboard.setDouble("Flywheel", "TOP RPM Target", topTargetRPS * 60);
-        LightningShuffleboard.setDouble("Flywheel", "BOTTOM RPM Target", bottomTargetRPS * 60);
-        LightningShuffleboard.setDouble("Flywheel", "BIAS", bias);
-        LightningShuffleboard.setBool("Flywheel", "ON TARGET", allMotorsOnTarget());
     }
 
     /**
@@ -205,7 +209,7 @@ public class Flywheel extends SubsystemBase {
     public void stop() {
         setAllMotorsRPM(0);
     }
-    
+
     /**
      * @return The bias to add to the target RPM of the flywheel
      */
@@ -236,7 +240,7 @@ public class Flywheel extends SubsystemBase {
 
     /**
      * Sets target RPS to the bottom motor, using the proper slots and FOC
-     * @param targetRPS 
+     * @param targetRPS
      */
     private void applyPowerTop(double targetRPS) {
         if(targetRPS > 95) {
