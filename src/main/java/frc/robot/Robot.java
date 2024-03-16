@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.ADXL345_I2C.AllAxes;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.LightningRobot;
@@ -29,6 +30,15 @@ public class Robot extends LightningRobot {
         } else {
             container.drivetrain
                     .setOperatorPerspectiveForward(new Rotation2d(Math.toRadians(0)));
+        }
+    }
+
+    @Override
+    public void disabledPeriodic(){
+        super.disabledPeriodic();
+        RobotContainer container = (RobotContainer) getContainer();
+        if(haveDriverStation) {
+            container.drivetrain.setSpeakerPose(DriverStation.getAlliance().get());
         }
     }
 }

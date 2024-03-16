@@ -98,7 +98,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
         powerLog = new DoubleLogEntry(log, "/Pivot/Power");
 
-        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> getAngle() * 360);
+        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> (getAngle() * 360));
         LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle * 360);
         LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
 

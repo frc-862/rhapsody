@@ -509,7 +509,7 @@ public class Constants {
 
         public static final double ANGLE_TOLERANCE = 0.00208d;
 
-        public static final double ENCODER_OFFSET = 0.282; // In rotations
+        public static final double ENCODER_OFFSET = -0.54008; // In rotations, was 0.282 //TODO: get real :)
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 275d;

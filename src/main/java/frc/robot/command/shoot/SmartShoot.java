@@ -17,6 +17,7 @@ import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.command.TimedCommand;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class SmartShoot extends Command {
 
@@ -75,6 +76,8 @@ public class SmartShoot extends Command {
 	public void execute() {
 		// Distance from current pose to speaker pose
 		distance = drivetrain.distanceToSpeaker();
+
+		LightningShuffleboard.setString("Shoot", "Smart shoot STATE", state.toString());
 
 		switch (state) {
 			case AIM:

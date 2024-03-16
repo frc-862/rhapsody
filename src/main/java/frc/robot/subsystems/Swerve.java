@@ -25,6 +25,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.util.datalog.DataLog;
@@ -79,10 +80,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
         configurePathPlanner();
 
-        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-            speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
-        }
-
         setRampRate();
 
         initLogging();
@@ -124,6 +121,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 0.1;
         config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.1;
         config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
+        config.TorqueCurrent.PeakForwardTorqueCurrent = 80;
+        config.TorqueCurrent.PeakReverseTorqueCurrent = 80;
+        
 
         for (int i = 0; i < 4; ++i) {
             var module = getModule(i);
@@ -398,7 +398,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         System.out.println("Vision Enabled");
     }
 
+    public void setSpeakerPose (Alliance alliance) {
+        if(alliance == Alliance.Red){
+            speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
+        }
+    }
+
     public double distanceToSpeaker() {
         return speakerPose.getDistance(getPose().getTranslation());
     }
+
 }

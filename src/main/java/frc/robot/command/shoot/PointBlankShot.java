@@ -2,8 +2,10 @@ package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
+import frc.thunder.command.TimedCommand;
 
 public class PointBlankShot extends Command {
 
@@ -33,6 +35,9 @@ public class PointBlankShot extends Command {
 	public void execute() {
 		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());
 		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + flywheel.getBias());
+		if(flywheel.allMotorsOnTarget() && pivot.onTarget()) {
+			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
+		}
 	}
 
 	@Override
