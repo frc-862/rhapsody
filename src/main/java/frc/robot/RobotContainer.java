@@ -9,8 +9,10 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -74,6 +76,7 @@ import frc.thunder.LightningContainer;
 import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
+import frc.thunder.vision.Limelight.LEDMode;
 
 public class RobotContainer extends LightningContainer {
 	public static XboxControllerFilter driver;
@@ -97,6 +100,8 @@ public class RobotContainer extends LightningContainer {
 	SwerveRequest.RobotCentric slowRobotCentric;
 	SwerveRequest.PointWheelsAt point;
 	Telemetry logger;
+
+	private Boolean triggerInit;
 
 	@Override
 	protected void initializeSubsystems() {
@@ -128,6 +133,8 @@ public class RobotContainer extends LightningContainer {
 
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrainConstants.MaxSpeed);
+
+		triggerInit = false;
 	}
 
 	@Override
@@ -252,9 +259,9 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState() || collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
-		new Trigger(() -> (!(limelights.getChamps().hasTarget() || limelights.getStopMe().hasTarget()) && DriverStation.isDisabled())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
-
-		new Trigger(() -> (!drivetrain.isStable() && DriverStation.isDisabled())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
+		new Trigger(() -> drivetrain.getPose().getTranslation().getDistance(new Translation2d(0,0)) < 1 && triggerInit).whileTrue(leds.enableState(LED_STATES.EMERGENCY));
+		new Trigger(() -> DriverStation.isDisabled() && !drivetrain.isStable() && !(limelights.getChamps().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.EMERGENCY));
+		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled() && (limelights.getChamps().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
 
 		new Trigger(() -> collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
@@ -271,6 +278,8 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
 				.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
 				.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
+
+		triggerInit = true;
 
 	}
 

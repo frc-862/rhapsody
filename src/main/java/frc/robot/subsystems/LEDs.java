@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDsConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.RobotMap.PWM;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class LEDs extends SubsystemBase {
 
@@ -146,14 +147,29 @@ public class LEDs extends SubsystemBase {
 	 * @return the command to enable the state
 	 */
 	public Command enableState(LED_STATES state) {
+		if (state == LED_STATES.EMERGENCY) {
+			System.out.println("Emergency");
+		}
 		return new StartEndCommand(() -> {
 			ledStates.put(state, true);
 			updateState();
+			if (state == LED_STATES.EMERGENCY) {
+				System.out.println("Emergency");
+			}
 		},
 				() -> {
 					ledStates.put(state, false);
 					updateState();
+					if (state == LED_STATES.EMERGENCY) {
+						System.out.println("Emergency");
+					}
 				}).ignoringDisable(true);
+	}
+
+	public void setState(LED_STATES state, boolean value) {
+		ledStates.put(state, value);
+		System.out.println("Setting " + state + " to " + value);
+		updateState();
 	}
 
 	public void updateState() {
