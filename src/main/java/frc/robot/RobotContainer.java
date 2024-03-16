@@ -233,7 +233,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		// new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-		// new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
+		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
 		/* BIAS */
 		new Trigger(() -> coPilot.getPOV() == 0)
@@ -250,7 +250,7 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		new Trigger(coPilot::getLeftBumper)
 				.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer)
-				.deadlineWith(new SourceCollect(flywheel, pivot)));
+				.deadlineWith(new InstantCommand(() -> flywheel.setAllMotorsRPM(-300))));
 
 		/* Other */
 		new Trigger(

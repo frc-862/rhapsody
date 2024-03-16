@@ -379,8 +379,7 @@ public class Constants {
 
     public class CollectorConstants { // TODO: get real
         public static final boolean COLLECTOR_MOTOR_INVERTED = true;
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 60; // TODO: make sure they
-                                                                           // are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 40;
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
 
         public static final double MOTOR_KP = 0;
@@ -599,7 +598,7 @@ public class Constants {
 
         // Source
         public static final double SOURCE_RPM = -300d; // TODO test
-        public static final double SOURCE_ANGLE = 45d; // TODO test
+        public static final double SOURCE_ANGLE = 90d; // TODO test
 
         // TODO find time to shoot
         public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer start to flywheel exit
