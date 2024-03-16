@@ -23,6 +23,7 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.constraint.RectangularRegionConstraint;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -62,6 +63,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private LinearFilter yFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter rotFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private Translation2d speakerPose = VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d();
+    static RectangularRegionConstraint FIELD = new RectangularRegionConstraint(
+            new Translation2d(0, 0), VisionConstants.FIELD_LIMIT, null);
 
     private DoubleLogEntry timerLog;
     private DoubleLogEntry robotHeadingLog;
@@ -254,6 +257,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void simulationPeriodic() {
         /* Assume */
         updateSimState(0.01, 12);
+        setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE);
     }
 
     /**
@@ -353,6 +357,10 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         }
     }
 
+    public boolean isInField () {
+        return FIELD.isPoseInRegion(getPose());
+    }
+
     /**
      * Logs if the robot is in robot centric control
      * @param robotCentricControl boolean if the robot is in robot centric control
@@ -406,6 +414,10 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     public double distanceToSpeaker() {
         return speakerPose.getDistance(getPose().getTranslation());
+    }
+
+    public void setDrivetrainPose(Pose2d newPose){
+        seedFieldRelative(newPose);
     }
 
 }

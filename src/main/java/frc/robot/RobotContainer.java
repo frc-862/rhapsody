@@ -10,6 +10,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -95,6 +96,8 @@ public class RobotContainer extends LightningContainer {
 	LEDs leds;
 	Orchestra sing;
 
+	private boolean triggerInit;
+
 	private SendableChooser<Command> autoChooser;
 	SwerveRequest.FieldCentric drive;
 	SwerveRequest.FieldCentric slow;
@@ -130,6 +133,8 @@ public class RobotContainer extends LightningContainer {
 		climber = new Climber();
 		leds = new LEDs();
 		sing = new Orchestra();
+
+		triggerInit = false;
 
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrainConstants.MaxSpeed);
@@ -263,10 +268,11 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState() || collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
-		new Trigger(() -> (!(limelights.getChamps().hasTarget() || limelights.getStopMe().hasTarget()) && DriverStation.isDisabled())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
-
-		new Trigger(() -> (!drivetrain.isStable() && DriverStation.isDisabled())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
-
+		new Trigger(() -> drivetrain.isInField() && triggerInit).whileTrue(leds.enableState(LED_STATES.EMERGENCY));
+		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled() && !(limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget() || limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget())).whileTrue(leds.enableState(LED_STATES.EMERGENCY));
+		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled() && (limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget() || limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
+		triggerInit = true;
+	
 		new Trigger(() -> collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
 		new Trigger(() -> indexer.getEntryBeamBreakState())

@@ -147,6 +147,13 @@ public class Constants {
 
         public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at before ending.
                                                          // Prevents going over center line.
+
+        public static final Pose2d SOURCE_SUB_C_STARTPOSE = new Pose2d(new Translation2d(0.73, 4.34),
+         new Rotation2d(0));
+         public static final Pose2d SOURCE_SUB_B_STARTPOSE = new Pose2d(new Translation2d(1.34, 5.5),
+         new Rotation2d(0));
+         public static final Pose2d SOURCE_SUB_A_STARTPOSE = new Pose2d(new Translation2d(0.73, 6.69),
+         new Rotation2d(0));
     }
 
     public static class TunerConstants {
