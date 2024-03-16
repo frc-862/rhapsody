@@ -57,14 +57,12 @@ public class SmartClimb extends Command {
 
     @Override
     public void execute() {
-        if (pivot.onTarget()) {
-            autoClimbEngaged = false;
-        } else {
+        // if (pivot.onTarget()) {
             if (leftPower.getAsDouble() != 0d || rightPower.getAsDouble() != 0d) {
                 // Engage Manual Climb whenever sticks are active
                 climber.setPower(leftPower.getAsDouble(), rightPower.getAsDouble());
                 autoClimbEngaged = false;
-            } else if ((buttonState && !bButton.getAsBoolean()) || (drivetrain.isTipped() && !autoClimbEngaged)) {
+            } else if ((buttonState && !bButton.getAsBoolean()) || (drivetrain.isTipped()  && !autoClimbEngaged)) {
                 // Auto retract on the falling edge of the B button or if the robot is tipped
                 climber.retract();
                 buttonState = false; // reset button state for next time
@@ -72,18 +70,15 @@ public class SmartClimb extends Command {
                     autoClimbEngaged = true; // trigger autoClimbEngaged to prevent auto deploy from re-engaging
                 }
             } else if (bButton.getAsBoolean() && !autoClimbEngaged) {
-                // Auto deploy climb when B button is pressed and auto climb has not been
-                // engaged
+                // Auto deploy climb when B button is pressed and auto climb has not been engaged
                 climber.deploy();
                 buttonState = true;
+            } else if (climber.isManual()) {
+                climber.setPower(0d);
             }
-        } else if (bButton.getAsBoolean() && !autoClimbEngaged) {
-            // Auto deploy climb when B button is pressed and auto climb has not been engaged
-            climber.deploy();
-            buttonState = true;
-        } else if (climber.isManual()) {
-            climber.setPower(0d);
-        }
+        // } else {
+        //     climber.setPower(0d);
+        // }
     }
 
     @Override
