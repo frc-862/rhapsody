@@ -606,8 +606,8 @@ public class Constants {
     }
 
     public class ClimbConstants { // TODO: find real values
-        public static final boolean CLIMB_RIGHT_MOTOR_INVERT = true;
-        public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
+        public static final boolean CLIMB_RIGHT_MOTOR_INVERT = false;
+        public static final boolean CLIMB_LEFT_MOTOR_INVERT = true;
         public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean CLIMB_MOTOR_BRAKE_MODE = true;
         public static final double UNLOADED_KP = 10;
@@ -625,9 +625,9 @@ public class Constants {
         public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
 
         public static final double CLIMB_PID_SETPOINT_EXTENDED = MAX_HEIGHT;
-        public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
+        public static final double CLIMB_PID_SETPOINT_RETRACTED = 1;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
-        public static final double CLIMB_RETRACTION_TOLERANCE = 0;
+        public static final double CLIMB_RETRACTION_TOLERANCE = 0.5;
         public static final double CLIMB_RETURN_TO_GROUND_MAX_POWER = 0.05;
 
         public static final double CLIMB_SYSTEST_POWER = 0.1;

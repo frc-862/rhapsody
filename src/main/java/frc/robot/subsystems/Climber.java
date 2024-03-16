@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -59,16 +60,23 @@ public class Climber extends SubsystemBase {
         climbMotorR.configPIDF(1, ClimbConstants.LOADED_KP, ClimbConstants.LOADED_KI, ClimbConstants.LOADED_KD);
 
         FeedbackConfigs sensorConf = new FeedbackConfigs();
-        SoftwareLimitSwitchConfigs softLimitConf = new SoftwareLimitSwitchConfigs();
+        SoftwareLimitSwitchConfigs softLimitConfL = new SoftwareLimitSwitchConfigs();
+        SoftwareLimitSwitchConfigs softLimitConfR = new SoftwareLimitSwitchConfigs();
+        HardwareLimitSwitchConfigs hardLimitConf = new HardwareLimitSwitchConfigs();
 
         sensorConf.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
         sensorConf.SensorToMechanismRatio = ClimbConstants.GEAR_REDUCTION;
 
-        softLimitConf.ForwardSoftLimitEnable = true;
-        softLimitConf.ForwardSoftLimitThreshold = ClimbConstants.MAX_HEIGHT;
+        softLimitConfL.ForwardSoftLimitEnable = true;
+        softLimitConfL.ForwardSoftLimitThreshold = ClimbConstants.MAX_HEIGHT;
 
-        climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConf));
-        climbMotorR.applyConfig(climbMotorR.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConf));
+        softLimitConfR.ForwardSoftLimitEnable = true;
+        softLimitConfR.ForwardSoftLimitThreshold = ClimbConstants.MAX_HEIGHT;
+
+        // hardLimitConf.ReverseLimitEnable = false;
+
+        climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConfL).withHardwareLimitSwitch(hardLimitConf));
+        climbMotorR.applyConfig(climbMotorR.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConfR).withHardwareLimitSwitch(hardLimitConf));
 
         climbMotorL.setPosition(0d);
         climbMotorR.setPosition(0d);
@@ -218,17 +226,12 @@ public class Climber extends SubsystemBase {
     public void periodic() {
         // zeroes height if the limit switch is pressed or position is negative
         for (TalonFX motor : new TalonFX[] {climbMotorR, climbMotorL}) {
-            if (motor.getPosition().getValueAsDouble() < 0
-                    || getReverseLimit(motor)) {
+            if (motor.getPosition().getValueAsDouble() < 0 || getReverseLimit(motor)) {
                 motor.setPosition(0d);
             }
             
             if (getForwardLimit(motor)) {
-                if (motor == climbMotorR) {
-                    setSetpoint(getHeightL(), ClimbConstants.MAX_HEIGHT); // if right limit is pressed, set right to max height
-                } else {
-                    setSetpoint(ClimbConstants.MAX_HEIGHT, getHeightR()); // if left limit is pressed, set left to max height
-                }
+                motor.setPosition(ClimbConstants.MAX_HEIGHT); // If soft limit triggered Set pos to max height
             }
         }
 
