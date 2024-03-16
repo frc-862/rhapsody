@@ -126,7 +126,7 @@ public class RobotContainer extends LightningContainer {
 			pivot = new PivotRhapsody();
 		}
 		indexer = new Indexer(collector);
-		// climber = new Climber(drivetrain);
+		// climber = new Climber();
 		leds = new LEDs();
 		sing = new Orchestra();
 
@@ -303,9 +303,9 @@ public class RobotContainer extends LightningContainer {
 		// new SmartClimb(
 		// climber,
 		// drivetrain,
-		// () -> -coPilot.getLeftY(),
-		// () -> -coPilot.getRightY(),
-		// coPilot::getBButton,
+		// () -> coPilot.getLeftY(),
+		// () -> coPilot.getRightY(),
+		// coPilot::getBButton, 
 		// leds
 		// ).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 

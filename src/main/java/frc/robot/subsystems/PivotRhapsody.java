@@ -165,7 +165,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     /**
      * Sets the target angle of the pivot
-     * @param angle Angle of the pivot in rotations
+     * @param angle Angle of the pivot in degrees
      */
     public void setTargetAngle(double angle) {
         targetAngle = (MathUtil.clamp(angle + bias, RhapsodyPivotConstants.MIN_ANGLE, RhapsodyPivotConstants.MAX_ANGLE) / 360);
