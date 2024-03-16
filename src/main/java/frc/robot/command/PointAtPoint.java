@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -19,6 +20,7 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PointAtPoint extends Command {
 
@@ -90,6 +92,8 @@ public class PointAtPoint extends Command {
 		} else {
 			targetPose = swapAlliance(originalTargetPose);
 		}
+
+		System.out.println("DRIVE - Point AT Point START");
 	}
 
 	/**
@@ -125,6 +129,10 @@ public class PointAtPoint extends Command {
 
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 
+		LightningShuffleboard.setDouble("Point-At-Point", "Target Heading", targetHeading);
+		LightningShuffleboard.setDouble("Point-At-Point", "Current Heading", drivetrain.getPose().getRotation().getDegrees());
+
+
 		updateLogging();
 	}
 
@@ -145,6 +153,8 @@ public class PointAtPoint extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
+		System.out.println("DRIVE - Point AT Point END");
+		new InstantCommand(() -> new stopDrive(drivetrain));
 	}
 
 	@Override
