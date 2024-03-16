@@ -259,9 +259,17 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState() || collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
-		new Trigger(() -> drivetrain.getPose().getTranslation().getDistance(new Translation2d(0,0)) < 1 && triggerInit).whileTrue(leds.enableState(LED_STATES.EMERGENCY));
-		new Trigger(() -> DriverStation.isDisabled() && !drivetrain.isStable() && !(limelights.getChamps().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.EMERGENCY));
-		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled() && (limelights.getChamps().hasTarget() || limelights.getChamps().hasTarget())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
+		new Trigger(() -> drivetrain.getPose().getTranslation().getDistance(new Translation2d(0,0)) < 1 
+			&& Timer.getFPGATimestamp() > 7)
+				.whileTrue(leds.enableState(LED_STATES.EMERGENCY));
+		new Trigger(() -> DriverStation.isDisabled()  && !drivetrain.isStable() 
+			&& !(limelights.getChamps().hasTarget() || limelights.getChamps().hasTarget()) 
+			&& Timer.getFPGATimestamp() > 7)
+				.whileTrue(leds.enableState(LED_STATES.EMERGENCY));
+		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled() 
+			&& (limelights.getChamps().hasTarget() || limelights.getChamps().hasTarget()) 
+			&& Timer.getFPGATimestamp() > 7)
+				.whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
 
 		new Trigger(() -> collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
@@ -269,8 +277,10 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(leds.enableState(LED_STATES.INDEXER_ENTER_BEAMBREAK));
 		new Trigger(() -> indexer.getExitBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.INDEXER_EXIT_BEAMBREAK));
-		new Trigger(() -> pivot.getForwardLimit()).whileTrue(leds.enableState(LED_STATES.PIVOT_BOTTOM_SWITCH));
-		new Trigger(() -> pivot.getReverseLimit()).whileTrue(leds.enableState(LED_STATES.PIVOT_TOP_SWITCH));
+		new Trigger(() -> pivot.getForwardLimit())
+				.whileTrue(leds.enableState(LED_STATES.PIVOT_BOTTOM_SWITCH));
+		new Trigger(() -> pivot.getReverseLimit())
+				.whileTrue(leds.enableState(LED_STATES.PIVOT_TOP_SWITCH));
 
 		new Trigger(() -> DriverStation.isAutonomousEnabled()).whileTrue(new CollisionDetection(
 				drivetrain, CollisionType.AUTON));
@@ -278,8 +288,6 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
 				.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
 				.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
-
-		triggerInit = true;
 
 	}
 

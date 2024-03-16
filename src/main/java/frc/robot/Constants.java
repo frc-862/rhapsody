@@ -633,21 +633,21 @@ public class Constants {
     }
 
     public class LEDsConstants {
-        public static final int LED_LENGTH = 31;
+        public static final int LED_LENGTH = 28;
 
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
                 put(-1, 0);
                 put(0, 0);
-                put(1, 16);
+                put(1, 14);
             }
         };
 
         public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>(){
             {
             put(-1, LEDsConstants.LED_LENGTH);
-            put(0, 16);
-            put(1, 15);
+            put(0, 14);
+            put(1, 14);
             }
         };
 
@@ -668,21 +668,22 @@ public class Constants {
             EMERGENCY(2),
             START(3),
             GOOD_POSE(4),
-            COLLECTED(5),
-            SHOT(6),
-            FINISHED_CLIMB(7),
-            SHOOTING(8),
-            COLLECTING(9),
-            CHASING(10),
-            CLIMBING(11),
-            HAS_PIECE(12),
-            HAS_VISION(13),
-            DEFAULT(14),
-            PIVOT_BOTTOM_SWITCH(15),
-            PIVOT_TOP_SWITCH(16),
-            COLLECTOR_BEAMBREAK(17),
-            INDEXER_ENTER_BEAMBREAK(18),
-            INDEXER_EXIT_BEAMBREAK(19);
+            COLLECT_PLANNED(5),
+            COLLECTED(6),
+            SHOT(7),
+            FINISHED_CLIMB(8),
+            SHOOTING(9),
+            COLLECTING(10),
+            CHASING(11),
+            CLIMBING(12),
+            HAS_PIECE(13),
+            HAS_VISION(14),
+            DEFAULT(15),
+            PIVOT_BOTTOM_SWITCH(16),
+            PIVOT_TOP_SWITCH(17),
+            COLLECTOR_BEAMBREAK(18),
+            INDEXER_ENTER_BEAMBREAK(19),
+            INDEXER_EXIT_BEAMBREAK(20);
 
             private final int priority;
 
