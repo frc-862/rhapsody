@@ -225,9 +225,9 @@ public class Climber extends SubsystemBase {
             
             if (getForwardLimit(motor)) {
                 if (motor == climbMotorR) {
-                    setSetpoint(ClimbConstants.MAX_HEIGHT);
+                    setSetpoint(getHeightL(), ClimbConstants.MAX_HEIGHT); // if right limit is pressed, set right to max height
                 } else {
-                    setSetpoint(ClimbConstants.MAX_HEIGHT);
+                    setSetpoint(ClimbConstants.MAX_HEIGHT, getHeightR()); // if left limit is pressed, set left to max height
                 }
             }
         }
