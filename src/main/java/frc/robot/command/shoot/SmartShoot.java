@@ -95,7 +95,7 @@ public class SmartShoot extends Command {
 				flywheel.setAllMotorsRPM(calculateTargetRPM(distance));
 				indexer.indexUp();
 				// Once shoot critera met moves to shot
-				if (Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT || indexer.hasShot()) {
+				if ((Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT || indexer.hasShot()) && !indexer.hasNote()) {
 					state = ShootingState.SHOT;
 				}
 				break;

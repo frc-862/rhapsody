@@ -47,9 +47,10 @@ import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
 import frc.robot.command.stopDrive;
 import frc.robot.command.shoot.AmpShot;
+import frc.robot.command.shoot.FlywheelIN;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
-import frc.robot.command.shoot.SourceCollect;
+import frc.robot.command.shoot.PivotUP;
 import frc.robot.command.shoot.Stow;
 import frc.robot.command.shoot.Tune;
 import frc.robot.command.shoot.preAim;
@@ -167,7 +168,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Point-At-Speaker", new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
 		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
 		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
-		NamedCommands.registerCommand("Stop-Flywheel", new SourceCollect(flywheel, pivot));
+		NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel, pivot));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -233,7 +234,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		// new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
+		new Trigger(coPilot::getYButton).whileTrue(new PivotUP(flywheel, pivot));
 
 		/* BIAS */
 		new Trigger(() -> coPilot.getPOV() == 0)
@@ -250,7 +251,7 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		new Trigger(coPilot::getLeftBumper)
 				.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer)
-				.deadlineWith(new InstantCommand(() -> flywheel.setAllMotorsRPM(-300))));
+				.deadlineWith(new FlywheelIN(flywheel, pivot)));
 
 		/* Other */
 		new Trigger(

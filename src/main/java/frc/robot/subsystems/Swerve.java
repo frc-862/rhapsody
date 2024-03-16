@@ -121,8 +121,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 0.1;
         config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.1;
         config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
-        config.TorqueCurrent.PeakForwardTorqueCurrent = 80;
-        config.TorqueCurrent.PeakReverseTorqueCurrent = 80;
+        config.TorqueCurrent.PeakForwardTorqueCurrent = 70;
+        config.TorqueCurrent.PeakReverseTorqueCurrent = 70;
         
 
         for (int i = 0; i < 4; ++i) {
