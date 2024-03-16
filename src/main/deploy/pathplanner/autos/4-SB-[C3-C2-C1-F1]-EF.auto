@@ -1,33 +1,14 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.734,
-      "y": 4.41
-    },
-    "rotation": -61.5
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Cand-Sub"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
-                }
-              }
-            ]
+            "name": "Smart-Shoot"
           }
         },
         {
@@ -50,22 +31,28 @@
           }
         },
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "name": "Point-At-Speaker"
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 1.0
+                  "name": "preAim"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Smart-Shoot"
           }
         },
         {
@@ -88,22 +75,28 @@
           }
         },
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "name": "Point-At-Speaker"
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 1.0
+                  "name": "preAim"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Smart-Shoot"
           }
         },
         {
@@ -126,26 +119,32 @@
           }
         },
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "name": "Point-At-Speaker"
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 1.0
+                  "name": "preAim"
                 }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "named",
+          "data": {
+            "name": "Smart-Shoot"
+          }
+        },
+        {
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -157,10 +156,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Collect"
+                  "name": "Stop-Flywheel"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Chase-Pieces"
           }
         }
       ]

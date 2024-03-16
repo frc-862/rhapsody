@@ -6,6 +6,18 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Cand-Sub"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 10.0
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "SB-F4"

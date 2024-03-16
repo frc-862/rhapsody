@@ -473,15 +473,14 @@ public class Constants {
         public static final double MAGIC_ACCEL = 0.02; // TODO: get real value
         public static final double MAGIC_JERK = 0.2; // TODO: get real value
 
-        public static final double ANGLE_TOLERANCE = 0.5d;
+        public static final double ANGLE_TOLERANCE = 0.00208d;
 
         public static final double ENCODER_OFFSET = 0.61095; // In rotations
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias
-                                                        // by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press
 
         public static final double STOW_ANGLE = 28d;
 
@@ -509,7 +508,7 @@ public class Constants {
         public static final double MAGIC_ACCEL = 0.02; // TODO: get real value
         public static final double MAGIC_JERK = 0.2; // TODO: get real value
 
-        public static final double ANGLE_TOLERANCE = 0.5d;
+        public static final double ANGLE_TOLERANCE = 0.00138d;
 
         public static final double ENCODER_OFFSET = 0.282; // In rotations //TODO: find this value (NEEDS TO BE DONE
                                                            // BEFORE PR)
@@ -517,8 +516,7 @@ public class Constants {
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 275d;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias
-                                                        // by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
 
         public static final double STOW_ANGLE = 27d;
 
