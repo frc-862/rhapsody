@@ -29,6 +29,7 @@ import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.command.AutoClimb;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Collect;
 import frc.robot.command.CollectAndGo;
@@ -90,7 +91,7 @@ public class RobotContainer extends LightningContainer {
 	private Flywheel flywheel;
 	private Pivot pivot;
 	private Indexer indexer;
-	// private Climber climber;
+	private Climber climber;
 	LEDs leds;
 	Orchestra sing;
 
@@ -126,7 +127,7 @@ public class RobotContainer extends LightningContainer {
 			pivot = new PivotRhapsody();
 		}
 		indexer = new Indexer(collector);
-		// climber = new Climber();
+		climber = new Climber();
 		leds = new LEDs();
 		sing = new Orchestra();
 
@@ -235,6 +236,9 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		new Trigger(coPilot::getYButton).whileTrue(new SourceCollect(flywheel, pivot));
 
+		new Trigger(coPilot::getBButton).whileTrue(new AutoClimb(drivetrain, pivot, climber)
+			.deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
+
 		/* BIAS */
 		new Trigger(() -> coPilot.getPOV() == 0)
 				.onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
@@ -298,6 +302,8 @@ public class RobotContainer extends LightningContainer {
 				new Collect(() -> MathUtil.applyDeadband(
 						(coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()),
 						ControllerConstants.DEADBAND), collector));
+
+		climber.setDefaultCommand(new ManualClimb(() -> coPilot.getLeftY(), () -> coPilot.getRightY(), climber));
 
 		// climber.setDefaultCommand(
 		// new SmartClimb(
