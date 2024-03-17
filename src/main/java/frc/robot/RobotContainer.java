@@ -29,6 +29,7 @@ import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.command.ChasePieces;
+import frc.robot.command.ClimbAlign;
 import frc.robot.command.Collect;
 import frc.robot.command.CollectAndGo;
 import frc.robot.command.CollisionDetection;
@@ -211,6 +212,8 @@ public class RobotContainer extends LightningContainer {
 		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+
+		new Trigger(driver::getBButton).whileTrue(new ClimbAlign(drivetrain));
 
 		/* copilot */
 		new Trigger(coPilot::getBButton)

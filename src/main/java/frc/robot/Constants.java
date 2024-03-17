@@ -627,10 +627,15 @@ public class Constants {
 
         public static final double CLIMB_SYSTEST_POWER = 0.1;
 
-        public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE = new Pose2d(7.43, 4.16, new Rotation2d(Math.PI));
-        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE = new Pose2d(3.55, 6.16, new Rotation2d(Units.degreesToRadians(-53.13)));
-        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE = new Pose2d(3.54, 1.91, new Rotation2d(Units.degreesToRadians(63.43)));
+        public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE_BLUE = new Pose2d(7.43, 4.16, new Rotation2d(0));
+        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_BLUE = new Pose2d(3.55, 6.16, new Rotation2d(Units.degreesToRadians(-53.13)));
+        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_BLUE = new Pose2d(3.54, 1.91, new Rotation2d(Units.degreesToRadians(63.43)));
+
+        public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE_RED = new Pose2d(9.07, 4.16, new Rotation2d(0));
+        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_RED = new Pose2d(12.96, 6.16, new Rotation2d(Units.degreesToRadians(-53.13)));
+        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_RED = new Pose2d(12.95, 1.91, new Rotation2d(Units.degreesToRadians(63.43)));
     }
+    
 
     public class LEDsConstants {
         public static final int LED_LENGTH = 31;
