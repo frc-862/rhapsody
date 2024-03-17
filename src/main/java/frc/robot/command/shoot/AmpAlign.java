@@ -15,29 +15,29 @@ public class AmpAlign extends Command {
 
   Swerve drivetrain;
   PathPlannerPath path;
-  PathFindToAuton pathCommand;
+  Command pathCommand;
 
   public AmpAlign(Swerve drivetrain) {
     this.drivetrain = drivetrain;
-    addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
       path = PathPlannerPath.fromPathFile("PathFind-AMP");
-      PathFindToAuton pathCommand = new PathFindToAuton(path, drivetrain);
+      pathCommand = new PathFindToAuton(path, drivetrain);
       pathCommand.schedule();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  // Called eveiry time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    pathCommand.cancel();
+    pathCommand.end(interrupted);
     drivetrain.brake();
   }
 
