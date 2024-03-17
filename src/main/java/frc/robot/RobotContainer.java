@@ -289,6 +289,21 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
 				.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
 
+		// BLUE Alliance set
+		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE BLUE A", false))
+			.onTrue(new InstantCommand(() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_BLUE)));
+		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE BLUE B", false))
+			.onTrue(new InstantCommand(() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_BLUE)));
+		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE BLUE C", false))
+			.onTrue(new InstantCommand(() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_BLUE)));
+
+		// BLUE Alliance set
+		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED A", false))
+			.onTrue(new InstantCommand(() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_RED)));
+		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED B", false))
+			.onTrue(new InstantCommand(() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_RED)));
+		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED C", false))
+			.onTrue(new InstantCommand(() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_RED)));
 	}
 
 	@Override

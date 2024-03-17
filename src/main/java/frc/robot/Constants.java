@@ -45,12 +45,9 @@ public class Constants {
         private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center
                                                                                          // of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed /
-                                                                                              // circumference of circle
-                                                                                              // with radius of
-                                                                                              // wheelbase
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
 
-        public static final double ROT_MULT = 0.015; // TODO Tune for Driver
+        public static final double ROT_MULT = 0.04; // TODO Tune for Driver
 
         public static final double SLOW_ROT_MULT = 0.3; // TODO Tune for Driver
         public static final double SLOW_SPEED_MULT = 0.4; // TODO Tune for Driver
@@ -145,16 +142,22 @@ public class Constants {
                                                               // Prevents going over center line.
         public static final double RED_CHASE_BOUNDARY = 8;
 
-        public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at before ending. Prevents going over center line.
+        public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at before ending.
+                                                         // Prevents going over center line.
 
-        public static final Pose2d SOURCE_SUB_A_STARTPOSE_BLUE = new Pose2d(new Translation2d(0.73, 6.69), new Rotation2d(0));
-        public static final Pose2d SOURCE_SUB_B_STARTPOSE_BLUE = new Pose2d(new Translation2d(1.34, 5.5), new Rotation2d(0));
-        public static final Pose2d SOURCE_SUB_C_STARTPOSE_BLUE = new Pose2d(new Translation2d(0.73, 4.34), new Rotation2d(0));
-    
-        //TODO GET FOR REDDDDDD
-        public static final Pose2d SOURCE_SUB_A_STARTPOSE_RED = new Pose2d(new Translation2d(0.73, 6.69), new Rotation2d(0));
-        public static final Pose2d SOURCE_SUB_B_STARTPOSE_RED = new Pose2d(new Translation2d(1.34, 5.5), new Rotation2d(0));
-        public static final Pose2d SOURCE_SUB_C_STARTPOSE_RED = new Pose2d(new Translation2d(0.73, 4.34), new Rotation2d(0));
+        public static final Pose2d SOURCE_SUB_A_STARTPOSE_BLUE = new Pose2d(new Translation2d(0.72, 6.69),
+                new Rotation2d(60));
+        public static final Pose2d SOURCE_SUB_B_STARTPOSE_BLUE = new Pose2d(new Translation2d(1.34, 5.55),
+                new Rotation2d(0));
+        public static final Pose2d SOURCE_SUB_C_STARTPOSE_BLUE = new Pose2d(new Translation2d(0.72, 4.39),
+                new Rotation2d(-60));
+
+        public static final Pose2d SOURCE_SUB_A_STARTPOSE_RED = new Pose2d(new Translation2d(15.85, 6.70),
+                new Rotation2d(120));
+        public static final Pose2d SOURCE_SUB_B_STARTPOSE_RED = new Pose2d(new Translation2d(15.2, 5.55),
+                new Rotation2d(180));
+        public static final Pose2d SOURCE_SUB_C_STARTPOSE_RED = new Pose2d(new Translation2d(15.85, 4.35),
+                new Rotation2d(-120));
     }
 
     public static class TunerConstants {
@@ -422,7 +425,7 @@ public class Constants {
         public static final double TOP_1_MOTOR_KI = 0;
         public static final double TOP_1_MOTOR_KD = 0;
         public static final double TOP_1_MOTOR_KS = 0.3;
-        public static final double TOP_1_MOTOR_KV = 0.113;
+        public static final double TOP_1_MOTOR_KV = 0.114;
         public static final double TOP_1_MOTOR_KA = 0;
 
         // SLOT 0 BOTTOM, 0 - 49 RPS
@@ -503,12 +506,12 @@ public class Constants {
         public static final boolean MOTOR_INVERT = true; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
-        public static final double MOTOR_KP = 100; // TODO this can be cranked higher
+        public static final double MOTOR_KP = 75; 
         public static final double MOTOR_KI = 0;
-        public static final double MOTOR_KD = 0.2;
-        public static final double MOTOR_KG = 0.4;
-        public static final double MOTOR_KV = 10d;
-        public static final double MOTOR_KS = 0d;
+        public static final double MOTOR_KD = 0;
+        public static final double MOTOR_KG = 0.393;
+        public static final double MOTOR_KV = 50d;
+        public static final double MOTOR_KS = 50d;
         public static final double MOTOR_KA = 0d;
 
         public static final double MAGIC_CRUISE_VEL = 0.01; // TODO: get real value
@@ -522,7 +525,8 @@ public class Constants {
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 275d;
 
-        public static final double BIAS_INCREMENT = 1d; // fDegrees to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // fDegrees to bias by per button press TODO get amount to bias
+                                                        // by
 
         public static final double STOW_ANGLE = 27d;
 
@@ -546,11 +550,9 @@ public class Constants {
                 put(2d, 45d);
                 put(2.5d, 41.5d);
                 put(3d, 37d);
-                put(3.5d, 35.3d);
-                put(4d, 33.3d);
-                put(4.5d, 32.5d);
-                put(5d, 30d);
-
+                put(3.5d, 30d);
+                put(4.09d, 26.5d);
+                put(4.86, 26.5d);
             }
         };
 
@@ -563,9 +565,8 @@ public class Constants {
                 put(2.5d, 3000d);
                 put(3d, 3500d);
                 put(3.5d, 4000d);
-                put(4d, 4500d);
-                put(4.5d, 5300d);
-                put(5d, 5500d);
+                put(4.09d, 3600d);
+                put(4.86d, 4600d);
             }
         };
 
@@ -576,7 +577,7 @@ public class Constants {
 
     public class CandConstants { // TODO get real
         // Amp
-        public static final double AMP_TOP_RPM = 50; 
+        public static final double AMP_TOP_RPM = 50;
         public static final double AMP_BOTTOM_RPM = 2000;
         public static final double AMP_ANGLE = 45;
 
