@@ -214,6 +214,19 @@
               }
             ]
           }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BL-F3"
+                }
+              }
+            ]
+          }
         }
       ]
     }

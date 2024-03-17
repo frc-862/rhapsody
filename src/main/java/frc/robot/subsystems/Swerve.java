@@ -118,8 +118,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 0.2;
         config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.2;
         config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.2;
-        config.TorqueCurrent.PeakForwardTorqueCurrent = 70;
-        config.TorqueCurrent.PeakReverseTorqueCurrent = 70;
+        config.TorqueCurrent.PeakForwardTorqueCurrent = 50;
+        config.TorqueCurrent.PeakReverseTorqueCurrent = -50;
 
         for (int i = 0; i < 4; ++i) {
             var module = getModule(i);
@@ -256,7 +256,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void simulationPeriodic() {
         /* Assume */
         updateSimState(0.01, 12);
-        setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_BLUE);
     }
 
     /**

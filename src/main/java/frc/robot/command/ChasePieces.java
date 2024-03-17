@@ -164,9 +164,9 @@ public class ChasePieces extends Command {
 							}
 						} else {
 							if (DriverStation.getAlliance().get() == Alliance.Blue) {
-								drivetrain.setRobot(0, 0, rotPower);
+								drivetrain.setRobot(0.5, 0, rotPower);
 							} else {
-								drivetrain.setRobot(0, 0, -rotPower);
+								drivetrain.setRobot(0.5, 0, -rotPower);
 							}
 						}
 					} else {
