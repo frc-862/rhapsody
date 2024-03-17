@@ -1,10 +1,5 @@
 package frc.robot.command;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import javax.xml.crypto.Data;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;

@@ -4,7 +4,6 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
@@ -41,6 +40,7 @@ public class Indexer extends SubsystemBase {
     private Debouncer exitDebouncer = new Debouncer(0.05);
 
     private DoubleLogEntry indexerPowerLog;
+    private DoubleLogEntry indexerTargetPowerLog;
     private BooleanLogEntry entryBeamBreakLog;
     private BooleanLogEntry exitBeamBreakLog;
     private StringLogEntry pieceStateLog;
@@ -69,6 +69,7 @@ public class Indexer extends SubsystemBase {
         DataLog log = DataLogManager.getLog();
 
         indexerPowerLog = new DoubleLogEntry(log, "/Indexer/Power");
+        indexerTargetPowerLog = new DoubleLogEntry(log, "/Indexer/TargetPower");
         entryBeamBreakLog = new BooleanLogEntry(log, "/Indexer/EntryBeamBreak");
         exitBeamBreakLog = new BooleanLogEntry(log, "/Indexer/ExitBeamBreak");
         pieceStateLog = new StringLogEntry(log, "/Indexer/PieceState");
@@ -218,6 +219,7 @@ public class Indexer extends SubsystemBase {
      */
     public void updateLogging() {
         indexerPowerLog.append(indexerMotor.get());
+        indexerTargetPowerLog.append(targetPower);
         entryBeamBreakLog.append(getEntryBeamBreakState());
         exitBeamBreakLog.append(getExitBeamBreakState());
         pieceStateLog.append(getPieceState().toString());

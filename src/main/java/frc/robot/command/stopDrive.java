@@ -21,7 +21,7 @@ public class stopDrive extends Command {
 
 	@Override
 	public void execute() {
-		// drivetrain.applyPercentRequestField(() -> 0d, () -> 0d, () -> 0d);
+		drivetrain.applyPercentRequestField(() -> 0d, () -> 0d, () -> 0d);
 	}
 
 	@Override

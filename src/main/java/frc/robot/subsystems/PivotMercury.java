@@ -24,8 +24,7 @@ public class PivotMercury extends SubsystemBase implements Pivot {
 
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
-    // private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
-    // private final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(0);
+
     private final PIDController angleController = new PIDController(0.06, 0, 0);
     private double bias = 0;
 
@@ -212,10 +211,11 @@ public class PivotMercury extends SubsystemBase implements Pivot {
     }
 
     /**
+     * CURRENTLY DOES NOTHING
      * @param angle angle to set the pivot angle to
      */
     public void resetAngle(double angle) {
-        // TODO is this necessary and implement
+        // THIS DOES NOTHING
     }
 
     /**

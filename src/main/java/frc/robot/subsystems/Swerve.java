@@ -1,11 +1,7 @@
 package frc.robot.subsystems;
 
-import java.sql.Array;
-import java.util.ArrayList;
-import java.sql.Driver;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-import javax.xml.crypto.Data;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
@@ -14,12 +10,10 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -118,12 +112,12 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     private void setRampRate() {
         var config = new TalonFXConfiguration();
-        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.1;
-        config.OpenLoopRamps.TorqueOpenLoopRampPeriod = 0.1;
-        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.1;
-        config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 0.1;
-        config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.1;
-        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
+        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.2;
+        config.OpenLoopRamps.TorqueOpenLoopRampPeriod = 0.2;
+        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.2;
+        config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 0.2;
+        config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.2;
+        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.2;
         config.TorqueCurrent.PeakForwardTorqueCurrent = 70;
         config.TorqueCurrent.PeakReverseTorqueCurrent = 70;
 
