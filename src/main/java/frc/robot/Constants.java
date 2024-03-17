@@ -687,14 +687,15 @@ public class Constants {
             COLLECTING(9),
             CHASING(10),
             CLIMBING(11),
-            HAS_PIECE(12),
-            HAS_VISION(13),
-            DEFAULT(14),
-            PIVOT_BOTTOM_SWITCH(15),
-            PIVOT_TOP_SWITCH(16),
-            COLLECTOR_BEAMBREAK(17),
-            INDEXER_ENTER_BEAMBREAK(18),
-            INDEXER_EXIT_BEAMBREAK(19);
+            BAD_POSE(12),
+            HAS_PIECE(13),
+            HAS_VISION(14),
+            DEFAULT(15),
+            PIVOT_BOTTOM_SWITCH(16),
+            PIVOT_TOP_SWITCH(17),
+            COLLECTOR_BEAMBREAK(18),
+            INDEXER_ENTER_BEAMBREAK(19),
+            INDEXER_EXIT_BEAMBREAK(20);
 
             private final int priority;
 
