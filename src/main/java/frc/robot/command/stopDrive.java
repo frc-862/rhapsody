@@ -21,16 +21,18 @@ public class stopDrive extends Command {
 
 	@Override
 	public void execute() {
-		drivetrain.applyPercentRequestField(() -> 0d, () -> 0d, () -> 0d);
+		drivetrain.brake();
+		// drivetrain.applyPercentRequestField(() -> 0d, () -> 0d, () -> 0d);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
+		drivetrain.applyPercentRequestField(() -> 0d, () -> 0d, () -> 0d);
 		System.out.println("AUTO - Stop Drivetrain END");
 	}
 
 	@Override
 	public boolean isFinished() {
-		return true;
+		return false;
 	}
 }
