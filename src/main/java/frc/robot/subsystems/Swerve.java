@@ -14,6 +14,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
@@ -112,6 +113,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         LightningShuffleboard.setDoubleSupplier("Swerve", "Odometry Y", () -> getPose().getY());
 
         LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPose().getRotation().getDegrees());
+        LightningShuffleboard.setDoubleSupplier("Swerve", "Distance to speaker", () -> distanceToSpeaker());
     }
 
     private void setRampRate() {
@@ -168,75 +170,63 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a percentage Field centric request to the drivetrain
-     * 
      * @param x   the x, percent of max velocity (-1,1)
      * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity (-1,1)
      * @return the request to drive for the drivetrain
      */
-    public Command applyPercentRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
-        return run(() -> this.setControl(driveField
-                .withVelocityX(x.getAsDouble() * maxSpeed)
+    public Command applyPercentRequestField(DoubleSupplier x, DoubleSupplier y,
+            DoubleSupplier rot) {
+        return run(() -> this.setControl(driveField.withVelocityX(x.getAsDouble() * maxSpeed)
                 .withVelocityY(y.getAsDouble() * maxSpeed)
                 .withRotationalRate(rot.getAsDouble() * maxAngularRate)));
     }
 
     /**
      * Apply a Field centric request to the drivetrain run in periodic
-     * 
      * @param x   the x velocity m/s
      * @param y   the y velocity m/s
      * @param rot the rotational velocity in rad/s
      */
     public void setField(double x, double y, double rot) {
-        this.setControl(driveField
-                .withVelocityX(x)
-                .withVelocityY(y)
-                .withRotationalRate(rot));
+        this.setControl(driveField.withVelocityX(x).withVelocityY(y).withRotationalRate(rot));
     }
 
     /**
-     * Apply a Field centric request to the drivetrain run in periodic,
-     * Allows driving normally and pid control of rotation
-     * 
+     * Apply a Field centric request to the drivetrain run in periodic, Allows
+     * driving normally and
+     * pid control of rotation
      * @param x   the x, percent of max velocity (-1,1)
      * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity rad/s
      */
     public void setFieldDriver(double x, double y, double rot) {
-        this.setControl(driveField
-                .withVelocityX(x * maxSpeed)
-                .withVelocityY(y * maxSpeed)
+        this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
                 .withRotationalRate(rot));
     }
 
     /**
      * Apply a percentage Robot centric request to the drivetrain
-     * 
      * @param x   the x, percent of max velocity (-1,1)
      * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity (-1,1)
      * @return the request to drive for the drivetrain
      */
-    public Command applyPercentRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
-        return run(() -> this.setControl(driveRobot
-                .withVelocityX(x.getAsDouble() * maxSpeed)
+    public Command applyPercentRequestRobot(DoubleSupplier x, DoubleSupplier y,
+            DoubleSupplier rot) {
+        return run(() -> this.setControl(driveRobot.withVelocityX(x.getAsDouble() * maxSpeed)
                 .withVelocityY(y.getAsDouble() * maxSpeed)
                 .withRotationalRate(rot.getAsDouble() * maxAngularRate)));
     }
 
     /**
      * Apply a Robot centric request to the drivetrain run in periodic
-     * 
      * @param x   the x velocity m/s
      * @param y   the y velocity m/s
      * @param rot the rotational velocity in rad/s
      */
     public void setRobot(double x, double y, double rot) {
-        this.setControl(driveRobot
-                .withVelocityX(x)
-                .withVelocityY(y)
-                .withRotationalRate(rot));
+        this.setControl(driveRobot.withVelocityX(x).withVelocityY(y).withRotationalRate(rot));
     }
 
     /**
@@ -246,9 +236,12 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         this.setControl(brake);
     }
 
+    public void stop() {
+        applyPercentRequestField(() -> 0d, () -> 0d, () -> 0d);
+    }
+
     /**
      * Apply a request to the drivetrain
-     * 
      * @param requestSupplier the SwerveRequest to apply
      * @return the request to drive for the drivetrain
      */
@@ -280,13 +273,15 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     private void configurePathPlanner() {
-        AutoBuilder.configureHolonomic(() -> this.getState().Pose, // Supplier of current robot pose
+        AutoBuilder.configureHolonomic(() -> getPose(), // Supplier of current robot pose
                 this::seedFieldRelative, // Consumer for seeding pose against auto
                 this::getCurrentRobotChassisSpeeds,
-                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
-                                                                             // robot
+                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of
+                                                                             // ChassisSpeeds to
+                                                                             // drive the robot
                 new HolonomicPathFollowerConfig(AutonomousConstants.TRANSLATION_PID,
-                        AutonomousConstants.ROTATION_PID, AutonomousConstants.MAX_MODULE_VELOCITY,
+                        AutonomousConstants.ROTATION_PID,
+                        AutonomousConstants.MAX_MODULE_VELOCITY,
                         AutonomousConstants.DRIVE_BASE_RADIUS, new ReplanningConfig(),
                         AutonomousConstants.CONTROL_LOOP_PERIOD),
                 () -> {
@@ -329,15 +324,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return whether the robot is tipped
      */
     public boolean isTipped() {
-        return (Math.abs(
-                getPigeon2().getPitch().getValueAsDouble()) > CollisionConstants.TIP_DEADZONE
+        return (Math
+                .abs(getPigeon2().getPitch().getValueAsDouble()) > CollisionConstants.TIP_DEADZONE
                 || Math.abs(getPigeon2().getRoll()
                         .getValueAsDouble()) > CollisionConstants.TIP_DEADZONE);
     }
 
     /**
      * gets if slow mode is enabled
-     * 
      * @return if the robot is driving in slow mode
      */
     public boolean inSlowMode() {
@@ -346,7 +340,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Set slow mode t/f
-     * 
      * @param slow boolean if we are in slow mode
      */
     public void setSlowMode(boolean slow) {
@@ -362,7 +355,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Logs if the robot is in robot centric control
-     * 
      * @param robotCentricControl boolean if the robot is in robot centric control
      */
     public void setRobotCentricControl(boolean robotCentricControl) {
@@ -371,7 +363,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Returns if the robot is in robot centric control
-     * 
      * @return boolean if the robot is in robot centric control
      */
     public boolean isRobotCentricControl() {
@@ -380,7 +371,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Swaps the driver and copilot controllers
-     * 
      * @param driverC  the driver controller
      * @param copilotC the copilot controller
      */
@@ -392,7 +382,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Returns if the robot Pose is in Wing
-     * 
      * @return boolean if the robot is in the wing to start aiming STATE priming
      */
     public boolean inWing() {

@@ -98,8 +98,8 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
         powerLog = new DoubleLogEntry(log, "/Pivot/Power");
 
-        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> getAngle());
-        LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle);
+        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> getAngle() * 360);
+        LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle * 360);
         LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
 
         LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
@@ -165,7 +165,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     /**
      * Sets the target angle of the pivot
-     * 
      * @param angle Angle of the pivot in degrees
      */
     public void setTargetAngle(double angle) {
@@ -184,7 +183,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     }
 
     /**
-     * @return The current angle of the pivot in degrees
+     * @return The current angle of the pivot in rotations
      */
     public double getAngle() {
         return angleMotor.getPosition().getValue();
@@ -199,20 +198,18 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     /**
      * Gets forward limit switch
-     * 
      * @return true if pressed
      */
     public boolean getForwardLimit() {
-        return angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
+        return false; //angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
     }
 
     /**
      * Gets reverse limit switch
-     * 
      * @return true if pressed
      */
     public boolean getReverseLimit() {
-        return angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
+        return false; //angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
     }
 
     /**

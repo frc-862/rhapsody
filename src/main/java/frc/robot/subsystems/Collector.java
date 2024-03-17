@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -32,6 +33,8 @@ public class Collector extends SubsystemBase {
 	private BooleanLogEntry beamBreakLog;
 	private BooleanLogEntry hasPieceLog;
 
+	private Debouncer entryDebouncer = new Debouncer(0.05);
+
 	public Collector() {
 		motor = new ThunderBird(
 				CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
@@ -59,7 +62,7 @@ public class Collector extends SubsystemBase {
 		hasPieceLog = new BooleanLogEntry(log, "/Collector/HasPiece");
 
 		LightningShuffleboard.setDoubleSupplier("Collector", "Power", () -> motor.get());
-		LightningShuffleboard.setBoolSupplier("Collector", "BeamBreak", () -> beamBreak.get());
+		LightningShuffleboard.setBoolSupplier("Collector", "BeamBreak", () -> getEntryBeamBreakState());
 		LightningShuffleboard.setBoolSupplier("Collector", "HasPiece", () -> hasPiece());
 	}
 
@@ -68,7 +71,10 @@ public class Collector extends SubsystemBase {
 	 * @return When an object is present, returns true, otherwise returns false
 	 */
 	public boolean getEntryBeamBreakState() {
-		return beamBreak.get();
+		if (Constants.isMercury()) {
+			return entryDebouncer.calculate(!beamBreak.get());
+		}
+		return entryDebouncer.calculate(beamBreak.get());
 	}
 
 	/**

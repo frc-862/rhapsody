@@ -42,9 +42,13 @@ public class Constants {
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center
+                                                                                         // of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed /
+                                                                                              // circumference of circle
+                                                                                              // with radius of
+                                                                                              // wheelbase
 
         public static final double ROT_MULT = 0.015; // TODO Tune for Driver
 
@@ -126,21 +130,23 @@ public class Constants {
     }
 
     public static class AutonomousConstants {
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(2.0, 0, 0); // TODO:
-                                                                                        // Tune
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(2.0, 0, 0); // TODO Tune
         public static final PIDConstants ROTATION_PID = new PIDConstants(4, 0, 0); // TODO: Tune
 
-        public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(17.3); // f/s to m/s
-        public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(19.09); // TODO check
+        public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(15); // f/s to m/s
+        public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(10.825);
 
-        public static final double CONTROL_LOOP_PERIOD = 0.004; // IS this right?
+        public static final double CONTROL_LOOP_PERIOD = 0.01;
 
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
                                                                                                       // constants
 
-        public static final double BLUE_CHASE_BOUNDARY = 8.2; // The highest X value the robot can be at before ending. Prevents going over center line.
-        public static final double RED_CHASE_BOUNDARY = 8.7;
+        public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can be at before ending.
+                                                              // Prevents going over center line.
+        public static final double RED_CHASE_BOUNDARY = 8;
 
+        public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at before ending.
+                                                         // Prevents going over center line.
     }
 
     public static class TunerConstants {
@@ -169,7 +175,7 @@ public class Constants {
 
         // Theoretical free speed (m/s) at 12v applied output;
         // This needs to be tuned to your individual robot
-        public static final double kSpeedAt12VoltsMps = 5.21;
+        public static final double kSpeedAt12VoltsMps = 5.02;
 
         // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
         // This may need to be tuned to your individual robot
@@ -290,12 +296,12 @@ public class Constants {
         public static final Swerve getDrivetrain() {
             if (Constants.isMercury()) {
                 System.out.println("IS MERCURY");
-                return new Swerve(DrivetrainConstants, 250, FrontLeft, FrontRight,
-                        BackLeft, BackRight);
+                return new Swerve(DrivetrainConstants, 250, FrontLeft, FrontRight, BackLeft,
+                        BackRight);
             } else {
                 System.out.println("IS RHAPSODY");
-                return new Swerve(DrivetrainConstants, 250, FrontLeftRh, FrontRightRh,
-                        BackLeftRh, BackRightRh);
+                return new Swerve(DrivetrainConstants, 250, FrontLeftRh, FrontRightRh, BackLeftRh,
+                        BackRightRh);
             }
         }
     }
@@ -309,11 +315,13 @@ public class Constants {
         public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
                 Units.feetToMeters(5));
         public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
-        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0);
+        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0, 0.01);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int SPEAKER_PIPELINE = 1;
         public static final int NOTE_PIPELINE = 2;
+
+        public static final double HALF_FIELD_HEIGHT = Units.feetToMeters(13);
 
         public static final Translation3d BLUE_SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
         public static final Translation3d RED_SPEAKER_LOCATION = new Translation3d(16.4592, 5.547593, 1.2);
@@ -465,14 +473,14 @@ public class Constants {
         public static final double MAGIC_ACCEL = 0.02; // TODO: get real value
         public static final double MAGIC_JERK = 0.2; // TODO: get real value
 
-        public static final double ANGLE_TOLERANCE = 0.5d;
+        public static final double ANGLE_TOLERANCE = 0.00208d;
 
         public static final double ENCODER_OFFSET = 0.61095; // In rotations
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press
 
         public static final double STOW_ANGLE = 28d;
 
@@ -500,16 +508,14 @@ public class Constants {
         public static final double MAGIC_ACCEL = 0.02; // TODO: get real value
         public static final double MAGIC_JERK = 0.2; // TODO: get real value
 
-        public static final double ANGLE_TOLERANCE = 0.5d;
+        public static final double ANGLE_TOLERANCE = 0.00208d;
 
-        public static final double ENCODER_OFFSET = 0.282; // In rotations //TODO: find this value (NEEDS TO BE DONE
-                                                           // BEFORE PR)
+        public static final double ENCODER_OFFSET = 0.282; // In rotations
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 275d;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias
-                                                        // by
+        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
 
         public static final double STOW_ANGLE = 27d;
 
@@ -533,10 +539,10 @@ public class Constants {
                 put(2d, 45d);
                 put(2.5d, 41.5d);
                 put(3d, 37d);
-                put(3.5d, 34.3d);
-                put(4d, 32.3d);
-                put(4.5d, 30d);
-                put(5d, 28.5d);
+                put(3.5d, 35.3d);
+                put(4d, 33.3d);
+                put(4.5d, 32.5d);
+                put(5d, 30d);
 
             }
         };
@@ -563,9 +569,9 @@ public class Constants {
 
     public class CandConstants { // TODO get real
         // Amp
-        public static final double AMP_TOP_RPM = 300; // FRONT METHOD 250
-        public static final double AMP_BOTTOM_RPM = 450; // FRONT METHOD 1250
-        public static final double AMP_ANGLE = 103.5; // FRONT METHOD 55
+        public static final double AMP_TOP_RPM = 50; 
+        public static final double AMP_BOTTOM_RPM = 2000;
+        public static final double AMP_ANGLE = 45;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
@@ -596,13 +602,12 @@ public class Constants {
         public static final double SOURCE_ANGLE = 45d; // TODO test
 
         // TODO find time to shoot
-        public static final double TIME_TO_SHOOT = 2d; // Time in seconds it takes from indexer
-                                                       // start to flywheel exit
+        public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer start to flywheel exit
     }
 
     public class ClimbConstants { // TODO: find real values
-        public static final boolean CLIMB_RIGHT_MOTOR_INVERT = false;
-        public static final boolean CLIMB_LEFT_MOTOR_INVERT = true;
+        public static final boolean CLIMB_RIGHT_MOTOR_INVERT = true;
+        public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
         public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean CLIMB_MOTOR_BRAKE_MODE = true;
         public static final double UNLOADED_KP = 10;
@@ -643,16 +648,15 @@ public class Constants {
             }
         };
 
-        public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>(){
+        public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
             {
-            put(-1, LEDsConstants.LED_LENGTH);
-            put(0, 16);
-            put(1, 15);
+                put(-1, LEDsConstants.LED_LENGTH);
+                put(0, 16);
+                put(1, 15);
             }
         };
 
         public static final int SWIRL_SEGMENT_SIZE = 5;
-
 
         public static final int RED_HUE = 0;
         public static final int ORANGE_HUE = 5;
