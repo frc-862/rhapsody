@@ -60,28 +60,28 @@ public class Climber extends SubsystemBase {
         climbMotorR.configPIDF(1, ClimbConstants.LOADED_KP, ClimbConstants.LOADED_KI, ClimbConstants.LOADED_KD);
 
         FeedbackConfigs sensorConf = new FeedbackConfigs();
-        SoftwareLimitSwitchConfigs softLimitConfL = new SoftwareLimitSwitchConfigs();
-        SoftwareLimitSwitchConfigs softLimitConfR = new SoftwareLimitSwitchConfigs();
-        HardwareLimitSwitchConfigs hardLimitConf = new HardwareLimitSwitchConfigs();
+        // SoftwareLimitSwitchConfigs softLimitConfL = new SoftwareLimitSwitchConfigs();
+        // SoftwareLimitSwitchConfigs softLimitConfR = new SoftwareLimitSwitchConfigs();
+        // HardwareLimitSwitchConfigs hardLimitConf = new HardwareLimitSwitchConfigs();
 
         sensorConf.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
         sensorConf.SensorToMechanismRatio = ClimbConstants.GEAR_REDUCTION;
 
-        softLimitConfL.ForwardSoftLimitEnable = true;
-        softLimitConfL.ForwardSoftLimitThreshold = ClimbConstants.MAX_HEIGHT;
+        // softLimitConfL.ForwardSoftLimitEnable = true;
+        // softLimitConfL.ForwardSoftLimitThreshold = ClimbConstants.MAX_HEIGHT;
 
-        softLimitConfR.ForwardSoftLimitEnable = true;
-        softLimitConfR.ForwardSoftLimitThreshold = ClimbConstants.MAX_HEIGHT;
+        // softLimitConfR.ForwardSoftLimitEnable = true;
+        // softLimitConfR.ForwardSoftLimitThreshold = ClimbConstants.MAX_HEIGHT;
 
         // hardLimitConf.ReverseLimitEnable = false;
 
-        climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConfL).withHardwareLimitSwitch(hardLimitConf));
-        climbMotorR.applyConfig(climbMotorR.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConfR).withHardwareLimitSwitch(hardLimitConf));
+        // climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConfL).withHardwareLimitSwitch(hardLimitConf));
+        // climbMotorR.applyConfig(climbMotorR.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConfR).withHardwareLimitSwitch(hardLimitConf));
 
         climbMotorL.setPosition(0d);
         climbMotorR.setPosition(0d);
 
-        initOldLogging();
+        // initOldLogging();
         initLogging();
     }
 

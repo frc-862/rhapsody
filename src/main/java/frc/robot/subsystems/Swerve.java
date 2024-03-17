@@ -257,7 +257,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void simulationPeriodic() {
         /* Assume */
         updateSimState(0.01, 12);
-        setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE);
+        setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_BLUE);
     }
 
     /**

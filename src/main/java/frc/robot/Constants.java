@@ -145,15 +145,16 @@ public class Constants {
                                                               // Prevents going over center line.
         public static final double RED_CHASE_BOUNDARY = 8;
 
-        public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at before ending.
-                                                         // Prevents going over center line.
+        public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at before ending. Prevents going over center line.
 
-        public static final Pose2d SOURCE_SUB_C_STARTPOSE = new Pose2d(new Translation2d(0.73, 4.34),
-         new Rotation2d(0));
-         public static final Pose2d SOURCE_SUB_B_STARTPOSE = new Pose2d(new Translation2d(1.34, 5.5),
-         new Rotation2d(0));
-         public static final Pose2d SOURCE_SUB_A_STARTPOSE = new Pose2d(new Translation2d(0.73, 6.69),
-         new Rotation2d(0));
+        public static final Pose2d SOURCE_SUB_A_STARTPOSE_BLUE = new Pose2d(new Translation2d(0.73, 6.69), new Rotation2d(0));
+        public static final Pose2d SOURCE_SUB_B_STARTPOSE_BLUE = new Pose2d(new Translation2d(1.34, 5.5), new Rotation2d(0));
+        public static final Pose2d SOURCE_SUB_C_STARTPOSE_BLUE = new Pose2d(new Translation2d(0.73, 4.34), new Rotation2d(0));
+    
+        //TODO GET FOR REDDDDDD
+        public static final Pose2d SOURCE_SUB_A_STARTPOSE_RED = new Pose2d(new Translation2d(0.73, 6.69), new Rotation2d(0));
+        public static final Pose2d SOURCE_SUB_B_STARTPOSE_RED = new Pose2d(new Translation2d(1.34, 5.5), new Rotation2d(0));
+        public static final Pose2d SOURCE_SUB_C_STARTPOSE_RED = new Pose2d(new Translation2d(0.73, 4.34), new Rotation2d(0));
     }
 
     public static class TunerConstants {
@@ -502,11 +503,11 @@ public class Constants {
         public static final boolean MOTOR_INVERT = true; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
-        public static final double MOTOR_KP = 120; // TODO this can be cranked higher
+        public static final double MOTOR_KP = 100; // TODO this can be cranked higher
         public static final double MOTOR_KI = 0;
-        public static final double MOTOR_KD = 0;
-        public static final double MOTOR_KG = 0.359;
-        public static final double MOTOR_KV = 0d;
+        public static final double MOTOR_KD = 0.2;
+        public static final double MOTOR_KG = 0.4;
+        public static final double MOTOR_KV = 10d;
         public static final double MOTOR_KS = 0d;
         public static final double MOTOR_KA = 0d;
 
