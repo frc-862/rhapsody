@@ -19,8 +19,6 @@ public class PathToPose extends Command {
     /*
      * Pathfinds to a specific pose given
      * @param pathfindingPose The pose to pathfind to
-     * @param drivetrain The drivetrain subsystem
-     * @param controller The driver controller
      */
     public PathToPose(Pose2d pathfindingPose) {
         this.pathfindingPose = pathfindingPose;
