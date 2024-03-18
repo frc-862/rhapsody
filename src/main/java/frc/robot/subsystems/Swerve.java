@@ -43,6 +43,10 @@ import frc.thunder.util.Pose4d;
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
+
+    static RectangularRegionConstraint FIELD = new RectangularRegionConstraint(
+            new Translation2d(0, 0), VisionConstants.FIELD_LIMIT, null);
+
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric();
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
@@ -57,8 +61,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private LinearFilter yFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter rotFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private Translation2d speakerPose = VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d();
-    static RectangularRegionConstraint FIELD = new RectangularRegionConstraint(
-            new Translation2d(0, 0), VisionConstants.FIELD_LIMIT, null);
 
     private DoubleLogEntry timerLog;
     private DoubleLogEntry robotHeadingLog;
@@ -166,7 +168,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a percentage Field centric request to the drivetrain
-     * 
+     *
      * @param x   the x, percent of max velocity (-1,1)
      * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity (-1,1)
@@ -181,7 +183,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a Field centric request to the drivetrain run in periodic
-     * 
+     *
      * @param x   the x velocity m/s
      * @param y   the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -194,7 +196,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * Apply a Field centric request to the drivetrain run in periodic, Allows
      * driving normally and
      * pid control of rotation
-     * 
+     *
      * @param x   the x, percent of max velocity (-1,1)
      * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity rad/s
@@ -206,7 +208,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a percentage Robot centric request to the drivetrain
-     * 
+     *
      * @param x   the x, percent of max velocity (-1,1)
      * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity (-1,1)
@@ -221,7 +223,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a Robot centric request to the drivetrain run in periodic
-     * 
+     *
      * @param x   the x velocity m/s
      * @param y   the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -243,7 +245,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a request to the drivetrain
-     * 
+     *
      * @param requestSupplier the SwerveRequest to apply
      * @return the request to drive for the drivetrain
      */
@@ -334,7 +336,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * gets if slow mode is enabled
-     * 
+     *
      * @return if the robot is driving in slow mode
      */
     public boolean inSlowMode() {
@@ -343,7 +345,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Set slow mode t/f
-     * 
+     *
      * @param slow boolean if we are in slow mode
      */
     public void setSlowMode(boolean slow) {
@@ -363,7 +365,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Logs if the robot is in robot centric control
-     * 
+     *
      * @param robotCentricControl boolean if the robot is in robot centric control
      */
     public void setRobotCentricControl(boolean robotCentricControl) {
@@ -372,7 +374,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Returns if the robot is in robot centric control
-     * 
+     *
      * @return boolean if the robot is in robot centric control
      */
     public boolean isRobotCentricControl() {
@@ -381,7 +383,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Swaps the driver and copilot controllers
-     * 
+     *
      * @param driverC  the driver controller
      * @param copilotC the copilot controller
      */
@@ -393,7 +395,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Returns if the robot Pose is in Wing
-     * 
+     *
      * @return boolean if the robot is in the wing to start aiming STATE priming
      */
     public boolean inWing() {

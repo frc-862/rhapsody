@@ -10,59 +10,51 @@ import frc.thunder.filter.XboxControllerFilter;
 
 public class PathToPose extends Command {
 
-  private Swerve drivetrain;
-  private XboxControllerFilter controller; // Driver Controller
-  private Pose2d pathfindingPose;
-  private AutoBuilder autoBuilder;
-  Command pathFindCommand;
-  
-  /*
-   * Pathfinds to a specific pose given
-   * @param pathfindingPose The pose to pathfind to
-   * @param drivetrain The drivetrain subsystem
-   * @param controller The driver controller
-   */
-  public PathToPose(Pose2d pathfindingPose, Swerve drivetrain, XboxControllerFilter controller) {
-    this.drivetrain = drivetrain;
-    this.controller = controller;
-    this.pathfindingPose = pathfindingPose;
+    private Swerve drivetrain;
+    private XboxControllerFilter controller; // Driver Controller
+    private Pose2d pathfindingPose;
+    private AutoBuilder autoBuilder;
+    Command pathFindCommand;
 
-    autoBuilder = new AutoBuilder();
+    /*
+     * Pathfinds to a specific pose given
+     * @param pathfindingPose The pose to pathfind to
+     * @param drivetrain The drivetrain subsystem
+     * @param controller The driver controller
+     */
+    public PathToPose(Pose2d pathfindingPose, Swerve drivetrain, XboxControllerFilter controller) {
+        this.drivetrain = drivetrain;
+        this.controller = controller;
+        this.pathfindingPose = pathfindingPose;
 
-    addRequirements(drivetrain);
-  }
+        autoBuilder = new AutoBuilder();
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    pathFindCommand = autoBuilder.pathfindToPose(
-      pathfindingPose, AutonomousConstants.PATH_CONSTRAINTS
-    );
-    pathFindCommand.schedule();
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    if (controller.getYButton()) {
-      end(true);
+        addRequirements(drivetrain);
     }
-  }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    if (interrupted) {
-      pathFindCommand.cancel();
+    @Override
+    public void initialize() {
+        pathFindCommand = autoBuilder.pathfindToPose(
+                pathfindingPose, AutonomousConstants.PATH_CONSTRAINTS);
+        pathFindCommand.schedule();
     }
-  }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    if (pathFindCommand.isFinished()) {
-      return true;
+    @Override
+    public void execute() {
+        if (controller.getYButton()) {
+            end(true);
+        }
     }
-    return false;
-  }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            pathFindCommand.cancel();
+        }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return pathFindCommand.isFinished();
+    }
 }

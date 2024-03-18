@@ -34,7 +34,6 @@ public class SmartClimb extends Command {
      * @param leftPower power to apply to left climber motor
      * @param rightPower power to apply to right climber motor
      * @param button button state
-     
      */
     public SmartClimb(Climber climber, Swerve drivetrain, Pivot pivot, LEDs leds, DoubleSupplier leftPower, DoubleSupplier rightPower, BooleanSupplier button) {
         this.climber = climber;
@@ -86,7 +85,7 @@ public class SmartClimb extends Command {
         climber.stop();
         leds.enableState(LED_STATES.FINISHED_CLIMB);
     }
- 
+
     @Override
     public boolean isFinished() {
         return false;

@@ -14,7 +14,6 @@ public class AmpShot extends Command {
 
 	/**
 	 * Creates a new AmpShot
-	 * 
 	 * @param flywheel subsystem
 	 * @param pivot    subsystem
 	 */

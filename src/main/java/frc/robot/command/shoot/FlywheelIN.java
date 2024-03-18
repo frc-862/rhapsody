@@ -5,35 +5,36 @@ import frc.robot.Constants.CandConstants;
 import frc.robot.subsystems.Flywheel;
 
 public class FlywheelIN extends Command {
-  private final Flywheel flywheel;
 
-	/**
-	 * Creates a new SourceCollect.
-	 * @param flywheel subsystem
-	 */
-	public FlywheelIN(Flywheel flywheel) {
-		this.flywheel = flywheel;
+    private final Flywheel flywheel;
 
-		addRequirements(flywheel);
-	}
+    /**
+     * Creates a new FlywheelIN.
+     * @param flywheel subsystem
+     */
+    public FlywheelIN(Flywheel flywheel) {
+        this.flywheel = flywheel;
 
-	@Override
-	public void initialize() {
-		flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
-	}
+        addRequirements(flywheel);
+    }
 
-	@Override
-	public void execute() {
-		flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
-	}
+    @Override
+    public void initialize() {
+        flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
+    }
 
-	@Override
-	public void end(boolean interrupted) {
-		flywheel.coast(true);
-	}
+    @Override
+    public void execute() {
+        flywheel.setAllMotorsRPM(CandConstants.SOURCE_RPM);
+    }
 
-	@Override
-	public boolean isFinished() {
-		return false;
-	}
+    @Override
+    public void end(boolean interrupted) {
+        flywheel.coast(true);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

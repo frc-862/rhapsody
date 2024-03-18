@@ -30,7 +30,7 @@ public class Collect extends Command {
 
 		initLogging();
 	}
-	
+
 	@Override
 	public void initialize() {
 		collector.setPower(powerSupplier.getAsDouble());

@@ -191,7 +191,7 @@ public class LEDs extends SubsystemBase {
 	// 		setStrandSingleHSV(i, LEDsConstants.RED_HUE, (int)(255 * Math.cos(Math.toRadians(i * 360 / LEDsConstants.STRAND_LENGTH.get(strand)) / 4)), 255);
 	// 	}
 	// }
-	
+
 	/**
 	 * @param strand the strand to swirl
 	 */

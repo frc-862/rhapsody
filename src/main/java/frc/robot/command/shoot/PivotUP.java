@@ -6,36 +6,37 @@ import frc.robot.subsystems.Pivot;
 
 public class PivotUP extends Command {
 
-	private final Pivot pivot;
+    private final Pivot pivot;
 
-	/**
-	 * Creates a new Pivot up Command
-	 * Puts the pivot to 90 degrees
-	 * @param pivot subsystem
-	 */
-	public PivotUP(Pivot pivot) {
-		this.pivot = pivot;
+    /**
+     * Creates a new Pivot up Command
+     * Puts the pivot to 90 degrees
+     *
+     * @param pivot subsystem
+     */
+    public PivotUP(Pivot pivot) {
+        this.pivot = pivot;
 
-		addRequirements(pivot);
-	}
+        addRequirements(pivot);
+    }
 
-	@Override
-	public void initialize() {
-		pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
-	}
+    @Override
+    public void initialize() {
+        pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
+    }
 
-	@Override
-	public void execute() {
-		pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
-	}
+    @Override
+    public void execute() {
+        pivot.setTargetAngle(CandConstants.SOURCE_ANGLE);
+    }
 
-	@Override
-	public void end(boolean interrupted) {
-		pivot.setTargetAngle(pivot.getStowAngle());
-	}
+    @Override
+    public void end(boolean interrupted) {
+        pivot.setTargetAngle(pivot.getStowAngle());
+    }
 
-	@Override
-	public boolean isFinished() {
-		return false;
-	}
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

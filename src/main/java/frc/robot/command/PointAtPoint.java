@@ -21,6 +21,7 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 public class PointAtPoint extends Command {
 
 	private static final double MIN_POWER = 0.3;
+
 	private Swerve drivetrain;
 	private XboxController driver;
 
@@ -30,7 +31,7 @@ public class PointAtPoint extends Command {
 	private Translation2d originalTargetPose;
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
-	
+
 	private DoubleLogEntry deltaYLog;
 	private DoubleLogEntry deltaXLog;
 	private DoubleLogEntry targetHeadingLog;
@@ -40,6 +41,7 @@ public class PointAtPoint extends Command {
     private DoubleLogEntry targetMinusCurrentHeadingLog;
 	private DoubleLogEntry currentLog;
 	private BooleanLogEntry inToleranceLog;
+
 	/**
 	 * Creates a new PointAtTag.
 	 * @param targetX    the x coordinate of the target

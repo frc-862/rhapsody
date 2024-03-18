@@ -21,7 +21,6 @@ public class PointBlankShotAuton extends Command {
 
 	/**
 	 * Creates a new PointBlankShot.
-	 * 
 	 * @param flywheel subsystem
 	 * @param pivot    subsystem
 	 * @param indexer  subsystem

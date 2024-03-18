@@ -55,7 +55,7 @@ public class PointAtTag extends Command {
 	}
 
 	/**
-	 * initialize logging
+	 * Initialize logging
 	 */
 	private void initLogging() {
 		DataLog log = DataLogManager.getLog();
@@ -75,7 +75,7 @@ public class PointAtTag extends Command {
 			driver.getLeftY(),
 			driver.getLeftX(),
 			-pidOutput);
-		
+
 		updateLogging();
 	}
 
