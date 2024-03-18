@@ -49,6 +49,10 @@ public class LEDs extends SubsystemBase {
 				rainbow(-1);
 				break;
 
+			case BAD_POSE:
+				pulse(-1, LEDsConstants.BLUE_HUE);
+				break;
+
 			case GOOD_POSE:
 				blink(-1, LEDsConstants.PINK_HUE);
 				break;
@@ -187,7 +191,7 @@ public class LEDs extends SubsystemBase {
 	// 		setStrandSingleHSV(i, LEDsConstants.RED_HUE, (int)(255 * Math.cos(Math.toRadians(i * 360 / LEDsConstants.STRAND_LENGTH.get(strand)) / 4)), 255);
 	// 	}
 	// }
-	
+
 	/**
 	 * @param strand the strand to swirl
 	 */

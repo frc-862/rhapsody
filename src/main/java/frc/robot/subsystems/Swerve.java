@@ -1,11 +1,7 @@
 package frc.robot.subsystems;
 
-import java.sql.Array;
-import java.util.ArrayList;
-import java.sql.Driver;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-import javax.xml.crypto.Data;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
@@ -14,17 +10,17 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.constraint.RectangularRegionConstraint;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.util.datalog.DataLog;
@@ -47,6 +43,10 @@ import frc.thunder.util.Pose4d;
  * in command-based projects easily.
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
+
+    static RectangularRegionConstraint field = new RectangularRegionConstraint(
+            new Translation2d(0, 0), VisionConstants.FIELD_LIMIT, null);
+
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric();
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
@@ -78,10 +78,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
 
         configurePathPlanner();
-
-        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-            speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
-        }
 
         setRampRate();
 
@@ -118,12 +114,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     private void setRampRate() {
         var config = new TalonFXConfiguration();
-        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.1;
-        config.OpenLoopRamps.TorqueOpenLoopRampPeriod = 0.1;
-        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.1;
-        config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 0.1;
-        config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.1;
-        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
+        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.2;
+        config.OpenLoopRamps.TorqueOpenLoopRampPeriod = 0.2;
+        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.2;
+        config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 0.2;
+        config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.2;
+        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.2;
+        config.TorqueCurrent.PeakForwardTorqueCurrent = 50;
+        config.TorqueCurrent.PeakReverseTorqueCurrent = -50;
 
         for (int i = 0; i < 4; ++i) {
             var module = getModule(i);
@@ -159,7 +157,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
         updateLogging();
     }
- 
+
     public void applyVisionPose(Pose4d pose) {
         if (!disableVision) {
             addVisionMeasurement(pose.toPose2d(), pose.getFPGATimestamp(), pose.getStdDevs());
@@ -170,6 +168,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a percentage Field centric request to the drivetrain
+     *
      * @param x   the x, percent of max velocity (-1,1)
      * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity (-1,1)
@@ -184,6 +183,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a Field centric request to the drivetrain run in periodic
+     *
      * @param x   the x velocity m/s
      * @param y   the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -196,6 +196,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * Apply a Field centric request to the drivetrain run in periodic, Allows
      * driving normally and
      * pid control of rotation
+     *
      * @param x   the x, percent of max velocity (-1,1)
      * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity rad/s
@@ -207,6 +208,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a percentage Robot centric request to the drivetrain
+     *
      * @param x   the x, percent of max velocity (-1,1)
      * @param y   the y, percent of max velocity (-1,1)
      * @param rot the rotational, percent of max velocity (-1,1)
@@ -221,6 +223,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a Robot centric request to the drivetrain run in periodic
+     *
      * @param x   the x velocity m/s
      * @param y   the y velocity m/s
      * @param rot the rotational velocity in rad/s
@@ -232,7 +235,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     /**
      * Sets the robot in park mode
      */
-    public void brake() {        
+    public void brake() {
         this.setControl(brake);
     }
 
@@ -242,6 +245,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a request to the drivetrain
+     *
      * @param requestSupplier the SwerveRequest to apply
      * @return the request to drive for the drivetrain
      */
@@ -308,8 +312,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     public boolean isStable() {
         return (Math.abs(rotFilter.lastValue() - getPose().getRotation().getDegrees()) < 0.1
-            && Math.abs(xFilter.lastValue() - getPose().getX()) < 0.1
-            && Math.abs(yFilter.lastValue() - getPose().getY()) < 0.1);
+                && Math.abs(xFilter.lastValue() - getPose().getX()) < 0.1
+                && Math.abs(yFilter.lastValue() - getPose().getY()) < 0.1);
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
@@ -332,6 +336,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * gets if slow mode is enabled
+     *
      * @return if the robot is driving in slow mode
      */
     public boolean inSlowMode() {
@@ -340,6 +345,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Set slow mode t/f
+     *
      * @param slow boolean if we are in slow mode
      */
     public void setSlowMode(boolean slow) {
@@ -353,8 +359,13 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         }
     }
 
+    public boolean isInField() {
+        return field.isPoseInRegion(getPose());
+    }
+
     /**
      * Logs if the robot is in robot centric control
+     *
      * @param robotCentricControl boolean if the robot is in robot centric control
      */
     public void setRobotCentricControl(boolean robotCentricControl) {
@@ -363,6 +374,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Returns if the robot is in robot centric control
+     *
      * @return boolean if the robot is in robot centric control
      */
     public boolean isRobotCentricControl() {
@@ -371,6 +383,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Swaps the driver and copilot controllers
+     *
      * @param driverC  the driver controller
      * @param copilotC the copilot controller
      */
@@ -382,6 +395,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Returns if the robot Pose is in Wing
+     *
      * @return boolean if the robot is in the wing to start aiming STATE priming
      */
     public boolean inWing() {
@@ -398,7 +412,18 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         System.out.println("Vision Enabled");
     }
 
+    public void setSpeakerPose(Alliance alliance) {
+        if (alliance == Alliance.Red) {
+            speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
+        }
+    }
+
     public double distanceToSpeaker() {
         return speakerPose.getDistance(getPose().getTranslation());
     }
+
+    public void setDrivetrainPose(Pose2d newPose) {
+        seedFieldRelative(newPose);
+    }
+
 }

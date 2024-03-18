@@ -18,7 +18,7 @@ public class SmartClimb extends Command {
 
     private DoubleSupplier leftPower;
     private DoubleSupplier rightPower;
-    private BooleanSupplier bButton;
+    private BooleanSupplier button;
 
     private boolean buttonState;
     private boolean autoClimbEngaged;
@@ -33,26 +33,25 @@ public class SmartClimb extends Command {
      * @param leds subsystem
      * @param leftPower power to apply to left climber motor
      * @param rightPower power to apply to right climber motor
-     * @param bButton B button state
-     
+     * @param button button state
      */
-    public SmartClimb(Climber climber, Swerve drivetrain, Pivot pivot, LEDs leds, DoubleSupplier leftPower, DoubleSupplier rightPower, BooleanSupplier bButton) {
+    public SmartClimb(Climber climber, Swerve drivetrain, Pivot pivot, LEDs leds, DoubleSupplier leftPower, DoubleSupplier rightPower, BooleanSupplier button) {
         this.climber = climber;
         this.drivetrain = drivetrain;
         this.pivot = pivot;
         this.leds = leds;
         this.leftPower = leftPower;
         this.rightPower = rightPower;
-        this.bButton = bButton;
+        this.button = button;
         this.buttonState = false;
 
-        addRequirements(climber, pivot); // don't addrequirements for drivetrain because it's read only
+        addRequirements(climber); // don't addrequirements for drivetrain because it's read only
     }
 
     @Override
     public void initialize() {
         autoClimbEngaged = false;
-        pivot.setTargetAngle(pivot.getStowAngle());
+        // pivot.setTargetAngle(pivot.getStowAngle());
     }
 
     @Override
@@ -62,20 +61,20 @@ public class SmartClimb extends Command {
                 // Engage Manual Climb whenever sticks are active
                 climber.setPower(leftPower.getAsDouble(), rightPower.getAsDouble());
                 autoClimbEngaged = false;
-            } else if ((buttonState && !bButton.getAsBoolean()) || (drivetrain.isTipped()  && !autoClimbEngaged)) {
+            } else if ((buttonState && !button.getAsBoolean()) || (drivetrain.isTipped()  && !autoClimbEngaged)) {
                 // Auto retract on the falling edge of the B button or if the robot is tipped
                 climber.retract();
                 buttonState = false; // reset button state for next time
                 if (drivetrain.isTipped()) {
                     autoClimbEngaged = true; // trigger autoClimbEngaged to prevent auto deploy from re-engaging
                 }
-            } else if (bButton.getAsBoolean() && !autoClimbEngaged) {
+            } else if (button.getAsBoolean() && !autoClimbEngaged) {
                 // Auto deploy climb when B button is pressed and auto climb has not been engaged
                 climber.deploy();
                 buttonState = true;
-            } else if (climber.isManual()) {
-                climber.setPower(0d);
-            }
+            } //else if (climber.isManual()) {
+            //     climber.setPower(0d);
+            // }
         // } else {
         //     climber.setPower(0d);
         // }

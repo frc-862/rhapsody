@@ -11,32 +11,32 @@ import frc.robot.subsystems.Collector;
 
 public class CollectorTest extends Command {
 
-	private Collector collector;
-	private DoubleSupplier power;
+    private Collector collector;
+    private DoubleSupplier power;
 
-	public CollectorTest(Collector collector, DoubleSupplier power) {
-		this.collector = collector;
-		this.power = power;
+    public CollectorTest(Collector collector, DoubleSupplier power) {
+        this.collector = collector;
+        this.power = power;
 
-		addRequirements(collector);
-	}
+        addRequirements(collector);
+    }
 
-	@Override
-	public void initialize() {
-		collector.setPower(power.getAsDouble());
-	}
+    @Override
+    public void initialize() {
+        collector.setPower(power.getAsDouble());
+    }
 
-	@Override
-	public void execute() {
-	}
+    @Override
+    public void execute() {
+    }
 
-	@Override
-	public void end(boolean interrupted) {
-		collector.setPower(0);
-	}
+    @Override
+    public void end(boolean interrupted) {
+        collector.setPower(0);
+    }
 
-	@Override
-	public boolean isFinished() {
-		return false;
-	}
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }
