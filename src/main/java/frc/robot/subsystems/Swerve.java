@@ -44,7 +44,7 @@ import frc.thunder.util.Pose4d;
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
 
-    static RectangularRegionConstraint FIELD = new RectangularRegionConstraint(
+    static RectangularRegionConstraint field = new RectangularRegionConstraint(
             new Translation2d(0, 0), VisionConstants.FIELD_LIMIT, null);
 
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
@@ -360,7 +360,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public boolean isInField() {
-        return FIELD.isPoseInRegion(getPose());
+        return field.isPoseInRegion(getPose());
     }
 
     /**

@@ -26,7 +26,7 @@ public class CollectedNote extends Command {
         this.timeout = timeout;
         this.indexer = indexer;
     }
-    
+
     /**
      * Creates a new CollectedNote.
      * @param indexer not required, but used to read sensors

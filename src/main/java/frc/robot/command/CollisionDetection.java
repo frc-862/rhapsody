@@ -58,7 +58,7 @@ public class CollisionDetection extends Command {
     @Override
     public void execute() {
         storeVelocities();
-        
+
         updateLogging();
     }
 

@@ -14,7 +14,7 @@ public class PointBlankShot extends Command {
 
 	/**
 	 * Creates a new PointBlankShot.
-	 * 
+	 *
 	 * @param pivot    subsystem
 	 * @param flywheel subsystem
 	 */

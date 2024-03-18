@@ -22,9 +22,10 @@ public class PathFindToAuton extends Command {
 
     /**
      * Pathfinds to a specific pose given
-     * @param pathfindingPose The pose to pathfind to
-     * @param drivetrain The drivetrain subsystem
-     * @param controller The driver controller
+     *
+     * @param autonPath
+     * @param drivetrain
+     * @param controller
      */
     public PathFindToAuton(PathPlannerPath autonPath, Swerve drivetrain, XboxControllerFilter controller) {
         this.drivetrain = drivetrain;
