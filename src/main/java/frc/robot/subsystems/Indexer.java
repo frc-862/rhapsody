@@ -4,7 +4,6 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
@@ -12,6 +11,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
+import frc.robot.Constants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.RobotMap.CAN;
@@ -40,6 +40,7 @@ public class Indexer extends SubsystemBase {
     private Debouncer exitDebouncer = new Debouncer(0.05);
 
     private DoubleLogEntry indexerPowerLog;
+    private DoubleLogEntry indexerTargetPowerLog;
     private BooleanLogEntry entryBeamBreakLog;
     private BooleanLogEntry exitBeamBreakLog;
     private StringLogEntry pieceStateLog;
@@ -68,6 +69,7 @@ public class Indexer extends SubsystemBase {
         DataLog log = DataLogManager.getLog();
 
         indexerPowerLog = new DoubleLogEntry(log, "/Indexer/Power");
+        indexerTargetPowerLog = new DoubleLogEntry(log, "/Indexer/TargetPower");
         entryBeamBreakLog = new BooleanLogEntry(log, "/Indexer/EntryBeamBreak");
         exitBeamBreakLog = new BooleanLogEntry(log, "/Indexer/ExitBeamBreak");
         pieceStateLog = new StringLogEntry(log, "/Indexer/PieceState");
@@ -81,7 +83,7 @@ public class Indexer extends SubsystemBase {
         LightningShuffleboard.setBoolSupplier("Indexer", "ExitBeamBreak", () -> getExitBeamBreakState());
 
         LightningShuffleboard.setStringSupplier("Indexer", "PieceState", () -> getPieceState().toString());
-        
+
         LightningShuffleboard.setBoolSupplier("Indexer", "HasShot", () -> hasShot());
         LightningShuffleboard.setBoolSupplier("Indexer", "IsExiting", () -> isExiting());
         LightningShuffleboard.setBoolSupplier("Indexer", "HasPiece", () -> hasNote());
@@ -89,7 +91,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Get current state of piece
-     * 
+     *
      * @return current state of piece
      */
     public PieceState getPieceState() {
@@ -98,7 +100,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Set the current state of the piece
-     * 
+     *
      * @param state new state of piece
      */
     public void setPieceState(PieceState state) {
@@ -107,7 +109,7 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Set raw power to the indexer motor
-     * 
+     *
      * @param power
      */
     public void setPower(double power) {
@@ -138,16 +140,19 @@ public class Indexer extends SubsystemBase {
 
     /**
      * Gets the current beam brake state
-     * 
+     *
      * @return entry beambreak state
      */
     public boolean getEntryBeamBreakState() {
+        if (Constants.isMercury()) {
+            return entryDebouncer.calculate(!indexerSensorEntry.get());
+        }
         return entryDebouncer.calculate(indexerSensorEntry.get());
     }
 
     /**
      * Gets the current beam brake state
-     * 
+     *
      * @return exit beambreak state
      */
     public boolean getExitBeamBreakState() {
@@ -164,7 +169,7 @@ public class Indexer extends SubsystemBase {
     /**
      * Will return true after shooting (or really anytime we no longer have a note,
      * after previously having one)
-     * 
+     *
      * @return boolean
      */
     public boolean hasShot() {
@@ -178,6 +183,15 @@ public class Indexer extends SubsystemBase {
      */
     public void clearHasShot() {
         didShoot = false;
+    }
+
+    /**
+     * Get the current power of the indexer motor
+     *
+     * @return current power of the indexer motor
+     */
+    public double getIndexerPower() {
+        return indexerMotor.get();
     }
 
     @Override
@@ -205,6 +219,7 @@ public class Indexer extends SubsystemBase {
      */
     public void updateLogging() {
         indexerPowerLog.append(indexerMotor.get());
+        indexerTargetPowerLog.append(targetPower);
         entryBeamBreakLog.append(getEntryBeamBreakState());
         exitBeamBreakLog.append(getExitBeamBreakState());
         pieceStateLog.append(getPieceState().toString());

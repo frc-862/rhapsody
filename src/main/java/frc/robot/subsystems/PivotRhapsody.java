@@ -1,9 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
@@ -66,12 +64,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         motorConfig.Feedback.SensorToMechanismRatio = RhapsodyPivotConstants.ENCODER_TO_MECHANISM_RATIO;
         motorConfig.Feedback.RotorToSensorRatio = RhapsodyPivotConstants.ROTOR_TO_ENCODER_RATIO;
 
-        // MotionMagicConfigs motionMagicConfigs = motorConfig.MotionMagic;
-        // motionMagicConfigs.MotionMagicCruiseVelocity =
-        // PivotConstants.MAGIC_CRUISE_VEL;
-        // motionMagicConfigs.MotionMagicAcceleration = PivotConstants.MAGIC_ACCEL;
-        // motionMagicConfigs.MotionMagicJerk = PivotConstants.MAGIC_JERK;
-
         angleMotor.applyConfig(motorConfig);
 
         setTargetAngle(targetAngle);
@@ -98,8 +90,8 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
         powerLog = new DoubleLogEntry(log, "/Pivot/Power");
 
-        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> getAngle());
-        LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle);
+        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> (getAngle() * 360));
+        LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle * 360);
         LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
 
         LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
@@ -108,30 +100,12 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     @Override
     public void periodic() {
 
-        // angleMotor.getConfig().Slot0.kP = LightningShuffleboard.getDouble("Pivot",
-        // "kP", PivotConstants.MOTOR_KP);
-        // angleMotor.getConfig().Slot0.kI = LightningShuffleboard.getDouble("Pivot",
-        // "kI", PivotConstants.MOTOR_KI);
-        // angleMotor.getConfig().Slot0.kD = LightningShuffleboard.getDouble("Pivot",
-        // "kD", PivotConstants.MOTOR_KD);
-        // angleMotor.getConfig().Slot0.kS = LightningShuffleboard.getDouble("Pivot",
-        // "kS", PivotConstants.MOTOR_KS);
-        // angleMotor.getConfig().Slot0.kV = LightningShuffleboard.getDouble("Pivot",
-        // "kV", PivotConstants.MOTOR_KV);
-        // angleMotor.getConfig().Slot0.kA = LightningShuffleboard.getDouble("Pivot",
-        // "kA", PivotConstants.MOTOR_KA);
-
         angleMotor.getConfig().MotionMagic.MotionMagicCruiseVelocity = LightningShuffleboard.getDouble("Pivot",
                 "cruiseVelocity", RhapsodyPivotConstants.MAGIC_CRUISE_VEL);
         angleMotor.getConfig().MotionMagic.MotionMagicAcceleration = LightningShuffleboard.getDouble("Pivot",
                 "acceleration", RhapsodyPivotConstants.MAGIC_ACCEL);
         angleMotor.getConfig().MotionMagic.MotionMagicJerk = LightningShuffleboard.getDouble("Pivot", "jerk",
                 RhapsodyPivotConstants.MAGIC_JERK);
-
-        // pivotTuner.update();
-
-        // setTargetAngle(LightningShuffleboard.getDouble("Pivot", "settargetAngle",
-        // targetAngle));
 
         // SETS angle to angle of limit switch on press
         if (getForwardLimit()) {
@@ -165,7 +139,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     /**
      * Sets the target angle of the pivot
-     * 
      * @param angle Angle of the pivot in degrees
      */
     public void setTargetAngle(double angle) {
@@ -184,7 +157,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     }
 
     /**
-     * @return The current angle of the pivot in degrees
+     * @return The current angle of the pivot in rotations
      */
     public double getAngle() {
         return angleMotor.getPosition().getValue();
@@ -199,20 +172,18 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     /**
      * Gets forward limit switch
-     * 
      * @return true if pressed
      */
     public boolean getForwardLimit() {
-        return angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
+        return false; //angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
     }
 
     /**
      * Gets reverse limit switch
-     * 
      * @return true if pressed
      */
     public boolean getReverseLimit() {
-        return angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
+        return false; //angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
     }
 
     /**
@@ -244,10 +215,11 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     }
 
     /**
+     * CURRENTLY DOES NOTHING
      * @param angle angle to set the pivot angle to
      */
     public void resetAngle(double angle) {
-        // TODO is this necessary and implement
+        // THIS DOES NOTHING
     }
 
     /**

@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import javax.xml.crypto.Data;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -18,7 +17,6 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.tuning.FalconTuner;
 import frc.robot.Constants.MercuryPivotConstants;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
@@ -26,8 +24,7 @@ public class PivotMercury extends SubsystemBase implements Pivot {
 
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
-    // private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
-    // private final MotionMagicVoltage motionMagicPID = new MotionMagicVoltage(0);
+
     private final PIDController angleController = new PIDController(0.06, 0, 0);
     private double bias = 0;
 
@@ -137,7 +134,6 @@ public class PivotMercury extends SubsystemBase implements Pivot {
 
     /**
      * Sets the target angle of the pivot
-     * 
      * @param angle Angle of the pivot
      */
     public void setTargetAngle(double angle) {
@@ -172,20 +168,18 @@ public class PivotMercury extends SubsystemBase implements Pivot {
 
     /**
      * Gets forward limit switch
-     * 
      * @return true if pressed
      */
     public boolean getForwardLimit() {
-        return angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
+        return false;//angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
     }
 
     /**
      * Gets reverse limit switch
-     * 
      * @return true if pressed
      */
     public boolean getReverseLimit() {
-        return angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
+        return false;//angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
     }
 
     /**
@@ -217,10 +211,11 @@ public class PivotMercury extends SubsystemBase implements Pivot {
     }
 
     /**
+     * CURRENTLY DOES NOTHING
      * @param angle angle to set the pivot angle to
      */
     public void resetAngle(double angle) {
-        // TODO is this necessary and implement
+        // THIS DOES NOTHING
     }
 
     /**

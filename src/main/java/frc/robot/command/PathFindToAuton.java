@@ -5,70 +5,54 @@
 package frc.robot.command;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.PathPoint;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonomousConstants;
-import frc.robot.Constants.PathFindingConstants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.filter.XboxControllerFilter;
 
 public class PathFindToAuton extends Command {
 
-  private Swerve drivetrain;
-  private XboxControllerFilter controller; // Driver Controller
-  private AutoBuilder autoBuilder;
-  private Command pathFindCommand;
-  private PathPlannerPath autonPath;
-  
-  /*
-   * Pathfinds to a specific pose given
-   * @param pathfindingPose The pose to pathfind to
-   * @param drivetrain The drivetrain subsystem
-   * @param controller The driver controller
-   */
-  public PathFindToAuton(PathPlannerPath autonPath, Swerve drivetrain, XboxControllerFilter controller) {
-    this.drivetrain = drivetrain;
-    this.controller = controller;
-    this.autonPath = autonPath;
-    autoBuilder = new AutoBuilder();
+    private Swerve drivetrain;
+    private XboxControllerFilter controller; // Driver Controller
+    private AutoBuilder autoBuilder;
+    private Command pathFindCommand;
+    private PathPlannerPath autonPath;
 
-    addRequirements(drivetrain);
-  }
+    /**
+     * Pathfinds to a specific pose given
+     *
+     * @param autonPath
+     * @param drivetrain
+     * @param controller
+     */
+    public PathFindToAuton(PathPlannerPath autonPath, Swerve drivetrain, XboxControllerFilter controller) {
+        this.drivetrain = drivetrain;
+        this.controller = controller;
+        this.autonPath = autonPath;
+        autoBuilder = new AutoBuilder();
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    pathFindCommand = autoBuilder.pathfindThenFollowPath(
-      autonPath, AutonomousConstants.PATH_CONSTRAINTS);
-    pathFindCommand.schedule();
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    pathFindCommand.cancel();
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    if (pathFindCommand.isFinished()) {
-      return true;
+        addRequirements(drivetrain);
     }
-    return false;
-  }
+
+    @Override
+    public void initialize() {
+        pathFindCommand = autoBuilder.pathfindThenFollowPath(
+                autonPath, AutonomousConstants.PATH_CONSTRAINTS);
+        pathFindCommand.schedule();
+    }
+
+    @Override
+    public void execute() {}
+
+    @Override
+    public void end(boolean interrupted) {
+        pathFindCommand.cancel();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return pathFindCommand.isFinished();
+    }
 }
