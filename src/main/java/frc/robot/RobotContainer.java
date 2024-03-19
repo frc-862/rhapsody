@@ -6,9 +6,11 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -75,6 +77,7 @@ import frc.thunder.LightningContainer;
 import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
+import frc.thunder.vision.Limelight.LEDMode;
 
 public class RobotContainer extends LightningContainer {
 	public static XboxControllerFilter driver;
@@ -91,8 +94,6 @@ public class RobotContainer extends LightningContainer {
 	LEDs leds;
 	Orchestra sing;
 
-	private boolean triggerInit;
-
 	private SendableChooser<Command> autoChooser;
 	SwerveRequest.FieldCentric drive;
 	SwerveRequest.FieldCentric slow;
@@ -100,6 +101,8 @@ public class RobotContainer extends LightningContainer {
 	SwerveRequest.RobotCentric slowRobotCentric;
 	SwerveRequest.PointWheelsAt point;
 	Telemetry logger;
+
+	private Boolean triggerInit;
 
 	@Override
 	protected void initializeSubsystems() {
@@ -133,6 +136,8 @@ public class RobotContainer extends LightningContainer {
 
 		point = new SwerveRequest.PointWheelsAt();
 		logger = new Telemetry(DrivetrainConstants.MaxSpeed);
+
+		triggerInit = false;
 	}
 
 	@Override
@@ -262,6 +267,7 @@ public class RobotContainer extends LightningContainer {
 				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 		new Trigger(() -> drivetrain.isInField() && triggerInit).whileFalse(leds.enableState(LED_STATES.BAD_POSE));
 		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled() && !(limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget() || limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget())).whileTrue(leds.enableState(LED_STATES.BAD_POSE));
+		new Trigger(() -> DriverStation.isDisabled() && !(limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget() || limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget())).whileTrue(leds.enableState(LED_STATES.BAD_POSE));
 		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled() && (limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget() || limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
 		triggerInit = true;
 
@@ -271,8 +277,10 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(leds.enableState(LED_STATES.INDEXER_ENTER_BEAMBREAK));
 		new Trigger(() -> indexer.getExitBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.INDEXER_EXIT_BEAMBREAK));
-		new Trigger(() -> pivot.getForwardLimit()).whileTrue(leds.enableState(LED_STATES.PIVOT_BOTTOM_SWITCH));
-		new Trigger(() -> pivot.getReverseLimit()).whileTrue(leds.enableState(LED_STATES.PIVOT_TOP_SWITCH));
+		new Trigger(() -> pivot.getForwardLimit())
+				.whileTrue(leds.enableState(LED_STATES.PIVOT_BOTTOM_SWITCH));
+		new Trigger(() -> pivot.getReverseLimit())
+				.whileTrue(leds.enableState(LED_STATES.PIVOT_TOP_SWITCH));
 
 		new Trigger(() -> DriverStation.isAutonomousEnabled()).whileTrue(new CollisionDetection(
 				drivetrain, CollisionType.AUTON));

@@ -646,21 +646,21 @@ public class Constants {
     }
 
     public class LEDsConstants {
-        public static final int LED_LENGTH = 31;
+        public static final int LED_LENGTH = 28;
 
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
                 put(-1, 0);
                 put(0, 0);
-                put(1, 16);
+                put(1, 14);
             }
         };
 
         public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
             {
-                put(-1, LEDsConstants.LED_LENGTH);
-                put(0, 16);
-                put(1, 15);
+            put(-1, LEDsConstants.LED_LENGTH);
+            put(0, 14);
+            put(1, 14);
             }
         };
 
@@ -680,22 +680,23 @@ public class Constants {
             EMERGENCY(2),
             START(3),
             GOOD_POSE(4),
-            COLLECTED(5),
-            SHOT(6),
-            FINISHED_CLIMB(7),
-            SHOOTING(8),
-            COLLECTING(9),
-            CHASING(10),
-            CLIMBING(11),
-            BAD_POSE(12),
-            HAS_PIECE(13),
-            HAS_VISION(14),
-            DEFAULT(15),
-            PIVOT_BOTTOM_SWITCH(16),
-            PIVOT_TOP_SWITCH(17),
-            COLLECTOR_BEAMBREAK(18),
-            INDEXER_ENTER_BEAMBREAK(19),
-            INDEXER_EXIT_BEAMBREAK(20);
+            COLLECT_PLANNED(5),
+            COLLECTED(6),
+            SHOT(7),
+            FINISHED_CLIMB(8),
+            SHOOTING(9),
+            COLLECTING(10),
+            CHASING(11),
+            CLIMBING(12),
+            BAD_POSE(13),
+            HAS_PIECE(14),
+            HAS_VISION(15),
+            DEFAULT(16),
+            PIVOT_BOTTOM_SWITCH(17),
+            PIVOT_TOP_SWITCH(18),
+            COLLECTOR_BEAMBREAK(19),
+            INDEXER_ENTER_BEAMBREAK(20),
+            INDEXER_EXIT_BEAMBREAK(21);
 
             private final int priority;
 

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDsConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.RobotMap.PWM;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class LEDs extends SubsystemBase {
 
@@ -57,6 +58,10 @@ public class LEDs extends SubsystemBase {
 				blink(-1, LEDsConstants.PINK_HUE);
 				break;
 
+			case COLLECT_PLANNED:
+				pulse(-1, LEDsConstants.BLUE_HUE);
+				break;
+				
 			case COLLECTED:
 				pulse(-1, LEDsConstants.GREEN_HUE);
 				break;
@@ -152,15 +157,22 @@ public class LEDs extends SubsystemBase {
 	public Command enableState(LED_STATES state) {
 		return new StartEndCommand(() -> {
 			ledStates.put(state, true);
-			updateState();
+			if (state.getPriority() > this.state.getPriority()) {
+				this.state = state;
+			}
 		},
-				() -> {
-					ledStates.put(state, false);
-					updateState();
-				}).ignoringDisable(true);
+		() -> {
+			ledStates.put(state, false);
+			reloadStates();
+		}).ignoringDisable(true);
 	}
 
-	public void updateState() {
+	public void setState(LED_STATES state, boolean value) {
+		ledStates.put(state, value);
+		System.out.println("Setting " + state + " to " + value);
+	}
+
+	public void reloadStates() {
 		state = LED_STATES.DEFAULT;
 		for (LED_STATES i : Arrays.asList(LED_STATES.values())) {
 			Boolean value = ledStates.get(i);
