@@ -60,7 +60,8 @@ public class LEDs extends SubsystemBase {
 
 			case COLLECT_PLANNED:
 				pulse(-1, LEDsConstants.BLUE_HUE);
-
+				break;
+				
 			case COLLECTED:
 				pulse(-1, LEDsConstants.GREEN_HUE);
 				break;
