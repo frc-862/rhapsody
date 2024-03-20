@@ -13,46 +13,48 @@ import frc.robot.Constants.IndexerConstants.PieceState;
 
 public class CollectAndGo extends Command {
 
-	private final Collector collector;
-	private final Flywheel flywheel;
-	private final Indexer indexer;
+    private final Collector collector;
+    private final Flywheel flywheel;
+    private final Indexer indexer;
 
-	/** Creates a new CollectAndGo.
-	 * @param collector subsystem
-	 * @param flywheel subsystem
-	 * @param indexer subsystem
-	 */
-	public CollectAndGo(Collector collector, Flywheel flywheel, Indexer indexer) {
-		this.collector = collector;
-		this.flywheel = flywheel;
-		this.indexer = indexer;
-		addRequirements(collector, flywheel, indexer);
-	}
+    /**
+     * Creates a new CollectAndGo.
+     *
+     * @param collector subsystem
+     * @param flywheel  subsystem
+     * @param indexer   subsystem
+     */
+    public CollectAndGo(Collector collector, Flywheel flywheel, Indexer indexer) {
+        this.collector = collector;
+        this.flywheel = flywheel;
+        this.indexer = indexer;
+        addRequirements(collector, flywheel, indexer);
+    }
 
-	@Override
-	public void initialize() {
-		System.out.println("AUTO - Collect and Go INIT");
-		flywheel.stop();
-		collector.setPower(CollectorConstants.COLLECTOR_GRABANDGO_POWER);
-		indexer.indexUp();
-	}
+    @Override
+    public void initialize() {
+        System.out.println("AUTO - Collect and Go INIT");
+        flywheel.stop();
+        collector.setPower(CollectorConstants.COLLECTOR_GRABANDGO_POWER);
+        indexer.indexUp();
+    }
 
-	@Override
-	public void execute() {
-		flywheel.stop();
-		collector.setPower(CollectorConstants.COLLECTOR_GRABANDGO_POWER);
-		indexer.indexUp();
-	}
+    @Override
+    public void execute() {
+        flywheel.stop();
+        collector.setPower(CollectorConstants.COLLECTOR_GRABANDGO_POWER);
+        indexer.indexUp();
+    }
 
-	@Override
-	public void end(boolean interrupted) {
-		collector.stop();
-		indexer.stop();
-		System.out.println("AUTO - Collect and Go END");
-	}
+    @Override
+    public void end(boolean interrupted) {
+        collector.stop();
+        indexer.stop();
+        System.out.println("AUTO - Collect and Go END");
+    }
 
-	@Override
-	public boolean isFinished() {
-		return indexer.getPieceState() != PieceState.NONE;
-	}
+    @Override
+    public boolean isFinished() {
+        return indexer.getPieceState() != PieceState.NONE;
+    }
 }
