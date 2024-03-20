@@ -1,14 +1,11 @@
 package frc.robot.command;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
-import frc.robot.Constants;
-import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
@@ -20,7 +17,6 @@ public class PointAtTag extends Command {
 	private Limelight limelight;
 	private XboxController driver;
 
-	private int limelightPrevPipeline = 0;
 	private double pidOutput;
 	private double targetHeading;
 	private double previousTargetHeading;
@@ -40,7 +36,6 @@ public class PointAtTag extends Command {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
 
-		// TODO Figure out which of these is the right one to use
 		limelight = limelights.getStopMe();
 
 		if(limelight.getPipeline() != VisionConstants.SPEAKER_PIPELINE){
@@ -60,7 +55,7 @@ public class PointAtTag extends Command {
 	}
 
 	/**
-	 * initialize logging
+	 * Initialize logging
 	 */
 	private void initLogging() {
 		DataLog log = DataLogManager.getLog();
@@ -80,7 +75,7 @@ public class PointAtTag extends Command {
 			driver.getLeftY(),
 			driver.getLeftX(),
 			-pidOutput);
-		
+
 		updateLogging();
 	}
 

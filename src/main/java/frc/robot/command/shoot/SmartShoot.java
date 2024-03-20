@@ -17,6 +17,7 @@ import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.command.TimedCommand;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class SmartShoot extends Command {
 
@@ -76,6 +77,8 @@ public class SmartShoot extends Command {
 		// Distance from current pose to speaker pose
 		distance = drivetrain.distanceToSpeaker();
 
+		LightningShuffleboard.setString("Shoot", "Smart shoot STATE", state.toString());
+
 		switch (state) {
 			case AIM:
 				// Default state remains here until pivot + Flywheel are on target
@@ -92,7 +95,7 @@ public class SmartShoot extends Command {
 				flywheel.setAllMotorsRPM(calculateTargetRPM(distance));
 				indexer.indexUp();
 				// Once shoot critera met moves to shot
-				if (Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT || indexer.hasShot()) {
+				if ((Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT) && !indexer.hasNote()) {
 					state = ShootingState.SHOT;
 				}
 				break;

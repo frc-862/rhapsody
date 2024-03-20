@@ -1,10 +1,5 @@
 package frc.robot.command;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import javax.xml.crypto.Data;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,10 +14,12 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PointAtPoint extends Command {
 
 	private static final double MIN_POWER = 0.3;
+
 	private Swerve drivetrain;
 	private XboxController driver;
 
@@ -32,33 +29,24 @@ public class PointAtPoint extends Command {
 	private Translation2d originalTargetPose;
 
 	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
-	
+
 	private DoubleLogEntry deltaYLog;
 	private DoubleLogEntry deltaXLog;
 	private DoubleLogEntry targetHeadingLog;
 	private DoubleLogEntry targetYLog;
 	private DoubleLogEntry targetXLog;
 	private DoubleLogEntry pidOutputLog;
-    private DoubleLogEntry targetMinusCurrentHeadingLog;
+	private DoubleLogEntry targetMinusCurrentHeadingLog;
 	private DoubleLogEntry currentLog;
 	private BooleanLogEntry inToleranceLog;
+
 	/**
-	 * Creates a new PointAtTag.
-	 * @param targetX    the x coordinate of the target
-	 * @param targetY    the y coordinate of the target
+	 * Creates a new PointAtPoint.
+	 *
+	 * @param targetPose the target pose to point at
 	 * @param drivetrain to request movement
 	 * @param driver     the driver's controller, used for drive input
 	 */
-	public PointAtPoint(double targetX, double targetY, Swerve drivetrain, XboxController driver) {
-		this.drivetrain = drivetrain;
-		this.driver = driver;
-		this.originalTargetPose = new Translation2d(targetX, targetY);
-
-		addRequirements(drivetrain);
-
-		initLogging();
-	}
-
 	public PointAtPoint(Translation2d targetPose, Swerve drivetrain, XboxController driver) {
 		this.drivetrain = drivetrain;
 		this.driver = driver;
@@ -67,6 +55,10 @@ public class PointAtPoint extends Command {
 		addRequirements(drivetrain);
 
 		initLogging();
+	}
+
+	public PointAtPoint(double targetX, double targetY, Swerve drivetrain, XboxController driver) {
+		this(new Translation2d(targetX, targetY), drivetrain, driver);
 	}
 
 	private boolean isBlueAlliance() {
@@ -79,7 +71,8 @@ public class PointAtPoint extends Command {
 	}
 
 	private boolean inTolerance() {
-		return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()) % 360 < DrivetrainConstants.ALIGNMENT_TOLERANCE;
+		return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees())
+				% 360 < DrivetrainConstants.ALIGNMENT_TOLERANCE;
 	}
 
 	@Override
@@ -90,12 +83,14 @@ public class PointAtPoint extends Command {
 		} else {
 			targetPose = swapAlliance(originalTargetPose);
 		}
+
+		System.out.println("DRIVE - Point AT Point START");
 	}
 
 	/**
 	 * update logging
 	 */
-	public void initLogging(){
+	public void initLogging() {
 		DataLog log = DataLogManager.getLog();
 
 		deltaYLog = new DoubleLogEntry(log, "/PointAtPoint/Delta Y");
@@ -125,13 +120,17 @@ public class PointAtPoint extends Command {
 
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 
+		LightningShuffleboard.setDouble("Point-At-Point", "Target Heading", targetHeading);
+		LightningShuffleboard.setDouble("Point-At-Point", "Current Heading",
+				drivetrain.getPose().getRotation().getDegrees());
+
 		updateLogging();
 	}
 
 	/**
 	 * update logging
 	 */
-	public void updateLogging(){
+	public void updateLogging() {
 		deltaYLog.append(targetPose.getY() - drivetrain.getPose().getY());
 		deltaXLog.append(targetPose.getX() - drivetrain.getPose().getX());
 		targetHeadingLog.append(targetHeading);
@@ -145,11 +144,12 @@ public class PointAtPoint extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
+		System.out.println("DRIVE - Point AT Point END");
 	}
 
 	@Override
 	public boolean isFinished() {
-		if(DriverStation.isAutonomous()) {
+		if (DriverStation.isAutonomous()) {
 			return inTolerance();
 		}
 		return false;

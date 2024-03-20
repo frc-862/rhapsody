@@ -21,7 +21,6 @@ public class CandC2 extends Command {
 
 	/**
 	 * Creates a new CandC2.
-	 * 
 	 * @param flywheel subsystem
 	 * @param pivot    subsystem
 	 * @param indexer  subsystem

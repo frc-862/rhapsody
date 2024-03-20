@@ -6,35 +6,35 @@ import frc.robot.subsystems.Flywheel;
 
 public class Stow extends Command {
 
-	private Pivot pivot;
-	private Flywheel flywheel;
+    private Pivot pivot;
+    private Flywheel flywheel;
 
-	/**
-	 * Creates a new Stow.
-	 * 
-	 * @param pivot    subsystem
-	 * @param flywheel subsystem
-	 */
-	public Stow(Flywheel flywheel, Pivot pivot) {
-		this.pivot = pivot;
-		this.flywheel = flywheel;
+    /**
+     * Creates a new Stow.
+     *
+     * @param pivot    subsystem
+     * @param flywheel subsystem
+     */
+    public Stow(Flywheel flywheel, Pivot pivot) {
+        this.pivot = pivot;
+        this.flywheel = flywheel;
 
-		addRequirements(pivot, flywheel);
-	}
+        addRequirements(pivot, flywheel);
+    }
 
-	@Override
-	public void initialize() {
-		pivot.setTargetAngle(pivot.getStowAngle());
-		flywheel.coast(true);
-	}
+    @Override
+    public void initialize() {
+        pivot.setTargetAngle(pivot.getStowAngle());
+        flywheel.coast(true);
+    }
 
-	@Override
-	public void execute() {
-		pivot.setTargetAngle(pivot.getStowAngle());
-	}
+    @Override
+    public void execute() {
+        pivot.setTargetAngle(pivot.getStowAngle());
+    }
 
-	@Override
-	public boolean isFinished() {
-		return pivot.onTarget();
-	}
+    @Override
+    public boolean isFinished() {
+        return pivot.onTarget();
+    }
 }
