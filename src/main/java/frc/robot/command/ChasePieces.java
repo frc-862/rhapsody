@@ -1,7 +1,6 @@
 package frc.robot.command;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
@@ -10,7 +9,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonomousConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
@@ -47,8 +45,6 @@ public class ChasePieces extends Command {
 
 	private Command smartCollect;
 	private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
-
-	private Debouncer debouncer = new Debouncer(IndexerConstants.INDEXER_DEBOUNCE_TIME);
 
 	private BooleanLogEntry onTargetLog;
 	private BooleanLogEntry hasTargetLog;
@@ -168,9 +164,9 @@ public class ChasePieces extends Command {
 							}
 						} else {
 							if (DriverStation.getAlliance().get() == Alliance.Blue) {
-								drivetrain.setRobot(0, 0, rotPower);
+								drivetrain.setRobot(0.5, 0, rotPower);
 							} else {
-								drivetrain.setRobot(0, 0, -rotPower);
+								drivetrain.setRobot(0.5, 0, -rotPower);
 							}
 						}
 					} else {

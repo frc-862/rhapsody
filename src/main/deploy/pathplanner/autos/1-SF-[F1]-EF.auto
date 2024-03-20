@@ -14,13 +14,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 10.0
+            "waitTime": 8.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SB-F4"
+            "pathName": "SF-F1"
           }
         },
         {

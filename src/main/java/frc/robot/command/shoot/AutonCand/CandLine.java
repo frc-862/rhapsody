@@ -21,7 +21,6 @@ public class CandLine extends Command {
 
 	/**
 	 * Creates a new CandLine.
-	 * 
 	 * @param flywheel subsystem
 	 * @param pivot    subsystem
 	 * @param indexer  subsystem

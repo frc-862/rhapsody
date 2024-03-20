@@ -21,7 +21,6 @@ public class PointBlankShotAuton extends Command {
 
 	/**
 	 * Creates a new PointBlankShot.
-	 * 
 	 * @param flywheel subsystem
 	 * @param pivot    subsystem
 	 * @param indexer  subsystem
@@ -47,8 +46,7 @@ public class PointBlankShotAuton extends Command {
 	public void execute() {
 		// Checks if the pivot and flywheel are on target then shoots
 		// also checks whether or not the flywheel's target RPM is greater than 0
-		if (pivot.onTarget() && flywheel.allMotorsOnTarget()
-				&& (flywheel.getTopMotorRPM() != 0 && flywheel.getBottomMotorRPM() != 0)) {
+		if (pivot.onTarget() && flywheel.allMotorsOnTarget() && (flywheel.getTopMotorRPM() != 0 && flywheel.getBottomMotorRPM() != 0)) {
 			startIndexing = true;
 		}
 
@@ -71,6 +69,6 @@ public class PointBlankShotAuton extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return shot && shotTime - startTime >= CandConstants.TIME_TO_SHOOT;
+		return shot && shotTime - startTime >= CandConstants.TIME_TO_SHOOT && !indexer.hasNote();
 	}
 }

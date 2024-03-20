@@ -19,102 +19,105 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Collector extends SubsystemBase {
 
-	// Declare collector hardware
-	private ThunderBird motor;
-	private DigitalInput beamBreak;
+    // Declare collector hardware
+    private ThunderBird motor;
+    private DigitalInput beamBreak;
 
-	private final VelocityVoltage velocityVoltage = new VelocityVoltage(
-			0, 0, true, CollectorConstants.MOTOR_KV,
-			0, false, false, false);
+    private final VelocityVoltage velocityVoltage = new VelocityVoltage(
+            0, 0, true, CollectorConstants.MOTOR_KV,
+            0, false, false, false);
 
-	private boolean hasPiece;
+    private boolean hasPiece;
 
-	private DoubleLogEntry collectorPowerLog;
-	private BooleanLogEntry beamBreakLog;
-	private BooleanLogEntry hasPieceLog;
+    private DoubleLogEntry collectorPowerLog;
+    private BooleanLogEntry beamBreakLog;
+    private BooleanLogEntry hasPieceLog;
 
-	private Debouncer entryDebouncer = new Debouncer(0.05);
+    private Debouncer entryDebouncer = new Debouncer(0.05);
 
-	public Collector() {
-		motor = new ThunderBird(
-				CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
-				CollectorConstants.COLLECTOR_MOTOR_INVERTED,
-				CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT,
-				CollectorConstants.COLLECTOR_MOTOR_BRAKE_MODE);
+    public Collector() {
+        motor = new ThunderBird(
+                CAN.COLLECTOR_MOTOR, CAN.CANBUS_FD,
+                CollectorConstants.COLLECTOR_MOTOR_INVERTED,
+                CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT,
+                CollectorConstants.COLLECTOR_MOTOR_BRAKE_MODE);
 
-		motor.configPIDF(0, CollectorConstants.MOTOR_KP, CollectorConstants.MOTOR_KI,
-				CollectorConstants.MOTOR_KD, CollectorConstants.MOTOR_KS, CollectorConstants.MOTOR_KV);
+        motor.configPIDF(0, CollectorConstants.MOTOR_KP, CollectorConstants.MOTOR_KI,
+                CollectorConstants.MOTOR_KD, CollectorConstants.MOTOR_KS, CollectorConstants.MOTOR_KV);
 
-		beamBreak = new DigitalInput(DIO.COLLECTOR_BEAMBREAK);
-		motor.applyConfig();
+        beamBreak = new DigitalInput(DIO.COLLECTOR_BEAMBREAK);
+        motor.applyConfig();
 
-		initLogging();
-	}
+        initLogging();
+    }
 
-	/**
-	 * initialize logging
-	 */
-	private void initLogging() {
-		DataLog log = DataLogManager.getLog();
+    /**
+     * initialize logging
+     */
+    private void initLogging() {
+        DataLog log = DataLogManager.getLog();
 
-		collectorPowerLog = new DoubleLogEntry(log, "/Collector/Power");
-		beamBreakLog = new BooleanLogEntry(log, "/Collector/BeamBreak");
-		hasPieceLog = new BooleanLogEntry(log, "/Collector/HasPiece");
+        collectorPowerLog = new DoubleLogEntry(log, "/Collector/Power");
+        beamBreakLog = new BooleanLogEntry(log, "/Collector/BeamBreak");
+        hasPieceLog = new BooleanLogEntry(log, "/Collector/HasPiece");
 
-		LightningShuffleboard.setDoubleSupplier("Collector", "Power", () -> motor.get());
-		LightningShuffleboard.setBoolSupplier("Collector", "BeamBreak", () -> getEntryBeamBreakState());
-		LightningShuffleboard.setBoolSupplier("Collector", "HasPiece", () -> hasPiece());
-	}
+        LightningShuffleboard.setDoubleSupplier("Collector", "Power", () -> motor.get());
+        LightningShuffleboard.setBoolSupplier("Collector", "BeamBreak", () -> getEntryBeamBreakState());
+        LightningShuffleboard.setBoolSupplier("Collector", "HasPiece", () -> hasPiece());
+    }
 
-	/**
-	 * Entrance of Collector Beam Break
-	 * @return When an object is present, returns true, otherwise returns false
-	 */
-	public boolean getEntryBeamBreakState() {
-		if (Constants.isMercury()) {
-			return entryDebouncer.calculate(!beamBreak.get());
-		}
-		return entryDebouncer.calculate(beamBreak.get());
-	}
+    /**
+     * Entrance of Collector Beam Break
+     *
+     * @return When an object is present, returns true, otherwise returns false
+     */
+    public boolean getEntryBeamBreakState() {
+        if (Constants.isMercury()) {
+            return entryDebouncer.calculate(!beamBreak.get());
+        }
+        return entryDebouncer.calculate(beamBreak.get());
+    }
 
-	/**
-	 * Sets the power of both collector motors
-	 * @param power Double value from -1.0 to 1.0 (positive collects inwards)
-	 */
-	public void setPower(double power) {
-		// Convert from -1,1 to RPS
-		power = power * 100;
-		motor.setControl(velocityVoltage.withVelocity(power));
-	}
+    /**
+     * Sets the power of both collector motors
+     *
+     * @param power Double value from -1.0 to 1.0 (positive collects inwards)
+     */
+    public void setPower(double power) {
+        // Convert from -1,1 to RPS
+        power = power * 100;
+        motor.setControl(velocityVoltage.withVelocity(power));
+    }
 
-	@Override
-	public void periodic() {
-		// tells robot if we have a piece in collector
-		hasPiece = getEntryBeamBreakState();
-		updateLogging();
-	}
+    @Override
+    public void periodic() {
+        // tells robot if we have a piece in collector
+        hasPiece = getEntryBeamBreakState();
+        updateLogging();
+    }
 
-	/**
-	 * update logging
-	 */
-	public void updateLogging() {
-		collectorPowerLog.append(motor.get());
-		beamBreakLog.append(getEntryBeamBreakState());
-		hasPieceLog.append(hasPiece());
-	}
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        collectorPowerLog.append(motor.get());
+        beamBreakLog.append(getEntryBeamBreakState());
+        hasPieceLog.append(hasPiece());
+    }
 
-	/**
-	 * Has piece
-	 * @return boolean, true if collector has piece
-	 */
-	public boolean hasPiece() {
-		return hasPiece;
-	}
+    /**
+     * Has piece
+     *
+     * @return boolean, true if collector has piece
+     */
+    public boolean hasPiece() {
+        return hasPiece;
+    }
 
-	/**
-	 * Stops the collector
-	 */
-	public void stop() {
-		setPower(0d);
-	}
+    /**
+     * Stops the collector
+     */
+    public void stop() {
+        setPower(0d);
+    }
 }

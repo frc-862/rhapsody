@@ -10,7 +10,7 @@ public class PivotAngleTest extends SystemTestCommand {
 
     /**
      * Sets pivot to a certain angle
-     * 
+     *
      * @param pivot subsystem
      * @param angle angle to set pivot to (degrees)
      */
