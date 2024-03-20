@@ -1,31 +1,24 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.hardware.core.CoreTalonFX;
 import com.ctre.phoenix6.signals.ControlModeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
-import frc.robot.Constants;
 import frc.robot.Constants.ClimbConstants;
-import frc.robot.Constants.MercuryPivotConstants;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
-
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-import edu.wpi.first.math.Pair;
 
 public class Climber extends SubsystemBase {
 
@@ -47,9 +40,11 @@ public class Climber extends SubsystemBase {
     public Climber() {
         // configure climb motors
         climbMotorR = new ThunderBird(CAN.CLIMB_RIGHT, CAN.CANBUS_FD,
-                ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
+                ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT,
+                ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
         climbMotorL = new ThunderBird(CAN.CLIMB_LEFT, CAN.CANBUS_FD,
-            ClimbConstants.CLIMB_LEFT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
+                ClimbConstants.CLIMB_LEFT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT,
+                ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
 
         climbMotorL.configPIDF(0, ClimbConstants.UNLOADED_KP, ClimbConstants.UNLOADED_KI, ClimbConstants.UNLOADED_KD);
         climbMotorL.configPIDF(1, ClimbConstants.LOADED_KP, ClimbConstants.LOADED_KI, ClimbConstants.LOADED_KD);
@@ -58,31 +53,41 @@ public class Climber extends SubsystemBase {
         climbMotorR.configPIDF(1, ClimbConstants.LOADED_KP, ClimbConstants.LOADED_KI, ClimbConstants.LOADED_KD);
 
         FeedbackConfigs sensorConf = new FeedbackConfigs();
-        SoftwareLimitSwitchConfigs softLimitConf = new SoftwareLimitSwitchConfigs();
+        // SoftwareLimitSwitchConfigs softLimitConfL = new SoftwareLimitSwitchConfigs();
+        // SoftwareLimitSwitchConfigs softLimitConfR = new SoftwareLimitSwitchConfigs();
+        // HardwareLimitSwitchConfigs hardLimitConf = new HardwareLimitSwitchConfigs();
 
         sensorConf.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
         sensorConf.SensorToMechanismRatio = ClimbConstants.GEAR_REDUCTION;
 
-        softLimitConf.ForwardSoftLimitEnable = true;
-        softLimitConf.ForwardSoftLimitThreshold = ClimbConstants.MAX_HEIGHT;
+        // softLimitConfL.ForwardSoftLimitEnable = true;
+        // softLimitConfL.ForwardSoftLimitThreshold = ClimbConstants.MAX_HEIGHT;
 
-        climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConf));
-        climbMotorR.applyConfig(climbMotorR.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConf));
+        // softLimitConfR.ForwardSoftLimitEnable = true;
+        // softLimitConfR.ForwardSoftLimitThreshold = ClimbConstants.MAX_HEIGHT;
+
+        // hardLimitConf.ReverseLimitEnable = false;
+
+        // climbMotorL.applyConfig(climbMotorL.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConfL).withHardwareLimitSwitch(hardLimitConf));
+        // climbMotorR.applyConfig(climbMotorR.getConfig().withFeedback(sensorConf).withSoftwareLimitSwitch(softLimitConfR).withHardwareLimitSwitch(hardLimitConf));
 
         climbMotorL.setPosition(0d);
         climbMotorR.setPosition(0d);
 
-        initOldLogging();
+        // initOldLogging();
         initLogging();
     }
 
+    @Deprecated
     private void initOldLogging() {
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Height", () -> getHeightL());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
         LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
         LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
-        LightningShuffleboard.setDoubleSupplier("Climb", "Left Applied", () -> climbMotorL.getMotorVoltage().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Climb", "Right Applied", () -> climbMotorR.getMotorVoltage().getValueAsDouble());
+        LightningShuffleboard.setDoubleSupplier("Climb", "Left Applied",
+                () -> climbMotorL.getMotorVoltage().getValueAsDouble());
+        LightningShuffleboard.setDoubleSupplier("Climb", "Right Applied",
+                () -> climbMotorR.getMotorVoltage().getValueAsDouble());
         LightningShuffleboard.setBoolSupplier("Climb", "Foward Limit Left", () -> getForwardLimitLeft());
         LightningShuffleboard.setBoolSupplier("Climb", "Foward Limit Right", () -> getForwardLimitRight());
         LightningShuffleboard.setBoolSupplier("Climb", "Reverse Limit Left", () -> getReverseLimitLeft());
@@ -92,7 +97,7 @@ public class Climber extends SubsystemBase {
     /**
      * initialize logging
      */
-    private void initLogging() { // TODO test and fix once we have climber
+    private void initLogging() {
         DataLog log = DataLogManager.getLog();
 
         leftHeightLog = new DoubleLogEntry(log, "/Climb/LeftHeight");
@@ -107,13 +112,16 @@ public class Climber extends SubsystemBase {
 
         LightningShuffleboard.setDoubleSupplier("Climber", "LeftSetpoint", () -> getSetpointL());
         LightningShuffleboard.setDoubleSupplier("Climber", "RightSetpoint", () -> getSetpointR());
-        
-        LightningShuffleboard.setDoubleSupplier("Climber", "LeftApplied", () -> climbMotorL.getMotorVoltage().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Climber", "RightApplied", () -> climbMotorR.getMotorVoltage().getValueAsDouble());
+
+        LightningShuffleboard.setDoubleSupplier("Climber", "LeftApplied",
+                () -> climbMotorL.getMotorVoltage().getValueAsDouble());
+        LightningShuffleboard.setDoubleSupplier("Climber", "RightApplied",
+                () -> climbMotorR.getMotorVoltage().getValueAsDouble());
     }
 
     /**
      * Sets power to both climb motors
+     *
      * @param power the power to set both climb motors to
      */
     public void setPower(double power) {
@@ -122,6 +130,7 @@ public class Climber extends SubsystemBase {
 
     /**
      * Sets power to climb motors
+     *
      * @param powerR the power to set the right climb motor to
      * @param powerL the power to set the left climb motor to
      */
@@ -132,6 +141,7 @@ public class Climber extends SubsystemBase {
 
     /**
      * sets the setpoint of both climb motors
+     *
      * @param setPoint setpoint for both climb motors in pulley rotations
      */
     public void setSetpoint(double setPoint) {
@@ -140,7 +150,8 @@ public class Climber extends SubsystemBase {
 
     /**
      * sets the setpoint of the climb motors
-     * @param leftSetPoint setpoint for left climb motor in pulley rotations
+     *
+     * @param leftSetPoint  setpoint for left climb motor in pulley rotations
      * @param rightSetPoint setpoint for right climb motor in pulley rotations
      */
     public void setSetpoint(double leftSetPoint, double rightSetPoint) {
@@ -179,7 +190,6 @@ public class Climber extends SubsystemBase {
         return climbMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
     }
 
-
     /**
      * @return height of right climb arm
      */
@@ -209,25 +219,20 @@ public class Climber extends SubsystemBase {
     }
 
     public boolean isManual() {
-        return climbMotorL.getControlMode().getValue().equals(ControlModeValue.DutyCycleOut) |
-               climbMotorR.getControlMode().getValue().equals(ControlModeValue.DutyCycleOut);
+        return climbMotorL.getControlMode().getValue().equals(ControlModeValue.DutyCycleOut)
+                | climbMotorR.getControlMode().getValue().equals(ControlModeValue.DutyCycleOut);
     }
 
     @Override
     public void periodic() {
         // zeroes height if the limit switch is pressed or position is negative
-        for (TalonFX motor : new TalonFX[] {climbMotorR, climbMotorL}) {
-            if (motor.getPosition().getValueAsDouble() < 0
-                    || getReverseLimit(motor)) {
+        for (TalonFX motor : new TalonFX[] { climbMotorR, climbMotorL }) {
+            if (motor.getPosition().getValueAsDouble() < 0 || getReverseLimit(motor)) {
                 motor.setPosition(0d);
             }
-            
+
             if (getForwardLimit(motor)) {
-                if (motor == climbMotorR) {
-                    setSetpoint(getHeightL(), ClimbConstants.MAX_HEIGHT); // if right limit is pressed, set right to max height
-                } else {
-                    setSetpoint(ClimbConstants.MAX_HEIGHT, getHeightR()); // if left limit is pressed, set left to max height
-                }
+                motor.setPosition(ClimbConstants.MAX_HEIGHT); // If soft limit triggered Set pos to max height
             }
         }
 
@@ -245,28 +250,32 @@ public class Climber extends SubsystemBase {
         leftAppliedLog.append(climbMotorL.getMotorVoltage().getValueAsDouble());
         rightAppliedLog.append(climbMotorR.getMotorVoltage().getValueAsDouble());
     }
+
     /**
      * Gets forward limit switch
-     * 
+     *
      * @return true if pressed
      */
     public boolean getForwardLimitLeft() {
         return climbMotorL.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
     }
+
     /**
      * @return true if pressed
      */
     public boolean getForwardLimitRight() {
         return climbMotorR.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
     }
+
     /**
      * Gets reverse limit switch
-     * 
+     *
      * @return true if pressed
      */
     public boolean getReverseLimitLeft() {
         return climbMotorL.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
     }
+
     /**
      * @return true if pressed
      */

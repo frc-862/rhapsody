@@ -45,12 +45,9 @@ public class Constants {
         private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center
                                                                                          // of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed /
-                                                                                              // circumference of circle
-                                                                                              // with radius of
-                                                                                              // wheelbase
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
 
-        public static final double ROT_MULT = 0.015; // TODO Tune for Driver
+        public static final double ROT_MULT = 0.04; // TODO Tune for Driver
 
         public static final double SLOW_ROT_MULT = 0.3; // TODO Tune for Driver
         public static final double SLOW_SPEED_MULT = 0.4; // TODO Tune for Driver
@@ -60,7 +57,7 @@ public class Constants {
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
 
-        public static final double ALIGNMENT_TOLERANCE = 10d;
+        public static final double ALIGNMENT_TOLERANCE = 5d;
     }
 
     public class RobotMap {
@@ -133,7 +130,7 @@ public class Constants {
         public static final PIDConstants TRANSLATION_PID = new PIDConstants(2.0, 0, 0); // TODO Tune
         public static final PIDConstants ROTATION_PID = new PIDConstants(4, 0, 0); // TODO: Tune
 
-        public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(15); // f/s to m/s
+        public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16); // f/s to m/s
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(10.825);
 
         public static final double CONTROL_LOOP_PERIOD = 0.01;
@@ -147,6 +144,20 @@ public class Constants {
 
         public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at before ending.
                                                          // Prevents going over center line.
+
+        public static final Pose2d SOURCE_SUB_A_STARTPOSE_BLUE = new Pose2d(new Translation2d(0.72, 6.69),
+                new Rotation2d(60));
+        public static final Pose2d SOURCE_SUB_B_STARTPOSE_BLUE = new Pose2d(new Translation2d(1.34, 5.55),
+                new Rotation2d(0));
+        public static final Pose2d SOURCE_SUB_C_STARTPOSE_BLUE = new Pose2d(new Translation2d(0.72, 4.39),
+                new Rotation2d(-60));
+
+        public static final Pose2d SOURCE_SUB_A_STARTPOSE_RED = new Pose2d(new Translation2d(15.85, 6.70),
+                new Rotation2d(120));
+        public static final Pose2d SOURCE_SUB_B_STARTPOSE_RED = new Pose2d(new Translation2d(15.2, 5.55),
+                new Rotation2d(180));
+        public static final Pose2d SOURCE_SUB_C_STARTPOSE_RED = new Pose2d(new Translation2d(15.85, 4.35),
+                new Rotation2d(-120));
     }
 
     public static class TunerConstants {
@@ -379,8 +390,7 @@ public class Constants {
 
     public class CollectorConstants { // TODO: get real
         public static final boolean COLLECTOR_MOTOR_INVERTED = true;
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 60; // TODO: make sure they
-                                                                           // are not set to 0
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 70;
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
 
         public static final double MOTOR_KP = 0;
@@ -415,7 +425,7 @@ public class Constants {
         public static final double TOP_1_MOTOR_KI = 0;
         public static final double TOP_1_MOTOR_KD = 0;
         public static final double TOP_1_MOTOR_KS = 0.3;
-        public static final double TOP_1_MOTOR_KV = 0.113;
+        public static final double TOP_1_MOTOR_KV = 0.114;
         public static final double TOP_1_MOTOR_KA = 0;
 
         // SLOT 0 BOTTOM, 0 - 49 RPS
@@ -496,12 +506,12 @@ public class Constants {
         public static final boolean MOTOR_INVERT = true; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
-        public static final double MOTOR_KP = 120; // TODO this can be cranked higher
+        public static final double MOTOR_KP = 75;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
-        public static final double MOTOR_KG = 0.359;
-        public static final double MOTOR_KV = 0d;
-        public static final double MOTOR_KS = 0d;
+        public static final double MOTOR_KG = 0.393;
+        public static final double MOTOR_KV = 50d;
+        public static final double MOTOR_KS = 50d;
         public static final double MOTOR_KA = 0d;
 
         public static final double MAGIC_CRUISE_VEL = 0.01; // TODO: get real value
@@ -510,12 +520,13 @@ public class Constants {
 
         public static final double ANGLE_TOLERANCE = 0.00208d;
 
-        public static final double ENCODER_OFFSET = 0.282; // In rotations
+        public static final double ENCODER_OFFSET = -0.54008; // In rotations, was 0.282 //TODO: get real :)
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 275d;
 
-        public static final double BIAS_INCREMENT = 1d; // Degrees to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 1d; // fDegrees to bias by per button press TODO get amount to bias
+                                                        // by
 
         public static final double STOW_ANGLE = 27d;
 
@@ -539,11 +550,9 @@ public class Constants {
                 put(2d, 45d);
                 put(2.5d, 41.5d);
                 put(3d, 37d);
-                put(3.5d, 35.3d);
-                put(4d, 33.3d);
-                put(4.5d, 32.5d);
-                put(5d, 30d);
-
+                put(3.5d, 30d);
+                put(4.09d, 26.5d);
+                put(4.86, 26.5d);
             }
         };
 
@@ -556,9 +565,8 @@ public class Constants {
                 put(2.5d, 3000d);
                 put(3d, 3500d);
                 put(3.5d, 4000d);
-                put(4d, 4500d);
-                put(4.5d, 5300d);
-                put(5d, 5500d);
+                put(4.09d, 3600d);
+                put(4.86d, 4600d);
             }
         };
 
@@ -569,7 +577,7 @@ public class Constants {
 
     public class CandConstants { // TODO get real
         // Amp
-        public static final double AMP_TOP_RPM = 50; 
+        public static final double AMP_TOP_RPM = 50;
         public static final double AMP_BOTTOM_RPM = 2000;
         public static final double AMP_ANGLE = 45;
 
@@ -599,15 +607,15 @@ public class Constants {
 
         // Source
         public static final double SOURCE_RPM = -300d; // TODO test
-        public static final double SOURCE_ANGLE = 45d; // TODO test
+        public static final double SOURCE_ANGLE = 90d; // TODO test
 
         // TODO find time to shoot
         public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer start to flywheel exit
     }
 
     public class ClimbConstants { // TODO: find real values
-        public static final boolean CLIMB_RIGHT_MOTOR_INVERT = true;
-        public static final boolean CLIMB_LEFT_MOTOR_INVERT = false;
+        public static final boolean CLIMB_RIGHT_MOTOR_INVERT = false;
+        public static final boolean CLIMB_LEFT_MOTOR_INVERT = true;
         public static final int CLIMB_MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean CLIMB_MOTOR_BRAKE_MODE = true;
         public static final double UNLOADED_KP = 10;
@@ -625,9 +633,9 @@ public class Constants {
         public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
 
         public static final double CLIMB_PID_SETPOINT_EXTENDED = MAX_HEIGHT;
-        public static final double CLIMB_PID_SETPOINT_RETRACTED = 0;
+        public static final double CLIMB_PID_SETPOINT_RETRACTED = 1;
         public static final double CLIMB_EXTENSION_TOLERANCE = 0;
-        public static final double CLIMB_RETRACTION_TOLERANCE = 0;
+        public static final double CLIMB_RETRACTION_TOLERANCE = 0.5;
         public static final double CLIMB_RETURN_TO_GROUND_MAX_POWER = 0.05;
 
         public static final double CLIMB_SYSTEST_POWER = 0.1;
@@ -643,21 +651,21 @@ public class Constants {
     
 
     public class LEDsConstants {
-        public static final int LED_LENGTH = 31;
+        public static final int LED_LENGTH = 28;
 
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
                 put(-1, 0);
                 put(0, 0);
-                put(1, 16);
+                put(1, 14);
             }
         };
 
         public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
             {
-                put(-1, LEDsConstants.LED_LENGTH);
-                put(0, 16);
-                put(1, 15);
+            put(-1, LEDsConstants.LED_LENGTH);
+            put(0, 14);
+            put(1, 14);
             }
         };
 
@@ -677,21 +685,23 @@ public class Constants {
             EMERGENCY(2),
             START(3),
             GOOD_POSE(4),
-            COLLECTED(5),
-            SHOT(6),
-            FINISHED_CLIMB(7),
-            SHOOTING(8),
-            COLLECTING(9),
-            CHASING(10),
-            CLIMBING(11),
-            HAS_PIECE(12),
-            HAS_VISION(13),
-            DEFAULT(14),
-            PIVOT_BOTTOM_SWITCH(15),
-            PIVOT_TOP_SWITCH(16),
-            COLLECTOR_BEAMBREAK(17),
-            INDEXER_ENTER_BEAMBREAK(18),
-            INDEXER_EXIT_BEAMBREAK(19);
+            COLLECT_PLANNED(5),
+            COLLECTED(6),
+            SHOT(7),
+            FINISHED_CLIMB(8),
+            SHOOTING(9),
+            COLLECTING(10),
+            CHASING(11),
+            CLIMBING(12),
+            BAD_POSE(13),
+            HAS_PIECE(14),
+            HAS_VISION(15),
+            DEFAULT(16),
+            PIVOT_BOTTOM_SWITCH(17),
+            PIVOT_TOP_SWITCH(18),
+            COLLECTOR_BEAMBREAK(19),
+            INDEXER_ENTER_BEAMBREAK(20),
+            INDEXER_EXIT_BEAMBREAK(21);
 
             private final int priority;
 

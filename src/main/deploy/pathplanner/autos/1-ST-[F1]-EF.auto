@@ -6,9 +6,27 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Cand-Sub"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 8.0
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "ST-F1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Chase-Pieces"
           }
         }
       ]

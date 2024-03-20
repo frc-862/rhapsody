@@ -6,7 +6,7 @@ public interface Pivot extends Subsystem {
 
     /**
      * Sets the target angle of the pivot
-     * 
+     *
      * @param angle Angle of the pivot
      */
     void setTargetAngle(double angle);
@@ -25,14 +25,14 @@ public interface Pivot extends Subsystem {
 
     /**
      * Gets forward limit switch
-     * 
+     *
      * @return true if pressed
      */
     boolean getForwardLimit();
 
     /**
      * Gets reverse limit switch
-     * 
+     *
      * @return true if pressed
      */
     boolean getReverseLimit();

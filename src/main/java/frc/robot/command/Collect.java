@@ -10,62 +10,63 @@ import frc.robot.subsystems.Collector;
 
 public class Collect extends Command {
 
-	// Declares collector
-	private DoubleSupplier powerSupplier;
-	private Collector collector;
+    // Declares collector
+    private DoubleSupplier powerSupplier;
+    private Collector collector;
 
-	// logging
-	private DoubleLogEntry powerLog;
+    // logging
+    private DoubleLogEntry powerLog;
 
-	/**
-	 * Creates a new Collect.
-	 * @param powerSupplier DoubleSupplier for power of motor (-1 to 1)
-	 * @param collector subsystem
-	 */
-	public Collect(DoubleSupplier powerSupplier, Collector collector) {
-		this.collector = collector;
-		this.powerSupplier = powerSupplier;
+    /**
+     * Creates a new Collect.
+     *
+     * @param powerSupplier DoubleSupplier for power of motor (-1 to 1)
+     * @param collector     subsystem
+     */
+    public Collect(DoubleSupplier powerSupplier, Collector collector) {
+        this.collector = collector;
+        this.powerSupplier = powerSupplier;
 
-		addRequirements(collector);
+        addRequirements(collector);
 
-		initLogging();
-	}
-	
-	@Override
-	public void initialize() {
-		collector.setPower(powerSupplier.getAsDouble());
-	}
+        initLogging();
+    }
 
-	/**
-	 * initialize logging
-	 */
-	public void initLogging(){
-		DataLog log = DataLogManager.getLog();
+    @Override
+    public void initialize() {
+        collector.setPower(powerSupplier.getAsDouble());
+    }
 
-		powerLog = new DoubleLogEntry(log, "/Collect/Power");
-	}
+    /**
+     * initialize logging
+     */
+    public void initLogging() {
+        DataLog log = DataLogManager.getLog();
 
-	@Override
-	public void execute() {
-		collector.setPower(powerSupplier.getAsDouble());
+        powerLog = new DoubleLogEntry(log, "/Collect/Power");
+    }
 
-		updateLogging();
-	}
+    @Override
+    public void execute() {
+        collector.setPower(powerSupplier.getAsDouble());
 
-	/**
-	 * update logging
-	 */
-	public void updateLogging(){
-		powerLog.append(powerSupplier.getAsDouble());
-	}
+        updateLogging();
+    }
 
-	@Override
-	public void end(boolean interrupted) {
-		collector.stop();
-	}
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        powerLog.append(powerSupplier.getAsDouble());
+    }
 
-	@Override
-	public boolean isFinished() {
-		return false;
-	}
+    @Override
+    public void end(boolean interrupted) {
+        collector.stop();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

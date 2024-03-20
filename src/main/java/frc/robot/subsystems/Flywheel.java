@@ -9,7 +9,6 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants;
 import frc.robot.Constants.FlywheelConstants;
-import frc.thunder.LightningContainer;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
