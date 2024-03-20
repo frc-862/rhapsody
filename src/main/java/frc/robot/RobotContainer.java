@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -107,8 +108,16 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeSubsystems() {
-		// SignalLogger.setPath(Constants.HOOT_PATH);
-		// SignalLogger.enableAutoLogging(true);
+		boolean setPath = SignalLogger.setPath(Constants.HOOT_PATH).isOK();
+		// SignalLogger.enableAutoLogging(true); // TODO Return during COMPS
+		boolean startedLogs = SignalLogger.start().isOK();
+
+		if(startedLogs && setPath) {
+			System.out.println("STARTED HOOT LOG");
+		} else {
+			System.out.println("FAILED TO START HOOT LOG");
+		}
+
 
 		driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort,
 				Constants.ControllerConstants.DEADBAND, -1, 1,
