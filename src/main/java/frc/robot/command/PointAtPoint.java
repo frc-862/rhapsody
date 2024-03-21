@@ -124,7 +124,9 @@ public class PointAtPoint extends Command {
         targetHeading %= 360;
         pidOutput = headingController.calculate((pose.getRotation().getDegrees() + 360) % 360, targetHeading);
 
-        setDebugging();
+        if (!DriverStation.isFMSAttached()){
+            setDebugging();
+        }
 
         if (!inTolerance() && Math.abs(pidOutput) < minPower) {
             pidOutput = Math.signum(pidOutput) * minPower;
