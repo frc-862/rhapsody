@@ -58,11 +58,6 @@ public interface Pivot extends Subsystem {
     void resetBias();
 
     /**
-     * @param angle angle to set the pivot angle to
-     */
-    void resetAngle(double angle);
-
-    /**
      * @return current stow angle
      */
     double getStowAngle();
