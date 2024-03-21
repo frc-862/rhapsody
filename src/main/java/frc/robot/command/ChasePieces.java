@@ -1,5 +1,7 @@
 package frc.robot.command;
 
+import java.sql.Driver;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -81,13 +83,12 @@ public class ChasePieces extends Command {
 
         if (DriverStation.isAutonomous()) {
             this.drivePower = 1.5d;
-            this.rotPower = 1.5d; // TODO: get real >:)
             this.maxCollectPower = 0.8d;
         } else {
             this.maxCollectPower = 0.65d;
             this.drivePower = 3d;
-            this.rotPower = 1.5d; // TODO: get real >:)
         }
+        this.rotPower = 1.5d;
 
         addRequirements(drivetrain, collector, indexer, flywheel);
 
@@ -96,7 +97,12 @@ public class ChasePieces extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("AUTO - Chase pieces INIT");
+
+        if (DriverStation.isAutonomous()){
+            System.out.println("AUTO - Chase pieces INIT");
+        } else {
+            System.out.println("TELEOP - Chase pieces INIT");
+        }
 
         headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
         collectPower = 0d;
@@ -218,7 +224,10 @@ public class ChasePieces extends Command {
         collectPower = 0d;
         smartCollect.end(interrupted);
         // drivetrain.stop();
-        System.out.println("AUTO - Chase pieces END");
+        if (DriverStation.isAutonomous())
+            System.out.println("AUTO - Chase pieces END");
+        else
+            System.out.println("TELEOP - Chase pieces END");
     }
 
     /**
