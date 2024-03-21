@@ -6,9 +6,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
@@ -24,7 +22,9 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
+
     private final PositionVoltage anglePID = new PositionVoltage(0).withSlot(0);
+
     private double bias = 0;
     private double targetAngle = RhapsodyPivotConstants.STOW_ANGLE;
 
@@ -107,12 +107,12 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         angleMotor.getConfig().MotionMagic.MotionMagicJerk = LightningShuffleboard.getDouble("Pivot", "jerk",
                 RhapsodyPivotConstants.MAGIC_JERK);
 
-        // SETS angle to angle of limit switch on press
-        if (getForwardLimit()) {
-            resetAngle(RhapsodyPivotConstants.MIN_ANGLE);
-        } else if (getReverseLimit()) {
-            resetAngle(RhapsodyPivotConstants.MAX_ANGLE);
-        }
+        // // SETS angle to angle of limit switch on press
+        // if (getForwardLimit()) {
+        //     resetAngle(RhapsodyPivotConstants.MIN_ANGLE);
+        // } else if (getReverseLimit()) {
+        //     resetAngle(RhapsodyPivotConstants.MAX_ANGLE);
+        // }
 
         moveToTarget();
 
@@ -139,10 +139,12 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     /**
      * Sets the target angle of the pivot
+     *
      * @param angle Angle of the pivot in degrees
      */
     public void setTargetAngle(double angle) {
-        targetAngle = (MathUtil.clamp(angle + bias, RhapsodyPivotConstants.MIN_ANGLE, RhapsodyPivotConstants.MAX_ANGLE) / 360);
+        targetAngle = (MathUtil.clamp(angle + bias, RhapsodyPivotConstants.MIN_ANGLE, RhapsodyPivotConstants.MAX_ANGLE)
+                / 360);
     }
 
     /*
@@ -172,18 +174,22 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     /**
      * Gets forward limit switch
+     *
      * @return true if pressed
      */
     public boolean getForwardLimit() {
-        return false; //angleMotor.getForwardLimit().refresh().getValue() == ForwardLimitValue.ClosedToGround;
+        return false; // angleMotor.getForwardLimit().refresh().getValue() ==
+                      // ForwardLimitValue.ClosedToGround;
     }
 
     /**
      * Gets reverse limit switch
+     *
      * @return true if pressed
      */
     public boolean getReverseLimit() {
-        return false; //angleMotor.getReverseLimit().refresh().getValue() == ReverseLimitValue.ClosedToGround;
+        return false; // angleMotor.getReverseLimit().refresh().getValue() ==
+                      // ReverseLimitValue.ClosedToGround;
     }
 
     /**
@@ -214,13 +220,14 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         bias = 0;
     }
 
-    /**
-     * CURRENTLY DOES NOTHING
-     * @param angle angle to set the pivot angle to
-     */
-    public void resetAngle(double angle) {
-        // THIS DOES NOTHING
-    }
+    // /**
+    //  * CURRENTLY DOES NOTHING
+    //  *
+    //  * @param angle angle to set the pivot angle to
+    //  */
+    // public void resetAngle(double angle) {
+    //     // THIS DOES NOTHING
+    // }
 
     /**
      * @return current stow angle

@@ -1,16 +1,15 @@
 package frc.robot;
 
 import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -23,10 +22,8 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PathFindingConstants;
-import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.TunerConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Collect;
 import frc.robot.command.CollectAndGo;
@@ -78,156 +75,157 @@ import frc.thunder.LightningContainer;
 import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.testing.SystemTest;
-import frc.thunder.vision.Limelight.LEDMode;
 
 public class RobotContainer extends LightningContainer {
-	public static XboxControllerFilter driver;
-	public static XboxControllerFilter coPilot;
 
-	// Subsystems
-	public Swerve drivetrain;
-	private Limelights limelights;
-	private Collector collector;
-	private Flywheel flywheel;
-	private Pivot pivot;
-	private Indexer indexer;
-	private Climber climber;
-	LEDs leds;
-	Orchestra sing;
+    public static XboxControllerFilter driver;
+    public static XboxControllerFilter coPilot;
 
-	private SendableChooser<Command> autoChooser;
-	SwerveRequest.FieldCentric drive;
-	SwerveRequest.FieldCentric slow;
-	SwerveRequest.RobotCentric driveRobotCentric;
-	SwerveRequest.RobotCentric slowRobotCentric;
-	SwerveRequest.PointWheelsAt point;
-	Telemetry logger;
+    // Subsystems
+    public Swerve drivetrain;
+    private Limelights limelights;
+    private Collector collector;
+    private Flywheel flywheel;
+    private Pivot pivot;
+    private Indexer indexer;
+    private Climber climber;
+    LEDs leds;
+    Orchestra sing;
 
-	private Boolean triggerInit;
+    private SendableChooser<Command> autoChooser;
+    SwerveRequest.FieldCentric drive;
+    SwerveRequest.FieldCentric slow;
+    SwerveRequest.RobotCentric driveRobotCentric;
+    SwerveRequest.RobotCentric slowRobotCentric;
+    SwerveRequest.PointWheelsAt point;
+    Telemetry logger;
 
-	@Override
-	protected void initializeSubsystems() {
-		// SignalLogger.setPath(Constants.HOOT_PATH);
-		// SignalLogger.enableAutoLogging(true);
+    private Boolean triggerInit;
 
-		driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort,
-				Constants.ControllerConstants.DEADBAND, -1, 1,
-				XboxControllerFilter.filterMode.SQUARED); // Driver controller
-		coPilot = new XboxControllerFilter(ControllerConstants.CopilotControllerPort,
-				Constants.ControllerConstants.DEADBAND, -1, 1,
-				XboxControllerFilter.filterMode.SQUARED); // CoPilot controller
+    @Override
+    protected void initializeSubsystems() {
+        boolean setPath = SignalLogger.setPath(Constants.HOOT_PATH).isOK();
+        // SignalLogger.enableAutoLogging(true); // TODO Return during COMPS
+        boolean startedLogs = SignalLogger.start().isOK();
 
-		drivetrain = TunerConstants.getDrivetrain();
-		limelights = new Limelights();
-		limelights.setApplyVisionUpdate(drivetrain::applyVisionPose);
+        if (startedLogs && setPath) {
+            System.out.println("STARTED HOOT LOG");
+        } else {
+            System.out.println("FAILED TO START HOOT LOG");
+        }
 
-		collector = new Collector();
-		flywheel = new Flywheel();
-		if(Constants.isMercury()) {
-			pivot = new PivotMercury();
-		} else {
-			pivot = new PivotRhapsody();
-		}
-		indexer = new Indexer(collector);
-		climber = new Climber();
-		leds = new LEDs();
-		sing = new Orchestra();
+        driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort,
+                Constants.ControllerConstants.DEADBAND, -1, 1,
+                XboxControllerFilter.filterMode.SQUARED); // Driver controller
+        coPilot = new XboxControllerFilter(ControllerConstants.CopilotControllerPort,
+                Constants.ControllerConstants.DEADBAND, -1, 1,
+                XboxControllerFilter.filterMode.SQUARED); // CoPilot controller
 
-		triggerInit = false;
+        drivetrain = TunerConstants.getDrivetrain();
+        limelights = new Limelights();
+        limelights.setApplyVisionUpdate(drivetrain::applyVisionPose);
 
-		point = new SwerveRequest.PointWheelsAt();
-		logger = new Telemetry(DrivetrainConstants.MaxSpeed);
+        collector = new Collector();
+        flywheel = new Flywheel();
+        pivot = Constants.isMercury() ? new PivotMercury() : new PivotRhapsody();
+        indexer = new Indexer(collector);
+        climber = new Climber();
+        leds = new LEDs();
+        sing = new Orchestra();
 
-		triggerInit = false;
-	}
+        triggerInit = false;
 
-	@Override
-	protected void initializeNamedCommands() {
-		NamedCommands.registerCommand("disable-Vision",
-				new InstantCommand(() -> drivetrain.disableVision()));
-		NamedCommands.registerCommand("enable-Vision",
-				new InstantCommand(() -> drivetrain.enableVision()));
-		NamedCommands.registerCommand("led-Shoot",
-				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
+        point = new SwerveRequest.PointWheelsAt();
+        logger = new Telemetry(DrivetrainConstants.MaxSpeed);
 
-		NamedCommands.registerCommand("Cand-Sub",
-				new PointBlankShotAuton(flywheel, pivot, indexer)
-						.deadlineWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
-		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-Line", new CandLine(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("AMP", new AmpShotAuton(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
-		NamedCommands.registerCommand("Smart-Shoot",
-				new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-					.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
-		NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
-		NamedCommands.registerCommand("Chase-Pieces",
-				new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
-		NamedCommands.registerCommand("Smart-Collect",
-				new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot, flywheel)
-						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
-		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
-		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE));
-		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
-		NamedCommands.registerCommand("Point-At-Speaker", new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
-		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
-		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
-		NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
+        triggerInit = false;
+    }
 
-		// make sure named commands are initialized before autobuilder!
-		autoChooser = AutoBuilder.buildAutoChooser();
-		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
-	}
+    @Override
+    protected void initializeNamedCommands() {
+        NamedCommands.registerCommand("disable-Vision",
+                new InstantCommand(() -> drivetrain.disableVision()));
+        NamedCommands.registerCommand("enable-Vision",
+                new InstantCommand(() -> drivetrain.enableVision()));
+        NamedCommands.registerCommand("led-Shoot",
+                leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
-	@Override
-	protected void configureButtonBindings() {
-		/* driver */
-		// field centric for the robot
-		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
-				.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
-				.whileTrue(drivetrain.applyPercentRequestRobot(
-						() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()))
-				.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
+        NamedCommands.registerCommand("Cand-Sub",
+                new PointBlankShotAuton(flywheel, pivot, indexer)
+                        .deadlineWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
+        NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
+        NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
+        NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
+        NamedCommands.registerCommand("Cand-Line", new CandLine(flywheel, pivot, indexer));
+        NamedCommands.registerCommand("AMP", new AmpShotAuton(flywheel, pivot, indexer));
+        NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
+        NamedCommands.registerCommand("Smart-Shoot",
+                new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
+                        .alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
+        NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
+        NamedCommands.registerCommand("Chase-Pieces",
+                new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
+        NamedCommands.registerCommand("Smart-Collect",
+                new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot, flywheel)
+                        .deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
+        NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
+        NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE));
+        NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
+        NamedCommands.registerCommand("Point-At-Speaker",
+                new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
+        NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
+        NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
+        NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
 
-		// enables slow mode for driving
-		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
-				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
-				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+        // make sure named commands are initialized before autobuilder!
+        autoChooser = AutoBuilder.buildAutoChooser();
+        LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
+    }
 
-		// sets field relative forward to the direction the robot is facing
-		new Trigger(() -> driver.getStartButton() && driver.getBackButton())
-				.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative)
-				.andThen(new InstantCommand(() -> drivetrain.setOperatorPerspectiveForward(new Rotation2d(Math.toRadians(0))))));
+    @Override
+    protected void configureButtonBindings() {
+        /* driver */
+        // field centric for the robot
+        new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
+                .onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
+                .whileTrue(drivetrain.applyPercentRequestRobot(
+                        () -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()))
+                .onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
-		// makes the robot chase pieces
-		new Trigger(driver::getRightBumper)
-				.whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights)
-						.deadlineWith(leds.enableState(LED_STATES.CHASING)));
+        // enables slow mode for driving
+        new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
+                .onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
+                .onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
-		// new Trigger(driver::getRightBumper)
-				// .whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain, driver));
+        // sets field relative forward to the direction the robot is facing
+        new Trigger(() -> driver.getStartButton() && driver.getBackButton())
+                .onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative)
+                        .andThen(new InstantCommand(
+                                () -> drivetrain.setOperatorPerspectiveForward(new Rotation2d(Math.toRadians(0))))));
 
-		// parks the robot
-		new Trigger(driver::getXButton).whileTrue(new RunCommand(() ->
-		drivetrain.brake()));
+        // makes the robot chase pieces
+        new Trigger(driver::getRightBumper)
+                .whileTrue(new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights)
+                        .deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
-		// smart shoot for the robot
-		new Trigger(driver::getAButton)
-				.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-						.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        // new Trigger(driver::getRightBumper)
+        // .whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"),
+        // drivetrain, driver));
 
-		// aim at amp and stage tags for the robot
-		new Trigger(driver::getYButton)
-				.whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
+        // parks the robot
+        new Trigger(driver::getXButton).whileTrue(new RunCommand(() -> drivetrain.brake()));
 
-		new Trigger(driver::getLeftBumper).whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
+        // smart shoot for the robot
+        new Trigger(driver::getAButton)
+                .whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
+                        .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
-		// new Trigger(driver::getYButton)
-		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
+        // aim at amp and stage tags for the robot
+        new Trigger(driver::getYButton)
+                .whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
-		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+        new Trigger(driver::getLeftBumper)
+                .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
 
 		new Trigger(driver::getBButton).whileTrue(new AmpAlign(drivetrain));
 
@@ -238,190 +236,223 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
 						.andThen(new SmartCollect(() -> 0.65, () -> 0.9, collector, indexer, pivot, flywheel))
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
+        // new Trigger(driver::getYButton)
+        // .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
-		// cand shots for the robot
-		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-		new Trigger(coPilot::getXButton).whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-		new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
-		// new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
-		/* BIAS */
-		new Trigger(() -> coPilot.getPOV() == 0)
-				.onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
-		new Trigger(() -> coPilot.getPOV() == 180)
-				.onTrue(new InstantCommand(() -> pivot.decreaseBias())); // DOWN
+        /* copilot */
+        new Trigger(coPilot::getBButton)
+                .whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
+                        .andThen(new SmartCollect(() -> 0.65, () -> 0.9, collector, indexer, pivot, flywheel))
+                        .deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
-		new Trigger(() -> coPilot.getPOV() == 90)
-				.onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
-		new Trigger(() -> coPilot.getPOV() == 270)
-				.onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
+        // cand shots for the robot
+        new Trigger(coPilot::getAButton)
+                .whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        new Trigger(coPilot::getXButton)
+                .whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        // new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel,
+        // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
+        // new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
+        // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
-		new Trigger(coPilot::getRightBumper)
-				.whileTrue(new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
-		new Trigger(coPilot::getLeftBumper)
-				.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer)
-				.deadlineWith(new FlywheelIN(flywheel)));
+        /* BIAS */
+        new Trigger(() -> coPilot.getPOV() == 0)
+                .onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
+        new Trigger(() -> coPilot.getPOV() == 180)
+                .onTrue(new InstantCommand(() -> pivot.decreaseBias())); // DOWN
 
-		/* Other */
-		new Trigger(
-				() -> ((limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget()) && DriverStation.isEnabled()))
-				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState() || collector.getEntryBeamBreakState())
-				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
-				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
-		new Trigger(() -> drivetrain.isInField() && triggerInit).whileFalse(leds.enableState(LED_STATES.BAD_POSE));
-		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled() && !(limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget() || limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget())).whileTrue(leds.enableState(LED_STATES.BAD_POSE));
-		new Trigger(() -> DriverStation.isDisabled() && !(limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget() || limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget())).whileTrue(leds.enableState(LED_STATES.BAD_POSE));
-		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled() && (limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget() || limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget())).whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
-		triggerInit = true;
+        new Trigger(() -> coPilot.getPOV() == 90)
+                .onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
+        new Trigger(() -> coPilot.getPOV() == 270)
+                .onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
 
-		new Trigger(() -> collector.getEntryBeamBreakState())
-				.whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
-		new Trigger(() -> indexer.getEntryBeamBreakState())
-				.whileTrue(leds.enableState(LED_STATES.INDEXER_ENTER_BEAMBREAK));
-		new Trigger(() -> indexer.getExitBeamBreakState())
-				.whileTrue(leds.enableState(LED_STATES.INDEXER_EXIT_BEAMBREAK));
-		new Trigger(() -> pivot.getForwardLimit())
-				.whileTrue(leds.enableState(LED_STATES.PIVOT_BOTTOM_SWITCH));
-		new Trigger(() -> pivot.getReverseLimit())
-				.whileTrue(leds.enableState(LED_STATES.PIVOT_TOP_SWITCH));
+        new Trigger(coPilot::getRightBumper)
+                .whileTrue(new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
+        new Trigger(coPilot::getLeftBumper)
+                .whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer)
+                        .deadlineWith(new FlywheelIN(flywheel)));
 
-		new Trigger(() -> DriverStation.isAutonomousEnabled()).whileTrue(new CollisionDetection(
-				drivetrain, CollisionType.AUTON));
+        /* Other */
+        new Trigger(
+                () -> ((limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())
+                        && DriverStation.isEnabled()))
+                .whileTrue(leds.enableState(LED_STATES.HAS_VISION));
+        new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState()
+                || collector.getEntryBeamBreakState())
+                .whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
+                .onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+        new Trigger(() -> drivetrain.isInField() && triggerInit).whileFalse(leds.enableState(LED_STATES.BAD_POSE));
+        new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled()
+                && !(limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget()
+                        || limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget()))
+                .whileTrue(leds.enableState(LED_STATES.BAD_POSE));
+        new Trigger(() -> DriverStation.isDisabled()
+                && !(limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget()
+                        || limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget()))
+                .whileTrue(leds.enableState(LED_STATES.BAD_POSE));
+        new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled()
+                && (limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget()
+                        || limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget()))
+                .whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
+        triggerInit = true;
 
-		new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
-				.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
-				.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
+        new Trigger(() -> collector.getEntryBeamBreakState())
+                .whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
+        new Trigger(() -> indexer.getEntryBeamBreakState())
+                .whileTrue(leds.enableState(LED_STATES.INDEXER_ENTER_BEAMBREAK));
+        new Trigger(() -> indexer.getExitBeamBreakState())
+                .whileTrue(leds.enableState(LED_STATES.INDEXER_EXIT_BEAMBREAK));
+        new Trigger(() -> pivot.getForwardLimit())
+                .whileTrue(leds.enableState(LED_STATES.PIVOT_BOTTOM_SWITCH));
+        new Trigger(() -> pivot.getReverseLimit())
+                .whileTrue(leds.enableState(LED_STATES.PIVOT_TOP_SWITCH));
 
-		// BLUE Alliance set
-		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE BLUE A", false))
-			.onTrue(new InstantCommand(() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_BLUE)));
-		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE BLUE B", false))
-			.onTrue(new InstantCommand(() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_BLUE)));
-		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE BLUE C", false))
-			.onTrue(new InstantCommand(() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_BLUE)));
+        new Trigger(() -> DriverStation.isAutonomousEnabled()).whileTrue(new CollisionDetection(
+                drivetrain, CollisionType.AUTON));
 
-		// BLUE Alliance set
-		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED A", false))
-			.onTrue(new InstantCommand(() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_RED)));
-		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED B", false))
-			.onTrue(new InstantCommand(() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_RED)));
-		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED C", false))
-			.onTrue(new InstantCommand(() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_RED)));
-	}
+        new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
+                .onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
+                .onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
 
-	@Override
-	protected void configureDefaultCommands() {
-		/* driver */
-		drivetrain.registerTelemetry(logger::telemeterize);
+        // BLUE Alliance set
+        new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE BLUE A", false))
+                .onTrue(new InstantCommand(
+                        () -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_BLUE)));
+        new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE BLUE B", false))
+                .onTrue(new InstantCommand(
+                        () -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_BLUE)));
+        new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE BLUE C", false))
+                .onTrue(new InstantCommand(
+                        () -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_BLUE)));
 
-		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(
-				() -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
-				// .alongWith(new CollisionDetection(drivetrain, CollisionType.TELEOP)));
+        // BLUE Alliance set
+        new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED A", false))
+                .onTrue(new InstantCommand(
+                        () -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_RED)));
+        new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED B", false))
+                .onTrue(new InstantCommand(
+                        () -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_RED)));
+        new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED C", false))
+                .onTrue(new InstantCommand(
+                        () -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_RED)));
+    }
 
-		/* copilot */
-		collector.setDefaultCommand(
-				new Collect(() -> MathUtil.applyDeadband(
-						(coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()),
-						ControllerConstants.DEADBAND), collector));
+    @Override
+    protected void configureDefaultCommands() {
+        /* driver */
+        drivetrain.registerTelemetry(logger::telemeterize);
 
-		// climber.setDefaultCommand(
-		// new SmartClimb(climber, drivetrain, pivot, leds, () -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), coPilot::getYButton).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
+        drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(
+                () -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
+        // .alongWith(new CollisionDetection(drivetrain, CollisionType.TELEOP)));
 
-		climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
-	}
+        /* copilot */
+        collector.setDefaultCommand(
+                new Collect(() -> MathUtil.applyDeadband(
+                        (coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()),
+                        ControllerConstants.DEADBAND), collector));
 
-	protected Command getAutonomousCommand() {
-		return autoChooser.getSelected();
-	}
+        // climber.setDefaultCommand(
+        // new SmartClimb(climber, drivetrain, pivot, leds, () -> -coPilot.getLeftY(),
+        // () -> -coPilot.getRightY(),
+        // coPilot::getYButton).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
-	@Override
-	protected void releaseDefaultCommands() {
-	}
+        climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
+    }
 
-	@Override
-	protected void initializeDashboardCommands() {
-	}
+    protected Command getAutonomousCommand() {
+        return autoChooser.getSelected();
+    }
 
-	@Override
-	protected void configureFaultCodes() {
-	}
+    @Override
+    protected void releaseDefaultCommands() {
+    }
 
-	@Override
-	protected void configureFaultMonitors() {
-	}
+    @Override
+    protected void initializeDashboardCommands() {
+    }
 
-	@Override
-	protected void configureSystemTests() {
-		SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain,
-				DrivetrainConstants.SYS_TEST_SPEED_DRIVE)); // to be tested
-		SystemTest.registerTest("Azimuth Test", new TurnSystemTest(drivetrain,
-				DrivetrainConstants.SYS_TEST_SPEED_TURN));
+    @Override
+    protected void configureFaultCodes() {
+    }
 
-		// SystemTest.registerTest("Single Note Cycle", new CycleSytemTest(collector,
-		// indexer, pivot, flywheel, () -> 0.5d, () -> 0.6d, () -> 250));
+    @Override
+    protected void configureFaultMonitors() {
+    }
 
-		SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
-				Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+    @Override
+    protected void configureSystemTests() {
+        SystemTest.registerTest("Drive Test", new DrivetrainSystemTest(drivetrain,
+                DrivetrainConstants.SYS_TEST_SPEED_DRIVE)); // to be tested
+        SystemTest.registerTest("Azimuth Test", new TurnSystemTest(drivetrain,
+                DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
-		// SystemTest.registerTest("Pivot 90 Degrees", new PivotAngleTest(pivot,
-		// Constants.PivotConstants.PIVOT_SYSTEST_ANGLE));
+        // SystemTest.registerTest("Single Note Cycle", new CycleSytemTest(collector,
+        // indexer, pivot, flywheel, () -> 0.5d, () -> 0.6d, () -> 250));
 
-		SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
-				indexer, pivot, Constants.FlywheelConstants.FLYWHEEL_SYSTEST_RPM));
+        SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
+                Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
-		SystemTest.registerTest("Indexer Test", new IndexerSystemTest(indexer,
-				Constants.IndexerConstants.INDEXER_SYSTEST_POWER));
+        // SystemTest.registerTest("Pivot 90 Degrees", new PivotAngleTest(pivot,
+        // Constants.PivotConstants.PIVOT_SYSTEST_ANGLE));
 
-		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
-		// Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
+        SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
+                indexer, pivot, Constants.FlywheelConstants.FLYWHEEL_SYSTEST_RPM));
 
-		// Sing chooser SendableChooser<SystemTestCommand> songChooser = new
-		// SendableChooser<>();
-		// songChooser.setDefaultOption(MusicConstants.BOH_RHAP_FILEPATH,
-		// new SingSystemTest(drivetrain, MusicConstants.BOH_RHAP_FILEPATH, sing));
-		// for (String filepath : MusicConstants.SET_LIST) {
-		// songChooser.addOption(filepath, new SingSystemTest(drivetrain, filepath,
-		// sing));
-		// }
+        SystemTest.registerTest("Indexer Test", new IndexerSystemTest(indexer,
+                Constants.IndexerConstants.INDEXER_SYSTEST_POWER));
 
-		// LightningShuffleboard.set("SystemTest", "Songs List", songChooser);
+        // SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
+        // Constants.ClimbConstants.CLIMB_SYSTEST_POWER));
 
-		// songChooser.onChange((SystemTestCommand command) -> {
-		// if (command != null) {
-		// command.schedule();
-		// }
-		// });
+        // Sing chooser SendableChooser<SystemTestCommand> songChooser = new
+        // SendableChooser<>();
+        // songChooser.setDefaultOption(MusicConstants.BOH_RHAP_FILEPATH,
+        // new SingSystemTest(drivetrain, MusicConstants.BOH_RHAP_FILEPATH, sing));
+        // for (String filepath : MusicConstants.SET_LIST) {
+        // songChooser.addOption(filepath, new SingSystemTest(drivetrain, filepath,
+        // sing));
+        // }
 
-		// songChooser.close();
-	}
+        // LightningShuffleboard.set("SystemTest", "Songs List", songChooser);
 
-	public static Command hapticDriverCommand() {
-		if (DriverStation.isAutonomous()) {
-			return new StartEndCommand(() -> {
-				driver.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
-				driver.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
-			}, () -> {
-				driver.setRumble(GenericHID.RumbleType.kRightRumble, 0);
-				driver.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-			});
-		} else {
-			return new InstantCommand();
-		}
-	}
+        // songChooser.onChange((SystemTestCommand command) -> {
+        // if (command != null) {
+        // command.schedule();
+        // }
+        // });
 
-	public static Command hapticCopilotCommand() {
-		if (DriverStation.isAutonomous()) {
-			return new StartEndCommand(() -> {
-				coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
-				coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
-			}, () -> {
-				coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 0);
-				coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-			});
-		} else {
-			return new InstantCommand();
-		}
-	}
+        // songChooser.close();
+    }
+
+    public static Command hapticDriverCommand() {
+        if (!DriverStation.isAutonomous()) {
+            return new StartEndCommand(() -> {
+                driver.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
+                driver.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
+            }, () -> {
+                driver.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+                driver.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+            });
+        } else {
+            return new InstantCommand();
+        }
+    }
+
+    public static Command hapticCopilotCommand() {
+        if (!DriverStation.isAutonomous()) {
+            return new StartEndCommand(() -> {
+                coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
+                coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
+            }, () -> {
+                coPilot.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+                coPilot.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+            });
+        } else {
+            return new InstantCommand();
+        }
+    }
 }
