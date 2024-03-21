@@ -18,6 +18,8 @@ import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Limelights;
+import frc.thunder.LightningContainer;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 
 public class ChasePieces extends Command {
@@ -148,55 +150,14 @@ public class ChasePieces extends Command {
 
         pidOutput = headingController.calculate(0, targetHeading);
 
+        if (!DriverStation.isFMSAttached()){
+            debugging();
+        }
+
         if (DriverStation.isAutonomousEnabled()) {
-            collectPower = maxCollectPower;
-            if (!hasPiece) {
-                if (hasTarget) {
-                    if (trustValues()) {
-                        hasSeenTarget = true;
-                        if (!onTarget) {
-                            drivetrain.setRobot(drivePower, 0, -pidOutput);
-                        } else {
-                            drivetrain.setRobot(drivePower, 0, 0);
-                        }
-                    }
-                } else {
-                    if (!hasSeenTarget) {
-                        if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT) {
-                            if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                                drivetrain.setRobot(0, 0, -rotPower);
-                            } else {
-                                drivetrain.setRobot(0, 0, rotPower);
-                            }
-                        } else {
-                            if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                                drivetrain.setRobot(0.5, 0, rotPower);
-                            } else {
-                                drivetrain.setRobot(0.5, 0, -rotPower);
-                            }
-                        }
-                    } else {
-                        drivetrain.setRobot(drivePower, 0, 0);
-                    }
-                }
-            }
+            autoChase();
         } else {
-            if (!hasPiece) {
-                if (hasTarget) {
-                    if (trustValues()) {
-                        collectPower = maxCollectPower;
-                        if (!onTarget) {
-                            drivetrain.setRobot(drivePower, 0, -pidOutput);
-                        } else {
-                            drivetrain.setRobot(drivePower, 0, 0);
-                        }
-                    }
-                } else {
-                    drivetrain.setRobot(drivePower, 0, 0);
-                }
-            } else {
-                drivetrain.setRobot(0, 0, 0);
-            }
+            teleopChase();
         }
 
         updateLogging();
@@ -217,6 +178,69 @@ public class ChasePieces extends Command {
         smartCollectPowerLog.append(collectPower);
         drivePowerLog.append(drivePower);
         maxCollectPowerLog.append(maxCollectPower);
+    }
+
+    private void autoChase(){
+        collectPower = maxCollectPower;
+        if (!hasPiece) {
+            if (hasTarget) {
+                if (trustValues()) {
+                    hasSeenTarget = true;
+                    if (!onTarget) {
+                        drivetrain.setRobot(drivePower, 0, -pidOutput);
+                    } else {
+                        drivetrain.setRobot(drivePower, 0, 0);
+                    }
+                }
+            } else {
+                if (!hasSeenTarget) {
+                    if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT) {
+                        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+                            drivetrain.setRobot(0, 0, -rotPower);
+                        } else {
+                            drivetrain.setRobot(0, 0, rotPower);
+                        }
+                    } else {
+                        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+                            drivetrain.setRobot(0.5, 0, rotPower);
+                        } else {
+                            drivetrain.setRobot(0.5, 0, -rotPower);
+                        }
+                    }
+                } else {
+                    drivetrain.setRobot(drivePower, 0, 0);
+                }
+            }
+        }
+    }
+
+    private void teleopChase(){
+        if (!hasPiece) {
+            if (hasTarget) {
+                if (trustValues()) {
+                    collectPower = maxCollectPower;
+                    if (!onTarget) {
+                        drivetrain.setRobot(drivePower, 0, -pidOutput);
+                    } else {
+                        drivetrain.setRobot(drivePower, 0, 0);
+                    }
+                }
+            } else {
+                drivetrain.setRobot(drivePower, 0, 0);
+            }
+        } else {
+            drivetrain.setRobot(0, 0, 0);
+        }
+    }
+
+    private void debugging(){
+        headingController.setP(LightningShuffleboard.getDouble("ChasePieces", "Pid P", headingController.getP()));
+        headingController.setI(LightningShuffleboard.getDouble("ChasePieces", "Pid I", headingController.getI()));
+        headingController.setD(LightningShuffleboard.getDouble("ChasePieces", "Pid D", headingController.getD()));
+
+        drivePower = LightningShuffleboard.getDouble("ChasePieces", "Drive Power", drivePower);
+        rotPower = LightningShuffleboard.getDouble("ChasePieces", "Rot Power", rotPower);
+        maxCollectPower = LightningShuffleboard.getDouble("ChasePieces", "Max Collect Power", maxCollectPower);
     }
 
     @Override
