@@ -229,13 +229,7 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(driver::getBButton).whileTrue(new AmpAlign(drivetrain));
 
-		
-		// Test auto align
-		/* copilot */
-		new Trigger(coPilot::getBButton)
-				.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
-						.andThen(new SmartCollect(() -> 0.65, () -> 0.9, collector, indexer, pivot, flywheel))
-						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
+
         // new Trigger(driver::getYButton)
         // .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
 
