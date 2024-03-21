@@ -18,140 +18,140 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PointAtPoint extends Command {
 
-	private static final double MIN_POWER = 0.3;
+    private static final double MIN_POWER = 0.3;
 
-	private Swerve drivetrain;
-	private XboxController driver;
+    private Swerve drivetrain;
+    private XboxController driver;
 
-	private double pidOutput;
-	private double targetHeading;
-	private Translation2d targetPose;
-	private Translation2d originalTargetPose;
+    private double pidOutput;
+    private double targetHeading;
+    private Translation2d targetPose;
+    private Translation2d originalTargetPose;
 
-	private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
+    private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
 
-	private DoubleLogEntry deltaYLog;
-	private DoubleLogEntry deltaXLog;
-	private DoubleLogEntry targetHeadingLog;
-	private DoubleLogEntry targetYLog;
-	private DoubleLogEntry targetXLog;
-	private DoubleLogEntry pidOutputLog;
-	private DoubleLogEntry targetMinusCurrentHeadingLog;
-	private DoubleLogEntry currentLog;
-	private BooleanLogEntry inToleranceLog;
+    private DoubleLogEntry deltaYLog;
+    private DoubleLogEntry deltaXLog;
+    private DoubleLogEntry targetHeadingLog;
+    private DoubleLogEntry targetYLog;
+    private DoubleLogEntry targetXLog;
+    private DoubleLogEntry pidOutputLog;
+    private DoubleLogEntry targetMinusCurrentHeadingLog;
+    private DoubleLogEntry currentLog;
+    private BooleanLogEntry inToleranceLog;
 
-	/**
-	 * Creates a new PointAtPoint.
-	 *
-	 * @param targetPose the target pose to point at
-	 * @param drivetrain to request movement
-	 * @param driver     the driver's controller, used for drive input
-	 */
-	public PointAtPoint(Translation2d targetPose, Swerve drivetrain, XboxController driver) {
-		this.drivetrain = drivetrain;
-		this.driver = driver;
-		this.originalTargetPose = targetPose;
+    /**
+     * Creates a new PointAtPoint.
+     *
+     * @param targetPose the target pose to point at
+     * @param drivetrain to request movement
+     * @param driver     the driver's controller, used for drive input
+     */
+    public PointAtPoint(Translation2d targetPose, Swerve drivetrain, XboxController driver) {
+        this.drivetrain = drivetrain;
+        this.driver = driver;
+        this.originalTargetPose = targetPose;
 
-		addRequirements(drivetrain);
+        addRequirements(drivetrain);
 
-		initLogging();
-	}
+        initLogging();
+    }
 
-	public PointAtPoint(double targetX, double targetY, Swerve drivetrain, XboxController driver) {
-		this(new Translation2d(targetX, targetY), drivetrain, driver);
-	}
+    public PointAtPoint(double targetX, double targetY, Swerve drivetrain, XboxController driver) {
+        this(new Translation2d(targetX, targetY), drivetrain, driver);
+    }
 
-	private boolean isBlueAlliance() {
-		var alliance = DriverStation.getAlliance();
-		return alliance.isPresent() && alliance.get() == Alliance.Blue;
-	}
+    private boolean isBlueAlliance() {
+        var alliance = DriverStation.getAlliance();
+        return alliance.isPresent() && alliance.get() == Alliance.Blue;
+    }
 
-	private Translation2d swapAlliance(Translation2d pose) {
-		return new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY());
-	}
+    private Translation2d swapAlliance(Translation2d pose) {
+        return new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY());
+    }
 
-	private boolean inTolerance() {
-		return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees())
-				% 360 < DrivetrainConstants.ALIGNMENT_TOLERANCE;
-	}
+    private boolean inTolerance() {
+        return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees())
+                % 360 < DrivetrainConstants.ALIGNMENT_TOLERANCE;
+    }
 
-	@Override
-	public void initialize() {
-		headingController.enableContinuousInput(0, 360);
-		if (isBlueAlliance()) {
-			targetPose = originalTargetPose;
-		} else {
-			targetPose = swapAlliance(originalTargetPose);
-		}
+    @Override
+    public void initialize() {
+        headingController.enableContinuousInput(0, 360);
+        if (isBlueAlliance()) {
+            targetPose = originalTargetPose;
+        } else {
+            targetPose = swapAlliance(originalTargetPose);
+        }
 
-		System.out.println("DRIVE - Point AT Point START");
-	}
+        System.out.println("DRIVE - Point AT Point START");
+    }
 
-	/**
-	 * update logging
-	 */
-	public void initLogging() {
-		DataLog log = DataLogManager.getLog();
+    /**
+     * update logging
+     */
+    public void initLogging() {
+        DataLog log = DataLogManager.getLog();
 
-		deltaYLog = new DoubleLogEntry(log, "/PointAtPoint/Delta Y");
-		deltaXLog = new DoubleLogEntry(log, "/PointAtPoint/Delta X");
-		targetHeadingLog = new DoubleLogEntry(log, "/PointAtPoint/Target Heading");
-		targetYLog = new DoubleLogEntry(log, "/PointAtPoint/Target Pose Y");
-		targetXLog = new DoubleLogEntry(log, "/PointAtPoint/Target Pose X");
-		pidOutputLog = new DoubleLogEntry(log, "/PointAtPoint/Pid Output");
-		targetMinusCurrentHeadingLog = new DoubleLogEntry(log, "/PointAtPoint/target minus current heading");
-		currentLog = new DoubleLogEntry(log, "/PointAtPoint/Current");
-		inToleranceLog = new BooleanLogEntry(log, "/PointAtPoint/InTolerance");
-	}
+        deltaYLog = new DoubleLogEntry(log, "/PointAtPoint/Delta Y");
+        deltaXLog = new DoubleLogEntry(log, "/PointAtPoint/Delta X");
+        targetHeadingLog = new DoubleLogEntry(log, "/PointAtPoint/Target Heading");
+        targetYLog = new DoubleLogEntry(log, "/PointAtPoint/Target Pose Y");
+        targetXLog = new DoubleLogEntry(log, "/PointAtPoint/Target Pose X");
+        pidOutputLog = new DoubleLogEntry(log, "/PointAtPoint/Pid Output");
+        targetMinusCurrentHeadingLog = new DoubleLogEntry(log, "/PointAtPoint/target minus current heading");
+        currentLog = new DoubleLogEntry(log, "/PointAtPoint/Current");
+        inToleranceLog = new BooleanLogEntry(log, "/PointAtPoint/InTolerance");
+    }
 
-	@Override
-	public void execute() {
-		Pose2d pose = drivetrain.getPose();
-		var deltaX = targetPose.getX() - pose.getX();
-		var deltaY = targetPose.getY() - pose.getY();
+    @Override
+    public void execute() {
+        Pose2d pose = drivetrain.getPose();
+        var deltaX = targetPose.getX() - pose.getX();
+        var deltaY = targetPose.getY() - pose.getY();
 
-		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 360 + 180;
-		targetHeading %= 360;
-		pidOutput = headingController.calculate((pose.getRotation().getDegrees() + 360) % 360, targetHeading);
+        targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 360 + 180;
+        targetHeading %= 360;
+        pidOutput = headingController.calculate((pose.getRotation().getDegrees() + 360) % 360, targetHeading);
 
-		if (!inTolerance() && Math.abs(pidOutput) < MIN_POWER) {
-			pidOutput = Math.signum(pidOutput) * MIN_POWER;
-		}
+        if (!inTolerance() && Math.abs(pidOutput) < MIN_POWER) {
+            pidOutput = Math.signum(pidOutput) * MIN_POWER;
+        }
 
-		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
+        drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 
-		LightningShuffleboard.setDouble("Point-At-Point", "Target Heading", targetHeading);
-		LightningShuffleboard.setDouble("Point-At-Point", "Current Heading",
-				drivetrain.getPose().getRotation().getDegrees());
+        LightningShuffleboard.setDouble("Point-At-Point", "Target Heading", targetHeading);
+        LightningShuffleboard.setDouble("Point-At-Point", "Current Heading",
+                drivetrain.getPose().getRotation().getDegrees());
 
-		updateLogging();
-	}
+        updateLogging();
+    }
 
-	/**
-	 * update logging
-	 */
-	public void updateLogging() {
-		deltaYLog.append(targetPose.getY() - drivetrain.getPose().getY());
-		deltaXLog.append(targetPose.getX() - drivetrain.getPose().getX());
-		targetHeadingLog.append(targetHeading);
-		targetYLog.append(targetPose.getY());
-		targetXLog.append(targetPose.getX());
-		pidOutputLog.append(pidOutput);
-		targetMinusCurrentHeadingLog.append(Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()));
-		currentLog.append(drivetrain.getPose().getRotation().getDegrees());
-		inToleranceLog.append(inTolerance());
-	}
+    /**
+     * update logging
+     */
+    public void updateLogging() {
+        deltaYLog.append(targetPose.getY() - drivetrain.getPose().getY());
+        deltaXLog.append(targetPose.getX() - drivetrain.getPose().getX());
+        targetHeadingLog.append(targetHeading);
+        targetYLog.append(targetPose.getY());
+        targetXLog.append(targetPose.getX());
+        pidOutputLog.append(pidOutput);
+        targetMinusCurrentHeadingLog.append(Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()));
+        currentLog.append(drivetrain.getPose().getRotation().getDegrees());
+        inToleranceLog.append(inTolerance());
+    }
 
-	@Override
-	public void end(boolean interrupted) {
-		System.out.println("DRIVE - Point AT Point END");
-	}
+    @Override
+    public void end(boolean interrupted) {
+        System.out.println("DRIVE - Point AT Point END");
+    }
 
-	@Override
-	public boolean isFinished() {
-		if (DriverStation.isAutonomous()) {
-			return inTolerance();
-		}
-		return false;
-	}
+    @Override
+    public boolean isFinished() {
+        if (DriverStation.isAutonomous()) {
+            return inTolerance();
+        }
+        return false;
+    }
 }

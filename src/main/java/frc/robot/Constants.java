@@ -19,14 +19,11 @@ import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotMap.CAN;
-import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.math.InterpolationMap;
 
@@ -38,7 +35,7 @@ public class Constants {
         return MERCURY_PATH.toFile().exists();
     }
 
-    public static final String HOOT_PATH = "/home/lvuser/signallogger";
+    public static final String HOOT_PATH = "/home/lvuser/logs";
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
