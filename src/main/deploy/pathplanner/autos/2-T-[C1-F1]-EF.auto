@@ -8,19 +8,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Cand-Sub"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 8.0
+            "name": "Smart-Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "ST-F1"
+            "pathName": "ST-C1"
           }
         },
         {
@@ -28,10 +22,16 @@
           "data": {
             "name": "Chase-Pieces"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C1-F1"
+          }
         }
       ]
     }
   },
-  "folder": "Ann Arbor Top",
+  "folder": null,
   "choreoAuto": false
 }

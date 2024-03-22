@@ -87,7 +87,7 @@ public class RobotContainer extends LightningContainer {
     private Flywheel flywheel;
     private Pivot pivot;
     private Indexer indexer;
-    private Climber climber;
+//     private Climber climber;
     LEDs leds;
     Orchestra sing;
 
@@ -128,7 +128,7 @@ public class RobotContainer extends LightningContainer {
         flywheel = new Flywheel();
         pivot = Constants.isMercury() ? new PivotMercury() : new PivotRhapsody();
         indexer = new Indexer(collector);
-        climber = new Climber();
+        // climber = new Climber();
         leds = new LEDs();
         sing = new Orchestra();
 
@@ -238,15 +238,16 @@ public class RobotContainer extends LightningContainer {
                         .deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
         // cand shots for the robot
-        new Trigger(coPilot::getAButton)
-                .whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        // new Trigger(coPilot::getAButton)
+        //         .whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
         new Trigger(coPilot::getXButton)
                 .whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
         // new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel,
         // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-        new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
-        // new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
-        // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        // new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
+        new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
+        pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        new Trigger(coPilot::getYButton).whileTrue(new FlywheelIN(flywheel));
 
         /* BIAS */
         new Trigger(() -> coPilot.getPOV() == 0)
@@ -350,7 +351,7 @@ public class RobotContainer extends LightningContainer {
         // () -> -coPilot.getRightY(),
         // coPilot::getYButton).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
-        climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
+        // climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
     }
 
     protected Command getAutonomousCommand() {

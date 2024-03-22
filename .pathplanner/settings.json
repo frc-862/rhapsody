@@ -9,8 +9,10 @@
     "Top side paths"
   ],
   "autoFolders": [
-    "Ann Arbor Bottom",
-    "Ann Arbor Top"
+    "Commands",
+    "New Folder",
+    "Done",
+    "Path"
   ],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 5.0,
