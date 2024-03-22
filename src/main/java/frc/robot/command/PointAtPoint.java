@@ -106,12 +106,10 @@ public class PointAtPoint extends Command {
 
 
     public void setDebugging(){
-
         headingController.setP(LightningShuffleboard.getDouble("Point-At-Point", "P", headingController.getP()));
         headingController.setI(LightningShuffleboard.getDouble("Point-At-Point", "I", headingController.getI()));
         headingController.setD(LightningShuffleboard.getDouble("Point-At-Point", "D", headingController.getD()));
         minPower = LightningShuffleboard.getDouble("Point-At-Point", "Min Power", minPower);
-
     }
 
     @Override
@@ -124,9 +122,7 @@ public class PointAtPoint extends Command {
         targetHeading %= 360;
         pidOutput = headingController.calculate((pose.getRotation().getDegrees() + 360) % 360, targetHeading);
 
-        if (!DriverStation.isFMSAttached()){
-            setDebugging();
-        }
+        // setDebugging();
 
         if (!inTolerance() && Math.abs(pidOutput) < minPower) {
             pidOutput = Math.signum(pidOutput) * minPower;
