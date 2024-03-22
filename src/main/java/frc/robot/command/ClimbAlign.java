@@ -16,7 +16,9 @@ public class ClimbAlign extends Command {
   private Swerve drivetrain;
   private PathFindToAuton pathFind;
 
-  /** Creates a new ClimbAlign. */
+  /** Creates a new ClimbAlign. 
+   * @param drivetrain
+  */
   public ClimbAlign(Swerve drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
