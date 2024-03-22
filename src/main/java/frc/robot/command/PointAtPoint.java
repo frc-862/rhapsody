@@ -132,11 +132,13 @@ public class PointAtPoint extends Command {
             pidOutput = Math.signum(pidOutput) * minPower;
         }
 
+
         drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 
         LightningShuffleboard.setDouble("Point-At-Point", "Target Heading", targetHeading);
         LightningShuffleboard.setDouble("Point-At-Point", "Current Heading",
                 drivetrain.getPose().getRotation().getDegrees());
+        LightningShuffleboard.setBool("Point-At-Point", "In Tolerance", inTolerance());
 
         updateLogging();
     }
