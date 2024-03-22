@@ -5,6 +5,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -40,7 +41,6 @@ import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
-import frc.robot.command.shoot.AmpAlign;
 import frc.robot.command.stopDrive;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.FlywheelIN;
@@ -88,7 +88,7 @@ public class RobotContainer extends LightningContainer {
     private Flywheel flywheel;
     private Pivot pivot;
     private Indexer indexer;
-    private Climber climber;
+    // private Climber climber;
     LEDs leds;
     Orchestra sing;
 
@@ -129,7 +129,7 @@ public class RobotContainer extends LightningContainer {
         flywheel = new Flywheel();
         pivot = Constants.isMercury() ? new PivotMercury() : new PivotRhapsody();
         indexer = new Indexer(collector);
-        climber = new Climber();
+        // climber = new Climber();
         leds = new LEDs();
         sing = new Orchestra();
 
@@ -227,7 +227,8 @@ public class RobotContainer extends LightningContainer {
         new Trigger(driver::getLeftBumper)
                 .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
 
-		new Trigger(driver::getBButton).whileTrue(new AmpAlign(drivetrain));
+		new Trigger(driver::getBButton).whileTrue(new PathFindToAuton(
+				PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
 
 
         // new Trigger(driver::getYButton)
@@ -354,7 +355,7 @@ public class RobotContainer extends LightningContainer {
         // () -> -coPilot.getRightY(),
         // coPilot::getYButton).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
-        climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
+        // climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
     }
 
     protected Command getAutonomousCommand() {

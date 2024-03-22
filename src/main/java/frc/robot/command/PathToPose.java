@@ -27,7 +27,7 @@ public class PathToPose extends Command {
     @Override
     public void initialize() {
         pathFindCommand = AutoBuilder.pathfindToPose(
-                pathfindingPose, AutonomousConstants.PATH_CONSTRAINTS);
+                pathfindingPose, AutonomousConstants.PATHFINDING_CONSTRAINTS);
         pathFindCommand.schedule();
     }
 

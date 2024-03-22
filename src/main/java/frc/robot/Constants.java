@@ -132,8 +132,13 @@ public class Constants {
 
         public static final double CONTROL_LOOP_PERIOD = 0.01;
 
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 
+        1.0,
+         0.5); // TODO get
                                                                                                       // constants
+        
+        public static final PathConstraints PATHFINDING_CONSTRAINTS = new PathConstraints(2.0, 1.0,
+         3.0, 1.5);
 
         public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can be at before ending.
                                                               // Prevents going over center line.
@@ -155,6 +160,9 @@ public class Constants {
                 new Rotation2d(180));
         public static final Pose2d SOURCE_SUB_C_STARTPOSE_RED = new Pose2d(new Translation2d(15.85, 4.35),
                 new Rotation2d(-120));
+
+        public static final Pose2d AMP_LOCATION_RED = new Pose2d(new Translation2d(14.69, 7.62),
+            new Rotation2d(65));
     }
 
     public static class TunerConstants {

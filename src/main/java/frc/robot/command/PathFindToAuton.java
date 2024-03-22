@@ -10,12 +10,9 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.subsystems.Swerve;
-import frc.thunder.filter.XboxControllerFilter;
 
 public class PathFindToAuton extends Command {
 
-    private Swerve drivetrain;
-    private XboxControllerFilter controller; // Driver Controller
     private AutoBuilder autoBuilder;
     private Command pathFindCommand;
     private PathPlannerPath autonPath;
@@ -27,8 +24,6 @@ public class PathFindToAuton extends Command {
      * @param drivetrain
      */
     public PathFindToAuton(PathPlannerPath autonPath, Swerve drivetrain) {
-        this.drivetrain = drivetrain;
-        this.controller = controller;
         this.autonPath = autonPath;
         autoBuilder = new AutoBuilder();
 
@@ -37,8 +32,8 @@ public class PathFindToAuton extends Command {
 
     @Override
     public void initialize() {
-        pathFindCommand = autoBuilder.pathfindThenFollowPath(
-                autonPath, AutonomousConstants.PATH_CONSTRAINTS);
+        pathFindCommand = AutoBuilder.pathfindThenFollowPath(
+                autonPath, AutonomousConstants.PATHFINDING_CONSTRAINTS);
         pathFindCommand.schedule();
     }
 
