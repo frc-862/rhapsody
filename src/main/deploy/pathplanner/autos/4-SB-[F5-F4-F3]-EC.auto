@@ -6,15 +6,60 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "sequential",
           "data": {
-            "name": "Smart-Shoot"
+            "commands": [
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "SB-BL"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "preAim"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point-At-Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "preAim"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SB-F5"
+            "pathName": "BL-F5"
           }
         },
         {
@@ -206,7 +251,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "F3-BL"
+                  "pathName": "F3-TS"
                 }
               },
               {
@@ -265,6 +310,6 @@
       ]
     }
   },
-  "folder": "Commands",
+  "folder": "Testing",
   "choreoAuto": false
 }

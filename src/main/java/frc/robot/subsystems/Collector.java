@@ -73,7 +73,7 @@ public class Collector extends SubsystemBase {
      */
     public boolean getEntryBeamBreakState() {
         if (Constants.isMercury()) {
-            return entryDebouncer.calculate(beamBreak.get());
+            return entryDebouncer.calculate(!beamBreak.get());
         }
         return entryDebouncer.calculate(beamBreak.get());
     }

@@ -236,6 +236,7 @@ public class ChasePieces extends Command {
 
     @Override
     public boolean isFinished() {
+        // return true;
         if (DriverStation.isAutonomous()) {
             if (DriverStation.getAlliance().get() == Alliance.Blue) {
                 if (drivetrain.getPose().getX() > AutonomousConstants.CHASE_BOUNDARY) {
