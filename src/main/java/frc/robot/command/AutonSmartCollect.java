@@ -24,7 +24,6 @@ public class AutonSmartCollect extends Command {
      * @param indexerPower   power to apply to indexer
      * @param collector      subsystem
      * @param indexer        subsystem
-     * @param pivot          subsystem (read only)
      */
     public AutonSmartCollect(DoubleSupplier collectorPower, DoubleSupplier indexerPower, Collector collector,
             Indexer indexer) {
