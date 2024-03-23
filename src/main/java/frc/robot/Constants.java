@@ -576,7 +576,8 @@ public class Constants {
                 put(3d, 35d);
                 put(3.5d, 30.5d);
                 put(4d, 29.5d);
-                put(4.75d, 28d);
+                put(4.3, 28d);
+                put(4.75d, 27.5d);
             }
         };
 
@@ -590,7 +591,8 @@ public class Constants {
                 put(3d, 3500d);
                 put(3.5d, 3700d);
                 put(4d, 3700d);
-                put(4.75d, 4000d);
+                put(4.3d, 4200d);
+                put(4.75d, 4200d);
             }
         };
 
