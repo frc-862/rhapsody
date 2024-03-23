@@ -6,6 +6,7 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
@@ -147,7 +148,10 @@ public class SmartShoot extends Command {
 	 * @return Angle to set pivot to
 	 */
 	public double calculateTargetAngle(double distance) {
-		return ShooterConstants.ANGLE_MAP.get(distance);
+		if(Constants.isMercury()){
+			return ShooterConstants.TUBE_ANGLE_MAP.get(distance);
+		}
+		return ShooterConstants.STEALTH_ANGLE_MAP.get(distance);
 	}
 
 	/**
@@ -157,6 +161,9 @@ public class SmartShoot extends Command {
 	 * @return RPM to set the Flywheels
 	 */
 	public double calculateTargetRPM(double distance) {
-		return ShooterConstants.SPEED_MAP.get(distance);
+		if(Constants.isMercury()){
+			return ShooterConstants.TUBE_SPEED_MAP.get(distance);
+		}
+		return ShooterConstants.STEALTH_SPEED_MAP.get(distance);
 	}
 }

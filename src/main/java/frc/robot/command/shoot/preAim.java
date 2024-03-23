@@ -1,6 +1,7 @@
 package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
@@ -58,7 +59,10 @@ public class preAim extends Command {
      * @return Angle to set pivot to
      */
     public double calculateTargetAngle(double distance) {
-        return ShooterConstants.ANGLE_MAP.get(distance);
+        if(Constants.isMercury()){
+			return ShooterConstants.TUBE_ANGLE_MAP.get(distance);
+		}
+		return ShooterConstants.STEALTH_ANGLE_MAP.get(distance);
     }
 
     /**
@@ -68,6 +72,9 @@ public class preAim extends Command {
      * @return RPM to set the Flywheels
      */
     public double calculateTargetRPM(double distance) {
-        return ShooterConstants.SPEED_MAP.get(distance);
+        if(Constants.isMercury()){
+			return ShooterConstants.TUBE_SPEED_MAP.get(distance);
+		}
+		return ShooterConstants.STEALTH_SPEED_MAP.get(distance);
     }
 }
