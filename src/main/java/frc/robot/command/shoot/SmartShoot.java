@@ -104,6 +104,7 @@ public class SmartShoot extends Command {
 			case SHOT:
 				// Provides driver feed back and ends command
 				new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
+				new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 				leds.enableState(LED_STATES.SHOT).withTimeout(2).schedule();
 				break;
 		}
