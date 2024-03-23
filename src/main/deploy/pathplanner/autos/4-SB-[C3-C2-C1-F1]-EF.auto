@@ -6,9 +6,22 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "Point-At-Speaker"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point-At-Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "preAim"
+                }
+              }
+            ]
           }
         },
         {
@@ -76,6 +89,12 @@
                 "type": "named",
                 "data": {
                   "name": "preAim"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect"
                 }
               }
             ]
@@ -158,19 +177,26 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "deadline",
                 "data": {
-                  "pathName": "C2-C1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "C2-C1"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "preAim"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -190,6 +216,12 @@
                 "type": "named",
                 "data": {
                   "name": "preAim"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect"
                 }
               }
             ]

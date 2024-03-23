@@ -241,8 +241,8 @@ public class RobotContainer extends LightningContainer {
         // .andThen(new SmartCollect(() -> 0.65, () -> 0.9, collector, indexer, pivot, flywheel))
 
         // cand shots for the robot
-        // new Trigger(coPilot::getAButton)
-        //         .whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        new Trigger(coPilot::getAButton)
+                .whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
         new Trigger(coPilot::getXButton)
                 .whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
         new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
