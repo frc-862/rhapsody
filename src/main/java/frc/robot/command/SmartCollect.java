@@ -2,6 +2,7 @@ package frc.robot.command;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.IndexerConstants.PieceState;
@@ -48,7 +49,11 @@ public class SmartCollect extends Command {
         this.collectorPower = collectorPower;
         this.indexerPower = indexerPower;
 
-        addRequirements(collector, indexer, flywheel);
+        if (DriverStation.isAutonomous()) {
+            addRequirements(collector, indexer);
+        } else {
+            addRequirements(collector, indexer, flywheel);
+        }
     }
 
     @Override
@@ -68,7 +73,9 @@ public class SmartCollect extends Command {
                 collector.setPower(collectorPower.getAsDouble());
                 if (allowIndex) {
                     indexer.setPower(indexerPower.getAsDouble());
-                    flywheel.setAllMotorsRPM(-200);
+                    if (!DriverStation.isAutonomous()) {
+                        flywheel.setAllMotorsRPM(-200);
+                    }
                 }
                 break;
 
@@ -77,7 +84,9 @@ public class SmartCollect extends Command {
                     // Slow down collector to prevent jamming
                     collector.setPower(0.65 * collectorPower.getAsDouble());
                     indexer.setPower(indexerPower.getAsDouble());
-                    flywheel.setAllMotorsRPM(-500);
+                    if(!DriverStation.isAutonomous()){
+                        flywheel.setAllMotorsRPM(-500);
+                    }
                 } else {
                     // Stop collecting since pivot is not in right place
                     collector.stop();
@@ -91,7 +100,9 @@ public class SmartCollect extends Command {
                     indexer.setPower(0.9 * indexerPower.getAsDouble());
                 } else if (reversedFromExit) {
                     indexer.stop();
-                    flywheel.coast(true);
+                    if(!DriverStation.isAutonomous()){
+                        flywheel.coast(true);
+                    }
                     new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
                 }
                 break;
@@ -108,7 +119,9 @@ public class SmartCollect extends Command {
     public void end(boolean interrupted) {
         collector.stop();
         indexer.stop();
-        flywheel.coast(true);
+        if(!DriverStation.isAutonomous()){
+            flywheel.coast(true);
+        }
 
         System.out.println("COLLECT - Smart Collect END");
     }

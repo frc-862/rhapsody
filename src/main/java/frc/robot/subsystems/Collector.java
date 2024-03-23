@@ -73,7 +73,7 @@ public class Collector extends SubsystemBase {
      */
     public boolean getEntryBeamBreakState() {
         if (Constants.isMercury()) {
-            return entryDebouncer.calculate(!beamBreak.get());
+            return entryDebouncer.calculate(beamBreak.get());
         }
         return entryDebouncer.calculate(beamBreak.get());
     }
@@ -87,6 +87,15 @@ public class Collector extends SubsystemBase {
         // Convert from -1,1 to RPS
         power = power * 100;
         motor.setControl(velocityVoltage.withVelocity(power));
+    }
+
+    /**
+     * gets the current power of the collector motor
+     * 
+     * @return the current power of the collector motor
+     */
+    public double getPower() {
+        return motor.get();
     }
 
     @Override
