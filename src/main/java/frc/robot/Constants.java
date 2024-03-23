@@ -625,7 +625,7 @@ public class Constants {
         public static final double C3_RPM = 0;
         public static final double C3_ANGLE = 0;
 
-        // Mercury Amp Shot
+        // Reverse Amp Shot
         public static final double REVERSE_AMP_TOP_RPM = 500;
         public static final double REVERSE_AMP_BOTTOM_RPM = 650;
         public static final double REVERSE_AMP_ANGLE = 110;
