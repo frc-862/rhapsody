@@ -24,6 +24,7 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PathFindingConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.TunerConstants;
+import frc.robot.command.AutonSmartCollect;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Collect;
 import frc.robot.command.CollectAndGo;
@@ -165,7 +166,7 @@ public class RobotContainer extends LightningContainer {
         NamedCommands.registerCommand("Chase-Pieces",
                 new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
         NamedCommands.registerCommand("Smart-Collect",
-                new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot, flywheel)
+                new AutonSmartCollect(() -> 0.5, () -> 0.6, collector, indexer)
                         .deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
         NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
         NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE));
@@ -236,6 +237,8 @@ public class RobotContainer extends LightningContainer {
                 .whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
                         .andThen(new SmartCollect(() -> 0.65, () -> 0.9, collector, indexer, pivot, flywheel))
                         .deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
+        
+        // .andThen(new SmartCollect(() -> 0.65, () -> 0.9, collector, indexer, pivot, flywheel))
 
         // cand shots for the robot
         new Trigger(coPilot::getAButton)
