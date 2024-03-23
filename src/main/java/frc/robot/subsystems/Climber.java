@@ -74,7 +74,7 @@ public class Climber extends SubsystemBase {
         climbMotorL.setPosition(0d);
         climbMotorR.setPosition(0d);
 
-        // initOldLogging();
+        initOldLogging();
         initLogging();
     }
 
