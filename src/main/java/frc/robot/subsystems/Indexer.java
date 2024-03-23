@@ -118,6 +118,15 @@ public class Indexer extends SubsystemBase {
     }
 
     /**
+     * Get the current power of the indexer motor
+     *
+     * @return current power of the indexer motor
+     */
+    public double getPower() {
+        return indexerMotor.get();
+    }
+
+    /**
      * Index up
      */
     public void indexUp() {

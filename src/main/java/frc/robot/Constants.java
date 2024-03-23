@@ -457,6 +457,8 @@ public class Constants {
             IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE
         }
 
+
+
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
         public static final double INDEXER_DEFAULT_POWER = 1d;
         public static final double INDEXER_MANUAL_POWER = 1d;
