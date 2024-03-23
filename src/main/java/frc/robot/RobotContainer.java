@@ -24,6 +24,8 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PathFindingConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.TunerConstants;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.command.AutonPointAtTag;
 import frc.robot.command.AutonSmartCollect;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Collect;
@@ -38,6 +40,7 @@ import frc.robot.command.PathToPose;
 import frc.robot.command.PointAtPoint;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.SetPointClimb;
+import frc.robot.command.SetStopMePipeline;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
@@ -244,16 +247,13 @@ public class RobotContainer extends LightningContainer {
         // cand shots for the robot
         new Trigger(coPilot::getXButton)
             .whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-        // new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
-		new Trigger(coPilot::getYButton).whileTrue(new Tune(flywheel, pivot));
+        new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
+		// new Trigger(coPilot::getYButton).whileTrue(new Tune(flywheel, pivot));
 
-        if (Constants.isMercury()) {
-            new Trigger(coPilot::getAButton).whileTrue(new ReverseAmpShot(flywheel, pivot));
-        } else {
-            new Trigger(coPilot::getAButton)
-				.whileTrue(new AmpShot(flywheel, pivot)
-					.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-        }
+        new Trigger(coPilot::getAButton)
+            .whileTrue(new ReverseAmpShot(flywheel, pivot) // AmpShot
+            .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        
 
         /* BIAS */
         new Trigger(() -> coPilot.getPOV() == 0)
