@@ -88,7 +88,7 @@ public class RobotContainer extends LightningContainer {
     private Flywheel flywheel;
     private Pivot pivot;
     private Indexer indexer;
-//     private Climber climber;
+    private Climber climber;
     LEDs leds;
     Orchestra sing;
 
@@ -129,7 +129,7 @@ public class RobotContainer extends LightningContainer {
         flywheel = new Flywheel();
         pivot = Constants.isMercury() ? new PivotMercury() : new PivotRhapsody();
         indexer = new Indexer(collector);
-        // climber = new Climber();
+        climber = new Climber();
         leds = new LEDs();
         sing = new Orchestra();
 
@@ -162,7 +162,7 @@ public class RobotContainer extends LightningContainer {
         NamedCommands.registerCommand("Smart-Shoot",
                 new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
                         .alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
-        NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, indexer, drivetrain));
+        NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
         NamedCommands.registerCommand("Chase-Pieces",
                 new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
         NamedCommands.registerCommand("Smart-Collect",
@@ -351,7 +351,7 @@ public class RobotContainer extends LightningContainer {
         // () -> -coPilot.getRightY(),
         // coPilot::getYButton).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
-        // climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
+        climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
     }
 
     protected Command getAutonomousCommand() {

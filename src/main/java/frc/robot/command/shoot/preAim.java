@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 
@@ -12,16 +11,14 @@ public class preAim extends Command {
 
     private Flywheel flywheel;
     private Pivot pivot;
-    private Indexer indexer;
     private Swerve drivetrain;
 
-    public preAim(Flywheel flywheel, Pivot pivot, Indexer indexer, Swerve drivetrain) {
+    public preAim(Flywheel flywheel, Pivot pivot, Swerve drivetrain) {
         this.flywheel = flywheel;
         this.pivot = pivot;
-        this.indexer = indexer;
         this.drivetrain = drivetrain;
 
-        addRequirements(flywheel, pivot, indexer);
+        addRequirements(flywheel, pivot);
     }
 
     @Override
@@ -34,12 +31,6 @@ public class preAim extends Command {
         double distance = drivetrain.distanceToSpeaker();
         pivot.setTargetAngle(calculateTargetAngle(distance));
         flywheel.setAllMotorsRPM(calculateTargetRPM(distance));
-        if(indexer.getExitBeamBreakState()) {
-            indexer.indexDown();
-        } else {
-            indexer.stop();
-        }
-
     }
 
     @Override
@@ -59,10 +50,10 @@ public class preAim extends Command {
      * @return Angle to set pivot to
      */
     public double calculateTargetAngle(double distance) {
-        if(Constants.isMercury()){
-			return ShooterConstants.TUBE_ANGLE_MAP.get(distance);
-		}
-		return ShooterConstants.STEALTH_ANGLE_MAP.get(distance);
+        if (Constants.isMercury()) {
+            return ShooterConstants.TUBE_ANGLE_MAP.get(distance);
+        }
+        return ShooterConstants.STEALTH_ANGLE_MAP.get(distance);
     }
 
     /**
@@ -72,9 +63,9 @@ public class preAim extends Command {
      * @return RPM to set the Flywheels
      */
     public double calculateTargetRPM(double distance) {
-        if(Constants.isMercury()){
-			return ShooterConstants.TUBE_SPEED_MAP.get(distance);
-		}
-		return ShooterConstants.STEALTH_SPEED_MAP.get(distance);
+        if (Constants.isMercury()) {
+            return ShooterConstants.TUBE_SPEED_MAP.get(distance);
+        }
+        return ShooterConstants.STEALTH_SPEED_MAP.get(distance);
     }
 }
