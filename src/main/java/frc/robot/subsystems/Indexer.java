@@ -23,7 +23,7 @@ public class Indexer extends SubsystemBase {
 
     private Collector collector;
 
-    private ThunderBird indexerMotor;
+    private ThunderBird motor;
     private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_ENTER_BEAMBREAK);
     private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_EXIT_BEAMBREAK);
 
@@ -51,13 +51,13 @@ public class Indexer extends SubsystemBase {
     public Indexer(Collector collector) {
         this.collector = collector;
 
-        indexerMotor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
+        motor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
                 IndexerConstants.MOTOR_INVERT, IndexerConstants.MOTOR_STATOR_CURRENT_LIMIT,
                 IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
-        indexerMotor.configSupplyLimit(0d);
-        indexerMotor.configStatorLimit(80d);
+        motor.configSupplyLimit(0d);
+        motor.configStatorLimit(80d);
 
-        indexerMotor.applyConfig();
+        motor.applyConfig();
 
         initLogging();
     }
@@ -77,7 +77,7 @@ public class Indexer extends SubsystemBase {
         isExitingLog = new BooleanLogEntry(log, "/Indexer/IsExiting");
         hasPieceLog = new BooleanLogEntry(log, "/Indexer/HasPiece");
 
-        LightningShuffleboard.setDoubleSupplier("Indexer", "Power", () -> indexerMotor.get());
+        LightningShuffleboard.setDoubleSupplier("Indexer", "Power", () -> motor.get());
 
         LightningShuffleboard.setBoolSupplier("Indexer", "EntryBeamBreak", () -> getEntryBeamBreakState());
         LightningShuffleboard.setBoolSupplier("Indexer", "ExitBeamBreak", () -> getExitBeamBreakState());
@@ -114,7 +114,7 @@ public class Indexer extends SubsystemBase {
      */
     public void setPower(double power) {
         targetPower = power;
-        indexerMotor.setControl(dutyCycleControl.withOutput(power));
+        motor.setControl(dutyCycleControl.withOutput(power));
     }
 
     /**
@@ -123,7 +123,7 @@ public class Indexer extends SubsystemBase {
      * @return current power of the indexer motor
      */
     public double getPower() {
-        return indexerMotor.get();
+        return motor.get();
     }
 
     /**
@@ -200,7 +200,7 @@ public class Indexer extends SubsystemBase {
      * @return current power of the indexer motor
      */
     public double getIndexerPower() {
-        return indexerMotor.get();
+        return motor.get();
     }
 
     @Override
@@ -227,7 +227,7 @@ public class Indexer extends SubsystemBase {
      * update logging
      */
     public void updateLogging() {
-        indexerPowerLog.append(indexerMotor.get());
+        indexerPowerLog.append(motor.get());
         indexerTargetPowerLog.append(targetPower);
         entryBeamBreakLog.append(getEntryBeamBreakState());
         exitBeamBreakLog.append(getExitBeamBreakState());
