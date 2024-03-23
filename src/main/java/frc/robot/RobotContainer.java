@@ -248,8 +248,8 @@ public class RobotContainer extends LightningContainer {
         // new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel,
         // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
         new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
-        // new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
-        // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
+        pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
         if (Constants.isMercury()) {
             new Trigger(coPilot::getAButton).whileTrue(new ReverseAmpShot(flywheel, pivot));
