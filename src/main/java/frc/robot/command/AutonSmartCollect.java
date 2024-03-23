@@ -47,7 +47,7 @@ public class AutonSmartCollect extends Command {
     @Override
     public void execute() {
         if(indexer.getPieceState() == PieceState.IN_COLLECT){
-            indexer.setPower(indexerPower.getAsDouble() / 2);
+            indexer.setPower(indexerPower.getAsDouble() / 2); // TODO test at speed
         } else if (indexer.getPieceState() == PieceState.IN_PIVOT) {
             end(false);
         } else {

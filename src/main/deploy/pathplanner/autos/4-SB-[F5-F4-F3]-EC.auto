@@ -8,39 +8,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Cand-Sub"
+            "name": "Smart-Shoot"
           }
         },
         {
-          "type": "sequential",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "SB-F5"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stop-Flywheel"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Chase-Pieces"
-                }
-              }
-            ]
+            "pathName": "SB-F5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Chase-Pieces"
           }
         },
         {
@@ -54,60 +34,15 @@
                 }
               },
               {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Smart-Collect"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "preAim"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point-At-Speaker"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "preAim"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Shoot"
-                }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Stop-Drive"
+                  "name": "Smart-Collect"
                 }
               }
             ]
@@ -122,15 +57,21 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
+                      "type": "named",
                       "data": {
-                        "pathName": "BL-F4"
+                        "name": "Point-At-Speaker"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Stop-Flywheel"
+                        "name": "preAim"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Collect"
                       }
                     }
                   ]
@@ -139,10 +80,35 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Chase-Pieces"
+                  "name": "Smart-Shoot"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BL-F4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "preAim"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Chase-Pieces"
           }
         },
         {
@@ -156,13 +122,32 @@
                 }
               },
               {
-                "type": "sequential",
+                "type": "named",
+                "data": {
+                  "name": "preAim"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "deadline",
                 "data": {
                   "commands": [
                     {
                       "type": "named",
                       "data": {
-                        "name": "Smart-Collect"
+                        "name": "Point-At-Speaker"
                       }
                     },
                     {
@@ -170,8 +155,20 @@
                       "data": {
                         "name": "preAim"
                       }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Collect"
+                      }
                     }
                   ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
                 }
               }
             ]
@@ -182,9 +179,9 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Point-At-Speaker"
+                  "pathName": "BL-F3"
                 }
               },
               {
@@ -197,19 +194,31 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Chase-Pieces"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "pathName": "F3-BL"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Stop-Drive"
+                  "name": "Smart-Collect"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "preAim"
                 }
               }
             ]
@@ -220,9 +229,34 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "deadline",
                 "data": {
-                  "pathName": "BL-F3"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point-At-Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "preAim"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Collect"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
                 }
               }
             ]
@@ -231,6 +265,6 @@
       ]
     }
   },
-  "folder": "Testing",
+  "folder": "Commands",
   "choreoAuto": false
 }

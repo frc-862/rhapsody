@@ -3,15 +3,16 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "Bottom side paths",
     "Align Paths",
+    "Bottom side paths",
+    "PathFind",
     "Return Paths",
     "Top side paths"
   ],
   "autoFolders": [
     "Commands",
-    "New Folder",
     "Done",
+    "Testing",
     "Path"
   ],
   "defaultMaxVel": 5.0,

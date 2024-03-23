@@ -221,7 +221,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "C1-F1"
+                  "pathName": "C1-F2"
                 }
               },
               {
@@ -242,6 +242,6 @@
       ]
     }
   },
-  "folder": "Testing",
+  "folder": "Commands",
   "choreoAuto": false
 }

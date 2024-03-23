@@ -6,6 +6,25 @@
     "data": {
       "commands": [
         {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point-At-Speaker"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 5.0
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Smart-Shoot"
@@ -14,6 +33,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Done",
   "choreoAuto": false
 }

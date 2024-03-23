@@ -237,6 +237,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Commands",
   "choreoAuto": false
 }
