@@ -39,8 +39,7 @@ public class Constants {
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center
-                                                                                         // of robot to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
         TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
 
@@ -132,8 +131,7 @@ public class Constants {
 
         public static final double CONTROL_LOOP_PERIOD = 0.01;
 
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
-                                                                                                      // constants
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
 
         public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can be at before ending.
                                                               // Prevents going over center line.
@@ -323,7 +321,7 @@ public class Constants {
         public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
                 Units.feetToMeters(5));
         public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
-        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0, 0.01);
+        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.2, 0, 0, 0.01);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final int TAG_PIPELINE = 0;
         public static final int SPEAKER_PIPELINE = 1;
@@ -426,19 +424,19 @@ public class Constants {
         public static final double TOP_1_MOTOR_KA = 0;
 
         // SLOT 0 BOTTOM, 0 - 49 RPS
-        public static final double BOTTOM_0_MOTOR_KP = 0.15;
+        public static final double BOTTOM_0_MOTOR_KP = 0.155;
         public static final double BOTTOM_0_MOTOR_KI = 0;
         public static final double BOTTOM_0_MOTOR_KD = 0;
-        public static final double BOTTOM_0_MOTOR_KS = 0.3;
-        public static final double BOTTOM_0_MOTOR_KV = 0.11;
+        public static final double BOTTOM_0_MOTOR_KS = 0.35;
+        public static final double BOTTOM_0_MOTOR_KV = 0.112;
         public static final double BOTTOM_0_MOTOR_KA = 0;
 
         // SLOT 1 BOTTOM, 50 - 107 RPS
-        public static final double BOTTOM_1_MOTOR_KP = 0.16;
+        public static final double BOTTOM_1_MOTOR_KP = 0.15;
         public static final double BOTTOM_1_MOTOR_KI = 0;
         public static final double BOTTOM_1_MOTOR_KD = 0;
-        public static final double BOTTOM_1_MOTOR_KS = 0.3;
-        public static final double BOTTOM_1_MOTOR_KV = 0.1155;
+        public static final double BOTTOM_1_MOTOR_KS = 0.35;
+        public static final double BOTTOM_1_MOTOR_KV = 0.114;
         public static final double BOTTOM_1_MOTOR_KA = 0;
 
         public static final double RPM_TOLERANCE = 50d;
@@ -542,7 +540,7 @@ public class Constants {
         public static final double FAR_WING_X = 3.3;
 
         // Distance in meters, angle in degrees
-        public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {
+        public static final InterpolationMap TUBE_ANGLE_MAP = new InterpolationMap() {
             {
                 // As distance gets smaller angle goes up
                 put(1.21d, 52d);
@@ -556,7 +554,35 @@ public class Constants {
         };
 
         // Distance in meters, speed in RPM
-        public static final InterpolationMap SPEED_MAP = new InterpolationMap() {
+        public static final InterpolationMap TUBE_SPEED_MAP = new InterpolationMap() {
+            {
+                // As distance get smaller RPM gets smaller
+                put(1.21d, 2000d);
+                put(2d, 2500d);
+                put(2.5d, 3000d);
+                put(3d, 3500d);
+                put(3.5d, 4000d);
+                put(4.09d, 3600d);
+                put(4.86d, 4600d);
+            }
+        };
+
+        // Distance in meters, angle in degrees
+        public static final InterpolationMap STEALTH_ANGLE_MAP = new InterpolationMap() {
+            {
+                // As distance gets smaller angle goes up
+                put(1.21d, 52d);
+                put(2d, 45d);
+                put(2.5d, 41.5d);
+                put(3d, 37d);
+                put(3.5d, 30d);
+                put(4.09d, 26.5d);
+                put(4.86, 26.5d);
+            }
+        };
+
+        // Distance in meters, speed in RPM
+        public static final InterpolationMap STEALTH_SPEED_MAP = new InterpolationMap() {
             {
                 // As distance get smaller RPM gets smaller
                 put(1.21d, 2000d);
@@ -639,10 +665,15 @@ public class Constants {
 
         public static final double CLIMB_SYSTEST_POWER = 0.1;
 
-        public enum CLIMBER_STATES {
-            CLIMBED, GROUNDED, STOW
-        }
+        public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE_BLUE = new Pose2d(7.43, 4.16, new Rotation2d(0));
+        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_BLUE = new Pose2d(3.55, 6.16, new Rotation2d(Units.degreesToRadians(-53.13)));
+        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_BLUE = new Pose2d(3.54, 1.91, new Rotation2d(Units.degreesToRadians(63.43)));
+
+        public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE_RED = new Pose2d(9.07, 4.16, new Rotation2d(0));
+        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_RED = new Pose2d(12.96, 6.16, new Rotation2d(Units.degreesToRadians(-53.13)));
+        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_RED = new Pose2d(12.95, 1.91, new Rotation2d(Units.degreesToRadians(63.43)));
     }
+    
 
     public class LEDsConstants {
         public static final int LED_LENGTH = 28;
@@ -657,9 +688,9 @@ public class Constants {
 
         public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
             {
-            put(-1, LEDsConstants.LED_LENGTH);
-            put(0, 14);
-            put(1, 14);
+                put(-1, LEDsConstants.LED_LENGTH);
+                put(0, 14);
+                put(1, 14);
             }
         };
 
