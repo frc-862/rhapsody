@@ -3,6 +3,7 @@ package frc.robot.command.shoot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 
@@ -10,14 +11,16 @@ public class preAim extends Command {
 
     private Flywheel flywheel;
     private Pivot pivot;
+    private Indexer indexer;
     private Swerve drivetrain;
 
-    public preAim(Flywheel flywheel, Pivot pivot, Swerve drivetrain) {
+    public preAim(Flywheel flywheel, Pivot pivot, Indexer indexer, Swerve drivetrain) {
         this.flywheel = flywheel;
         this.pivot = pivot;
+        this.indexer = indexer;
         this.drivetrain = drivetrain;
 
-        addRequirements(flywheel, pivot);
+        addRequirements(flywheel, pivot, indexer);
     }
 
     @Override
@@ -30,6 +33,12 @@ public class preAim extends Command {
         double distance = drivetrain.distanceToSpeaker();
         pivot.setTargetAngle(calculateTargetAngle(distance));
         flywheel.setAllMotorsRPM(calculateTargetRPM(distance));
+        if(indexer.getExitBeamBreakState()) {
+            indexer.indexDown();
+        } else {
+            indexer.stop();
+        }
+
     }
 
     @Override

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.577030538676463,
-        "y": 4.084914323674802
+        "x": 2.6263652527305066,
+        "y": 3.8481076962153926
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7707422576043426,
-        "y": 4.883418839590889
+        "x": 1.7186065141361064,
+        "y": 4.035579609620758
       },
       "isLocked": false,
       "linkedName": "C3"
     },
     {
       "anchor": {
-        "x": 2.65,
-        "y": 5.54
+        "x": 3.1098454504601327,
+        "y": 5.505754088431254
       },
       "prevControl": {
-        "x": 1.6419230556007463,
-        "y": 5.294072432538587
+        "x": 2.4783611105683763,
+        "y": 4.676930892323324
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,8 +39,8 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
-    "rotateFast": false
+    "rotation": 56.853004167744054,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Top side paths",

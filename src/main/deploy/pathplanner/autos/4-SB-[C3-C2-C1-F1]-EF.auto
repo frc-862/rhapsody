@@ -6,13 +6,32 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Point-At-Speaker"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop-Drive"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -22,12 +41,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 4.0
           }
         },
         {
@@ -69,9 +82,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "Smart-Shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Drive"
+                }
+              }
+            ]
           }
         },
         {
@@ -113,9 +139,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "Smart-Shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Drive"
+                }
+              }
+            ]
           }
         },
         {
@@ -157,9 +196,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "Smart-Shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Drive"
+                }
+              }
+            ]
           }
         },
         {

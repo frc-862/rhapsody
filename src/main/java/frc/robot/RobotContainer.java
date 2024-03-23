@@ -161,7 +161,7 @@ public class RobotContainer extends LightningContainer {
         NamedCommands.registerCommand("Smart-Shoot",
                 new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
                         .alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
-        NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
+        NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, indexer, drivetrain));
         NamedCommands.registerCommand("Chase-Pieces",
                 new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
         NamedCommands.registerCommand("Smart-Collect",
@@ -238,16 +238,13 @@ public class RobotContainer extends LightningContainer {
                         .deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
         // cand shots for the robot
-        // new Trigger(coPilot::getAButton)
-        //         .whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        new Trigger(coPilot::getAButton)
+                .whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
         new Trigger(coPilot::getXButton)
                 .whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-        // new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel,
-        // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-        // new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
-        new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
-        pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-        new Trigger(coPilot::getYButton).whileTrue(new FlywheelIN(flywheel));
+        new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
+        // new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel, pivot)
+                // .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
         /* BIAS */
         new Trigger(() -> coPilot.getPOV() == 0)
