@@ -12,6 +12,10 @@ public class SetStopMePipeline extends Command {
     private Limelights limelights;
     private int pipeline;
 
+    /**
+     * @param limelights
+     * @param pipeline
+     */
     public SetStopMePipeline(Limelights limelights, int pipeline) {
         this.limelights = limelights;
         this.pipeline = pipeline;

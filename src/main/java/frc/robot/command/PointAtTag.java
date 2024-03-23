@@ -9,6 +9,7 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PointAtTag extends Command {
 
@@ -44,7 +45,7 @@ public class PointAtTag extends Command {
 
     @Override
     public void initialize() {
-        limelights.setStopMePipeline(VisionConstants.SPEAKER_PIPELINE);
+        limelights.setStopMePipeline(VisionConstants.SPEAKER_POINT_PIPELINE);
 
         headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 
@@ -63,18 +64,24 @@ public class PointAtTag extends Command {
 
     @Override
     public void execute() {
+        LightningShuffleboard.setBool("Point-At-Tag", "On Target", (Math.abs(limelights.getStopMe().getTargetX()) < VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE) && limelights.getStopMePipeline() == VisionConstants.SPEAKER_POINT_PIPELINE);
+        LightningShuffleboard.setDouble("Point-At-Tag", "Pidoutput", pidOutput);
+        LightningShuffleboard.setDouble("Point-At-Tag", "Target heading", targetHeading);
+
         previousTargetHeading = targetHeading;
 
         targetHeading = limelights.getStopMe().getTargetX();
-        
-        if (limelights.getStopMePipeline() == VisionConstants.SPEAKER_PIPELINE) {
-            pidOutput = headingController.calculate(0, targetHeading);
+
+        if (limelights.getStopMePipeline() == VisionConstants.SPEAKER_POINT_PIPELINE) {
+            pidOutput = headingController.calculate(targetHeading, 0);
+        } else {
+            pidOutput = 0d;
         }
 
         drivetrain.setFieldDriver(
                 driver.getLeftY(),
                 driver.getLeftX(),
-                -pidOutput);
+                pidOutput);
 
         updateLogging();
     }
@@ -89,7 +96,7 @@ public class PointAtTag extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        limelights.setStopMePipeline(VisionConstants.TAG_PIPELINE);
+        limelights.setStopMePipeline(VisionConstants.POSE_PIPELINE);
     }
 
     /**

@@ -24,6 +24,12 @@
                       "data": {
                         "name": "preAim"
                       }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stopme-Tag"
+                      }
                     }
                   ]
                 }
@@ -35,7 +41,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Point-At-Speaker"
+                        "name": "Point-At-Tag"
                       }
                     },
                     {
@@ -55,6 +61,12 @@
                       "type": "named",
                       "data": {
                         "name": "Smart-Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stopme-pose"
                       }
                     },
                     {
@@ -117,7 +129,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Point-At-Speaker"
+                        "name": "Point-At-Tag"
                       }
                     },
                     {
@@ -218,7 +230,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Point-At-Speaker"
+                        "name": "Point-At-Tag"
                       }
                     },
                     {
@@ -319,7 +331,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Point-At-Speaker"
+                        "name": "Point-At-Tag"
                       }
                     },
                     {
