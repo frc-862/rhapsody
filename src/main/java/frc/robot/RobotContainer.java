@@ -24,6 +24,8 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PathFindingConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.TunerConstants;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.command.AutonPointAtTag;
 import frc.robot.command.AutonSmartCollect;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Collect;
@@ -38,6 +40,7 @@ import frc.robot.command.PathToPose;
 import frc.robot.command.PointAtPoint;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.SetPointClimb;
+import frc.robot.command.SetStopMePipeline;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
@@ -130,7 +133,9 @@ public class RobotContainer extends LightningContainer {
         flywheel = new Flywheel();
         pivot = Constants.isMercury() ? new PivotMercury() : new PivotRhapsody();
         indexer = new Indexer(collector);
-        climber = new Climber();
+        if (!Constants.isMercury()) {
+            climber = new Climber();
+        }
         leds = new LEDs();
         sing = new Orchestra();
 
@@ -177,6 +182,9 @@ public class RobotContainer extends LightningContainer {
         NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
         NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
         NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
+        NamedCommands.registerCommand("Stopme-Tag", new SetStopMePipeline(limelights, VisionConstants.TAG_PIPELINE));
+        NamedCommands.registerCommand("Stopme-Speaker", new SetStopMePipeline(limelights, VisionConstants.SPEAKER_PIPELINE));
+        NamedCommands.registerCommand("Point-At-Tag", new AutonPointAtTag(drivetrain, limelights, driver));
 
         // make sure named commands are initialized before autobuilder!
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -248,15 +256,15 @@ public class RobotContainer extends LightningContainer {
         // new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel,
         // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
         new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
-        new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
-        pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        // new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
+        // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
         if (Constants.isMercury()) {
             new Trigger(coPilot::getAButton).whileTrue(new ReverseAmpShot(flywheel, pivot));
         } else {
             new Trigger(coPilot::getAButton)
-                    .whileTrue(new AmpShot(flywheel,
-                            pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+                    .whileTrue(new AmpShot(flywheel, pivot)
+                    .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
         }
 
         /* BIAS */
@@ -361,7 +369,9 @@ public class RobotContainer extends LightningContainer {
         // () -> -coPilot.getRightY(),
         // coPilot::getYButton).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
-        climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
+        if (!Constants.isMercury()) {
+            climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
+        }
     }
 
     protected Command getAutonomousCommand() {
