@@ -45,7 +45,7 @@ public class PointAtTag extends Command {
 
     @Override
     public void initialize() {
-        limelights.setStopMePipeline(VisionConstants.SPEAKER_PIPELINE);;
+        limelights.setStopMePipeline(VisionConstants.SPEAKER_PIPELINE);
 
         headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 
