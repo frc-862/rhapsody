@@ -40,7 +40,6 @@ import frc.robot.command.PathToPose;
 import frc.robot.command.PointAtPoint;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.SetPointClimb;
-import frc.robot.command.SetStopMePipeline;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
@@ -182,8 +181,8 @@ public class RobotContainer extends LightningContainer {
         NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
         NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
         NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
-        NamedCommands.registerCommand("Stopme-Tag", new SetStopMePipeline(limelights, VisionConstants.TAG_PIPELINE));
-        NamedCommands.registerCommand("Stopme-Speaker", new SetStopMePipeline(limelights, VisionConstants.SPEAKER_PIPELINE));
+        NamedCommands.registerCommand("Stopme-Tag", new InstantCommand(() -> limelights.setStopMePipeline(VisionConstants.TAG_PIPELINE)));
+        NamedCommands.registerCommand("Stopme-Speaker", new InstantCommand(() -> limelights.setStopMePipeline(VisionConstants.SPEAKER_PIPELINE)));
         NamedCommands.registerCommand("Point-At-Tag", new AutonPointAtTag(drivetrain, limelights, driver));
 
         // make sure named commands are initialized before autobuilder!
