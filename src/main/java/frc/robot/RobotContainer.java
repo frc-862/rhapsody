@@ -48,7 +48,6 @@ import frc.robot.command.SmartCollect;
 import frc.robot.command.stopDrive;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.FlywheelIN;
-import frc.robot.command.shoot.ReverseAmpShot;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.shoot.PivotUP;
@@ -176,7 +175,7 @@ public class RobotContainer extends LightningContainer {
                 new AutonSmartCollect(() -> 0.5, () -> 0.6, collector, indexer)
                         .deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
         NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
-        NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE));
+        NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain));
         NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
         NamedCommands.registerCommand("Point-At-Speaker",
                 new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
@@ -239,8 +238,9 @@ public class RobotContainer extends LightningContainer {
         new Trigger(driver::getLeftBumper)
                 .whileTrue(new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights));
 
-		new Trigger(driver::getBButton).whileTrue(new PathFindToAuton(
-				PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
+        // new Trigger(driver::getBButton).whileTrue(new PathFindToAuton(
+        //                 PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
+        new Trigger(driver::getBButton).whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
 
 
         // new Trigger(driver::getYButton)
@@ -266,13 +266,10 @@ public class RobotContainer extends LightningContainer {
         // new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
         // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
-        if (Constants.isMercury()) {
-            new Trigger(coPilot::getAButton).whileTrue(new ReverseAmpShot(flywheel, pivot));
-        } else {
-            new Trigger(coPilot::getAButton)
+        
+        new Trigger(coPilot::getAButton)
                     .whileTrue(new AmpShot(flywheel, pivot)
                     .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-        }
 
         /* BIAS */
         new Trigger(() -> coPilot.getPOV() == 0)

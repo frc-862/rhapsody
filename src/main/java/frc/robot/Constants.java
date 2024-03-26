@@ -156,8 +156,8 @@ public class Constants {
         public static final Pose2d SOURCE_SUB_C_STARTPOSE_RED = new Pose2d(new Translation2d(15.85, 4.35),
                 new Rotation2d(-120));
 
-        public static final Pose2d AMP_LOCATION_RED = new Pose2d(new Translation2d(14.69, 7.62),
-            new Rotation2d(65));
+        public static final Pose2d AMP_LOCATION_RED = new Pose2d(new Translation2d(14.4, 7.62),
+            new Rotation2d(90));
     }
 
     public static class TunerConstants {
@@ -606,10 +606,6 @@ public class Constants {
     }
 
     public class CandConstants { // TODO get real
-        // Amp
-        public static final double AMP_TOP_RPM = 50;
-        public static final double AMP_BOTTOM_RPM = 2000;
-        public static final double AMP_ANGLE = 45;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
@@ -632,9 +628,9 @@ public class Constants {
         public static final double C3_ANGLE = 0;
 
         // Reverse Amp Shot
-        public static final double REVERSE_AMP_TOP_RPM = 500;
-        public static final double REVERSE_AMP_BOTTOM_RPM = 650;
-        public static final double REVERSE_AMP_ANGLE = 110;
+        public static final double AMP_TOP_RPM = 300;
+        public static final double AMP_BOTTOM_RPM = 700;
+        public static final double AMP_ANGLE = 93;
 
         // Line
         public static final double LINE_RPM = 0;
