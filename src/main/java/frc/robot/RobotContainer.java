@@ -24,17 +24,21 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PathFindingConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.TunerConstants;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.command.AutonPointAtTag;
+import frc.robot.command.AutonSmartCollect;
 import frc.robot.command.ChasePieces;
 import frc.robot.command.Collect;
 import frc.robot.command.CollectAndGo;
 import frc.robot.command.CollisionDetection;
+import frc.robot.command.ComboPoint;
 import frc.robot.command.HasPieceAuto;
 import frc.robot.command.Index;
+import frc.robot.command.ManualClimb;
 import frc.robot.command.MoveToPose;
 import frc.robot.command.PathFindToAuton;
 import frc.robot.command.PathToPose;
 import frc.robot.command.PointAtPoint;
-import frc.robot.command.ManualClimb;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
@@ -43,6 +47,7 @@ import frc.robot.command.SmartCollect;
 import frc.robot.command.stopDrive;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.FlywheelIN;
+import frc.robot.command.shoot.ReverseAmpShot;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.shoot.PivotUP;
@@ -128,7 +133,9 @@ public class RobotContainer extends LightningContainer {
         flywheel = new Flywheel();
         pivot = Constants.isMercury() ? new PivotMercury() : new PivotRhapsody();
         indexer = new Indexer(collector);
-        climber = new Climber();
+        if (!Constants.isMercury()) {
+            climber = new Climber();
+        }
         leds = new LEDs();
         sing = new Orchestra();
 
@@ -165,7 +172,7 @@ public class RobotContainer extends LightningContainer {
         NamedCommands.registerCommand("Chase-Pieces",
                 new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
         NamedCommands.registerCommand("Smart-Collect",
-                new SmartCollect(() -> .5d, () -> .6d, collector, indexer, pivot, flywheel)
+                new AutonSmartCollect(() -> 0.5, () -> 0.6, collector, indexer)
                         .deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
         NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
         NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE));
@@ -175,6 +182,9 @@ public class RobotContainer extends LightningContainer {
         NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
         NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
         NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
+        NamedCommands.registerCommand("Stopme-Tag", new InstantCommand(() -> limelights.setStopMePipeline(VisionConstants.Pipelines.TAG_PIPELINE)));
+        NamedCommands.registerCommand("Stopme-Speaker", new InstantCommand(() -> limelights.setStopMePipeline(VisionConstants.Pipelines.SPEAKER_PIPELINE)));
+        NamedCommands.registerCommand("Point-At-Tag", new AutonPointAtTag(drivetrain, limelights, driver));
 
         // make sure named commands are initialized before autobuilder!
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -223,8 +233,10 @@ public class RobotContainer extends LightningContainer {
         new Trigger(driver::getYButton)
                 .whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
+        // new Trigger(driver::getLeftBumper)
+        //         .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
         new Trigger(driver::getLeftBumper)
-                .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
+                .whileTrue(new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights));
 
         // new Trigger(driver::getYButton)
         // .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
@@ -237,9 +249,10 @@ public class RobotContainer extends LightningContainer {
                         .andThen(new SmartCollect(() -> 0.65, () -> 0.9, collector, indexer, pivot, flywheel))
                         .deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
+        // .andThen(new SmartCollect(() -> 0.65, () -> 0.9, collector, indexer, pivot,
+        // flywheel))
+
         // cand shots for the robot
-        new Trigger(coPilot::getAButton)
-                .whileTrue(new AmpShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
         new Trigger(coPilot::getXButton)
                 .whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
         // new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel,
@@ -247,6 +260,14 @@ public class RobotContainer extends LightningContainer {
         new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
         // new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
         // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+
+        if (Constants.isMercury()) {
+            new Trigger(coPilot::getAButton).whileTrue(new ReverseAmpShot(flywheel, pivot));
+        } else {
+            new Trigger(coPilot::getAButton)
+                    .whileTrue(new AmpShot(flywheel, pivot)
+                    .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+        }
 
         /* BIAS */
         new Trigger(() -> coPilot.getPOV() == 0)
@@ -350,7 +371,9 @@ public class RobotContainer extends LightningContainer {
         // () -> -coPilot.getRightY(),
         // coPilot::getYButton).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
-        climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
+        if (!Constants.isMercury()) {
+            climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
+        }
     }
 
     protected Command getAutonomousCommand() {

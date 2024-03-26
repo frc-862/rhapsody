@@ -18,7 +18,7 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PointAtPoint extends Command {
 
-    private static final double MIN_POWER = 0.3;
+    private double minPower = 0.3;
 
     private Swerve drivetrain;
     private XboxController driver;
@@ -28,7 +28,7 @@ public class PointAtPoint extends Command {
     private Translation2d targetPose;
     private Translation2d originalTargetPose;
 
-    private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
+    private PIDController headingController = VisionConstants.POINT_AIM_CONTROLLER;
 
     private DoubleLogEntry deltaYLog;
     private DoubleLogEntry deltaXLog;
@@ -104,6 +104,14 @@ public class PointAtPoint extends Command {
         inToleranceLog = new BooleanLogEntry(log, "/PointAtPoint/InTolerance");
     }
 
+
+    public void setDebugging(){
+        headingController.setP(LightningShuffleboard.getDouble("Point-At-Point", "P", headingController.getP()));
+        headingController.setI(LightningShuffleboard.getDouble("Point-At-Point", "I", headingController.getI()));
+        headingController.setD(LightningShuffleboard.getDouble("Point-At-Point", "D", headingController.getD()));
+        minPower = LightningShuffleboard.getDouble("Point-At-Point", "Min Power", minPower);
+    }
+
     @Override
     public void execute() {
         Pose2d pose = drivetrain.getPose();
@@ -114,15 +122,19 @@ public class PointAtPoint extends Command {
         targetHeading %= 360;
         pidOutput = headingController.calculate((pose.getRotation().getDegrees() + 360) % 360, targetHeading);
 
-        if (!inTolerance() && Math.abs(pidOutput) < MIN_POWER) {
-            pidOutput = Math.signum(pidOutput) * MIN_POWER;
+        // setDebugging();
+
+        if (!inTolerance() && Math.abs(pidOutput) < minPower) {
+            pidOutput = Math.signum(pidOutput) * minPower;
         }
+
 
         drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), pidOutput);
 
         LightningShuffleboard.setDouble("Point-At-Point", "Target Heading", targetHeading);
         LightningShuffleboard.setDouble("Point-At-Point", "Current Heading",
                 drivetrain.getPose().getRotation().getDegrees());
+        LightningShuffleboard.setBool("Point-At-Point", "In Tolerance", inTolerance());
 
         updateLogging();
     }
