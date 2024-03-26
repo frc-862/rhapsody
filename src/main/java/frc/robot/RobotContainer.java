@@ -31,6 +31,7 @@ import frc.robot.command.ChasePieces;
 import frc.robot.command.Collect;
 import frc.robot.command.CollectAndGo;
 import frc.robot.command.CollisionDetection;
+import frc.robot.command.ComboPoint;
 import frc.robot.command.HasPieceAuto;
 import frc.robot.command.Index;
 import frc.robot.command.ManualClimb;
@@ -237,8 +238,10 @@ public class RobotContainer extends LightningContainer {
         new Trigger(driver::getYButton)
                 .whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
 
+        // new Trigger(driver::getLeftBumper)
+        //         .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
         new Trigger(driver::getLeftBumper)
-                .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
+                .whileTrue(new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights));
 
         // new Trigger(driver::getYButton)
         // .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
