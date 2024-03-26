@@ -237,6 +237,10 @@ public class Indexer extends SubsystemBase {
         hasPieceLog.append(hasNote());
     }
 
+    /**
+     * If collector or indexer has note
+     * @return true if Piece state is not NONE
+     */
     public boolean hasNote() {
         return getPieceState() != PieceState.NONE;
     }

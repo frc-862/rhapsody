@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4226527369328164,
-        "y": 4.0012518520812295
+        "x": 1.6199370860280196,
+        "y": 4.065180438053184
       },
       "isLocked": false,
       "linkedName": "C3"
@@ -20,8 +20,8 @@
         "y": 5.574358195791997
       },
       "prevControl": {
-        "x": 2.270240402436249,
-        "y": 4.834914581493817
+        "x": 2.014573435513194,
+        "y": 5.574358195791997
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 74.64986350757553,
+    "rotation": -1.3771435512067638,
     "rotateFast": true
   },
   "reversed": false,

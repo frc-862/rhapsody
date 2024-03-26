@@ -13,7 +13,7 @@ public class HasPieceAuto extends Command {
     /**
      * Creates a new HasPieceAuto
      * A race condition to move to next collect if we miss the piece
-     *
+     * Ends if we do not have a piece
      * @param indexer subsystem
      */
     public HasPieceAuto(Indexer indexer) {

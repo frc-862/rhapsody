@@ -57,25 +57,38 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "Point-At-Speaker"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point-At-Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "preAim"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Collect"
+                      }
+                    }
+                  ]
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "preAim"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
+                  "name": "Has-Piece"
                 }
               }
             ]
@@ -105,9 +118,9 @@
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 3.0
+                  "name": "Has-Piece"
                 }
               }
             ]
@@ -133,38 +146,70 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "Point-At-Speaker"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point-At-Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "preAim"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Collect"
+                      }
+                    }
+                  ]
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "preAim"
+                  "name": "Has-Piece"
                 }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop-Drive"
+                      }
+                    }
+                  ]
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Stop-Drive"
+                  "name": "Has-Piece"
                 }
               }
             ]
@@ -189,6 +234,12 @@
                       "data": {
                         "name": "preAim"
                       }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Collect"
+                      }
                     }
                   ]
                 }
@@ -197,44 +248,70 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "Point-At-Speaker"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point-At-Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "preAim"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Collect"
+                      }
+                    }
+                  ]
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "preAim"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
+                  "name": "Has-Piece"
                 }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop-Drive"
+                      }
+                    }
+                  ]
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Stop-Drive"
+                  "name": "Has-Piece"
                 }
               }
             ]

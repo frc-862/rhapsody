@@ -39,7 +39,7 @@ public class ComboPoint extends Command {
 
     private PIDController pointController = VisionConstants.TAG_AIM_CONTROLLER;
     private PIDController tagController = VisionConstants.COMBO_CONTROLLER;
-    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.2, 0.5);
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.25, 0.5);
 
     private Debouncer debouncer = new Debouncer(0.2);
 
