@@ -337,7 +337,6 @@ public class Constants {
             public static final int TAG_PIPELINE = 0;
             public static final int SPEAKER_PIPELINE = 1;
             public static final int NOTE_PIPELINE = 2;
-
         }
     }
 

@@ -59,6 +59,7 @@ public class ComboPoint extends Command {
      * @param targetPose the target pose to point at
      * @param drivetrain to request movement
      * @param driver     the driver's controller, used for drive input
+     * @param limelights for tag align
      */
     public ComboPoint(Translation2d targetPose, Swerve drivetrain, XboxController driver, Limelights limelights) {
         this.drivetrain = drivetrain;
@@ -105,7 +106,7 @@ public class ComboPoint extends Command {
             targetPose = swapAlliance(originalTargetPose);
         }
 
-        stopMe.setPipeline(VisionConstants.SPEAKER_PIPELINE);
+        stopMe.setPipeline(VisionConstants.Pipelines.SPEAKER_PIPELINE);
 
         System.out.println("DRIVE - COMBO POINT START");
     }
@@ -142,7 +143,7 @@ public class ComboPoint extends Command {
         var deltaY = targetPose.getY() - pose.getY();
 
 
-        if (stopMe.hasTarget() && stopMe.getPipeline() == VisionConstants.SPEAKER_PIPELINE) {
+        if (stopMe.hasTarget() && stopMe.getPipeline() == VisionConstants.Pipelines.SPEAKER_PIPELINE) {
             targetHeading = stopMe.getTargetX();
             if (inTagTolerance()){
                 pidOutput = 0d;
@@ -195,7 +196,7 @@ public class ComboPoint extends Command {
     @Override
     public void end(boolean interrupted) {
         System.out.println("DRIVE - COMBO POINT END");
-        stopMe.setPipeline(VisionConstants.TAG_PIPELINE);
+        stopMe.setPipeline(VisionConstants.Pipelines.TAG_PIPELINE);
     }
 
     @Override
