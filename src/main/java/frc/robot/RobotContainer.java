@@ -200,13 +200,13 @@ public class RobotContainer extends LightningContainer {
                         () -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()))
                 .onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
-        // enables slow mode for driving
-        new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
-                .onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
-                .onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+        // // enables slow mode for driving
+        // new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
+        //         .onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
+        //         .onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
         // enables turbo mode for driving
-        new Trigger(() -> driver.getBackButton())
+        new Trigger(() -> driver.getRightTriggerAxis() > 0.25d) // TODO figure out the button for this trigger
                 .onTrue(new InstantCommand(() -> drivetrain.setTurboMode(true)))
                 .onFalse(new InstantCommand(() -> drivetrain.setTurboMode(false)));
 

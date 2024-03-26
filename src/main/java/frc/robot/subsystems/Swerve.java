@@ -68,6 +68,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private DoubleLogEntry odoXLog;
     private DoubleLogEntry odoYLog;
     private BooleanLogEntry slowModeLog;
+    private BooleanLogEntry turboModeLog;
     private BooleanLogEntry robotCentricLog;
     private BooleanLogEntry tippedLog;
     private DoubleLogEntry velocityXLog;
@@ -96,6 +97,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         odoXLog = new DoubleLogEntry(log, "/Swerve/Odo X");
         odoYLog = new DoubleLogEntry(log, "/Swerve/Odo Y");
         slowModeLog = new BooleanLogEntry(log, "/Swerve/Slow mode");
+        turboModeLog = new BooleanLogEntry(log, "/Swerve/Turbo mode");
         robotCentricLog = new BooleanLogEntry(log, "/Swerve/Robot Centric");
         tippedLog = new BooleanLogEntry(log, "/Swerve/Tipped");
         velocityXLog = new DoubleLogEntry(log, "/Swerve/velocity x");
@@ -103,6 +105,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         distanceToSpeakerLog = new DoubleLogEntry(log, "/Swerve/Distance to Speaker");
 
         LightningShuffleboard.setBoolSupplier("Swerve", "Slow Mode", () -> inSlowMode());
+        LightningShuffleboard.setBoolSupplier("Swerve", "Turbo mode", () -> inTurboMode());
         LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
         LightningShuffleboard.setBoolSupplier("Swerve", "Tipped", () -> isTipped());
 
@@ -350,7 +353,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param slow boolean if we are in slow mode
      */
     public void setSlowMode(boolean slow) {
-        if (slow) {
+        slowMode = slow;
+
+        if (slowMode) {
             if (turboMode){
                 setTurboMode(false);
             }
@@ -361,6 +366,15 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             maxSpeed = DrivetrainConstants.MaxSpeed;
             maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
         }
+    }
+
+    /**
+     * gets if turbo mode is enabled
+     * 
+     * @return if the robot is driving in turbo mode
+     */
+    public boolean inTurboMode(){
+        return turboMode;
     }
 
     /**
@@ -389,25 +403,18 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             maxSpeed = DrivetrainConstants.MaxSpeed;
         }
 
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {   
             var module = getModule(i);
             var drive = module.getDriveMotor();
-            var steer = module.getSteerMotor();
 
             StatusCode status = StatusCode.StatusCodeNotInitialized;
             StatusCode status1 = StatusCode.StatusCodeNotInitialized;
+
             for (int j = 0; j < 5; ++j) {
                 // Theory is like, it'll refresh, and then apply.
                 status1 = drive.getConfigurator().refresh(config);
                 // kyle said try refresh, but im pretty sure it's for reading only.
                 status = drive.getConfigurator().apply(config);
-                if (status.isOK() && status1.isOK()) {
-                    break;
-                }
-            }
-            for (int j = 0; j < 5; ++j) {
-                status1 = steer.getConfigurator().refresh(config);
-                status = steer.getConfigurator().apply(config);
                 if (status.isOK() && status1.isOK()) {
                     break;
                 }
