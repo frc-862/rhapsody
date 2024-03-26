@@ -8,6 +8,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveControlRequestParameters;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -15,6 +16,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.constraint.RectangularRegionConstraint;
@@ -50,6 +52,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric();
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
+    private final SwerveRequest.FieldCentricFacingAngle driveFieldFacing = new SwerveRequest.FieldCentricFacingAngle();
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
     private boolean slowMode = false;
@@ -190,6 +193,16 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public void setField(double x, double y, double rot) {
         this.setControl(driveField.withVelocityX(x).withVelocityY(y).withRotationalRate(rot));
+    }
+
+    /**
+     * Apply a Field centric request to the drivetrain run in periodic, Always points torward desired heading
+     * @param x the x velocity m/s
+     * @param y the y velocity m/s
+     * @param facing the desired heading
+     */
+    public void setFieldFacing(double x, double y, Rotation2d facing) {
+        this.setControl(driveFieldFacing.withVelocityX(x).withVelocityY(y).withTargetDirection(facing));
     }
 
     /**
