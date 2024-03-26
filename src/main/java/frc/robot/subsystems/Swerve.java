@@ -53,6 +53,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
     private boolean slowMode = false;
+    private boolean turboMode = false;
     private boolean disableVision = false;
     private boolean robotCentricControl = false;
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
@@ -350,12 +351,67 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public void setSlowMode(boolean slow) {
         if (slow) {
+            if (turboMode){
+                setTurboMode(false);
+            }
             maxSpeed = DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT;
             maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT
                     * DrivetrainConstants.SLOW_ROT_MULT;
         } else {
             maxSpeed = DrivetrainConstants.MaxSpeed;
             maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
+        }
+    }
+
+    /**
+     * Set turbo mode t/f
+     *
+     * @param turbo boolean if we are in turbo mode
+     */
+    public void setTurboMode(boolean turbo) {
+        var config = new TalonFXConfiguration();
+
+        turboMode = turbo;
+
+        if (turboMode) {
+            setSlowMode(false);
+
+            config.TorqueCurrent.PeakForwardTorqueCurrent = 150;
+            config.TorqueCurrent.PeakReverseTorqueCurrent = -150;
+            config.CurrentLimits.StatorCurrentLimit = 150;
+
+            maxSpeed = DrivetrainConstants.MaxSpeed * DrivetrainConstants.TURBO_MULT;
+        } else {
+            config.TorqueCurrent.PeakForwardTorqueCurrent = 50;
+            config.TorqueCurrent.PeakReverseTorqueCurrent = -50;
+            config.CurrentLimits.StatorCurrentLimit = 50;
+
+            maxSpeed = DrivetrainConstants.MaxSpeed;
+        }
+
+        for (int i = 0; i < 4; ++i) {
+            var module = getModule(i);
+            var drive = module.getDriveMotor();
+            var steer = module.getSteerMotor();
+
+            StatusCode status = StatusCode.StatusCodeNotInitialized;
+            StatusCode status1 = StatusCode.StatusCodeNotInitialized;
+            for (int j = 0; j < 5; ++j) {
+                // Theory is like, it'll refresh, and then apply.
+                status1 = drive.getConfigurator().refresh(config);
+                // kyle said try refresh, but im pretty sure it's for reading only.
+                status = drive.getConfigurator().apply(config);
+                if (status.isOK() && status1.isOK()) {
+                    break;
+                }
+            }
+            for (int j = 0; j < 5; ++j) {
+                status1 = steer.getConfigurator().refresh(config);
+                status = steer.getConfigurator().apply(config);
+                if (status.isOK() && status1.isOK()) {
+                    break;
+                }
+            }
         }
     }
 

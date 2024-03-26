@@ -205,6 +205,11 @@ public class RobotContainer extends LightningContainer {
                 .onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
                 .onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
+        // enables turbo mode for driving
+        new Trigger(() -> driver.getBackButton())
+                .onTrue(new InstantCommand(() -> drivetrain.setTurboMode(true)))
+                .onFalse(new InstantCommand(() -> drivetrain.setTurboMode(false)));
+
         // sets field relative forward to the direction the robot is facing
         new Trigger(() -> driver.getStartButton() && driver.getBackButton())
                 .onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative)
