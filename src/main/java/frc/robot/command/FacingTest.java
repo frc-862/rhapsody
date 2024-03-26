@@ -19,8 +19,6 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class FacingTest extends Command {
 
-    private double minPower = 0.3;
-
     private Swerve drivetrain;
     private XboxController driver;
 

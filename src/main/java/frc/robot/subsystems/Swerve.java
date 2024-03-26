@@ -197,12 +197,12 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Apply a Field centric request to the drivetrain run in periodic, Always points torward desired heading
-     * @param x the x velocity m/s
-     * @param y the y velocity m/s
+     * @param x the x percent request
+     * @param y the y percent request
      * @param facing the desired heading
      */
     public void setFieldFacing(double x, double y, Rotation2d facing) {
-        this.setControl(driveFieldFacing.withVelocityX(x).withVelocityY(y).withTargetDirection(facing));
+        this.setControl(driveFieldFacing.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed).withTargetDirection(facing));
     }
 
     /**
@@ -212,7 +212,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      *
      * @param x   the x, percent of max velocity (-1,1)
      * @param y   the y, percent of max velocity (-1,1)
-     * @param rot the rotational, percent of max velocity rad/s
+     * @param rot the rotational rate rad/s
      */
     public void setFieldDriver(double x, double y, double rot) {
         this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
