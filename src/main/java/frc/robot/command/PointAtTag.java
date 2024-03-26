@@ -45,7 +45,7 @@ public class PointAtTag extends Command {
 
     @Override
     public void initialize() {
-        limelights.setStopMePipeline(VisionConstants.SPEAKER_PIPELINE);
+        limelights.setStopMePipeline(VisionConstants.Pipelines.SPEAKER_PIPELINE);
 
         headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
 
@@ -68,7 +68,7 @@ public class PointAtTag extends Command {
 
         targetHeading = limelights.getStopMe().getTargetX();
         
-        if (limelights.getStopMePipeline() == VisionConstants.SPEAKER_PIPELINE) {
+        if (limelights.getStopMePipeline() == VisionConstants.Pipelines.SPEAKER_PIPELINE) {
             pidOutput = headingController.calculate(0, targetHeading);
         }
 
@@ -90,7 +90,7 @@ public class PointAtTag extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        limelights.setStopMePipeline(VisionConstants.TAG_PIPELINE);
+        limelights.setStopMePipeline(VisionConstants.Pipelines.TAG_PIPELINE);
     }
 
     /**

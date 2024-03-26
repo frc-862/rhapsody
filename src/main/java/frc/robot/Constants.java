@@ -324,9 +324,7 @@ public class Constants {
         public static final double POINTATTAG_ALIGNMENT_TOLERANCE = 2d;
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.2, 0, 0.015, 0.01);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
-        public static final int TAG_PIPELINE = 0;
-        public static final int SPEAKER_PIPELINE = 1;
-        public static final int NOTE_PIPELINE = 2;
+        
 
         public static final double HALF_FIELD_HEIGHT = Units.feetToMeters(13);
 
@@ -334,9 +332,10 @@ public class Constants {
         public static final Translation3d RED_SPEAKER_LOCATION = new Translation3d(16.4592, 5.547593, 1.2);
 
         public class Pipelines { // TODO get real
-            public static final int APRIL_TAG_3d = 0;
-            public static final int APRIL_TAG_2d = 1;
-            public static final int CHASE_PIECE = 2; // FOR the collector
+            public static final int TAG_PIPELINE = 0;
+            public static final int SPEAKER_PIPELINE = 1;
+            public static final int NOTE_PIPELINE = 2;
+
         }
     }
 
