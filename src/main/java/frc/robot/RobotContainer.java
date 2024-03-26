@@ -51,6 +51,7 @@ import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.shoot.PivotUP;
 import frc.robot.command.shoot.Stow;
+import frc.robot.command.shoot.TrapShot;
 import frc.robot.command.shoot.Tune;
 import frc.robot.command.shoot.preAim;
 import frc.robot.command.shoot.AutonCand.AmpShotAuton;
@@ -230,7 +231,7 @@ public class RobotContainer extends LightningContainer {
 
         // aim at amp and stage tags for the robot
         new Trigger(driver::getYButton)
-                .whileTrue(new PointAtTag(drivetrain, limelights, driver)); // TODO: make work
+                .whileTrue(new TrapShot(flywheel, pivot));
 
         new Trigger(driver::getLeftBumper)
                 .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));

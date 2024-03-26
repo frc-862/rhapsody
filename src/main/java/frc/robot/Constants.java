@@ -606,6 +606,11 @@ public class Constants {
         public static final double AMP_BOTTOM_RPM = 2000;
         public static final double AMP_ANGLE = 45;
 
+        // Trap
+        public static final double TRAP_TOP_RPM = 650;
+        public static final double TRAP_BOTTOM_RPM = 1850;
+        public static final double TRAP_ANGLE = 79.25;
+
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
         public static final double POINT_BLANK_ANGLE = 50;

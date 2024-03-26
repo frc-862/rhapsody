@@ -1,0 +1,55 @@
+package frc.robot.command.shoot;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.CandConstants;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Pivot;
+import frc.thunder.command.TimedCommand;
+
+public class TrapShot extends Command {
+
+    private Flywheel flywheel;
+    private Pivot pivot;
+
+    /**
+	 * Creates a new TrapShot
+	 * @param flywheel subsystem
+	 * @param pivot subsystem
+	 */
+    public TrapShot(Flywheel flywheel, Pivot pivot) {
+        this.flywheel = flywheel;
+        this.pivot = pivot;
+
+        addRequirements(flywheel, pivot);
+    }
+
+    @Override
+    public void initialize() {
+        flywheel.setTopMotorRPM(CandConstants.TRAP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMotorRPM(CandConstants.TRAP_BOTTOM_RPM + flywheel.getBias());
+		pivot.setTargetAngle(CandConstants.TRAP_ANGLE + pivot.getBias());
+    }
+
+    @Override
+    public void execute() {
+        flywheel.setTopMotorRPM(CandConstants.TRAP_TOP_RPM + flywheel.getBias());
+		flywheel.setBottomMotorRPM(CandConstants.TRAP_BOTTOM_RPM + flywheel.getBias());
+		pivot.setTargetAngle(CandConstants.TRAP_ANGLE + pivot.getBias());
+
+		if(flywheel.allMotorsOnTarget() && pivot.onTarget()) {
+			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
+		}
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        flywheel.coast(true);
+		pivot.setTargetAngle(pivot.getStowAngle());
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+}
