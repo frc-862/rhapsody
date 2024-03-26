@@ -31,6 +31,7 @@ import frc.robot.command.ChasePieces;
 import frc.robot.command.Collect;
 import frc.robot.command.CollectAndGo;
 import frc.robot.command.CollisionDetection;
+import frc.robot.command.ComboPoint;
 import frc.robot.command.HasPieceAuto;
 import frc.robot.command.Index;
 import frc.robot.command.ManualClimb;
@@ -40,7 +41,6 @@ import frc.robot.command.PathToPose;
 import frc.robot.command.PointAtPoint;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.SetPointClimb;
-import frc.robot.command.SetStopMePipeline;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
@@ -156,36 +156,35 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("led-Shoot",
 				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
-		NamedCommands.registerCommand("Cand-Sub",
-				new PointBlankShotAuton(flywheel, pivot, indexer)
-						.deadlineWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
-		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-Line", new CandLine(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("AMP", new AmpShotAuton(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
-		NamedCommands.registerCommand("Smart-Shoot",
-				new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
-						.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
-		NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
-		NamedCommands.registerCommand("Chase-Pieces",
-				new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
-		NamedCommands.registerCommand("Smart-Collect",
-				new AutonSmartCollect(() -> 0.5, () -> 0.6, collector, indexer)
-						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
-		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
-		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE));
-		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
-		NamedCommands.registerCommand("Point-At-Speaker",
-				new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
-		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
-		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
-		NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
-		NamedCommands.registerCommand("Stopme-pose", new SetStopMePipeline(limelights, VisionConstants.POSE_PIPELINE));
-		NamedCommands.registerCommand("Stopme-Tag",
-				new SetStopMePipeline(limelights, VisionConstants.SPEAKER_POINT_PIPELINE));
-		NamedCommands.registerCommand("Point-At-Tag", new AutonPointAtTag(drivetrain, limelights, driver));
+        NamedCommands.registerCommand("Cand-Sub",
+                new PointBlankShotAuton(flywheel, pivot, indexer)
+                        .deadlineWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
+        NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
+        NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
+        NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
+        NamedCommands.registerCommand("Cand-Line", new CandLine(flywheel, pivot, indexer));
+        NamedCommands.registerCommand("AMP", new AmpShotAuton(flywheel, pivot, indexer));
+        NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
+        NamedCommands.registerCommand("Smart-Shoot",
+                new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
+                        .alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
+        NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
+        NamedCommands.registerCommand("Chase-Pieces",
+                new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
+        NamedCommands.registerCommand("Smart-Collect",
+                new AutonSmartCollect(() -> 0.5, () -> 0.6, collector, indexer)
+                        .deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
+        NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
+        NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE));
+        NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
+        NamedCommands.registerCommand("Point-At-Speaker",
+                new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
+        NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
+        NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
+        NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
+        NamedCommands.registerCommand("Stopme-Tag", new InstantCommand(() -> limelights.setStopMePipeline(VisionConstants.Pipelines.TAG_PIPELINE)));
+        NamedCommands.registerCommand("Stopme-Speaker", new InstantCommand(() -> limelights.setStopMePipeline(VisionConstants.Pipelines.SPEAKER_PIPELINE)));
+        NamedCommands.registerCommand("Point-At-Tag", new AutonPointAtTag(drivetrain, limelights, driver));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -234,8 +233,10 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getYButton)
 				.whileTrue(new AutonPointAtTag(drivetrain, limelights, driver));
 
-		new Trigger(driver::getLeftBumper)
-				.whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
+        // new Trigger(driver::getLeftBumper)
+        //         .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
+        new Trigger(driver::getLeftBumper)
+                .whileTrue(new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights));
 
 		// new Trigger(driver::getYButton)
 		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));

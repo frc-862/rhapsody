@@ -28,7 +28,7 @@ public class PointAtPoint extends Command {
     private Translation2d targetPose;
     private Translation2d originalTargetPose;
 
-    private PIDController headingController = VisionConstants.TAG_AIM_CONTROLLER;
+    private PIDController headingController = VisionConstants.POINT_AIM_CONTROLLER;
 
     private DoubleLogEntry deltaYLog;
     private DoubleLogEntry deltaXLog;
