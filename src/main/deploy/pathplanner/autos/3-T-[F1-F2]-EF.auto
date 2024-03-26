@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "T-F1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "F1-TS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TS-F2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "F2-TS"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Testing",
+  "choreoAuto": false
+}

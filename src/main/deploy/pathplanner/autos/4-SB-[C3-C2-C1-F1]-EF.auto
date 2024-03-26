@@ -101,19 +101,32 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop-Drive"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "Stop-Drive"
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -187,7 +200,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "C2-C1"
+                        "pathName": "F1-TL"
                       }
                     },
                     {

@@ -341,7 +341,7 @@ public class Constants {
         public class Pipelines { // TODO get real
             public static final int APRIL_TAG_3d = 0;
             public static final int APRIL_TAG_2d = 1;
-            public static final int CHASE_PIECE = 2; // FOR the collector
+            public static final int CHASE_PIECE = 0; // FOR 12-dust only 
         }
     }
 
