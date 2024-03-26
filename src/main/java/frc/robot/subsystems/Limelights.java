@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.util.function.Consumer;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.VisionConstants;
 import frc.thunder.util.Pose4d;
 import frc.thunder.vision.Limelight;
 
@@ -29,7 +30,10 @@ public class Limelights extends SubsystemBase {
         this.poseProducer = new Thread(() -> {
             while (true) {
                 try {
-                    monitor(stopMe);
+
+                    if (stopMe.getPipeline() == VisionConstants.Pipelines.TAG_PIPELINE){
+                        monitor(stopMe);
+                    }
                     monitor(champs);
                     Thread.sleep(5);
                 } catch (InterruptedException e) {

@@ -65,7 +65,7 @@ public class PointAtTag extends Command {
 
     @Override
     public void execute() {
-        LightningShuffleboard.setBool("Point-At-Tag", "On Target", (Math.abs(limelights.getStopMe().getTargetX()) < VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE) && limelights.getStopMePipeline() == VisionConstants.SPEAKER_POINT_PIPELINE);
+        LightningShuffleboard.setBool("Point-At-Tag", "On Target", (Math.abs(limelights.getStopMe().getTargetX()) < VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE) && limelights.getStopMePipeline() == VisionConstants.Pipelines.SPEAKER_PIPELINE);
         LightningShuffleboard.setDouble("Point-At-Tag", "Pidoutput", pidOutput);
         LightningShuffleboard.setDouble("Point-At-Tag", "Target heading", targetHeading);
 

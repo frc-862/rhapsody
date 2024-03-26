@@ -35,10 +35,11 @@ public class Robot extends LightningRobot {
     @Override
     public void disabledPeriodic() {
         super.disabledPeriodic();
-
+        
         RobotContainer container = (RobotContainer) getContainer();
         if (haveDriverStation) {
             container.drivetrain.setSpeakerPose(DriverStation.getAlliance().get());
         }
+        container.pivot.resetBias();
     }
 }

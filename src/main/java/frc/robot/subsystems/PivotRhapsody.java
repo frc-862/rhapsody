@@ -220,15 +220,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         bias = 0;
     }
 
-    // /**
-    //  * CURRENTLY DOES NOTHING
-    //  *
-    //  * @param angle angle to set the pivot angle to
-    //  */
-    // public void resetAngle(double angle) {
-    //     // THIS DOES NOTHING
-    // }
-
     /**
      * @return current stow angle
      */

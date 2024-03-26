@@ -526,8 +526,7 @@ public class Constants {
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 275d;
 
-        public static final double BIAS_INCREMENT = 1d; // fDegrees to bias by per button press TODO get amount to bias
-                                                        // by
+        public static final double BIAS_INCREMENT = 0.5d; // Bias by .5 degrees
 
         public static final double STOW_ANGLE = 27d;
 
@@ -633,9 +632,9 @@ public class Constants {
         public static final double C3_ANGLE = 0;
 
         // Reverse Amp Shot
-        public static final double REVERSE_AMP_TOP_RPM = 500;
-        public static final double REVERSE_AMP_BOTTOM_RPM = 650;
-        public static final double REVERSE_AMP_ANGLE = 110;
+        public static final double REVERSE_AMP_TOP_RPM = 300;
+        public static final double REVERSE_AMP_BOTTOM_RPM = 700;
+        public static final double REVERSE_AMP_ANGLE = 93;
 
         // Line
         public static final double LINE_RPM = 0;

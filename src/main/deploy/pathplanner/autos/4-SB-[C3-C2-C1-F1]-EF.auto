@@ -6,22 +6,9 @@
     "data": {
       "commands": [
         {
-          "type": "deadline",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point-At-Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "preAim"
-                }
-              }
-            ]
+            "name": "Bias-down"
           }
         },
         {
@@ -36,12 +23,6 @@
                       "type": "named",
                       "data": {
                         "name": "Smart-Shoot"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stop-Drive"
                       }
                     }
                   ]
@@ -200,7 +181,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "F1-TL"
+                        "pathName": "C2-C1"
                       }
                     },
                     {
