@@ -182,7 +182,7 @@ public class Constants {
 
         // The stator current at which the wheels start to slip;
         // This needs to be tuned to your individual robot
-        private static final double kSlipCurrentA = 300d;
+        private static final double kSlipCurrentA = 50d;
 
         // Theoretical free speed (m/s) at 12v applied output;
         // This needs to be tuned to your individual robot
@@ -326,11 +326,12 @@ public class Constants {
         public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
                 Units.feetToMeters(5));
         public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
-        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.2, 0, 0, 0.01);
+        public static final double POINTATTAG_ALIGNMENT_TOLERANCE = 1d;
+        public static final PIDController POINT_AIM_CONTROLLER = new PIDController(0.2, 0, 0.015, 0.01);
+        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0.01);
+        public static final PIDController COMBO_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
-        public static final int TAG_PIPELINE = 0;
-        public static final int SPEAKER_PIPELINE = 1;
-        public static final int NOTE_PIPELINE = 2;
+        
 
         public static final double HALF_FIELD_HEIGHT = Units.feetToMeters(13);
 
@@ -338,9 +339,9 @@ public class Constants {
         public static final Translation3d RED_SPEAKER_LOCATION = new Translation3d(16.4592, 5.547593, 1.2);
 
         public class Pipelines { // TODO get real
-            public static final int APRIL_TAG_3d = 0;
-            public static final int APRIL_TAG_2d = 1;
-            public static final int CHASE_PIECE = 2; // FOR the collector
+            public static final int TAG_PIPELINE = 0;
+            public static final int SPEAKER_PIPELINE = 1;
+            public static final int NOTE_PIPELINE = 2;
         }
     }
 
@@ -533,7 +534,7 @@ public class Constants {
 
         public static final double MAX_INDEX_ANGLE = 40d;
 
-        public static final double MIN_ANGLE = 27d;
+        public static final double MIN_ANGLE = 25d;
         public static final double MAX_ANGLE = 105d;
 
         public static final double PIVOT_SYSTEST_ANGLE = 90d;
@@ -566,8 +567,8 @@ public class Constants {
                 put(2.5d, 3000d);
                 put(3d, 3500d);
                 put(3.5d, 4000d);
-                put(4.09d, 3600d);
-                put(4.86d, 4600d);
+                put(4d, 3600d);
+                put(4.75d, 4600d);
             }
         };
 
@@ -575,13 +576,13 @@ public class Constants {
         public static final InterpolationMap STEALTH_ANGLE_MAP = new InterpolationMap() {
             {
                 // As distance gets smaller angle goes up
-                put(1.21d, 52d);
-                put(2d, 45d);
-                put(2.5d, 41.5d);
-                put(3d, 37d);
-                put(3.5d, 30d);
-                put(4.09d, 26.5d);
-                put(4.86, 26.5d);
+                put(1.21d, 50d);
+                put(2d, 43d);
+                put(2.5d, 39.5d);
+                put(3d, 35d);
+                put(3.5d, 30.5d);
+                put(4d, 29.5d);
+                put(4.75d, 28d);
             }
         };
 
@@ -593,9 +594,9 @@ public class Constants {
                 put(2d, 2500d);
                 put(2.5d, 3000d);
                 put(3d, 3500d);
-                put(3.5d, 4000d);
-                put(4.09d, 3600d);
-                put(4.86d, 4600d);
+                put(3.5d, 3700d);
+                put(4d, 3700d);
+                put(4.75d, 4000d);
             }
         };
 
@@ -612,7 +613,7 @@ public class Constants {
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
-        public static final double POINT_BLANK_ANGLE = 60;
+        public static final double POINT_BLANK_ANGLE = 50;
 
         // Podium
         public static final double PODIUM_RPM = 3500;
@@ -629,6 +630,11 @@ public class Constants {
         // C3
         public static final double C3_RPM = 0;
         public static final double C3_ANGLE = 0;
+
+        // Reverse Amp Shot
+        public static final double REVERSE_AMP_TOP_RPM = 500;
+        public static final double REVERSE_AMP_BOTTOM_RPM = 650;
+        public static final double REVERSE_AMP_ANGLE = 110;
 
         // Line
         public static final double LINE_RPM = 0;
@@ -680,7 +686,7 @@ public class Constants {
     
 
     public class LEDsConstants {
-        public static final int LED_LENGTH = 28;
+        public static final int LED_LENGTH = 50;
 
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
@@ -694,7 +700,7 @@ public class Constants {
             {
                 put(-1, LEDsConstants.LED_LENGTH);
                 put(0, 14);
-                put(1, 14);
+                put(1, 15);
             }
         };
 
