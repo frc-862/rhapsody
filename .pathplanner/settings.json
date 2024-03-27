@@ -10,10 +10,7 @@
     "Top side paths"
   ],
   "autoFolders": [
-    "Commands",
-    "Done",
-    "Testing",
-    "Path"
+    "Commands"
   ],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 5.0,

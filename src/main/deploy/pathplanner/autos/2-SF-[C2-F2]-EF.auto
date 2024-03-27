@@ -14,12 +14,6 @@
                 "data": {
                   "name": "Cand-Sub"
                 }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 5.0
-                }
               }
             ]
           }
