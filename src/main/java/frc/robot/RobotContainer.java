@@ -48,6 +48,7 @@ import frc.robot.command.SmartCollect;
 import frc.robot.command.stopDrive;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.FlywheelIN;
+import frc.robot.command.shoot.NotePass;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.shoot.PivotUP;
@@ -262,7 +263,8 @@ public class RobotContainer extends LightningContainer {
                 .whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
         // new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel,
         // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-        new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
+        // new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
+        new Trigger(coPilot::getYButton).whileTrue(new NotePass(flywheel, pivot));
         // new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
         // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
