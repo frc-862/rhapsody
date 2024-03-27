@@ -129,8 +129,10 @@ public class Constants {
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16); // f/s to m/s
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(10.825);
 
-        public static final double CONTROL_LOOP_PERIOD = 0.01;
-
+        public static final double CONTROL_LOOP_PERIOD = 0.01;                                        // constants
+        
+        public static final PathConstraints PATHFINDING_CONSTRAINTS = new PathConstraints(2.0, 1.0,
+         3.0, 1.5);
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
 
         public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can be at before ending.
@@ -153,6 +155,9 @@ public class Constants {
                 new Rotation2d(180));
         public static final Pose2d SOURCE_SUB_C_STARTPOSE_RED = new Pose2d(new Translation2d(15.85, 4.35),
                 new Rotation2d(-120));
+
+        public static final Pose2d AMP_LOCATION_RED = new Pose2d(new Translation2d(14.4, 7.62),
+            new Rotation2d(90));
     }
 
     public static class TunerConstants {
@@ -321,12 +326,12 @@ public class Constants {
         public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
                 Units.feetToMeters(5));
         public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
-        public static final double POINTATTAG_ALIGNMENT_TOLERANCE = 2d;
-        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.2, 0, 0.015, 0.01);
+        public static final double POINTATTAG_ALIGNMENT_TOLERANCE = 1d;
+        public static final PIDController POINT_AIM_CONTROLLER = new PIDController(0.2, 0, 0.015, 0.01);
+        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0.01);
+        public static final PIDController COMBO_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
-        public static final int TAG_PIPELINE = 0;
-        public static final int SPEAKER_PIPELINE = 1;
-        public static final int NOTE_PIPELINE = 2;
+        
 
         public static final double HALF_FIELD_HEIGHT = Units.feetToMeters(13);
 
@@ -334,9 +339,9 @@ public class Constants {
         public static final Translation3d RED_SPEAKER_LOCATION = new Translation3d(16.4592, 5.547593, 1.2);
 
         public class Pipelines { // TODO get real
-            public static final int APRIL_TAG_3d = 0;
-            public static final int APRIL_TAG_2d = 1;
-            public static final int CHASE_PIECE = 2; // FOR the collector
+            public static final int TAG_PIPELINE = 0;
+            public static final int SPEAKER_PIPELINE = 1;
+            public static final int NOTE_PIPELINE = 2;
         }
     }
 
@@ -602,9 +607,9 @@ public class Constants {
 
     public class CandConstants { // TODO get real
         // Amp
-        public static final double AMP_TOP_RPM = 50;
-        public static final double AMP_BOTTOM_RPM = 2000;
-        public static final double AMP_ANGLE = 45;
+        public static final double AMP_TOP_RPM = 300;
+        public static final double AMP_BOTTOM_RPM = 700;
+        public static final double AMP_ANGLE = 93;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
@@ -625,11 +630,6 @@ public class Constants {
         // C3
         public static final double C3_RPM = 0;
         public static final double C3_ANGLE = 0;
-
-        // Reverse Amp Shot
-        public static final double REVERSE_AMP_TOP_RPM = 500;
-        public static final double REVERSE_AMP_BOTTOM_RPM = 650;
-        public static final double REVERSE_AMP_ANGLE = 110;
 
         // Line
         public static final double LINE_RPM = 0;
@@ -685,7 +685,7 @@ public class Constants {
     
 
     public class LEDsConstants {
-        public static final int LED_LENGTH = 29;
+        public static final int LED_LENGTH = 50;
 
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
