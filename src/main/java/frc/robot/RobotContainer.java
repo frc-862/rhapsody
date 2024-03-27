@@ -31,6 +31,7 @@ import frc.robot.command.ChasePieces;
 import frc.robot.command.Collect;
 import frc.robot.command.CollectAndGo;
 import frc.robot.command.CollisionDetection;
+import frc.robot.command.ComboPoint;
 import frc.robot.command.HasPieceAuto;
 import frc.robot.command.Index;
 import frc.robot.command.ManualClimb;
@@ -46,7 +47,6 @@ import frc.robot.command.SmartCollect;
 import frc.robot.command.stopDrive;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.FlywheelIN;
-import frc.robot.command.shoot.ReverseAmpShot;
 import frc.robot.command.shoot.PointBlankShot;
 import frc.robot.command.shoot.SmartShoot;
 import frc.robot.command.shoot.PivotUP;
@@ -233,8 +233,10 @@ public class RobotContainer extends LightningContainer {
         new Trigger(driver::getYButton)
                 .whileTrue(new TrapShot(flywheel, pivot));
 
+        // new Trigger(driver::getLeftBumper)
+        //         .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
         new Trigger(driver::getLeftBumper)
-                .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
+                .whileTrue(new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights));
 
         // new Trigger(driver::getYButton)
         // .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
@@ -259,13 +261,9 @@ public class RobotContainer extends LightningContainer {
         // new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
         // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
-        if (Constants.isMercury()) {
-            new Trigger(coPilot::getAButton).whileTrue(new ReverseAmpShot(flywheel, pivot));
-        } else {
-            new Trigger(coPilot::getAButton)
-                    .whileTrue(new AmpShot(flywheel, pivot)
-                    .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-        }
+		new Trigger(coPilot::getAButton)
+		        .whileTrue(new AmpShot(flywheel, pivot)
+		        .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
         /* BIAS */
         new Trigger(() -> coPilot.getPOV() == 0)
