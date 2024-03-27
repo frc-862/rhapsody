@@ -127,7 +127,7 @@ public class Constants {
     }
 
     public static class AutonomousConstants {
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(2.0, 0, 0); // TODO Tune
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 1, 0); // TODO Tune
         public static final PIDConstants ROTATION_PID = new PIDConstants(4, 0, 0); // TODO: Tune
 
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16); // f/s to m/s
@@ -135,8 +135,7 @@ public class Constants {
 
         public static final double CONTROL_LOOP_PERIOD = 0.01;
 
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
-                                                                                                      // constants
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5);
 
         public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can be at before ending.
                                                               // Prevents going over center line.
@@ -575,6 +574,7 @@ public class Constants {
             {
                 // As distance gets smaller angle goes up
                 put(1.21d, 50d);
+                put(1.63d, 47d);
                 put(2d, 43d);
                 put(2.5d, 39.5d);
                 put(3d, 35d);
@@ -582,6 +582,7 @@ public class Constants {
                 put(4d, 29.5d);
                 put(4.3, 28d);
                 put(4.75d, 27.5d);
+                put(6.2d, 23.5d);
             }
         };
 
@@ -590,6 +591,7 @@ public class Constants {
             {
                 // As distance get smaller RPM gets smaller
                 put(1.21d, 2000d);
+                put(1.63d, 2360d);
                 put(2d, 2500d);
                 put(2.5d, 3000d);
                 put(3d, 3500d);
@@ -597,6 +599,7 @@ public class Constants {
                 put(4d, 3700d);
                 put(4.3d, 4200d);
                 put(4.75d, 4200d);
+                put(6.2d, 5800d);
             }
         };
 

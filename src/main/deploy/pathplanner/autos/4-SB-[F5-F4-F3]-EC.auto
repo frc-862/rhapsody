@@ -24,12 +24,6 @@
                       "data": {
                         "name": "preAim"
                       }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stopme-Tag"
-                      }
                     }
                   ]
                 }
@@ -277,7 +271,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "BL-F3"
+                  "pathName": "BS-F3"
                 }
               },
               {

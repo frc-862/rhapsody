@@ -28,6 +28,12 @@
           "data": {
             "pathName": "F2-TS"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TS-F2"
+          }
         }
       ]
     }
