@@ -3,6 +3,7 @@ package frc.robot.command;
 import java.sql.Driver;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
@@ -40,6 +41,8 @@ public class ChasePieces extends Command {
     private double maxCollectPower;
     private double drivePower;
     private double rotPower;
+
+    private Pose2d startingPose;
 
     private boolean onTarget;
     private boolean hasPiece;
@@ -112,7 +115,7 @@ public class ChasePieces extends Command {
         smartCollect.initialize();
 
         hasSeenTarget = false;
-
+        startingPose = drivetrain.getPose();
     }
 
     /**
@@ -194,11 +197,11 @@ public class ChasePieces extends Command {
                 }
             } else {
                 if (!hasSeenTarget) {
-                    if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT) {
+                    if (startingPose.getY() > VisionConstants.HALF_FIELD_HEIGHT) {
                         if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                            drivetrain.setRobot(0, 0, -rotPower);
+                            drivetrain.setRobot(0.5, 0, -rotPower);
                         } else {
-                            drivetrain.setRobot(0, 0, rotPower);
+                            drivetrain.setRobot(0.5, 0, rotPower);
                         }
                     } else {
                         if (DriverStation.getAlliance().get() == Alliance.Blue) {
