@@ -604,9 +604,9 @@ public class Constants {
 
     public class CandConstants { // TODO get real
         // Amp
-        public static final double AMP_TOP_RPM = 50;
-        public static final double AMP_BOTTOM_RPM = 2000;
-        public static final double AMP_ANGLE = 45;
+        public static final double AMP_TOP_RPM = 300;
+        public static final double AMP_BOTTOM_RPM = 700;
+        public static final double AMP_ANGLE = 93;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
@@ -627,11 +627,6 @@ public class Constants {
         // C3
         public static final double C3_RPM = 0;
         public static final double C3_ANGLE = 0;
-
-        // Reverse Amp Shot
-        public static final double REVERSE_AMP_TOP_RPM = 500;
-        public static final double REVERSE_AMP_BOTTOM_RPM = 650;
-        public static final double REVERSE_AMP_ANGLE = 110;
 
         // Line
         public static final double LINE_RPM = 0;
