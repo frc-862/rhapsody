@@ -39,8 +39,7 @@ public class Constants {
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center
-                                                                                         // of robot to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
         TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
 
@@ -132,8 +131,7 @@ public class Constants {
 
         public static final double CONTROL_LOOP_PERIOD = 0.01;
 
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
-                                                                                                      // constants
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
 
         public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can be at before ending.
                                                               // Prevents going over center line.
@@ -179,7 +177,7 @@ public class Constants {
 
         // The stator current at which the wheels start to slip;
         // This needs to be tuned to your individual robot
-        private static final double kSlipCurrentA = 300d;
+        private static final double kSlipCurrentA = 50d;
 
         // Theoretical free speed (m/s) at 12v applied output;
         // This needs to be tuned to your individual robot
@@ -323,11 +321,12 @@ public class Constants {
         public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
                 Units.feetToMeters(5));
         public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
-        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0, 0.01);
+        public static final double POINTATTAG_ALIGNMENT_TOLERANCE = 1d;
+        public static final PIDController POINT_AIM_CONTROLLER = new PIDController(0.2, 0, 0.015, 0.01);
+        public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0.01);
+        public static final PIDController COMBO_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
-        public static final int TAG_PIPELINE = 0;
-        public static final int SPEAKER_PIPELINE = 1;
-        public static final int NOTE_PIPELINE = 2;
+        
 
         public static final double HALF_FIELD_HEIGHT = Units.feetToMeters(13);
 
@@ -335,9 +334,9 @@ public class Constants {
         public static final Translation3d RED_SPEAKER_LOCATION = new Translation3d(16.4592, 5.547593, 1.2);
 
         public class Pipelines { // TODO get real
-            public static final int APRIL_TAG_3d = 0;
-            public static final int APRIL_TAG_2d = 1;
-            public static final int CHASE_PIECE = 2; // FOR the collector
+            public static final int TAG_PIPELINE = 0;
+            public static final int SPEAKER_PIPELINE = 1;
+            public static final int NOTE_PIPELINE = 2;
         }
     }
 
@@ -426,19 +425,19 @@ public class Constants {
         public static final double TOP_1_MOTOR_KA = 0;
 
         // SLOT 0 BOTTOM, 0 - 49 RPS
-        public static final double BOTTOM_0_MOTOR_KP = 0.15;
+        public static final double BOTTOM_0_MOTOR_KP = 0.155;
         public static final double BOTTOM_0_MOTOR_KI = 0;
         public static final double BOTTOM_0_MOTOR_KD = 0;
-        public static final double BOTTOM_0_MOTOR_KS = 0.3;
-        public static final double BOTTOM_0_MOTOR_KV = 0.11;
+        public static final double BOTTOM_0_MOTOR_KS = 0.35;
+        public static final double BOTTOM_0_MOTOR_KV = 0.112;
         public static final double BOTTOM_0_MOTOR_KA = 0;
 
         // SLOT 1 BOTTOM, 50 - 107 RPS
-        public static final double BOTTOM_1_MOTOR_KP = 0.16;
+        public static final double BOTTOM_1_MOTOR_KP = 0.15;
         public static final double BOTTOM_1_MOTOR_KI = 0;
         public static final double BOTTOM_1_MOTOR_KD = 0;
-        public static final double BOTTOM_1_MOTOR_KS = 0.3;
-        public static final double BOTTOM_1_MOTOR_KV = 0.1155;
+        public static final double BOTTOM_1_MOTOR_KS = 0.35;
+        public static final double BOTTOM_1_MOTOR_KV = 0.114;
         public static final double BOTTOM_1_MOTOR_KA = 0;
 
         public static final double RPM_TOLERANCE = 50d;
@@ -456,6 +455,8 @@ public class Constants {
         public enum PieceState {
             IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE
         }
+
+
 
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
         public static final double INDEXER_DEFAULT_POWER = 1d;
@@ -517,19 +518,18 @@ public class Constants {
 
         public static final double ANGLE_TOLERANCE = 0.00208d;
 
-        public static final double ENCODER_OFFSET = -0.54008; // In rotations, was 0.282 //TODO: get real :)
+        public static final double ENCODER_OFFSET = -0.913834;//-0.54008; // In rotations
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 275d;
 
-        public static final double BIAS_INCREMENT = 1d; // fDegrees to bias by per button press TODO get amount to bias
-                                                        // by
+        public static final double BIAS_INCREMENT = 1d; // fDegrees to bias by per button press TODO get amount to bias by
 
         public static final double STOW_ANGLE = 27d;
 
         public static final double MAX_INDEX_ANGLE = 40d;
 
-        public static final double MIN_ANGLE = 27d;
+        public static final double MIN_ANGLE = 25d;
         public static final double MAX_ANGLE = 105d;
 
         public static final double PIVOT_SYSTEST_ANGLE = 90d;
@@ -540,7 +540,7 @@ public class Constants {
         public static final double FAR_WING_X = 3.3;
 
         // Distance in meters, angle in degrees
-        public static final InterpolationMap ANGLE_MAP = new InterpolationMap() {
+        public static final InterpolationMap TUBE_ANGLE_MAP = new InterpolationMap() {
             {
                 // As distance gets smaller angle goes up
                 put(1.21d, 52d);
@@ -554,7 +554,7 @@ public class Constants {
         };
 
         // Distance in meters, speed in RPM
-        public static final InterpolationMap SPEED_MAP = new InterpolationMap() {
+        public static final InterpolationMap TUBE_SPEED_MAP = new InterpolationMap() {
             {
                 // As distance get smaller RPM gets smaller
                 put(1.21d, 2000d);
@@ -562,8 +562,36 @@ public class Constants {
                 put(2.5d, 3000d);
                 put(3d, 3500d);
                 put(3.5d, 4000d);
-                put(4.09d, 3600d);
-                put(4.86d, 4600d);
+                put(4d, 3600d);
+                put(4.75d, 4600d);
+            }
+        };
+
+        // Distance in meters, angle in degrees
+        public static final InterpolationMap STEALTH_ANGLE_MAP = new InterpolationMap() {
+            {
+                // As distance gets smaller angle goes up
+                put(1.21d, 50d);
+                put(2d, 43d);
+                put(2.5d, 39.5d);
+                put(3d, 35d);
+                put(3.5d, 30.5d);
+                put(4d, 29.5d);
+                put(4.75d, 28d);
+            }
+        };
+
+        // Distance in meters, speed in RPM
+        public static final InterpolationMap STEALTH_SPEED_MAP = new InterpolationMap() {
+            {
+                // As distance get smaller RPM gets smaller
+                put(1.21d, 2000d);
+                put(2d, 2500d);
+                put(2.5d, 3000d);
+                put(3d, 3500d);
+                put(3.5d, 3700d);
+                put(4d, 3700d);
+                put(4.75d, 4000d);
             }
         };
 
@@ -574,13 +602,13 @@ public class Constants {
 
     public class CandConstants { // TODO get real
         // Amp
-        public static final double AMP_TOP_RPM = 50;
-        public static final double AMP_BOTTOM_RPM = 2000;
-        public static final double AMP_ANGLE = 45;
+        public static final double AMP_TOP_RPM = 300;
+        public static final double AMP_BOTTOM_RPM = 700;
+        public static final double AMP_ANGLE = 93;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
-        public static final double POINT_BLANK_ANGLE = 60;
+        public static final double POINT_BLANK_ANGLE = 50;
 
         // Podium
         public static final double PODIUM_RPM = 3500;
@@ -637,13 +665,18 @@ public class Constants {
 
         public static final double CLIMB_SYSTEST_POWER = 0.1;
 
-        public enum CLIMBER_STATES {
-            CLIMBED, GROUNDED, STOW
-        }
+        public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE_BLUE = new Pose2d(7.43, 4.16, new Rotation2d(0));
+        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_BLUE = new Pose2d(3.55, 6.16, new Rotation2d(Units.degreesToRadians(-53.13)));
+        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_BLUE = new Pose2d(3.54, 1.91, new Rotation2d(Units.degreesToRadians(63.43)));
+
+        public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE_RED = new Pose2d(9.07, 4.16, new Rotation2d(0));
+        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_RED = new Pose2d(12.96, 6.16, new Rotation2d(Units.degreesToRadians(-53.13)));
+        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_RED = new Pose2d(12.95, 1.91, new Rotation2d(Units.degreesToRadians(63.43)));
     }
+    
 
     public class LEDsConstants {
-        public static final int LED_LENGTH = 28;
+        public static final int LED_LENGTH = 50;
 
         public static final Map<Integer, Integer> STRAND_START = new HashMap<Integer, Integer>() {
             {
@@ -655,9 +688,9 @@ public class Constants {
 
         public static final Map<Integer, Integer> STRAND_LENGTH = new HashMap<Integer, Integer>() {
             {
-            put(-1, LEDsConstants.LED_LENGTH);
-            put(0, 14);
-            put(1, 14);
+                put(-1, LEDsConstants.LED_LENGTH);
+                put(0, 14);
+                put(1, 15);
             }
         };
 
