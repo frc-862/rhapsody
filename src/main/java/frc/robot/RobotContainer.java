@@ -11,6 +11,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.CollisionConstants.CollisionType;
+import frc.robot.Constants.ControllerConstants.ButtonBox;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
@@ -84,6 +86,7 @@ public class RobotContainer extends LightningContainer {
 
     public static XboxControllerFilter driver;
     public static XboxControllerFilter coPilot;
+    public static Joystick buttonBox;
 
     // Subsystems
     public Swerve drivetrain;
@@ -124,6 +127,7 @@ public class RobotContainer extends LightningContainer {
         coPilot = new XboxControllerFilter(ControllerConstants.CopilotControllerPort,
                 Constants.ControllerConstants.DEADBAND, -1, 1,
                 XboxControllerFilter.filterMode.SQUARED); // CoPilot controller
+        buttonBox = new Joystick(ControllerConstants.ButtonBoxControllerPort);
 
         drivetrain = TunerConstants.getDrivetrain();
         limelights = new Limelights();
@@ -350,6 +354,10 @@ public class RobotContainer extends LightningContainer {
         new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED C", false))
                 .onTrue(new InstantCommand(
                         () -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_RED)));
+        
+        /* Button Box */
+        new Trigger(() -> buttonBox.getRawButton(ButtonBox.PINK)).whileTrue(new PivotUP(pivot));
+        new Trigger(() -> buttonBox.getRawAxis(ButtonBox.GRAY_BOTTOMLEFT) == 1).whileTrue(new PivotUP(pivot));
     }
 
     @Override

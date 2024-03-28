@@ -118,8 +118,24 @@ public class Constants {
     public static class ControllerConstants {
         public static final int DriverControllerPort = 0;
         public static final int CopilotControllerPort = 1;
+        public static final int ButtonBoxControllerPort = 2;
 
         public static final double DEADBAND = 0.1;
+
+        public static class ButtonBox {
+            public static final int GRAY_TOPLEFT = 5;
+            public static final int PINK = 3;
+            public static final int GREEN = 4;
+            public static final int GRAY_TOPRIGHT = 6;
+            public static final int GRAY_BOTTOMLEFT = 2; // AXIS
+            public static final int PURPLE = 1;
+            public static final int RED = 2;
+            public static final int GRAY_BOTTOMRIGHT = 3; // AXIS
+            public static final int SHARE = 7;
+            public static final int OPTIONS = 8;
+            public static final int L3_SL = 9;
+            public static final int R3_SR = 10;
+        }
     }
 
     public static class AutonomousConstants {
