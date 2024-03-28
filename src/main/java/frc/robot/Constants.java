@@ -665,7 +665,7 @@ public class Constants {
 
         // Pass
         public static final double NOTE_PASS_ANGLE = 55d;
-        public static final double NOTE_PASS_RPM = 5000d;
+        public static final double NOTE_PASS_RPM = 4500d;
 
         // TODO find time to shoot
         public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer start to flywheel exit

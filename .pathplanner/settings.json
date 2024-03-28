@@ -9,7 +9,9 @@
     "Return Paths",
     "Top side paths"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Tested"
+  ],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 5.0,
   "defaultMaxAngVel": 540.0,

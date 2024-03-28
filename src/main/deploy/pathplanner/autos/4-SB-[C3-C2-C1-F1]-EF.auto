@@ -6,19 +6,13 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Bias-down"
-          }
-        },
-        {
           "type": "race",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "name": "Cand-Sub"
                 }
               },
               {
@@ -343,6 +337,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Tested",
   "choreoAuto": false
 }

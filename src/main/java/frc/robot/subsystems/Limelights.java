@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.VisionConstants.Pipelines;
 import frc.thunder.util.Pose4d;
 import frc.thunder.vision.Limelight;
 
@@ -19,8 +20,8 @@ public class Limelights extends SubsystemBase {
 
     public Limelights() {
         stopMe = new Limelight("limelight-stopme", "10.8.62.11"); // LL3 Back
-        dust = new Limelight("limelight-dust", "10.8.62.12"); // LL2+ Front up
-        champs = new Limelight("limelight-champs", "10.8.62.13"); // LL2+ Front down (collector)
+        dust = new Limelight("limelight-dust", "10.8.62.12"); // LL2+ Front
+        champs = new Limelight("limelight-champs", "10.8.62.13"); // LL3 Front
 
         // TODO: make actual pipelines... maybe an enum? At least use constants
         stopMe.setPipeline(0);
@@ -30,11 +31,10 @@ public class Limelights extends SubsystemBase {
         this.poseProducer = new Thread(() -> {
             while (true) {
                 try {
-
-                    if (stopMe.getPipeline() == VisionConstants.Pipelines.TAG_PIPELINE){
+                    if (stopMe.getPipeline() == Pipelines.TAG_PIPELINE){
                         monitor(stopMe);
                     }
-                    monitor(champs);
+                    // monitor(champs);
                     Thread.sleep(5);
                 } catch (InterruptedException e) {
                     System.err.println("Vision loop error: " + e.toString());

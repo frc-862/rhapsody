@@ -171,7 +171,7 @@ public class RobotContainer extends LightningContainer {
         NamedCommands.registerCommand("AMP", new AmpShotAuton(flywheel, pivot, indexer));
         NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
         NamedCommands.registerCommand("Smart-Shoot",
-                new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
+                new SmartShoot(flywheel, pivot, drivetrain, indexer, collector, leds)
                         .alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
         NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
         NamedCommands.registerCommand("Chase-Pieces",
@@ -232,7 +232,7 @@ public class RobotContainer extends LightningContainer {
 
 		// smart shoot for the robot
 		new Trigger(driver::getAButton)
-				.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, leds)
+				.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, collector, leds)
 						.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
         // new Trigger(driver::getBButton).whileTrue(new PathFindToAuton(
@@ -252,6 +252,13 @@ public class RobotContainer extends LightningContainer {
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
+
+		/* COPILOT */
+		new Trigger(coPilot::getBButton)
+                .whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
+                        .andThen(new SmartCollect(() -> 0.65, () -> 0.9, collector, indexer, pivot, flywheel))
+                        .deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
+
         // cand shots for the robot
         new Trigger(coPilot::getXButton)
                 .whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
@@ -261,11 +268,8 @@ public class RobotContainer extends LightningContainer {
         new Trigger(coPilot::getYButton).whileTrue(new NotePass(flywheel, pivot));
         // new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel,
         // pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-
-        new Trigger(coPilot::getAButton)
-                    .whileTrue(new AmpShot(flywheel, pivot)
+        new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot)
                     .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-
 
 		/* BIAS */
 		new Trigger(() -> coPilot.getPOV() == 0)
@@ -346,7 +350,6 @@ public class RobotContainer extends LightningContainer {
         /* Button Box */
         new Trigger(() -> buttonBox.getRawButton(ButtonBox.PINK)).whileTrue(new PivotUP(pivot));
         new Trigger(() -> buttonBox.getRawAxis(ButtonBox.GRAY_BOTTOMLEFT) == 1).whileTrue(new PivotUP(pivot));
-    }
 
 		// BLUE Alliance set
 		new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE BLUE A", false))
@@ -384,10 +387,6 @@ public class RobotContainer extends LightningContainer {
 		collector.setDefaultCommand(new Collect(() -> MathUtil.applyDeadband(
 				(coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()),
 				ControllerConstants.DEADBAND), collector));
-        if (!Constants.isMercury()) {
-            climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
-        }
-    }
 
 		// climber.setDefaultCommand(
 		// new SmartClimb(climber, drivetrain, pivot, leds, () -> -coPilot.getLeftY(),
@@ -395,8 +394,7 @@ public class RobotContainer extends LightningContainer {
 		// coPilot::getYButton).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
 		if (!Constants.isMercury()) {
-			climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(),
-					() -> -coPilot.getRightY(), climber));
+			climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
 		}
 	}
 

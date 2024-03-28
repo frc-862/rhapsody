@@ -12,6 +12,7 @@ import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.ShooterConstants.ShootingState;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LEDs;
@@ -26,6 +27,7 @@ public class SmartShoot extends Command {
 	final Pivot pivot;
 	final Swerve drivetrain;
 	final Indexer indexer;
+	final Collector collector;
 	final LEDs leds;
 	private double distance = 0d;
 
@@ -42,13 +44,16 @@ public class SmartShoot extends Command {
 	 * @param pivot      subsystem to set target angle
 	 * @param drivetrain subsystem to get distance from speaker
 	 * @param indexer    subsystem to set power
+	 * @param collector  subsystem to set power
 	 * @param leds       subsystem to provide driver feedback
 	 */
-	public SmartShoot(Flywheel flywheel, Pivot pivot, Swerve drivetrain, Indexer indexer, LEDs leds) {
+	public SmartShoot(Flywheel flywheel, Pivot pivot, Swerve drivetrain, Indexer indexer, Collector collector,
+			LEDs leds) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 		this.drivetrain = drivetrain;
 		this.indexer = indexer;
+		this.collector = collector;
 		this.leds = leds;
 
 		addRequirements(pivot, flywheel, indexer);
@@ -96,6 +101,7 @@ public class SmartShoot extends Command {
 				pivot.setTargetAngle(calculateTargetAngle(distance));
 				flywheel.setAllMotorsRPM(calculateTargetRPM(distance));
 				indexer.indexUp();
+				collector.setPower(.75d);
 				// Once shoot critera met moves to shot
 				if ((Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT) && !indexer.hasNote()) {
 					state = ShootingState.SHOT;
@@ -126,6 +132,7 @@ public class SmartShoot extends Command {
 		flywheel.coast(true);
 		pivot.setTargetAngle(pivot.getStowAngle());
 		indexer.stop();
+		collector.stop();
 	}
 
 	@Override
@@ -149,7 +156,7 @@ public class SmartShoot extends Command {
 	 * @return Angle to set pivot to
 	 */
 	public double calculateTargetAngle(double distance) {
-		if(Constants.isMercury()){
+		if (Constants.isMercury()) {
 			return ShooterConstants.TUBE_ANGLE_MAP.get(distance);
 		}
 		return ShooterConstants.STEALTH_ANGLE_MAP.get(distance);
@@ -162,7 +169,7 @@ public class SmartShoot extends Command {
 	 * @return RPM to set the Flywheels
 	 */
 	public double calculateTargetRPM(double distance) {
-		if(Constants.isMercury()){
+		if (Constants.isMercury()) {
 			return ShooterConstants.TUBE_SPEED_MAP.get(distance);
 		}
 		return ShooterConstants.STEALTH_SPEED_MAP.get(distance);
