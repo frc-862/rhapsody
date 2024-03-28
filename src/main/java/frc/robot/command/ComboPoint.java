@@ -213,9 +213,6 @@ public class ComboPoint extends Command {
 
     @Override
     public boolean isFinished() {
-        if (DriverStation.isAutonomous()) {
-            return debouncer.calculate(inTagTolerance());
-        }
         return debouncer.calculate(inTagTolerance());
     }
 }

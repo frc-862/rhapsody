@@ -100,7 +100,7 @@ public class ChasePieces extends Command {
 
         headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
         collectPower = 0d;
-        smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
+        smartCollect = new AutonSmartCollect(() -> collectPower, () -> collectPower, collector, indexer);
         smartCollect.initialize();
 
         hasSeenTarget = false;

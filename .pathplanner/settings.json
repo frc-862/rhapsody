@@ -9,9 +9,7 @@
     "Return Paths",
     "Top side paths"
   ],
-  "autoFolders": [
-    "Commands"
-  ],
+  "autoFolders": [],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 5.0,
   "defaultMaxAngVel": 540.0,
