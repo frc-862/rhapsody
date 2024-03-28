@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.CollisionConstants.CollisionType;
+import frc.robot.Constants.ControllerConstants.ButtonBox;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
@@ -353,6 +354,10 @@ public class RobotContainer extends LightningContainer {
         new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED C", false))
                 .onTrue(new InstantCommand(
                         () -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_RED)));
+        
+        /* Button Box */
+        new Trigger(() -> buttonBox.getRawButton(ButtonBox.PINK)).whileTrue(new PivotUP(pivot));
+        new Trigger(() -> buttonBox.getRawAxis(ButtonBox.GRAY_BOTTOMLEFT) == 1).whileTrue(new PivotUP(pivot));
     }
 
     @Override

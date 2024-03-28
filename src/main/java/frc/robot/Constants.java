@@ -127,10 +127,10 @@ public class Constants {
             public static final int PINK = 3;
             public static final int GREEN = 4;
             public static final int GRAY_TOPRIGHT = 6;
-            // public static final int GRAY_BOTTOMLEFT = null; // LTRIGGER
+            public static final int GRAY_BOTTOMLEFT = 2; // AXIS
             public static final int PURPLE = 1;
             public static final int RED = 2;
-            // public static final int GRAY_BOTTOMRIGHT = null; // RTRIGGER
+            public static final int GRAY_BOTTOMRIGHT = 3; // AXIS
             public static final int SHARE = 7;
             public static final int OPTIONS = 8;
             public static final int L3_SL = 9;
