@@ -13,7 +13,6 @@ import frc.robot.subsystems.Swerve;
 
 public class PathFindToAuton extends Command {
 
-    private AutoBuilder autoBuilder;
     private Command pathFindCommand;
     private PathPlannerPath autonPath;
 
@@ -25,15 +24,14 @@ public class PathFindToAuton extends Command {
      */
     public PathFindToAuton(PathPlannerPath autonPath, Swerve drivetrain) {
         this.autonPath = autonPath;
-        autoBuilder = new AutoBuilder();
 
         addRequirements(drivetrain);
     }
 
     @Override
     public void initialize() {
-        pathFindCommand = autoBuilder.pathfindThenFollowPath(
-                autonPath, AutonomousConstants.PATH_CONSTRAINTS);
+        pathFindCommand = AutoBuilder.pathfindThenFollowPath(
+                autonPath, AutonomousConstants.PATHFINDING_CONSTRAINTS);
         pathFindCommand.schedule();
     }
 
