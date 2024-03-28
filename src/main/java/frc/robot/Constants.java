@@ -122,8 +122,24 @@ public class Constants {
     public static class ControllerConstants {
         public static final int DriverControllerPort = 0;
         public static final int CopilotControllerPort = 1;
+        public static final int ButtonBoxControllerPort = 2;
 
         public static final double DEADBAND = 0.1;
+
+        public static class ButtonBox {
+            public static final int GRAY_TOPLEFT = 5;
+            public static final int PINK = 3;
+            public static final int GREEN = 4;
+            public static final int GRAY_TOPRIGHT = 6;
+            public static final int GRAY_BOTTOMLEFT = 2; // AXIS
+            public static final int PURPLE = 1;
+            public static final int RED = 2;
+            public static final int GRAY_BOTTOMRIGHT = 3; // AXIS
+            public static final int SHARE = 7;
+            public static final int OPTIONS = 8;
+            public static final int L3_SL = 9;
+            public static final int R3_SR = 10;
+        }
     }
 
     public static class AutonomousConstants {
@@ -133,9 +149,11 @@ public class Constants {
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16); // f/s to m/s
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(10.825);
 
-        public static final double CONTROL_LOOP_PERIOD = 0.01;
-
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5);
+        public static final double CONTROL_LOOP_PERIOD = 0.01;                                        // constants
+        
+        public static final PathConstraints PATHFINDING_CONSTRAINTS = new PathConstraints(2.0, 1.0,
+         3.0, 1.5);
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
 
         public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can be at before ending.
                                                               // Prevents going over center line.
@@ -157,6 +175,9 @@ public class Constants {
                 new Rotation2d(180));
         public static final Pose2d SOURCE_SUB_C_STARTPOSE_RED = new Pose2d(new Translation2d(15.85, 4.35),
                 new Rotation2d(-120));
+
+        public static final Pose2d AMP_LOCATION_RED = new Pose2d(new Translation2d(14.4, 7.62),
+            new Rotation2d(90));
     }
 
     public static class TunerConstants {
@@ -610,9 +631,9 @@ public class Constants {
 
     public class CandConstants { // TODO get real
         // Amp
-        public static final double AMP_TOP_RPM = 50;
-        public static final double AMP_BOTTOM_RPM = 2000;
-        public static final double AMP_ANGLE = 45;
+        public static final double AMP_TOP_RPM = 300;
+        public static final double AMP_BOTTOM_RPM = 700;
+        public static final double AMP_ANGLE = 93;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2000;
@@ -634,11 +655,6 @@ public class Constants {
         public static final double C3_RPM = 0;
         public static final double C3_ANGLE = 0;
 
-        // Reverse Amp Shot
-        public static final double REVERSE_AMP_TOP_RPM = 300;
-        public static final double REVERSE_AMP_BOTTOM_RPM = 700;
-        public static final double REVERSE_AMP_ANGLE = 93;
-
         // Line
         public static final double LINE_RPM = 0;
         public static final double LINE_ANGLE = 0;
@@ -646,6 +662,10 @@ public class Constants {
         // Source
         public static final double SOURCE_RPM = -300d; // TODO test
         public static final double SOURCE_ANGLE = 90d; // TODO test
+
+        // Pass
+        public static final double NOTE_PASS_ANGLE = 55d;
+        public static final double NOTE_PASS_RPM = 5000d;
 
         // TODO find time to shoot
         public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer start to flywheel exit
