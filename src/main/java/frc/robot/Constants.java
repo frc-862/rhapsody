@@ -364,6 +364,10 @@ public class Constants {
     public class PathFindingConstants {
         public static final Pose2d TEST_POSE = new Pose2d(9, 4, new Rotation2d(90));
         public static final Translation2d RED_ORIGIN = new Translation2d(16.4592, 0);
+
+        public static final Pose2d TRAP_ALIGN_POSE1 = new Pose2d(4, 2.7, new Rotation2d(-120));
+        public static final Pose2d TRAP_ALIGN_POSE2 = new Pose2d(7, 4, new Rotation2d(0));
+        public static final Pose2d TRAP_ALIGN_POSE3 = new Pose2d(4, 5.5, new Rotation2d(120));
     }
 
     public class CollisionConstants {

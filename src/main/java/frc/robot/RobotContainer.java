@@ -47,6 +47,7 @@ import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
+import frc.robot.command.TrapAlign;
 import frc.robot.command.stopDrive;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.FlywheelIN;
@@ -360,6 +361,7 @@ public class RobotContainer extends LightningContainer {
         /* Button Box */
         new Trigger(() -> buttonBox.getRawButton(ButtonBox.PINK)).whileTrue(new PivotUP(pivot));
         new Trigger(() -> buttonBox.getRawAxis(ButtonBox.GRAY_BOTTOMLEFT) == 1).whileTrue(new PivotUP(pivot));
+        new TrapAlign(drivetrain).repeatedly();
     }
 
     @Override
@@ -385,6 +387,7 @@ public class RobotContainer extends LightningContainer {
         if (!Constants.isMercury()) {
             climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
         }
+        
     }
 
     protected Command getAutonomousCommand() {
