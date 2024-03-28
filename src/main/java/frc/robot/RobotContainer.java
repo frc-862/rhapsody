@@ -381,7 +381,7 @@ public class RobotContainer extends LightningContainer {
         // coPilot::getYButton).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
         if (!Constants.isMercury()) {
-            climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getLeftY(), () -> -coPilot.getRightY(), climber));
+            climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
         }
     }
 
