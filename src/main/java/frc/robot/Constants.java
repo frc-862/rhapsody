@@ -655,6 +655,10 @@ public class Constants {
         public static final double SOURCE_RPM = -300d; // TODO test
         public static final double SOURCE_ANGLE = 90d; // TODO test
 
+        // Pass
+        public static final double NOTE_PASS_ANGLE = 55d;
+        public static final double NOTE_PASS_RPM = 5000d;
+
         // TODO find time to shoot
         public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer start to flywheel exit
     }
