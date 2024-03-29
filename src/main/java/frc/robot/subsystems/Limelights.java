@@ -19,7 +19,7 @@ public class Limelights extends SubsystemBase {
     };
 
     public Limelights() {
-        stopMe = new Limelight("limelight-stopme", "10.8.62.11"); // LL3 Back
+        stopMe = new Limelight("limelight-stopme", "10.8.62.11"); // LL3g Shooter side
         dust = new Limelight("limelight-dust", "10.8.62.12"); // LL2+ Front
         champs = new Limelight("limelight-champs", "10.8.62.13"); // LL3 Front
 

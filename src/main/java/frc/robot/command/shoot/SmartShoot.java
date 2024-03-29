@@ -56,7 +56,7 @@ public class SmartShoot extends Command {
 		this.collector = collector;
 		this.leds = leds;
 
-		addRequirements(pivot, flywheel, indexer);
+		addRequirements(pivot, flywheel, indexer, collector);
 
 		initLogging();
 	}

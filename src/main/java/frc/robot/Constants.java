@@ -465,7 +465,7 @@ public class Constants {
         public static final double BOTTOM_1_MOTOR_KV = 0.114;
         public static final double BOTTOM_1_MOTOR_KA = 0;
 
-        public static final double RPM_TOLERANCE = 250d;
+        public static final double RPM_TOLERANCE = 100d;
 
         public static final double BIAS_INCREMENT = 1.25; // RPS to bias by per button press
         public static final double COAST_VOLTAGE = 0.1;

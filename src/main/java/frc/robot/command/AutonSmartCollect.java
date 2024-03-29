@@ -44,11 +44,11 @@ public class AutonSmartCollect extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() { // TODO this needs to be cleaned up
         if(indexer.getPieceState() == PieceState.IN_COLLECT){
             indexer.setPower(indexerPower.getAsDouble() / 2); // TODO test at speed
         } else if (indexer.getPieceState() == PieceState.IN_PIVOT) {
-            end(false);
+            end(false); // DO not call end in execute, use the isFinsished command
         } else {
             collector.setPower(collectorPower.getAsDouble());
             indexer.setPower(indexerPower.getAsDouble());
