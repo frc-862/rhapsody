@@ -22,8 +22,7 @@ public class AutonSmartCollect extends Command {
      * @param collector      subsystem
      * @param indexer        subsystem
      */
-    public AutonSmartCollect(DoubleSupplier collectorPower, DoubleSupplier indexerPower, Collector collector,
-            Indexer indexer) {
+    public AutonSmartCollect(DoubleSupplier collectorPower, DoubleSupplier indexerPower, Collector collector, Indexer indexer) {
         this.collectorPower = collectorPower;
         this.indexerPower = indexerPower;
 
