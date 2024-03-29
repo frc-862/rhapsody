@@ -82,7 +82,7 @@ public class ChasePieces extends Command {
         if (DriverStation.isAutonomous()) {
             this.drivePower = 1.5d;
             this.rotPower = 1.5d; // TODO: get real >:)
-            this.maxCollectPower = 0.8d; // TODO Shouldnt this be slower?
+            this.maxCollectPower = 0.8d; 
         } else {
             this.maxCollectPower = 0.65d;
             this.drivePower = 3d;

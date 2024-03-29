@@ -182,7 +182,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain));
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
-		NamedCommands.registerCommand("Point-Speaker",
+		NamedCommands.registerCommand("Point-At-Speaker",
 				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights));
 		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
 		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
@@ -328,18 +328,24 @@ public class RobotContainer extends LightningContainer {
 		// .whileTrue(new CollisionDetection(drivetrain, CollisionType.AUTON));
 
 		// new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
-		// 		.onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
-		// 		.onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
+		// .onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
+		// .onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
 		// BLUE Alliance set
-		// new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED A", false))
-		// 		.onTrue(new InstantCommand(
-		// 				() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_RED)));
-		// new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED B", false))
-		// 		.onTrue(new InstantCommand(
-		// 				() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_RED)));
-		// new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED C", false))
-		// 		.onTrue(new InstantCommand(
-		// 				() -> drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_RED)));
+		// new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED A",
+		// false))
+		// .onTrue(new InstantCommand(
+		// () ->
+		// drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_RED)));
+		// new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED B",
+		// false))
+		// .onTrue(new InstantCommand(
+		// () ->
+		// drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_RED)));
+		// new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED C",
+		// false))
+		// .onTrue(new InstantCommand(
+		// () ->
+		// drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_RED)));
 
 		/* Button Box */
 		// new Trigger(() -> buttonBox.getRawButton(ButtonBox.PINK)).whileTrue(new
@@ -348,24 +354,30 @@ public class RobotContainer extends LightningContainer {
 		// 1).whileTrue(new PivotUP(pivot));
 
 		// BLUE Alliance set
-		new Trigger(() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE A", false) : false)
+		new Trigger(
+				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE A", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
 						.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_BLUE)));
-		new Trigger(() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE B", false) : false)
+		new Trigger(
+				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE B", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
 						.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_BLUE)));
-		new Trigger(() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE C", false) : false)
+		new Trigger(
+				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE C", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
 						.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_BLUE)));
 
 		// BLUE Alliance set
-		new Trigger(() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED A", false) : false)
+		new Trigger(
+				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED A", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
 						.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_RED)));
-		new Trigger(() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED B", false) : false)
+		new Trigger(
+				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED B", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
 						.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_RED)));
-		new Trigger(() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED C", false) : false)
+		new Trigger(
+				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED C", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
 						.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_RED)));
 	}

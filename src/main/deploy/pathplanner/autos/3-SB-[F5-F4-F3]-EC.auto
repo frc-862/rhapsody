@@ -6,9 +6,22 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Cand-Sub"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Cand-Sub"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 6.0
+                }
+              }
+            ]
           }
         },
         {
@@ -25,6 +38,108 @@
         },
         {
           "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "deadline",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "F5-BS"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "preAim"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Smart-Collect"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "race",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "deadline",
+                            "data": {
+                              "commands": [
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "Point-At-Speaker"
+                                  }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "preAim"
+                                  }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "Smart-Collect"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 1.0
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "deadline",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Smart-Shoot"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Stop-Drive"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Has-Piece"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
           "data": {
             "commands": [
               {
@@ -52,19 +167,6 @@
                   ]
                 }
               },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Has-Piece"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
               {
                 "type": "race",
                 "data": {
@@ -99,46 +201,33 @@
                       "data": {
                         "waitTime": 1.0
                       }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Shoot"
+                      }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Has-Piece"
+                        "name": "Stop-Drive"
                       }
                     }
                   ]
                 }
               },
               {
-                "type": "race",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "deadline",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Smart-Shoot"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Stop-Drive"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Has-Piece"
-                      }
-                    }
-                  ]
+                  "name": "Has-Piece"
                 }
               }
             ]

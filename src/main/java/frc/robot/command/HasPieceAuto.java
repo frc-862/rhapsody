@@ -8,7 +8,7 @@ import frc.robot.subsystems.Indexer;
 public class HasPieceAuto extends Command {
 
     private Indexer indexer;
-    private Debouncer hasNoteDebouncer = new Debouncer(0.1, DebounceType.kFalling);
+    private Debouncer hasNoteDebouncer = new Debouncer(0.2);
 
     /**
      * Creates a new HasPieceAuto
