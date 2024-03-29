@@ -6,14 +6,20 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Cand-Sub"
+            "pathName": "T-C1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C1-F1"
           }
         }
       ]
     }
   },
-  "folder": "Saved",
+  "folder": null,
   "choreoAuto": false
 }

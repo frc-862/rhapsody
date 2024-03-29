@@ -39,9 +39,13 @@ public class Constants {
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center
+                                                                                         // of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed /
+                                                                                              // circumference of circle
+                                                                                              // with radius of
+                                                                                              // wheelbase
 
         public static final double ROT_MULT = 0.04; // TODO Tune for Driver
 
@@ -139,7 +143,7 @@ public class Constants {
     }
 
     public static class AutonomousConstants {
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(2.0, 0, 0); // TODO Tune
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 1, 0); // TODO Tune
         public static final PIDConstants ROTATION_PID = new PIDConstants(4, 0, 0); // TODO: Tune
 
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16); // f/s to m/s
@@ -357,7 +361,7 @@ public class Constants {
         public class Pipelines { // TODO get real
             public static final int TAG_PIPELINE = 0;
             public static final int SPEAKER_PIPELINE = 1;
-            public static final int NOTE_PIPELINE = 2;
+            public static final int NOTE_PIPELINE = 0;
         }
     }
 
@@ -461,7 +465,7 @@ public class Constants {
         public static final double BOTTOM_1_MOTOR_KV = 0.114;
         public static final double BOTTOM_1_MOTOR_KA = 0;
 
-        public static final double RPM_TOLERANCE = 50d;
+        public static final double RPM_TOLERANCE = 100d;
 
         public static final double BIAS_INCREMENT = 1.25; // RPS to bias by per button press
         public static final double COAST_VOLTAGE = 0.1;
@@ -476,8 +480,6 @@ public class Constants {
         public enum PieceState {
             IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE
         }
-
-
 
         public static final boolean INDEXER_MOTOR_BRAKE_MODE = true;
         public static final double INDEXER_DEFAULT_POWER = 1d;
@@ -539,12 +541,12 @@ public class Constants {
 
         public static final double ANGLE_TOLERANCE = 0.00208d;
 
-        public static final double ENCODER_OFFSET = -0.913834;//-0.54008; // In rotations
+        public static final double ENCODER_OFFSET = -0.913834;// -0.54008; // In rotations
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 275d;
 
-        public static final double BIAS_INCREMENT = 1d; // fDegrees to bias by per button press TODO get amount to bias by
+        public static final double BIAS_INCREMENT = 0.5d; // Bias by .5 degrees
 
         public static final double STOW_ANGLE = 27d;
 
@@ -593,12 +595,15 @@ public class Constants {
             {
                 // As distance gets smaller angle goes up
                 put(1.21d, 50d);
+                put(1.63d, 47d);
                 put(2d, 43d);
                 put(2.5d, 39.5d);
                 put(3d, 35d);
                 put(3.5d, 30.5d);
                 put(4d, 29.5d);
-                put(4.75d, 28d);
+                put(4.3, 28d);
+                put(4.75d, 27.5d);
+                put(6.2d, 23.5d);
             }
         };
 
@@ -607,12 +612,15 @@ public class Constants {
             {
                 // As distance get smaller RPM gets smaller
                 put(1.21d, 2000d);
+                put(1.63d, 2360d);
                 put(2d, 2500d);
                 put(2.5d, 3000d);
                 put(3d, 3500d);
                 put(3.5d, 3700d);
                 put(4d, 3700d);
-                put(4.75d, 4000d);
+                put(4.3d, 4200d);
+                put(4.75d, 4200d);
+                put(6.2d, 5800d);
             }
         };
 
@@ -628,11 +636,11 @@ public class Constants {
         public static final double AMP_ANGLE = 93;
 
         // PointBlank
-        public static final double POINT_BLANK_RPM = 2000;
+        public static final double POINT_BLANK_RPM = 2500;
         public static final double POINT_BLANK_ANGLE = 50;
 
         // Podium
-        public static final double PODIUM_RPM = 3500;
+        public static final double PODIUM_RPM = 3000;
         public static final double PODIUM_ANGLE = 37;
 
         // C1
@@ -657,7 +665,7 @@ public class Constants {
 
         // Pass
         public static final double NOTE_PASS_ANGLE = 55d;
-        public static final double NOTE_PASS_RPM = 5000d;
+        public static final double NOTE_PASS_RPM = 4500d;
 
         // TODO find time to shoot
         public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer start to flywheel exit
@@ -691,14 +699,17 @@ public class Constants {
         public static final double CLIMB_SYSTEST_POWER = 0.1;
 
         public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE_BLUE = new Pose2d(7.43, 4.16, new Rotation2d(0));
-        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_BLUE = new Pose2d(3.55, 6.16, new Rotation2d(Units.degreesToRadians(-53.13)));
-        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_BLUE = new Pose2d(3.54, 1.91, new Rotation2d(Units.degreesToRadians(63.43)));
+        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_BLUE = new Pose2d(3.55, 6.16,
+                new Rotation2d(Units.degreesToRadians(-53.13)));
+        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_BLUE = new Pose2d(3.54, 1.91,
+                new Rotation2d(Units.degreesToRadians(63.43)));
 
         public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE_RED = new Pose2d(9.07, 4.16, new Rotation2d(0));
-        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_RED = new Pose2d(12.96, 6.16, new Rotation2d(Units.degreesToRadians(-53.13)));
-        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_RED = new Pose2d(12.95, 1.91, new Rotation2d(Units.degreesToRadians(63.43)));
+        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_RED = new Pose2d(12.96, 6.16,
+                new Rotation2d(Units.degreesToRadians(-53.13)));
+        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_RED = new Pose2d(12.95, 1.91,
+                new Rotation2d(Units.degreesToRadians(63.43)));
     }
-    
 
     public class LEDsConstants {
         public static final int LED_LENGTH = 50;
@@ -708,6 +719,7 @@ public class Constants {
                 put(-1, 0);
                 put(0, 0);
                 put(1, 14);
+                put(2, 28);
             }
         };
 
@@ -716,6 +728,7 @@ public class Constants {
                 put(-1, LEDsConstants.LED_LENGTH);
                 put(0, 14);
                 put(1, 15);
+                put(2, 22);
             }
         };
 

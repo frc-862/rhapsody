@@ -14,13 +14,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 8.0
+            "waitTime": 7.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SF-F1"
+            "pathName": "SB-F3"
           }
         },
         {
@@ -32,6 +32,6 @@
       ]
     }
   },
-  "folder": "Ann Arbor Top",
+  "folder": null,
   "choreoAuto": false
 }

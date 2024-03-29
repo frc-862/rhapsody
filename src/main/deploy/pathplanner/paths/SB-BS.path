@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7284778050297884,
-        "y": 4.414985377759629
+        "x": 1.4817998866766982,
+        "y": 3.611301068755984
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0556774520769514,
-        "y": 2.693027913214831
+        "x": 1.8666106562982372,
+        "y": 3.1968894707020192
       },
       "isLocked": false,
-      "linkedName": "SubwooferBottom"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.0706451141860898,
-        "y": 3.3844317617308555
+        "x": 3.1098454504601327,
+        "y": 2.65420761610754
       },
       "prevControl": {
-        "x": 0.7519135536460468,
-        "y": 2.7825482502715233
+        "x": 2.399425568081907,
+        "y": 2.851546472323715
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,21 +32,21 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -35.5376777919744,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Bottom side paths",
   "previewStartingState": {
-    "rotation": 120.0,
+    "rotation": -37.028172877258136,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

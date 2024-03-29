@@ -3,54 +3,48 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7121783474336195,
-        "y": 6.739121939782341
+        "x": 7.559836658134857,
+        "y": 4.084914323674802
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2252593735956716,
-        "y": 7.489009593403803
+        "x": 6.099529122135168,
+        "y": 4.02571266680995
       },
       "isLocked": false,
-      "linkedName": "SubwooferTop"
+      "linkedName": "F3"
     },
     {
       "anchor": {
-        "x": 2.912506594243959,
-        "y": 7.6863484496199765
+        "x": 4.856294327973273,
+        "y": 4.2921201227017844
       },
       "prevControl": {
-        "x": 2.063949512514411,
-        "y": 7.706082335241594
+        "x": 6.127907133395891,
+        "y": 3.8030382744623163
       },
       "nextControl": {
-        "x": 4.403611862419778,
-        "y": 7.651671582918214
+        "x": 4.34321330181122,
+        "y": 4.489458978917958
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.303296145053829,
-        "y": 7.400207108106525
+        "x": 4.31199378803893,
+        "y": 5.5040931765173085
       },
       "prevControl": {
-        "x": 6.087818285589388,
-        "y": 7.53177103742554
+        "x": 4.323479416189603,
+        "y": 5.051874719134054
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "F1"
+      "linkedName": "TS"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1,
-      "rotationDegrees": 0,
-      "rotateFast": true
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -60,14 +54,14 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0,
+    "velocity": 0.0,
+    "rotation": 0.0,
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Top side paths",
+  "folder": "Return Paths",
   "previewStartingState": {
-    "rotation": 52.49585763972986,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

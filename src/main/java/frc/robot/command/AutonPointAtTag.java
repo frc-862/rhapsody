@@ -17,6 +17,6 @@ public class AutonPointAtTag extends PointAtTag {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(limelights.getStopMe().getTargetX()) < VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE;
+        return (Math.abs(limelights.getStopMe().getTargetX()) < VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE) && limelights.getStopMePipeline() == VisionConstants.Pipelines.SPEAKER_PIPELINE;
     }
 }

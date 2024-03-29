@@ -71,8 +71,8 @@ public class PointAtPoint extends Command {
     }
 
     private boolean inTolerance() {
-        return Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees())
-                % 360 < DrivetrainConstants.ALIGNMENT_TOLERANCE;
+        return Math.abs(targetHeading - ((drivetrain.getPose().getRotation().getDegrees() + 360) % 360))
+            < DrivetrainConstants.ALIGNMENT_TOLERANCE;
     }
 
     @Override
@@ -133,7 +133,7 @@ public class PointAtPoint extends Command {
 
         LightningShuffleboard.setDouble("Point-At-Point", "Target Heading", targetHeading);
         LightningShuffleboard.setDouble("Point-At-Point", "Current Heading",
-                drivetrain.getPose().getRotation().getDegrees());
+                (drivetrain.getPose().getRotation().getDegrees() + 360) % 360);
         LightningShuffleboard.setBool("Point-At-Point", "In Tolerance", inTolerance());
 
         updateLogging();

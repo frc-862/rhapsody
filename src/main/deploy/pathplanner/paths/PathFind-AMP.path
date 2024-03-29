@@ -49,7 +49,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Align Paths",
+  "folder": "PathFind",
   "previewStartingState": {
     "rotation": 89.69844605013174,
     "velocity": 0

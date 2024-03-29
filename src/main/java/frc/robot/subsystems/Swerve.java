@@ -82,6 +82,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         setRampRate();
 
         initLogging();
+        
     }
 
     /**
@@ -154,6 +155,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         xFilter.calculate(getPose().getX());
         yFilter.calculate(getPose().getY());
         rotFilter.calculate(getPose().getRotation().getDegrees());
+
+        
 
         updateLogging();
     }

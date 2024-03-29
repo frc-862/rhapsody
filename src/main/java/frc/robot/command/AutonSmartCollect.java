@@ -25,8 +25,7 @@ public class AutonSmartCollect extends Command {
      * @param collector      subsystem
      * @param indexer        subsystem
      */
-    public AutonSmartCollect(DoubleSupplier collectorPower, DoubleSupplier indexerPower, Collector collector,
-            Indexer indexer) {
+    public AutonSmartCollect(DoubleSupplier collectorPower, DoubleSupplier indexerPower, Collector collector, Indexer indexer) {
         this.collectorPower = collectorPower;
         this.indexerPower = indexerPower;
 
@@ -45,11 +44,11 @@ public class AutonSmartCollect extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() { // TODO this needs to be cleaned up
         if(indexer.getPieceState() == PieceState.IN_COLLECT){
-            indexer.setPower(indexerPower.getAsDouble() / 2);
+            indexer.setPower(indexerPower.getAsDouble() / 2); // TODO test at speed
         } else if (indexer.getPieceState() == PieceState.IN_PIVOT) {
-            end(false);
+            end(false); // DO not call end in execute, use the isFinsished command
         } else {
             collector.setPower(collectorPower.getAsDouble());
             indexer.setPower(indexerPower.getAsDouble());

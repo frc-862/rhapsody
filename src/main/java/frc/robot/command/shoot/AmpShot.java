@@ -6,8 +6,10 @@ package frc.robot.command.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
+import frc.thunder.command.TimedCommand;
 
 public class AmpShot extends Command {
     
@@ -30,6 +32,10 @@ public class AmpShot extends Command {
         pivot.setTargetAngle(CandConstants.AMP_ANGLE + pivot.getBias());
         flywheel.setTopMotorRPM(CandConstants.AMP_TOP_RPM + flywheel.getBias());
         flywheel.setBottomMotorRPM(CandConstants.AMP_BOTTOM_RPM + flywheel.getBias());
+
+        if(flywheel.allMotorsOnTarget() && pivot.onTarget()) {
+			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
+		}
     }
 
     @Override

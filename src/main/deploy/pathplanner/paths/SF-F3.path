@@ -3,72 +3,66 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.0706451141860898,
-        "y": 3.3844317617308555
+        "x": 1.36086297850199,
+        "y": 5.574358195791997
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8893339325140204,
-        "y": 2.7035423301615844
+        "x": 4.599753814892247,
+        "y": 5.663625173404194
       },
       "isLocked": false,
-      "linkedName": "BottomLine"
+      "linkedName": "SubwooferFront"
     },
     {
       "anchor": {
-        "x": 5.122701783865108,
-        "y": 3.7593052109181126
+        "x": 4.935229870459742,
+        "y": 4.223051523026124
       },
       "prevControl": {
-        "x": 4.27414470213556,
-        "y": 3.384361384107383
+        "x": 4.777358785486803,
+        "y": 4.282253179890976
       },
       "nextControl": {
-        "x": 6.073090172099115,
-        "y": 4.179244266184301
+        "x": 5.852610625988531,
+        "y": 3.879033739702828
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.289990426134699,
-        "y": 4.1046482092964185
+        "x": 7.559836658134857,
+        "y": 4.084914323674802
       },
       "prevControl": {
-        "x": 6.395537406459429,
-        "y": 4.0750473808639915
+        "x": 6.227799378675683,
+        "y": 4.1046482092964185
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "F3"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.1,
-      "rotationDegrees": -0.1872282380145831,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 10.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
     "rotation": 0,
-    "rotateFast": true
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "Bottom side paths",
+  "folder": "Top side paths",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

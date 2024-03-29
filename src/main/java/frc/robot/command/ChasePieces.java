@@ -82,7 +82,7 @@ public class ChasePieces extends Command {
         if (DriverStation.isAutonomous()) {
             this.drivePower = 1.5d;
             this.rotPower = 1.5d; // TODO: get real >:)
-            this.maxCollectPower = 0.8d;
+            this.maxCollectPower = 0.8d; // TODO Shouldnt this be slower?
         } else {
             this.maxCollectPower = 0.65d;
             this.drivePower = 3d;
@@ -100,7 +100,12 @@ public class ChasePieces extends Command {
 
         headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
         collectPower = 0d;
-        smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
+        if(DriverStation.isAutonomous()) {
+            smartCollect = new AutonSmartCollect(() -> collectPower, () -> collectPower, collector, indexer);
+        } else {
+            smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
+        }
+
         smartCollect.initialize();
 
         hasSeenTarget = false;
@@ -236,6 +241,7 @@ public class ChasePieces extends Command {
 
     @Override
     public boolean isFinished() {
+        // return true;
         if (DriverStation.isAutonomous()) {
             if (DriverStation.getAlliance().get() == Alliance.Blue) {
                 if (drivetrain.getPose().getX() > AutonomousConstants.CHASE_BOUNDARY) {
