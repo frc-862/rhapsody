@@ -222,12 +222,6 @@
                       }
                     },
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "Has-Piece"
-                      }
-                    },
-                    {
                       "type": "wait",
                       "data": {
                         "waitTime": 1.0
@@ -258,58 +252,8 @@
                           }
                         ]
                       }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Has-Piece"
-                      }
                     }
                   ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "BS-F3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop-Flywheel"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Chase-Pieces"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "F3-Stage"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
                 }
               }
             ]

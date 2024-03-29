@@ -6,15 +6,86 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "sequential",
           "data": {
-            "name": "Cand-Sub"
+            "commands": [
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "B-BS"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "preAim"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "deadline",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Point-At-Speaker"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "preAim"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop-Drive"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SB-F5"
+            "pathName": "BS-F5"
           }
         },
         {
@@ -222,12 +293,6 @@
                       }
                     },
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "Has-Piece"
-                      }
-                    },
-                    {
                       "type": "wait",
                       "data": {
                         "waitTime": 1.0
@@ -258,58 +323,8 @@
                           }
                         ]
                       }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Has-Piece"
-                      }
                     }
                   ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "BS-F3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop-Flywheel"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Chase-Pieces"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "F3-Stage"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
                 }
               }
             ]

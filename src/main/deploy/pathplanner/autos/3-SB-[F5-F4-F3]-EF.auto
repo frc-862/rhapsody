@@ -295,25 +295,6 @@
           "data": {
             "name": "Chase-Pieces"
           }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "F3-Stage"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
-                }
-              }
-            ]
-          }
         }
       ]
     }
