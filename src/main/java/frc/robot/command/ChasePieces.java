@@ -143,7 +143,7 @@ public class ChasePieces extends Command {
         }
 
         onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-        hasPiece = indexer.getEntryBeamBreakState() || collector.getEntryBeamBreakState();
+        hasPiece = indexer.hasNote();
 
         pidOutput = headingController.calculate(0, targetHeading);
 

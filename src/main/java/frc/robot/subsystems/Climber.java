@@ -74,7 +74,7 @@ public class Climber extends SubsystemBase {
         climbMotorL.setPosition(0d);
         climbMotorR.setPosition(0d);
 
-        initOldLogging();
+        // initOldLogging();
         initLogging();
     }
 
@@ -106,17 +106,6 @@ public class Climber extends SubsystemBase {
         rightSetpointLog = new DoubleLogEntry(log, "/Climb/RightSetpoint");
         leftAppliedLog = new DoubleLogEntry(log, "/Climb/LeftApplied");
         rightAppliedLog = new DoubleLogEntry(log, "/Climb/RightApplied");
-
-        LightningShuffleboard.setDoubleSupplier("Climber", "LeftHeight", () -> getHeightL());
-        LightningShuffleboard.setDoubleSupplier("Climber", "RightHeight", () -> getHeightR());
-
-        LightningShuffleboard.setDoubleSupplier("Climber", "LeftSetpoint", () -> getSetpointL());
-        LightningShuffleboard.setDoubleSupplier("Climber", "RightSetpoint", () -> getSetpointR());
-
-        LightningShuffleboard.setDoubleSupplier("Climber", "LeftApplied",
-                () -> climbMotorL.getMotorVoltage().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Climber", "RightApplied",
-                () -> climbMotorR.getMotorVoltage().getValueAsDouble());
     }
 
     /**

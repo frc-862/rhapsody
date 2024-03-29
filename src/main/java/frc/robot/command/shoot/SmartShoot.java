@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import frc.robot.Constants;
@@ -84,7 +85,9 @@ public class SmartShoot extends Command {
 		// Distance from current pose to speaker pose
 		distance = drivetrain.distanceToSpeaker();
 
-		LightningShuffleboard.setString("Shoot", "Smart shoot STATE", state.toString());
+		if (!DriverStation.isFMSAttached()) {
+			LightningShuffleboard.setString("Shoot", "Smart shoot STATE", state.toString());
+		}
 
 		switch (state) {
 			case AIM:

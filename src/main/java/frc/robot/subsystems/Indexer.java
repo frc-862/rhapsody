@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
@@ -77,16 +78,18 @@ public class Indexer extends SubsystemBase {
         isExitingLog = new BooleanLogEntry(log, "/Indexer/IsExiting");
         hasPieceLog = new BooleanLogEntry(log, "/Indexer/HasPiece");
 
-        LightningShuffleboard.setDoubleSupplier("Indexer", "Power", () -> motor.get());
+		if (!DriverStation.isFMSAttached()) {
+            LightningShuffleboard.setDoubleSupplier("Indexer", "Power", () -> motor.get());
 
-        LightningShuffleboard.setBoolSupplier("Indexer", "EntryBeamBreak", () -> getEntryBeamBreakState());
-        LightningShuffleboard.setBoolSupplier("Indexer", "ExitBeamBreak", () -> getExitBeamBreakState());
+            LightningShuffleboard.setBoolSupplier("Indexer", "EntryBeamBreak", () -> getEntryBeamBreakState());
+            LightningShuffleboard.setBoolSupplier("Indexer", "ExitBeamBreak", () -> getExitBeamBreakState());
 
-        LightningShuffleboard.setStringSupplier("Indexer", "PieceState", () -> getPieceState().toString());
+            LightningShuffleboard.setStringSupplier("Indexer", "PieceState", () -> getPieceState().toString());
 
-        LightningShuffleboard.setBoolSupplier("Indexer", "HasShot", () -> hasShot());
-        LightningShuffleboard.setBoolSupplier("Indexer", "IsExiting", () -> isExiting());
-        LightningShuffleboard.setBoolSupplier("Indexer", "HasPiece", () -> hasNote());
+            LightningShuffleboard.setBoolSupplier("Indexer", "HasShot", () -> hasShot());
+            LightningShuffleboard.setBoolSupplier("Indexer", "IsExiting", () -> isExiting());
+            LightningShuffleboard.setBoolSupplier("Indexer", "HasPiece", () -> hasNote());
+        }
     }
 
     /**
