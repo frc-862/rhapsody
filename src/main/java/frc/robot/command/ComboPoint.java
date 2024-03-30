@@ -93,10 +93,10 @@ public class ComboPoint extends Command {
                 % 360 < DrivetrainConstants.ALIGNMENT_TOLERANCE;
     }
 
-    private boolean inTagTolerance() {
-        return (Math.abs(targetHeading)) < VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE
-                && stopMe.hasTarget();
-    }
+    // private boolean inTagTolerance() {
+    //     return (Math.abs(targetHeading)) < VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE
+    //             && stopMe.hasTarget();
+    // }
 
     @Override
     public void initialize() {
@@ -111,7 +111,7 @@ public class ComboPoint extends Command {
         }
 
         stopMe.setPipeline(VisionConstants.Pipelines.SPEAKER_PIPELINE);
-        targetBias = 5.5d;
+        targetBias = 0;//5.5d;
 
         System.out.println("DRIVE - COMBO POINT START");
     }
@@ -152,12 +152,9 @@ public class ComboPoint extends Command {
         if (stopMe.hasTarget()
                 && stopMe.getPipeline() == VisionConstants.Pipelines.SPEAKER_PIPELINE) {
             targetHeading = stopMe.getTargetX() - targetBias;
-            if (inTagTolerance()) {
-                pidOutput = 0d;
-            } else {
-                double currentHeading = (pose.getRotation().getDegrees() + 360) % 360;
-                pidOutput = tagController.calculate(currentHeading, currentHeading - targetHeading);
-            }
+            
+            double currentHeading = (pose.getRotation().getDegrees() + 360) % 360;
+            pidOutput = tagController.calculate(currentHeading, currentHeading - targetHeading);
         } else {
             targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 360 + 180;
             targetHeading %= 360;
@@ -199,7 +196,7 @@ public class ComboPoint extends Command {
         targetXLog.append(targetPose.getX());
         pidOutputLog.append(pidOutput);
         targetMinusCurrentHeadingLog
-                .append(Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()));
+                .append(Math.abs(targetHeading) - Math.abs(drivetrain.getPose().getRotation().getDegrees()));
         currentLog.append(drivetrain.getPose().getRotation().getDegrees());
         inToleranceLog.append(inTolerance());
     }
@@ -215,6 +212,6 @@ public class ComboPoint extends Command {
 
     @Override
     public boolean isFinished() {
-        return debouncer.calculate(inTagTolerance());
+        return debouncer.calculate(inTolerance());
     }
 }

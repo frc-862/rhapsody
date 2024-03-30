@@ -10,7 +10,7 @@
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "sequential",
                 "data": {
                   "commands": [
                     {
@@ -20,9 +20,22 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "preAim"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Smart-Shoot"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Stop-Drive"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -31,39 +44,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.0
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Smart-Shoot"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stop-Drive"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 3.0
+                  "waitTime": 6.0
                 }
               }
             ]
@@ -82,41 +63,9 @@
           }
         },
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "F1-TS"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "preAim"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Smart-Collect"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Has-Piece"
-                }
-              }
-            ]
+            "pathName": "F1-TS"
           }
         },
         {
@@ -124,7 +73,7 @@
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "sequential",
                 "data": {
                   "commands": [
                     {
@@ -134,62 +83,31 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "preAim"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Smart-Collect"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Smart-Shoot"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Stop-Drive"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Has-Piece"
                 }
               },
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.5
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Smart-Shoot"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stop-Drive"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Has-Piece"
+                  "waitTime": 6.0
                 }
               }
             ]
@@ -199,6 +117,12 @@
           "type": "path",
           "data": {
             "pathName": "TS-F2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Chase-Pieces"
           }
         },
         {
@@ -211,6 +135,12 @@
           "type": "path",
           "data": {
             "pathName": "TS-F2"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": []
           }
         }
       ]
