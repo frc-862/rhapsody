@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
@@ -48,6 +49,7 @@ public class ChasePieces extends Command {
 
     private BooleanLogEntry onTargetLog;
     private BooleanLogEntry hasTargetLog;
+    private BooleanLogEntry trustValuesLog;
     private BooleanLogEntry isDoneLog;
     private BooleanLogEntry hasPieceLog;
 
@@ -120,6 +122,7 @@ public class ChasePieces extends Command {
 
         onTargetLog = new BooleanLogEntry(log, "/ChasePieces/On Target");
         hasTargetLog = new BooleanLogEntry(log, "/ChasePieces/Has Target");
+        trustValuesLog = new BooleanLogEntry(log, "/ChasePieces/Trust Values");
         isDoneLog = new BooleanLogEntry(log, "/ChasePieces/Is Done");
         hasPieceLog = new BooleanLogEntry(log, "/ChasePieces/Has Piece");
 
@@ -207,6 +210,7 @@ public class ChasePieces extends Command {
     private void updateLogging() {
         onTargetLog.append(onTarget);
         hasTargetLog.append(hasTarget);
+        trustValuesLog.append(trustValues());
         isDoneLog.append(isDone);
         hasPieceLog.append(hasPiece);
 
@@ -241,7 +245,6 @@ public class ChasePieces extends Command {
 
     @Override
     public boolean isFinished() {
-        // return true;
         if (DriverStation.isAutonomous()) {
             if (DriverStation.getAlliance().get() == Alliance.Blue) {
                 if (drivetrain.getPose().getX() > AutonomousConstants.CHASE_BOUNDARY) {
@@ -252,9 +255,11 @@ public class ChasePieces extends Command {
                     return true;
                 }
             }
-            return smartCollect.isFinished();
+            // return smartCollect.isFinished();
+            return indexer.hasNote();
         } else {
-            return smartCollect.isFinished();
+            // return smartCollect.isFinished();
+            return indexer.getPieceState() == IndexerConstants.PieceState.IN_PIVOT;
         }
     }
 }

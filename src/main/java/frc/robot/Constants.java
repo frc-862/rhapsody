@@ -67,7 +67,7 @@ public class Constants {
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
 
-        public static final double ALIGNMENT_TOLERANCE = 5d;
+        public static final double ALIGNMENT_TOLERANCE = 3d;
     }
 
     public class RobotMap {
