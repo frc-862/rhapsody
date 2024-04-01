@@ -8,6 +8,8 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.SteerRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -183,7 +185,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             DoubleSupplier rot) {
         return run(() -> this.setControl(driveField.withVelocityX(x.getAsDouble() * maxSpeed)
                 .withVelocityY(y.getAsDouble() * maxSpeed)
-                .withRotationalRate(rot.getAsDouble() * maxAngularRate)));
+                .withRotationalRate(rot.getAsDouble() * maxAngularRate).withDriveRequestType(DriveRequestType.Velocity)));
     }
 
     /**
@@ -194,7 +196,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rot the rotational velocity in rad/s
      */
     public void setField(double x, double y, double rot) {
-        this.setControl(driveField.withVelocityX(x).withVelocityY(y).withRotationalRate(rot));
+        this.setControl(driveField.withVelocityX(x).withVelocityY(y).withRotationalRate(rot).withDriveRequestType(DriveRequestType.Velocity));
     }
 
     /**
@@ -208,7 +210,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public void setFieldDriver(double x, double y, double rot) {
         this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed)
-                .withRotationalRate(rot));
+                .withRotationalRate(rot).withDriveRequestType(DriveRequestType.Velocity));
     }
 
     /**
@@ -223,7 +225,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
             DoubleSupplier rot) {
         return run(() -> this.setControl(driveRobot.withVelocityX(x.getAsDouble() * maxSpeed)
                 .withVelocityY(y.getAsDouble() * maxSpeed)
-                .withRotationalRate(rot.getAsDouble() * maxAngularRate)));
+                .withRotationalRate(rot.getAsDouble() * maxAngularRate).withDriveRequestType(DriveRequestType.Velocity)));
     }
 
     /**
@@ -234,7 +236,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rot the rotational velocity in rad/s
      */
     public void setRobot(double x, double y, double rot) {
-        this.setControl(driveRobot.withVelocityX(x).withVelocityY(y).withRotationalRate(rot));
+        this.setControl(driveRobot.withVelocityX(x).withVelocityY(y).withRotationalRate(rot).withDriveRequestType(DriveRequestType.Velocity));
     }
 
     /**
@@ -285,13 +287,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         AutoBuilder.configureHolonomic(() -> getPose(), // Supplier of current robot pose
                 this::seedFieldRelative, // Consumer for seeding pose against auto
                 this::getCurrentRobotChassisSpeeds,
-                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of
-                                                                             // ChassisSpeeds to
-                                                                             // drive the robot
-                new HolonomicPathFollowerConfig(AutonomousConstants.TRANSLATION_PID,
+                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)
+                    .withDriveRequestType(DriveRequestType.Velocity)), // Consumer of ChassisSpeeds to drive the robot
+                new HolonomicPathFollowerConfig(
+                        AutonomousConstants.TRANSLATION_PID,
                         AutonomousConstants.ROTATION_PID,
                         AutonomousConstants.MAX_MODULE_VELOCITY,
-                        AutonomousConstants.DRIVE_BASE_RADIUS, new ReplanningConfig(),
+                        AutonomousConstants.DRIVE_BASE_RADIUS, 
+                        AutonomousConstants.REPLANNING_CONFIG,
                         AutonomousConstants.CONTROL_LOOP_PERIOD),
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red

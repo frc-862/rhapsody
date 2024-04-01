@@ -16,6 +16,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -159,11 +160,11 @@ public class Constants {
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16); // f/s to m/s
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(10.825);
 
-        public static final double CONTROL_LOOP_PERIOD = 0.01; // constants
+        public static final double CONTROL_LOOP_PERIOD = 0.02; // constants
 
+        public static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, false); // TODO Should we enable dynamic replaning
         public static final PathConstraints PATHFINDING_CONSTRAINTS = new PathConstraints(2.0, 1.0, 3.0, 1.5);
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
-                                                                                                      // constants
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
 
         public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can
                                                               // be at before ending.
