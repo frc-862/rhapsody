@@ -161,10 +161,9 @@ public class Constants {
 
         public static final double CONTROL_LOOP_PERIOD = 0.01; // constants
 
-        public static final PathConstraints PATHFINDING_CONSTRAINTS =
-                new PathConstraints(2.0, 1.0, 3.0, 1.5);
-        public static final PathConstraints PATH_CONSTRAINTS =
-                new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
+        public static final PathConstraints PATHFINDING_CONSTRAINTS = new PathConstraints(2.0, 1.0, 3.0, 1.5);
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
+                                                                                                      // constants
 
         public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can
                                                               // be at before ending.
@@ -175,22 +174,21 @@ public class Constants {
                                                          // before ending.
                                                          // Prevents going over center line.
 
-        public static final Pose2d SOURCE_SUB_A_STARTPOSE_BLUE =
-                new Pose2d(new Translation2d(0.72, 6.69), new Rotation2d(60));
-        public static final Pose2d SOURCE_SUB_B_STARTPOSE_BLUE =
-                new Pose2d(new Translation2d(1.34, 5.55), new Rotation2d(0));
-        public static final Pose2d SOURCE_SUB_C_STARTPOSE_BLUE =
-                new Pose2d(new Translation2d(0.72, 4.39), new Rotation2d(-60));
+        public static final Pose2d SOURCE_SUB_A_STARTPOSE_BLUE = new Pose2d(new Translation2d(0.72, 6.69),
+                new Rotation2d(60));
+        public static final Pose2d SOURCE_SUB_B_STARTPOSE_BLUE = new Pose2d(new Translation2d(1.34, 5.55),
+                new Rotation2d(0));
+        public static final Pose2d SOURCE_SUB_C_STARTPOSE_BLUE = new Pose2d(new Translation2d(0.72, 4.39),
+                new Rotation2d(-60));
 
-        public static final Pose2d SOURCE_SUB_A_STARTPOSE_RED =
-                new Pose2d(new Translation2d(15.85, 6.70), new Rotation2d(120));
-        public static final Pose2d SOURCE_SUB_B_STARTPOSE_RED =
-                new Pose2d(new Translation2d(15.2, 5.55), new Rotation2d(180));
-        public static final Pose2d SOURCE_SUB_C_STARTPOSE_RED =
-                new Pose2d(new Translation2d(15.85, 4.35), new Rotation2d(-120));
+        public static final Pose2d SOURCE_SUB_A_STARTPOSE_RED = new Pose2d(new Translation2d(15.85, 6.70),
+                new Rotation2d(120));
+        public static final Pose2d SOURCE_SUB_B_STARTPOSE_RED = new Pose2d(new Translation2d(15.2, 5.55),
+                new Rotation2d(180));
+        public static final Pose2d SOURCE_SUB_C_STARTPOSE_RED = new Pose2d(new Translation2d(15.85, 4.35),
+                new Rotation2d(-120));
 
-        public static final Pose2d AMP_LOCATION_RED =
-                new Pose2d(new Translation2d(14.4, 7.62), new Rotation2d(90));
+        public static final Pose2d AMP_LOCATION_RED = new Pose2d(new Translation2d(14.4, 7.62), new Rotation2d(90));
     }
 
     public static class TunerConstants {
@@ -203,17 +201,15 @@ public class Constants {
                 .withKD(0.2).withKS(0).withKV(1.5).withKA(0);
         // When using closed-loop control, the drive motor uses the control
         // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
-        private static final Slot0Configs driveGains =
-                new Slot0Configs().withKP(3).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0);
+        private static final Slot0Configs driveGains = new Slot0Configs().withKP(3).withKI(0).withKD(0).withKS(0)
+                .withKV(0).withKA(0);
 
         // The closed-loop output type to use for the steer motors;
         // This affects the PID/FF gains for the steer motors
-        private static final ClosedLoopOutputType steerClosedLoopOutput =
-                ClosedLoopOutputType.Voltage;
+        private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
         // The closed-loop output type to use for the drive motors;
         // This affects the PID/FF gains for the drive motors
-        private static final ClosedLoopOutputType driveClosedLoopOutput =
-                ClosedLoopOutputType.TorqueCurrentFOC;
+        private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.TorqueCurrentFOC;
 
         // The stator current at which the wheels start to slip;
         // This needs to be tuned to your individual robot
@@ -245,24 +241,24 @@ public class Constants {
         private static final double kSteerFrictionVoltage = 0.25;
         private static final double kDriveFrictionVoltage = 0.25;
 
-        private static final SwerveDrivetrainConstants DrivetrainConstants =
-                new SwerveDrivetrainConstants().withPigeon2Id(kPigeonId)
-                        .withCANbusName(kCANbusName);
+        private static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
+                .withPigeon2Id(kPigeonId)
+                .withCANbusName(kCANbusName);
 
-        private static final SwerveModuleConstantsFactory ConstantCreator =
-                new SwerveModuleConstantsFactory().withDriveMotorGearRatio(kDriveGearRatio)
-                        .withSteerMotorGearRatio(kSteerGearRatio)
-                        .withWheelRadius(kWheelRadiusInches).withSlipCurrent(kSlipCurrentA)
-                        .withSteerMotorGains(steerGains).withDriveMotorGains(driveGains)
-                        .withSteerMotorClosedLoopOutput(steerClosedLoopOutput)
-                        .withDriveMotorClosedLoopOutput(driveClosedLoopOutput)
-                        .withSpeedAt12VoltsMps(kSpeedAt12VoltsMps).withSteerInertia(kSteerInertia)
-                        .withDriveInertia(kDriveInertia)
-                        .withSteerFrictionVoltage(kSteerFrictionVoltage)
-                        .withDriveFrictionVoltage(kDriveFrictionVoltage)
-                        .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
-                        .withCouplingGearRatio(kCoupleRatio)
-                        .withSteerMotorInverted(kSteerMotorReversed);
+        private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
+                .withDriveMotorGearRatio(kDriveGearRatio)
+                .withSteerMotorGearRatio(kSteerGearRatio)
+                .withWheelRadius(kWheelRadiusInches).withSlipCurrent(kSlipCurrentA)
+                .withSteerMotorGains(steerGains).withDriveMotorGains(driveGains)
+                .withSteerMotorClosedLoopOutput(steerClosedLoopOutput)
+                .withDriveMotorClosedLoopOutput(driveClosedLoopOutput)
+                .withSpeedAt12VoltsMps(kSpeedAt12VoltsMps).withSteerInertia(kSteerInertia)
+                .withDriveInertia(kDriveInertia)
+                .withSteerFrictionVoltage(kSteerFrictionVoltage)
+                .withDriveFrictionVoltage(kDriveFrictionVoltage)
+                .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
+                .withCouplingGearRatio(kCoupleRatio)
+                .withSteerMotorInverted(kSteerMotorReversed);
 
         // OFFSETS Rhapsody
         private static final double kFrontLeftEncoderOffsetRh = 0.0546875;
@@ -298,46 +294,46 @@ public class Constants {
         private static final double kBackRightXPosInches = -10.825;
         private static final double kBackRightYPosInches = -10.825;
 
-        private static final SwerveModuleConstants FrontLeft =
-                ConstantCreator.createModuleConstants(CAN.kFrontLeftSteerMotorId,
-                        CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
-                        kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches),
-                        Units.inchesToMeters(kFrontLeftYPosInches), kInvertLeftSide);
-        private static final SwerveModuleConstants FrontRight =
-                ConstantCreator.createModuleConstants(CAN.kFrontRightSteerMotorId,
-                        CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
-                        kFrontRightEncoderOffset, Units.inchesToMeters(kFrontRightXPosInches),
-                        Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide);
+        private static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
+                CAN.kFrontLeftSteerMotorId,
+                CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
+                kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches),
+                Units.inchesToMeters(kFrontLeftYPosInches), kInvertLeftSide);
+        private static final SwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
+                CAN.kFrontRightSteerMotorId,
+                CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
+                kFrontRightEncoderOffset, Units.inchesToMeters(kFrontRightXPosInches),
+                Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide);
         private static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
                 CAN.kBackLeftSteerMotorId, CAN.kBackLeftDriveMotorId, CAN.kBackLeftEncoderId,
                 kBackLeftEncoderOffset, Units.inchesToMeters(kBackLeftXPosInches),
                 Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide);
-        private static final SwerveModuleConstants BackRight =
-                ConstantCreator.createModuleConstants(CAN.kBackRightSteerMotorId,
-                        CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
-                        kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches),
-                        Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
+        private static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
+                CAN.kBackRightSteerMotorId,
+                CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
+                kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches),
+                Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 
-        private static final SwerveModuleConstants FrontLeftRh =
-                ConstantCreator.createModuleConstants(CAN.kFrontLeftSteerMotorId,
-                        CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
-                        kFrontLeftEncoderOffsetRh, Units.inchesToMeters(kFrontLeftXPosInchesRh),
-                        Units.inchesToMeters(kFrontLeftYPosInchesRh), kInvertLeftSide);
-        private static final SwerveModuleConstants FrontRightRh =
-                ConstantCreator.createModuleConstants(CAN.kFrontRightSteerMotorId,
-                        CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
-                        kFrontRightEncoderOffsetRh, Units.inchesToMeters(kFrontRightXPosInchesRh),
-                        Units.inchesToMeters(kFrontRightYPosInchesRh), kInvertRightSide);
-        private static final SwerveModuleConstants BackLeftRh =
-                ConstantCreator.createModuleConstants(CAN.kBackLeftSteerMotorId,
-                        CAN.kBackLeftDriveMotorId, CAN.kBackLeftEncoderId, kBackLeftEncoderOffsetRh,
-                        Units.inchesToMeters(kBackLeftXPosInchesRh),
-                        Units.inchesToMeters(kBackLeftYPosInchesRh), kInvertLeftSide);
-        private static final SwerveModuleConstants BackRightRh =
-                ConstantCreator.createModuleConstants(CAN.kBackRightSteerMotorId,
-                        CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
-                        kBackRightEncoderOffsetRh, Units.inchesToMeters(kBackRightXPosInchesRh),
-                        Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
+        private static final SwerveModuleConstants FrontLeftRh = ConstantCreator.createModuleConstants(
+                CAN.kFrontLeftSteerMotorId,
+                CAN.kFrontLeftDriveMotorId, CAN.kFrontLeftEncoderId,
+                kFrontLeftEncoderOffsetRh, Units.inchesToMeters(kFrontLeftXPosInchesRh),
+                Units.inchesToMeters(kFrontLeftYPosInchesRh), kInvertLeftSide);
+        private static final SwerveModuleConstants FrontRightRh = ConstantCreator.createModuleConstants(
+                CAN.kFrontRightSteerMotorId,
+                CAN.kFrontRightDriveMotorId, CAN.kFrontRightEncoderId,
+                kFrontRightEncoderOffsetRh, Units.inchesToMeters(kFrontRightXPosInchesRh),
+                Units.inchesToMeters(kFrontRightYPosInchesRh), kInvertRightSide);
+        private static final SwerveModuleConstants BackLeftRh = ConstantCreator.createModuleConstants(
+                CAN.kBackLeftSteerMotorId,
+                CAN.kBackLeftDriveMotorId, CAN.kBackLeftEncoderId, kBackLeftEncoderOffsetRh,
+                Units.inchesToMeters(kBackLeftXPosInchesRh),
+                Units.inchesToMeters(kBackLeftYPosInchesRh), kInvertLeftSide);
+        private static final SwerveModuleConstants BackRightRh = ConstantCreator.createModuleConstants(
+                CAN.kBackRightSteerMotorId,
+                CAN.kBackRightDriveMotorId, CAN.kBackRightEncoderId,
+                kBackRightEncoderOffsetRh, Units.inchesToMeters(kBackRightXPosInchesRh),
+                Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
 
         public static final Swerve getDrivetrain() {
             if (Constants.isMercury()) {
@@ -356,25 +352,21 @@ public class Constants {
         // This is a magic number from gridlock, may need to be changed or removed
         // entirely
         public static final double PROCESS_LATENCY = 0.0472; // TODO test
-        public static final Translation2d FIELD_LIMIT =
-                new Translation2d(Units.feetToMeters(54.0), Units.feetToMeters(26.0));
-        public static final Translation2d VISION_LIMIT =
-                new Translation2d(Units.feetToMeters(9), Units.feetToMeters(5));
+        public static final Translation2d FIELD_LIMIT = new Translation2d(Units.feetToMeters(54.0),
+                Units.feetToMeters(26.0));
+        public static final Translation2d VISION_LIMIT = new Translation2d(Units.feetToMeters(9),
+                Units.feetToMeters(5));
         public static final double ALIGNMENT_TOLERANCE = 8d; // TODO: make this an actual value
         public static final double POINTATTAG_ALIGNMENT_TOLERANCE = 1d;
-        public static final PIDController POINT_AIM_CONTROLLER =
-                new PIDController(0.2, 0, 0.015, 0.01);
+        public static final PIDController POINT_AIM_CONTROLLER = new PIDController(0.2, 0, 0.015, 0.01);
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0.01);
         public static final PIDController COMBO_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
 
-
         public static final double HALF_FIELD_HEIGHT = Units.feetToMeters(13);
 
-        public static final Translation3d BLUE_SPEAKER_LOCATION =
-                new Translation3d(0, 5.547593, 1.2);
-        public static final Translation3d RED_SPEAKER_LOCATION =
-                new Translation3d(16.4592, 5.547593, 1.2);
+        public static final Translation3d BLUE_SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
+        public static final Translation3d RED_SPEAKER_LOCATION = new Translation3d(16.4592, 5.547593, 1.2);
 
         public class Pipelines { // TODO get real
             public static final int TAG_PIPELINE = 0;
@@ -410,23 +402,20 @@ public class Constants {
     public class MusicConstants {
         public static final String BOH_RHAP_FILEPATH = "bohemianrhapsody.chrp";
         public static final String JEOPARDY_FILEPATH = "jeopardy.chrp";
-        public static final String BEWARE_THE_FOREST_MUSHROOMS_FILEPATH =
-                "bewaretheforestmushrooms.chrp";
+        public static final String BEWARE_THE_FOREST_MUSHROOMS_FILEPATH = "bewaretheforestmushrooms.chrp";
         public static final String UNDER_PRESSURE_FILEPATH = "underpressure.chrp";
         public static final String NATIONAL_PARK_FILEPATH = "nationalpark.chrp";
         public static final String ENCOUNTER_FILEPATH = "encounter.chrp";
         public static final String PIRATES_OF_THE_CARIBBEAN_FILEPATH = "piratesofthecaribbean.chrp";
-        public static final String CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH =
-                "crazylittlethingcalledlove.chrp";
-        public static final String ANOTHER_ONE_BITES_THE_DUST_FILEPATH =
-                "anotheronebitesthedust.chrp";
+        public static final String CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH = "crazylittlethingcalledlove.chrp";
+        public static final String ANOTHER_ONE_BITES_THE_DUST_FILEPATH = "anotheronebitesthedust.chrp";
         public static final String SWEET_CAROLINE_FILEPATH = "sweetcaroline.chrp";
         public static final String WE_ARE_THE_CHAMPIONS_FILEPATH = "wearethechampions.chrp";
-        public static final String[] SONG_NAMES = {BOH_RHAP_FILEPATH, JEOPARDY_FILEPATH,
+        public static final String[] SONG_NAMES = { BOH_RHAP_FILEPATH, JEOPARDY_FILEPATH,
                 BEWARE_THE_FOREST_MUSHROOMS_FILEPATH, UNDER_PRESSURE_FILEPATH,
                 NATIONAL_PARK_FILEPATH, ENCOUNTER_FILEPATH, PIRATES_OF_THE_CARIBBEAN_FILEPATH,
                 CRAZY_LITTLE_THING_CALLED_LOVE_FILEPATH, ANOTHER_ONE_BITES_THE_DUST_FILEPATH,
-                SWEET_CAROLINE_FILEPATH, WE_ARE_THE_CHAMPIONS_FILEPATH};
+                SWEET_CAROLINE_FILEPATH, WE_ARE_THE_CHAMPIONS_FILEPATH };
         public static final List<String> SET_LIST = Arrays.asList(SONG_NAMES);
     }
 
@@ -528,8 +517,7 @@ public class Constants {
         public static final double ANGLE_TOLERANCE = 0.00208d;
 
         public static final double ENCODER_OFFSET = 0.61095; // In rotations
-        public static final SensorDirectionValue ENCODER_DIRECTION =
-                SensorDirectionValue.Clockwise_Positive;
+        public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 618.75;
 
@@ -564,8 +552,7 @@ public class Constants {
         public static final double ANGLE_TOLERANCE = 0.00208d;
 
         public static final double ENCODER_OFFSET = -0.913834;// -0.54008; // In rotations
-        public static final SensorDirectionValue ENCODER_DIRECTION =
-                SensorDirectionValue.Clockwise_Positive;
+        public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 275d;
 
@@ -724,19 +711,17 @@ public class Constants {
 
         public static final double CLIMB_SYSTEST_POWER = 0.1;
 
-        public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE_BLUE =
-                new Pose2d(7.43, 4.16, new Rotation2d(0));
-        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_BLUE =
-                new Pose2d(3.55, 6.16, new Rotation2d(Units.degreesToRadians(-53.13)));
-        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_BLUE =
-                new Pose2d(3.54, 1.91, new Rotation2d(Units.degreesToRadians(63.43)));
+        public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE_BLUE = new Pose2d(7.43, 4.16, new Rotation2d(0));
+        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_BLUE = new Pose2d(3.55, 6.16,
+                new Rotation2d(Units.degreesToRadians(-53.13)));
+        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_BLUE = new Pose2d(3.54, 1.91,
+                new Rotation2d(Units.degreesToRadians(63.43)));
 
-        public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE_RED =
-                new Pose2d(9.07, 4.16, new Rotation2d(0));
-        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_RED =
-                new Pose2d(12.96, 6.16, new Rotation2d(Units.degreesToRadians(-53.13)));
-        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_RED =
-                new Pose2d(12.95, 1.91, new Rotation2d(Units.degreesToRadians(63.43)));
+        public static final Pose2d PATHFIND_CENTER_STAGE_START_POSE_RED = new Pose2d(9.07, 4.16, new Rotation2d(0));
+        public static final Pose2d PATHFIND_HIGH_STAGE_START_POSE_RED = new Pose2d(12.96, 6.16,
+                new Rotation2d(Units.degreesToRadians(-53.13)));
+        public static final Pose2d PATHFIND_LOW_STAGE_START_POSE_RED = new Pose2d(12.95, 1.91,
+                new Rotation2d(Units.degreesToRadians(63.43)));
     }
 
     public class LEDsConstants {
@@ -771,12 +756,28 @@ public class Constants {
         public static final int PINK_HUE = 355;
 
         public enum LED_STATES {
-            CUSTOMCONTROL(0), DISABLED(1), EMERGENCY(2), START(3), GOOD_POSE(4), COLLECT_PLANNED(
-                    5), COLLECTED(6), SHOT(7), FINISHED_CLIMB(8), SHOOTING(9), COLLECTING(
-                            10), CHASING(11), CLIMBING(12), BAD_POSE(13), HAS_PIECE(14), HAS_VISION(
-                                    15), DEFAULT(16), PIVOT_BOTTOM_SWITCH(17), PIVOT_TOP_SWITCH(
-                                            18), COLLECTOR_BEAMBREAK(19), INDEXER_ENTER_BEAMBREAK(
-                                                    20), INDEXER_EXIT_BEAMBREAK(21);
+            CUSTOMCONTROL(0),
+            DISABLED(1),
+            EMERGENCY(2),
+            START(3),
+            GOOD_POSE(4),
+            COLLECT_PLANNED(5),
+            COLLECTED(6),
+            SHOT(7),
+            FINISHED_CLIMB(8),
+            SHOOTING(9),
+            COLLECTING(10),
+            CHASING(11),
+            CLIMBING(12),
+            BAD_POSE(13),
+            HAS_PIECE(14),
+            HAS_VISION(15),
+            DEFAULT(16),
+            PIVOT_BOTTOM_SWITCH(17),
+            PIVOT_TOP_SWITCH(18),
+            COLLECTOR_BEAMBREAK(19),
+            INDEXER_ENTER_BEAMBREAK(20),
+            INDEXER_EXIT_BEAMBREAK(21);
 
             private final int priority;
 
