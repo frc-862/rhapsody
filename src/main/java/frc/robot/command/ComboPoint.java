@@ -154,7 +154,7 @@ public class ComboPoint extends Command {
             targetHeading = stopMe.getTargetX() - targetBias;
             
             double currentHeading = (pose.getRotation().getDegrees() + 360) % 360;
-            pidOutput = tagController.calculate(currentHeading, currentHeading - targetHeading);
+                pidOutput = tagController.calculate(currentHeading, currentHeading - targetHeading);
         } else {
             targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 360 + 180;
             targetHeading %= 360;

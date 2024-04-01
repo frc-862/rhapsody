@@ -153,7 +153,7 @@ public class Constants {
     }
 
     public static class AutonomousConstants {
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 1, 0); // TODO Tune
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 0, 0); // TODO Tune
         public static final PIDConstants ROTATION_PID = new PIDConstants(4, 0, 0); // TODO: Tune
 
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16); // f/s to m/s
