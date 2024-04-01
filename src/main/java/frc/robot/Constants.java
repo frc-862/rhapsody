@@ -39,12 +39,22 @@ public class Constants {
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center
-                                                                                         // of robot to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x
+                                                                                         // distance
+                                                                                         // from
+                                                                                         // center
+                                                                                         // of robot
+                                                                                         // to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed /
-                                                                                              // circumference of circle
-                                                                                              // with radius of
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free
+                                                                                              // speed
+                                                                                              // /
+                                                                                              // circumference
+                                                                                              // of
+                                                                                              // circle
+                                                                                              // with
+                                                                                              // radius
+                                                                                              // of
                                                                                               // wheelbase
 
         public static final double ROT_MULT = 0.04; // TODO Tune for Driver
@@ -57,7 +67,7 @@ public class Constants {
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
 
-        public static final double ALIGNMENT_TOLERANCE = 5d;
+        public static final double ALIGNMENT_TOLERANCE = 3d;
     }
 
     public class RobotMap {
@@ -143,23 +153,25 @@ public class Constants {
     }
 
     public static class AutonomousConstants {
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 1, 0); // TODO Tune
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 0, 0); // TODO Tune
         public static final PIDConstants ROTATION_PID = new PIDConstants(4, 0, 0); // TODO: Tune
 
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16); // f/s to m/s
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(10.825);
 
-        public static final double CONTROL_LOOP_PERIOD = 0.01;                                        // constants
-        
-        public static final PathConstraints PATHFINDING_CONSTRAINTS = new PathConstraints(2.0, 1.0,
-         3.0, 1.5);
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
+        public static final double CONTROL_LOOP_PERIOD = 0.01; // constants
 
-        public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can be at before ending.
+        public static final PathConstraints PATHFINDING_CONSTRAINTS = new PathConstraints(2.0, 1.0, 3.0, 1.5);
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
+                                                                                                      // constants
+
+        public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can
+                                                              // be at before ending.
                                                               // Prevents going over center line.
         public static final double RED_CHASE_BOUNDARY = 8;
 
-        public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at before ending.
+        public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at
+                                                         // before ending.
                                                          // Prevents going over center line.
 
         public static final Pose2d SOURCE_SUB_A_STARTPOSE_BLUE = new Pose2d(new Translation2d(0.72, 6.69),
@@ -176,8 +188,7 @@ public class Constants {
         public static final Pose2d SOURCE_SUB_C_STARTPOSE_RED = new Pose2d(new Translation2d(15.85, 4.35),
                 new Rotation2d(-120));
 
-        public static final Pose2d AMP_LOCATION_RED = new Pose2d(new Translation2d(14.4, 7.62),
-            new Rotation2d(90));
+        public static final Pose2d AMP_LOCATION_RED = new Pose2d(new Translation2d(14.4, 7.62), new Rotation2d(90));
     }
 
     public static class TunerConstants {
@@ -214,7 +225,7 @@ public class Constants {
 
         public static final double kDriveGearRatio = 6.122448979591837;
         public static final double kSteerGearRatio = 21.428571428571427;
-        public static final double kWheelRadiusInches = 2;
+        public static final double kWheelRadiusInches = 1.875;
 
         private static final boolean kSteerMotorReversed = true;
         private static final boolean kInvertLeftSide = false;
@@ -351,7 +362,6 @@ public class Constants {
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0.01);
         public static final PIDController COMBO_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
-        
 
         public static final double HALF_FIELD_HEIGHT = Units.feetToMeters(13);
 
@@ -430,16 +440,16 @@ public class Constants {
         public static final boolean MOTOR_TOP_INVERT_Mercury = true;
 
         public static final boolean MOTOR_BOTTOM_INVERT = false;
-        public static final int MOTOR_STATOR_CURRENT_LIMIT = 40;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 80;
         public static final boolean MOTOR_BRAKE_MODE = false;
 
         // SLOT 0 TOP, 0 - 49 RPS
-        public static final double TOP_0_MOTOR_KP = 0.157;
-        public static final double TOP_0_MOTOR_KI = 0;
+        public static final double TOP_0_MOTOR_KP = 0.2;
+        public static final double TOP_0_MOTOR_KI = 0.07;
         public static final double TOP_0_MOTOR_KD = 0;
-        public static final double TOP_0_MOTOR_KS = 0.3;
-        public static final double TOP_0_MOTOR_KV = 0.115;
-        public static final double TOP_0_MOTOR_KA = 0;
+        public static final double TOP_0_MOTOR_KS = 0.26;
+        public static final double TOP_0_MOTOR_KV = 0.11;
+        public static final double TOP_0_MOTOR_KA = 2.9;
 
         // SLOT 1 TOP, 50 - 107 RPS
         public static final double TOP_1_MOTOR_KP = 0.163;
@@ -450,12 +460,12 @@ public class Constants {
         public static final double TOP_1_MOTOR_KA = 0;
 
         // SLOT 0 BOTTOM, 0 - 49 RPS
-        public static final double BOTTOM_0_MOTOR_KP = 0.155;
-        public static final double BOTTOM_0_MOTOR_KI = 0;
+        public static final double BOTTOM_0_MOTOR_KP = 0.2;
+        public static final double BOTTOM_0_MOTOR_KI = 0.07;
         public static final double BOTTOM_0_MOTOR_KD = 0;
-        public static final double BOTTOM_0_MOTOR_KS = 0.35;
-        public static final double BOTTOM_0_MOTOR_KV = 0.112;
-        public static final double BOTTOM_0_MOTOR_KA = 0;
+        public static final double BOTTOM_0_MOTOR_KS = 0.26;
+        public static final double BOTTOM_0_MOTOR_KV = 0.11;
+        public static final double BOTTOM_0_MOTOR_KA = 2.9;
 
         // SLOT 1 BOTTOM, 50 - 107 RPS
         public static final double BOTTOM_1_MOTOR_KP = 0.15;
@@ -527,7 +537,7 @@ public class Constants {
         public static final boolean MOTOR_INVERT = true; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
-        public static final double MOTOR_KP = 75;
+        public static final double MOTOR_KP = 220;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KG = 0.393;
@@ -668,7 +678,8 @@ public class Constants {
         public static final double NOTE_PASS_RPM = 4500d;
 
         // TODO find time to shoot
-        public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer start to flywheel exit
+        public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer
+                                                       // start to flywheel exit
     }
 
     public class ClimbConstants { // TODO: find real values
@@ -687,8 +698,10 @@ public class Constants {
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
         public static final double MAX_HEIGHT = 8.83; // In rotations
-        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of lower arm in inches
-        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
+        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of
+                                                       // lower arm in inches
+        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of
+                                                       // upper arm in inches
 
         public static final double CLIMB_PID_SETPOINT_EXTENDED = MAX_HEIGHT;
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 1;

@@ -11,6 +11,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
@@ -90,22 +91,17 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
         powerLog = new DoubleLogEntry(log, "/Pivot/Power");
 
-        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> (getAngle() * 360));
-        LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle * 360);
-        LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
+		if (!DriverStation.isFMSAttached()) {
+            LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> (getAngle() * 360));
+            LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle * 360);
+            LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
 
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
+            LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
+        }
     }
 
     @Override
     public void periodic() {
-
-        angleMotor.getConfig().MotionMagic.MotionMagicCruiseVelocity = LightningShuffleboard.getDouble("Pivot",
-                "cruiseVelocity", RhapsodyPivotConstants.MAGIC_CRUISE_VEL);
-        angleMotor.getConfig().MotionMagic.MotionMagicAcceleration = LightningShuffleboard.getDouble("Pivot",
-                "acceleration", RhapsodyPivotConstants.MAGIC_ACCEL);
-        angleMotor.getConfig().MotionMagic.MotionMagicJerk = LightningShuffleboard.getDouble("Pivot", "jerk",
-                RhapsodyPivotConstants.MAGIC_JERK);
 
         // // SETS angle to angle of limit switch on press
         // if (getForwardLimit()) {
