@@ -41,6 +41,7 @@ public class ChasePieces extends Command {
     private double collectPower;
     private double maxCollectPower;
     private double drivePower;
+    private double slowDrive = 0.5d;
     private double rotPower;
 
     private Pose2d startingPose;
@@ -209,15 +210,15 @@ public class ChasePieces extends Command {
                 if (!hasSeenTarget) {
                     if (startingPose.getY() > VisionConstants.HALF_FIELD_HEIGHT) {
                         if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                            drivetrain.setRobot(0.5, 0, -rotPower);
+                            drivetrain.setRobot(slowDrive, 0, -rotPower);
                         } else {
-                            drivetrain.setRobot(0.5, 0, rotPower);
+                            drivetrain.setRobot(slowDrive, 0, rotPower);
                         }
                     } else {
                         if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                            drivetrain.setRobot(0.5, 0, rotPower);
+                            drivetrain.setRobot(slowDrive, 0, rotPower);
                         } else {
-                            drivetrain.setRobot(0.5, 0, -rotPower);
+                            drivetrain.setRobot(slowDrive, 0, -rotPower);
                         }
                     }
                 } else {
@@ -284,11 +285,11 @@ public class ChasePieces extends Command {
     public boolean isFinished() {
         if (DriverStation.isAutonomous()) {
             if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                if (drivetrain.getPose().getX() > AutonomousConstants.CHASE_BOUNDARY) {
+                if (drivetrain.getPose().getX() > AutonomousConstants.BLUE_CHASE_BOUNDARY) {
                     return true;
                 }
             } else {
-                if (drivetrain.getPose().getX() < AutonomousConstants.CHASE_BOUNDARY) {
+                if (drivetrain.getPose().getX() < AutonomousConstants.RED_CHASE_BOUNDARY) {
                     return true;
                 }
             }
