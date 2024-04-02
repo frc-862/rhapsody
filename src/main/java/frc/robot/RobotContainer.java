@@ -42,6 +42,7 @@ import frc.robot.command.PathToPose;
 import frc.robot.command.PointAtPoint;
 import frc.robot.command.PointAtTag;
 import frc.robot.command.SetPointClimb;
+import frc.robot.command.SimpleFacingTest;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
@@ -238,7 +239,10 @@ public class RobotContainer extends LightningContainer {
         //         .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
         // new Trigger(driver::getLeftBumper)
         //         .whileTrue(new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights));
-		new Trigger(driver::getLeftBumper).whileTrue(new FacingTest(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver));
+
+		// new Trigger(driver::getLeftBumper).whileTrue(new FacingTest(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver)); //TODO: delete
+
+                new Trigger(driver::getLeftBumper).whileTrue(new SimpleFacingTest(drivetrain, driver));
 
         // new Trigger(driver::getYButton)
         // .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
