@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
@@ -55,6 +56,7 @@ public class ChasePieces extends Command {
 
     private BooleanLogEntry onTargetLog;
     private BooleanLogEntry hasTargetLog;
+    private BooleanLogEntry trustValuesLog;
     private BooleanLogEntry isDoneLog;
     private BooleanLogEntry hasPieceLog;
 
@@ -88,7 +90,8 @@ public class ChasePieces extends Command {
 
         if (DriverStation.isAutonomous()) {
             this.drivePower = 1.5d;
-            this.maxCollectPower = 0.8d;
+            this.rotPower = 1.5d; // TODO: get real >:)
+            this.maxCollectPower = 0.8d; 
         } else {
             this.maxCollectPower = 0.65d;
             this.drivePower = 3d;
@@ -111,7 +114,12 @@ public class ChasePieces extends Command {
 
         headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
         collectPower = 0d;
-        smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
+        if(DriverStation.isAutonomous()) {
+            smartCollect = new AutonSmartCollect(() -> collectPower, () -> collectPower, collector, indexer);
+        } else {
+            smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
+        }
+
         smartCollect.initialize();
 
         hasSeenTarget = false;
@@ -126,6 +134,7 @@ public class ChasePieces extends Command {
 
         onTargetLog = new BooleanLogEntry(log, "/ChasePieces/On Target");
         hasTargetLog = new BooleanLogEntry(log, "/ChasePieces/Has Target");
+        trustValuesLog = new BooleanLogEntry(log, "/ChasePieces/Trust Values");
         isDoneLog = new BooleanLogEntry(log, "/ChasePieces/Is Done");
         hasPieceLog = new BooleanLogEntry(log, "/ChasePieces/Has Piece");
 
@@ -149,7 +158,7 @@ public class ChasePieces extends Command {
         }
 
         onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-        hasPiece = indexer.getEntryBeamBreakState() || collector.getEntryBeamBreakState();
+        hasPiece = indexer.hasNote();
 
         pidOutput = headingController.calculate(0, targetHeading);
 
@@ -172,6 +181,7 @@ public class ChasePieces extends Command {
     private void updateLogging() {
         onTargetLog.append(onTarget);
         hasTargetLog.append(hasTarget);
+        trustValuesLog.append(trustValues());
         isDoneLog.append(isDone);
         hasPieceLog.append(hasPiece);
 
@@ -282,9 +292,11 @@ public class ChasePieces extends Command {
                     return true;
                 }
             }
-            return smartCollect.isFinished();
+            // return smartCollect.isFinished();
+            return indexer.hasNote();
         } else {
-            return smartCollect.isFinished();
+            // return smartCollect.isFinished();
+            return indexer.getPieceState() == IndexerConstants.PieceState.IN_PIVOT;
         }
     }
 }

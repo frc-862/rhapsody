@@ -13,6 +13,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
@@ -91,11 +92,13 @@ public class PivotMercury extends SubsystemBase implements Pivot {
 
         powerLog = new DoubleLogEntry(log, "/Pivot/Power");
 
-        LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> getAngle());
-        LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle);
-        LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
+        if (!DriverStation.isFMSAttached()) {
+            LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> getAngle());
+            LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle);
+            LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
 
-        LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
+            LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
+        }
     }
 
     @Override
@@ -111,9 +114,9 @@ public class PivotMercury extends SubsystemBase implements Pivot {
 
         updateLogging();
 
-        LightningShuffleboard.setDouble("Pivot", "Target ", targetAngle);
-        LightningShuffleboard.setDouble("Pivot", "Current angle", getAngle());
-        LightningShuffleboard.setDouble("Pivot", "BIAS", bias);
+        // LightningShuffleboard.setDouble("Pivot", "Target ", targetAngle);
+        // LightningShuffleboard.setDouble("Pivot", "Current angle", getAngle());
+        // LightningShuffleboard.setDouble("Pivot", "BIAS", bias);
     }
 
     /**
@@ -163,7 +166,7 @@ public class PivotMercury extends SubsystemBase implements Pivot {
      * @return Whether or not the pivot is on target, within Angle tolerance
      */
     public boolean onTarget() {
-        return Math.abs(getAngle() - targetAngle) < MercuryPivotConstants.ANGLE_TOLERANCE;
+        return Math.abs(getAngle() - targetAngle) < (MercuryPivotConstants.ANGLE_TOLERANCE * 360);
     }
 
     /**

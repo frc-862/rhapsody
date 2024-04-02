@@ -50,10 +50,10 @@ public class preAim extends Command {
      * @return Angle to set pivot to
      */
     public double calculateTargetAngle(double distance) {
-        if(Constants.isMercury()){
-			return ShooterConstants.TUBE_ANGLE_MAP.get(distance);
-		}
-		return ShooterConstants.STEALTH_ANGLE_MAP.get(distance);
+        if (Constants.isMercury()) {
+            return ShooterConstants.TUBE_ANGLE_MAP.get(distance);
+        }
+        return ShooterConstants.STEALTH_ANGLE_MAP.get(distance);
     }
 
     /**
@@ -63,9 +63,9 @@ public class preAim extends Command {
      * @return RPM to set the Flywheels
      */
     public double calculateTargetRPM(double distance) {
-        if(Constants.isMercury()){
-			return ShooterConstants.TUBE_SPEED_MAP.get(distance);
-		}
-		return ShooterConstants.STEALTH_SPEED_MAP.get(distance);
+        if (Constants.isMercury()) {
+            return ShooterConstants.TUBE_SPEED_MAP.get(distance);
+        }
+        return ShooterConstants.STEALTH_SPEED_MAP.get(distance);
     }
 }

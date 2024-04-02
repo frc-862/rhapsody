@@ -82,6 +82,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         setRampRate();
 
         initLogging();
+        
     }
 
     /**
@@ -101,15 +102,17 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         velocityYLog = new DoubleLogEntry(log, "/Swerve/velocity y");
         distanceToSpeakerLog = new DoubleLogEntry(log, "/Swerve/Distance to Speaker");
 
-        LightningShuffleboard.setBoolSupplier("Swerve", "Slow Mode", () -> inSlowMode());
-        LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
-        LightningShuffleboard.setBoolSupplier("Swerve", "Tipped", () -> isTipped());
+		if (!DriverStation.isFMSAttached()) {
+            LightningShuffleboard.setBoolSupplier("Swerve", "Slow Mode", () -> inSlowMode());
+            LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
+            LightningShuffleboard.setBoolSupplier("Swerve", "Tipped", () -> isTipped());
 
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odometry X", () -> getPose().getX());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Odometry Y", () -> getPose().getY());
+            LightningShuffleboard.setDoubleSupplier("Swerve", "Odometry X", () -> getPose().getX());
+            LightningShuffleboard.setDoubleSupplier("Swerve", "Odometry Y", () -> getPose().getY());
 
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPose().getRotation().getDegrees());
-        LightningShuffleboard.setDoubleSupplier("Swerve", "Distance to speaker", () -> distanceToSpeaker());
+            LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPose().getRotation().getDegrees());
+            LightningShuffleboard.setDoubleSupplier("Swerve", "Distance to speaker", () -> distanceToSpeaker());
+        }
     }
 
     private void setRampRate() {
@@ -154,6 +157,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         xFilter.calculate(getPose().getX());
         yFilter.calculate(getPose().getY());
         rotFilter.calculate(getPose().getRotation().getDegrees());
+
+        
 
         updateLogging();
     }

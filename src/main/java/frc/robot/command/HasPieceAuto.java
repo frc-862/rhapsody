@@ -8,12 +8,12 @@ import frc.robot.subsystems.Indexer;
 public class HasPieceAuto extends Command {
 
     private Indexer indexer;
-    private Debouncer hasNoteDebouncer = new Debouncer(0.1, DebounceType.kFalling);
+    private Debouncer hasNoteDebouncer = new Debouncer(0.2);
 
     /**
      * Creates a new HasPieceAuto
      * A race condition to move to next collect if we miss the piece
-     *
+     * Ends if we do not have a piece
      * @param indexer subsystem
      */
     public HasPieceAuto(Indexer indexer) {

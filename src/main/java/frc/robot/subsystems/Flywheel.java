@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
@@ -80,16 +81,18 @@ public class Flywheel extends SubsystemBase {
         bottomPowerLog = new DoubleLogEntry(log, "/Flywheel/BottomPower");
         biasLog = new DoubleLogEntry(log, "/Flywheel/Bias");
 
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Top RPM", () -> getTopMotorRPM());
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom RPM", () -> getBottomMotorRPM());
+		if (!DriverStation.isFMSAttached()) {
+            LightningShuffleboard.setDoubleSupplier("Flywheel", "Top RPM", () -> getTopMotorRPM());
+            LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom RPM", () -> getBottomMotorRPM());
 
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Top Target RPM", () -> topMotorTargetRPM());
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Target RPM", () -> bottomMotorTargetRPM());
+            LightningShuffleboard.setDoubleSupplier("Flywheel", "Top Target RPM", () -> topMotorTargetRPM());
+            LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Target RPM", () -> bottomMotorTargetRPM());
 
-        LightningShuffleboard.setBoolSupplier("Flywheel", "Top on Target", () -> topMotorRPMOnTarget());
-        LightningShuffleboard.setBoolSupplier("Flywheel", "Bottom on Target", () -> bottomMotorRPMOnTarget());
+            LightningShuffleboard.setBoolSupplier("Flywheel", "Top on Target", () -> topMotorRPMOnTarget());
+            LightningShuffleboard.setBoolSupplier("Flywheel", "Bottom on Target", () -> bottomMotorRPMOnTarget());
 
-        LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", () -> getBias());
+            LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", () -> getBias());
+        }
     }
 
     @Override
@@ -242,10 +245,10 @@ public class Flywheel extends SubsystemBase {
      * @param targetRPS
      */
     private void applyPowerTop(double targetRPS) {
-        if(targetRPS > 95) {
-            topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(false).withSlot(1));
-        } else if (targetRPS > 50){
-            topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(1));
+        if(targetRPS > 100) {
+            topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(false).withSlot(0));
+        // } else if (targetRPS > 50){
+        //     topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(1));
         } else {
             topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(0));
         }
@@ -256,10 +259,10 @@ public class Flywheel extends SubsystemBase {
      * @param targetRPS
      */
     private void applyPowerBottom(double targetRPS) {
-        if(targetRPS > 95) {
-            bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(false).withSlot(1));
-        } else if (targetRPS > 50){
-            bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(1));
+        if(targetRPS > 100) {
+            bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(false).withSlot(0));
+        // } else if (targetRPS > 50){
+        //     bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(1));
         } else {
             bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(0));
         }

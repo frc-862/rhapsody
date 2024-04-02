@@ -3,37 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.36086297850199,
-        "y": 5.574358195791997
+        "x": 7.559836658134857,
+        "y": 4.084914323674802
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.883504666034038,
-        "y": 5.571913969970186
+        "x": 6.839549832945821,
+        "y": 4.055313495242375
       },
       "isLocked": false,
-      "linkedName": "SubwooferFront"
+      "linkedName": "F3"
     },
     {
       "anchor": {
-        "x": 2.65,
-        "y": 5.54
+        "x": 4.944378961511131,
+        "y": 4.122214464115091
       },
       "prevControl": {
-        "x": 2.15,
-        "y": 5.54
+        "x": 5.63578281002716,
+        "y": 4.055313495242375
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "C2"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -43,7 +43,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Top side paths",
-  "previewStartingState": null,
+  "folder": "Return Paths",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }

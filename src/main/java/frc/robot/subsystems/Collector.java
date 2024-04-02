@@ -15,7 +15,6 @@ import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants;
 import frc.robot.Constants.CollectorConstants;
 import frc.thunder.hardware.ThunderBird;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Collector extends SubsystemBase {
 
@@ -58,12 +57,7 @@ public class Collector extends SubsystemBase {
         DataLog log = DataLogManager.getLog();
 
         collectorPowerLog = new DoubleLogEntry(log, "/Collector/Power");
-        beamBreakLog = new BooleanLogEntry(log, "/Collector/BeamBreak");
         hasPieceLog = new BooleanLogEntry(log, "/Collector/HasPiece");
-
-        LightningShuffleboard.setDoubleSupplier("Collector", "Power", () -> motor.get());
-        LightningShuffleboard.setBoolSupplier("Collector", "BeamBreak", () -> getEntryBeamBreakState());
-        LightningShuffleboard.setBoolSupplier("Collector", "HasPiece", () -> hasPiece());
     }
 
     /**
@@ -73,7 +67,7 @@ public class Collector extends SubsystemBase {
      */
     public boolean getEntryBeamBreakState() {
         if (Constants.isMercury()) {
-            return entryDebouncer.calculate(beamBreak.get());
+            return entryDebouncer.calculate(!beamBreak.get());
         }
         return entryDebouncer.calculate(beamBreak.get());
     }
@@ -110,7 +104,6 @@ public class Collector extends SubsystemBase {
      */
     public void updateLogging() {
         collectorPowerLog.append(motor.get());
-        beamBreakLog.append(getEntryBeamBreakState());
         hasPieceLog.append(hasPiece());
     }
 
