@@ -112,16 +112,6 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeSubsystems() {
-		boolean setPath = SignalLogger.setPath(Constants.HOOT_PATH).isOK();
-		SignalLogger.enableAutoLogging(true); // TODO Return during COMPS
-		boolean startedLogs = SignalLogger.start().isOK();
-
-		if (startedLogs && setPath) {
-			System.out.println("STARTED HOOT LOG");
-		} else {
-			System.out.println("FAILED TO START HOOT LOG");
-		}
-
 		driver = new XboxControllerFilter(ControllerConstants.DriverControllerPort,
 				Constants.ControllerConstants.DEADBAND, -1, 1,
 				XboxControllerFilter.filterMode.SQUARED); // Driver controller
@@ -150,6 +140,16 @@ public class RobotContainer extends LightningContainer {
 		logger = new Telemetry(DrivetrainConstants.MaxSpeed);
 
 		triggerInit = false;
+
+		boolean setPath = SignalLogger.setPath(Constants.HOOT_PATH).isOK();
+		SignalLogger.enableAutoLogging(true); // TODO Return during COMPS
+		boolean startedLogs = SignalLogger.start().isOK();
+
+		if (startedLogs && setPath) {
+			System.out.println("STARTED HOOT LOG");
+		} else {
+			System.out.println("FAILED TO START HOOT LOG");
+		}
 	}
 
 	@Override

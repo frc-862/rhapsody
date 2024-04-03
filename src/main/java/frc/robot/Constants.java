@@ -16,6 +16,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -153,17 +154,17 @@ public class Constants {
     }
 
     public static class AutonomousConstants {
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 0, 0); // TODO Tune
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 0, 1); // TODO Tune
         public static final PIDConstants ROTATION_PID = new PIDConstants(4, 0, 0); // TODO: Tune
 
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16); // f/s to m/s
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(10.825);
 
-        public static final double CONTROL_LOOP_PERIOD = 0.01; // constants
+        public static final double CONTROL_LOOP_PERIOD = 0.02; // constants
 
+        public static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, false); // TODO Should we enable dynamic replaning
         public static final PathConstraints PATHFINDING_CONSTRAINTS = new PathConstraints(2.0, 1.0, 3.0, 1.5);
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get
-                                                                                                      // constants
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
 
         public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can
                                                               // be at before ending.
@@ -225,7 +226,7 @@ public class Constants {
 
         public static final double kDriveGearRatio = 6.122448979591837;
         public static final double kSteerGearRatio = 21.428571428571427;
-        public static final double kWheelRadiusInches = 1.875;
+        public static final double kWheelRadiusInches = 2;
 
         private static final boolean kSteerMotorReversed = true;
         private static final boolean kInvertLeftSide = false;
@@ -485,7 +486,7 @@ public class Constants {
 
     public class IndexerConstants { // TODO: get real
         public static final boolean MOTOR_INVERT = true;
-        public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 100;
 
         public enum PieceState {
             IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE
