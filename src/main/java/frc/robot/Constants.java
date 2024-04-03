@@ -154,7 +154,7 @@ public class Constants {
     }
 
     public static class AutonomousConstants {
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 0, 0); // TODO Tune
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 0, 1); // TODO Tune
         public static final PIDConstants ROTATION_PID = new PIDConstants(4, 0, 0); // TODO: Tune
 
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16); // f/s to m/s
@@ -226,7 +226,7 @@ public class Constants {
 
         public static final double kDriveGearRatio = 6.122448979591837;
         public static final double kSteerGearRatio = 21.428571428571427;
-        public static final double kWheelRadiusInches = 1.875;
+        public static final double kWheelRadiusInches = 2;
 
         private static final boolean kSteerMotorReversed = true;
         private static final boolean kInvertLeftSide = false;
@@ -486,7 +486,7 @@ public class Constants {
 
     public class IndexerConstants { // TODO: get real
         public static final boolean MOTOR_INVERT = true;
-        public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 100;
 
         public enum PieceState {
             IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE

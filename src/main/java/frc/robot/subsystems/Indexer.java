@@ -55,11 +55,7 @@ public class Indexer extends SubsystemBase {
         motor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
                 IndexerConstants.MOTOR_INVERT, IndexerConstants.MOTOR_STATOR_CURRENT_LIMIT,
                 IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
-        motor.configSupplyLimit(0d);
-        motor.configStatorLimit(80d);
-
-        motor.applyConfig();
-
+                
         initLogging();
     }
 
