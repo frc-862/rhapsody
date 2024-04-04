@@ -369,6 +369,13 @@ public class Constants {
         public static final Translation3d BLUE_SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
         public static final Translation3d RED_SPEAKER_LOCATION = new Translation3d(16.4592, 5.547593, 1.2);
 
+
+        public static class LimelightOrientation {
+            public static final double STOPME_YAW = 180d;
+            public static final double STOPME_PITCH = 55.5;
+            public static final double STOPME_ROLL = 0d;
+        }
+
         public class Pipelines { // TODO get real
             public static final int TAG_PIPELINE = 0;
             public static final int SPEAKER_PIPELINE = 1;
