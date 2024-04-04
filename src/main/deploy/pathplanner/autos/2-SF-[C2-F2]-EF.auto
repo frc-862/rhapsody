@@ -14,6 +14,12 @@
                 "data": {
                   "name": "Cand-Sub"
                 }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 6.0
+                }
               }
             ]
           }
@@ -44,7 +50,7 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -73,12 +79,18 @@
                 }
               },
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "waitTime": 2.0
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Smart-Shoot"
           }
         },
         {
@@ -96,6 +108,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "kinda",
   "choreoAuto": false
 }
