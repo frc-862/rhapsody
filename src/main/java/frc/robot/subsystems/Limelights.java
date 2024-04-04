@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.VisionConstants.LimelightOrientation;
 import frc.robot.Constants.VisionConstants.Pipelines;
 import frc.thunder.util.Pose4d;
 import frc.thunder.vision.Limelight;
@@ -27,6 +28,8 @@ public class Limelights extends SubsystemBase {
         stopMe.setPipeline(0);
         dust.setPipeline(0);
         champs.setPipeline(0);
+
+        setOrientations();
 
         this.poseProducer = new Thread(() -> {
             while (true) {
@@ -97,5 +100,15 @@ public class Limelights extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // setOrientations();
     }
+
+    public void setOrientations(){
+        // stopMe.setRobotOrientation(LimelightOrientation.STOPME_YAW,0, 
+        // LimelightOrientation.STOPME_PITCH, 0, 
+        // LimelightOrientation.STOPME_ROLL, 0);
+
+        // champs.setRobotOrientation(0, 0, 0, 0, 0, 0);
+    }
+
 }
