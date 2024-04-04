@@ -101,7 +101,7 @@ public class ChasePieces extends Command {
         System.out.println("AUTO - Chase pieces INIT");
 
         headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
-        collectPower = 0d;
+        collectPower = maxCollectPower;
         if(DriverStation.isAutonomous()) {
             smartCollect = new AutonSmartCollect(() -> collectPower, () -> collectPower, collector, indexer);
         } else {

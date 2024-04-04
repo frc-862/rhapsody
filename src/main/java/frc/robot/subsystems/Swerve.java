@@ -10,6 +10,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.SteerRequestType;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -127,6 +128,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.2;
         config.TorqueCurrent.PeakForwardTorqueCurrent = 50;
         config.TorqueCurrent.PeakReverseTorqueCurrent = -50;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         for (int i = 0; i < 4; ++i) {
             var module = getModule(i);

@@ -10,35 +10,9 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Point-At-Speaker"
-                      }
-                    },
-                    {
-                      "type": "deadline",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Smart-Shoot"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Stop-Drive"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
+                  "name": "Cand-Sub"
                 }
               },
               {
@@ -53,7 +27,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "T-F1"
+            "pathName": "ST-F1"
           }
         },
         {
@@ -146,6 +120,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "kinda",
   "choreoAuto": false
 }
