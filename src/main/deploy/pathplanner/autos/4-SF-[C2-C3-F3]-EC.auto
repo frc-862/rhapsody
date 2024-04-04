@@ -31,7 +31,38 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SB-C3"
+                  "pathName": "SF-C2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "preAim"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Smart-Shoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C2-C3"
                 }
               },
               {
@@ -100,76 +131,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "C3-C2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "preAim"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Point-At-Speaker"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "preAim"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Smart-Collect"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Smart-Shoot"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "C2-F3"
+                  "pathName": "C3-F3"
                 }
               },
               {
@@ -229,13 +191,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Smart-Collect"
+                        "name": "preAim"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "preAim"
+                        "name": "Smart-Collect"
                       }
                     }
                   ]

@@ -154,10 +154,10 @@ public class Constants {
     }
 
     public static class AutonomousConstants {
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 0, 1); // TODO Tune
-        public static final PIDConstants ROTATION_PID = new PIDConstants(4, 0, 0); // TODO: Tune
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(10, 0, 0);
+        public static final PIDConstants ROTATION_PID = new PIDConstants(5, 0, 0); 
 
-        public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16); // f/s to m/s
+        public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16.5); // f/s to m/s
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(10.825);
 
         public static final double CONTROL_LOOP_PERIOD = 0.02; // constants
