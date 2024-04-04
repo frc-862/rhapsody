@@ -101,7 +101,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 5.0
+                              "waitTime": 2.0
                             }
                           }
                         ]
@@ -215,7 +215,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 5.0
+                              "waitTime": 2.0
                             }
                           }
                         ]
@@ -250,6 +250,18 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop-Flywheel"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BS-F4"
           }
         }
       ]
