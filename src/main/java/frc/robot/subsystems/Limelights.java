@@ -100,13 +100,13 @@ public class Limelights extends SubsystemBase {
 
     @Override
     public void periodic() {
-        setOrientations();
+        // setOrientations();
     }
 
     public void setOrientations(){
-        stopMe.setRobotOrientation(LimelightOrientation.STOPME_YAW,0, 
-        LimelightOrientation.STOPME_PITCH, 0, 
-        LimelightOrientation.STOPME_ROLL, 0);
+        // stopMe.setRobotOrientation(LimelightOrientation.STOPME_YAW,0, 
+        // LimelightOrientation.STOPME_PITCH, 0, 
+        // LimelightOrientation.STOPME_ROLL, 0);
 
         // champs.setRobotOrientation(0, 0, 0, 0, 0, 0);
     }
