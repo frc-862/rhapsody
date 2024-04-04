@@ -369,6 +369,9 @@ public class Constants {
         public static final Translation3d BLUE_SPEAKER_LOCATION = new Translation3d(0, 5.547593, 1.2);
         public static final Translation3d RED_SPEAKER_LOCATION = new Translation3d(16.4592, 5.547593, 1.2);
 
+        public static final int[] SPEAKER_FILTERS = {4, 7};
+        public static final int[] ALL_TAG_FILTERS  = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+
 
         public static class LimelightOrientation {
             public static final double STOPME_YAW = 180d;
