@@ -39,12 +39,6 @@
                 "data": {
                   "name": "Smart-Collect"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "preAim"
-                }
               }
             ]
           }
@@ -88,9 +82,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "Smart-Shoot"
+            "waitTime": 0.5
           }
         },
         {
@@ -196,6 +190,6 @@
       ]
     }
   },
-  "folder": "Done",
+  "folder": null,
   "choreoAuto": false
 }

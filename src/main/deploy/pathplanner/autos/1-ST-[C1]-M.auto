@@ -31,9 +31,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "SB-BS"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ST-C1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect"
+                }
+              }
+            ]
           }
         }
       ]

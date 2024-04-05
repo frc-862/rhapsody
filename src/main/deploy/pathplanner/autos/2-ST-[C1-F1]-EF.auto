@@ -47,7 +47,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "preAim"
+                        "name": "Stop-Flywheel"
                       }
                     }
                   ]
@@ -66,18 +66,6 @@
                             "data": {
                               "name": "Point-At-Speaker"
                             }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "preAim"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Smart-Collect"
-                            }
                           }
                         ]
                       }
@@ -92,9 +80,22 @@
                 }
               },
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop-Drive"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -128,6 +129,6 @@
       ]
     }
   },
-  "folder": "Done",
+  "folder": null,
   "choreoAuto": false
 }

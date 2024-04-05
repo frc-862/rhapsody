@@ -31,9 +31,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "SF-C2"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SF-C2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect"
+                }
+              }
+            ]
           }
         }
       ]

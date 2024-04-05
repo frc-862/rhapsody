@@ -25,9 +25,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "ST-F1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ST-F1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Flywheel"
+                }
+              }
+            ]
           }
         },
         {
@@ -43,19 +56,13 @@
           }
         },
         {
-          "type": "race",
+          "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "race",
                 "data": {
                   "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Point-At-Speaker"
-                      }
-                    },
                     {
                       "type": "deadline",
                       "data": {
@@ -63,34 +70,66 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "Smart-Shoot"
+                              "name": "Point-At-Speaker"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "Stop-Drive"
+                              "name": "preAim"
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
                       }
                     }
                   ]
                 }
               },
               {
-                "type": "wait",
+                "type": "deadline",
                 "data": {
-                  "waitTime": 6.0
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop-Drive"
+                      }
+                    }
+                  ]
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "TS-F2"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "TS-F2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Flywheel"
+                }
+              }
+            ]
           }
         },
         {
@@ -106,20 +145,85 @@
           }
         },
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "TS-F2"
+            "commands": [
+              {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "deadline",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Point-At-Speaker"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "preAim"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop-Drive"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
-            "commands": []
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "TS-F2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Flywheel"
+                }
+              }
+            ]
           }
         }
       ]
     }
   },
-  "folder": "kinda",
+  "folder": null,
   "choreoAuto": false
 }

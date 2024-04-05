@@ -12,22 +12,28 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Point-At-Speaker"
+                  "name": "Cand-Sub"
                 }
               },
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 6.0
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "Smart-Shoot"
+            "waitTime": 10.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SB-C3"
           }
         }
       ]

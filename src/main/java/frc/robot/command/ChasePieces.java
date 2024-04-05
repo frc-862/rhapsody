@@ -257,7 +257,7 @@ public class ChasePieces extends Command {
                 }
             }
             // return smartCollect.isFinished();
-            return collector.getEntryBeamBreakState();
+            return indexer.hasNote();
         } else {
             // return smartCollect.isFinished();
             return indexer.getPieceState() == IndexerConstants.PieceState.IN_COLLECT;
