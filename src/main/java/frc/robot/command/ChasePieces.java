@@ -86,8 +86,8 @@ public class ChasePieces extends Command {
             this.rotPower = 1.5d; // TODO: get real >:)
             this.maxCollectPower = 0.8d;
         } else {
-            this.maxCollectPower = 0.65d;
-            this.drivePower = 3d;
+            this.maxCollectPower = 1d;
+            this.drivePower = 5d;
             this.rotPower = 1.5d; // TODO: get real >:)
         }
 
@@ -167,9 +167,9 @@ public class ChasePieces extends Command {
                     if (!hasSeenTarget) {
                         if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT) {
                             if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                                drivetrain.setRobot(0, 0, -rotPower);
+                                drivetrain.setRobot(0.5, 0, -rotPower);
                             } else {
-                                drivetrain.setRobot(0, 0, rotPower);
+                                drivetrain.setRobot(0.5, 0, rotPower);
                             }
                         } else {
                             if (DriverStation.getAlliance().get() == Alliance.Blue) {
