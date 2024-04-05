@@ -677,8 +677,8 @@ public class Constants {
         public static final double C3_ANGLE = 0;
 
         // Line
-        public static final double LINE_RPM = 0;
-        public static final double LINE_ANGLE = 0;
+        public static final double LINE_RPM = 4100d;
+        public static final double LINE_ANGLE = 28.7;
 
         // Source
         public static final double SOURCE_RPM = -300d; // TODO test

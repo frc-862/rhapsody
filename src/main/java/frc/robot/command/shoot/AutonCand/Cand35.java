@@ -7,7 +7,7 @@ import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Indexer;
 
-public class CandLine extends Command {
+public class Cand35 extends Command {
 
     private final Flywheel flywheel;
     private final Pivot pivot;
@@ -26,7 +26,7 @@ public class CandLine extends Command {
      * @param pivot    subsystem
      * @param indexer  subsystem
      */
-    public CandLine(Flywheel flywheel, Pivot pivot, Indexer indexer) {
+    public Cand35(Flywheel flywheel, Pivot pivot, Indexer indexer) {
         this.flywheel = flywheel;
         this.pivot = pivot;
         this.indexer = indexer;
@@ -71,6 +71,6 @@ public class CandLine extends Command {
 
     @Override
     public boolean isFinished() {
-        return shot && startTime - shotTime >= CandConstants.TIME_TO_SHOOT;
+        return indexer.hasShot();
     }
 }
