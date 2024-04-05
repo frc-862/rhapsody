@@ -25,6 +25,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Bias-Down"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "SB-F5"
@@ -88,12 +94,6 @@
                                   "data": {
                                     "name": "preAim"
                                   }
-                                },
-                                {
-                                  "type": "named",
-                                  "data": {
-                                    "name": "Smart-Collect"
-                                  }
                                 }
                               ]
                             }
@@ -136,6 +136,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
           }
         },
         {
