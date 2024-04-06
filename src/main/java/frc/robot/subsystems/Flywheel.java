@@ -24,6 +24,7 @@ public class Flywheel extends SubsystemBase {
     private double bottomTargetRPS = 0;
     private double bias = 0;
     private boolean coast = false;
+    private boolean kamaDone = false;
 
     private DoubleLogEntry topRPMLog;
     private DoubleLogEntry bottomRPMLog;
@@ -129,8 +130,8 @@ public class Flywheel extends SubsystemBase {
      */
     public void setAllMotorsRPM(double rpm) {
         coast(false);
-        topTargetRPS = rpm / 60;
-        bottomTargetRPS = rpm / 60;
+        topTargetRPS = rpm / 60d;
+        bottomTargetRPS = rpm / 60d;
     }
 
     /**
@@ -139,7 +140,7 @@ public class Flywheel extends SubsystemBase {
      */
     public void setTopMotorRPM(double rpm) {
         coast(false);
-        topTargetRPS = rpm / 60;
+        topTargetRPS = rpm / 60d;
     }
 
     /**
@@ -148,35 +149,35 @@ public class Flywheel extends SubsystemBase {
      */
     public void setBottomMotorRPM(double rpm) {
         coast(false);
-        bottomTargetRPS = rpm / 60;
+        bottomTargetRPS = rpm / 60d;
     }
 
     /**
      * @return The current RPM of flywheel top
      */
     public double getTopMotorRPM() {
-        return (topMotor.getVelocity().getValue() * 60);
+        return (topMotor.getVelocity().getValue() * 60d);
     }
 
     /**
      * @return The current RPM of flywheel bottom
      */
     public double getBottomMotorRPM() {
-        return (bottomMotor.getVelocity().getValue() * 60);
+        return (bottomMotor.getVelocity().getValue() * 60d);
     }
 
     /**
      * @return Whether or not top flywheel is on target, within FlywheelConstants.RPM_TOLERANCE
      */
     public boolean topMotorRPMOnTarget() {
-        return Math.abs(getTopMotorRPM() - (topTargetRPS * 60)) < FlywheelConstants.RPM_TOLERANCE;
+        return Math.abs(getTopMotorRPM() - (topTargetRPS * 60d)) < FlywheelConstants.RPM_TOLERANCE;
     }
 
     /**
      * @return Whether or not bottom flywheel is on target, within FlywheelConstants.RPM_TOLERANCE
      */
     public boolean bottomMotorRPMOnTarget() {
-        return Math.abs(getBottomMotorRPM() - (bottomTargetRPS * 60)) < FlywheelConstants.RPM_TOLERANCE;
+        return Math.abs(getBottomMotorRPM() - (bottomTargetRPS * 60d)) < FlywheelConstants.RPM_TOLERANCE;
     }
 
     /**
@@ -190,14 +191,14 @@ public class Flywheel extends SubsystemBase {
      * @return the top motor's target RPM
      */
     public double topMotorTargetRPM() {
-        return topTargetRPS * 60;
+        return topTargetRPS * 60d;
     }
 
     /**
      * @return the bottom motor's target RPM
      */
     public double bottomMotorTargetRPM() {
-        return bottomTargetRPS * 60;
+        return bottomTargetRPS * 60d;
     }
 
     /**
@@ -238,6 +239,18 @@ public class Flywheel extends SubsystemBase {
      */
     public void resetBias() {
         bias = 0;
+    }
+    
+    public void startKama() {
+        kamaDone = false;
+    }
+
+    public void endKama() {
+        kamaDone = true;
+    }
+
+    public boolean getKama() {
+        return kamaDone;
     }
 
     /**

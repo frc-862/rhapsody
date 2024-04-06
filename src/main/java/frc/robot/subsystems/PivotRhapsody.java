@@ -91,7 +91,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
         powerLog = new DoubleLogEntry(log, "/Pivot/Power");
 
-		if (!DriverStation.isFMSAttached()) {
+        if (!DriverStation.isFMSAttached()) {
             LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> (getAngle() * 360));
             LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle * 360);
             LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
@@ -105,9 +105,9 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
         // // SETS angle to angle of limit switch on press
         // if (getForwardLimit()) {
-        //     resetAngle(RhapsodyPivotConstants.MIN_ANGLE);
+        // resetAngle(RhapsodyPivotConstants.MIN_ANGLE);
         // } else if (getReverseLimit()) {
-        //     resetAngle(RhapsodyPivotConstants.MAX_ANGLE);
+        // resetAngle(RhapsodyPivotConstants.MAX_ANGLE);
         // }
 
         moveToTarget();

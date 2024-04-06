@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6770555652380903,
-        "y": 4.180768646843998
+        "x": 1.7121880748754352,
+        "y": 4.028527771748839
       },
       "isLocked": false,
       "linkedName": "SubwooferBottom"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 2.55,
-        "y": 3.8
+        "y": 4.1
       },
       "prevControl": {
         "x": 1.923062054584547,
-        "y": 3.895854323169196
+        "y": 4.195854323169192
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,8 +39,8 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 1.0416266760099724,
-    "rotateFast": false
+    "rotation": 0.0,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Top side paths",

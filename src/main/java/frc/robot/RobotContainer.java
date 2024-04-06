@@ -43,6 +43,7 @@ import frc.robot.command.PathFindToAuton;
 import frc.robot.command.PathToPose;
 import frc.robot.command.PointAtPoint;
 import frc.robot.command.PointAtTag;
+import frc.robot.command.ReverseChasePieces;
 import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
@@ -167,7 +168,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-3.5", new Cand35(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("Cand-3.5", new Cand35(flywheel, pivot, indexer, collector));
 		NamedCommands.registerCommand("AMP", new AmpShotAuton(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
 		NamedCommands.registerCommand("Smart-Shoot",
@@ -188,6 +189,9 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
 		NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
 		NamedCommands.registerCommand("Bias-Down", new InstantCommand(() -> pivot.decreaseBias()));
+		NamedCommands.registerCommand("End-Kama", new InstantCommand(() -> flywheel.endKama()));
+		NamedCommands.registerCommand("Start-Kama", new InstantCommand(() -> flywheel.startKama()));
+		NamedCommands.registerCommand("Reverse-Cheese-Paste", new ReverseChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();

@@ -1,0 +1,164 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.5212676579199327,
+        "y": 3.5027646978370885
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.7378910142435675,
+        "y": 1.3715050507024094
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.22,
+        "y": 0.779488482053888
+      },
+      "prevControl": {
+        "x": 6.197276723782323,
+        "y": 1.7168480490793419
+      },
+      "nextControl": {
+        "x": 8.537525727271014,
+        "y": 0.6323424133188938
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.7,
+        "y": 2.05
+      },
+      "prevControl": {
+        "x": 8.694535081377856,
+        "y": 1.489908364432114
+      },
+      "nextControl": {
+        "x": 8.71679192445269,
+        "y": 3.7709801428571703
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.67,
+        "y": 7.4
+      },
+      "prevControl": {
+        "x": 8.68091933039653,
+        "y": 6.867283464930472
+      },
+      "nextControl": {
+        "x": 8.664535081377856,
+        "y": 7.666614563998359
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.490768058459196,
+        "y": 7.3114046228092455
+      },
+      "prevControl": {
+        "x": 7.98411519899963,
+        "y": 7.380473222484906
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.95,
+      "rotationDegrees": -35.22000000000003,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.9500000000000002,
+      "rotationDegrees": -135.0,
+      "rotateFast": true
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Plop",
+      "minWaypointRelativePos": 0.8999999999999999,
+      "maxWaypointRelativePos": 1.6500000000000001,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "Plop",
+      "waypointRelativePos": 0.45,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Cand-3.5"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Start-Kama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "End  Plop",
+      "waypointRelativePos": 1.95,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "End-Kama"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -135.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": -32.691984182572085,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

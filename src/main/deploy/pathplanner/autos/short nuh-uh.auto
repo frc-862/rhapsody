@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 7.58,
+      "y": 0.75
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -12,28 +18,22 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Cand-Sub"
+                  "name": "Cand-3.5"
                 }
               },
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 6.0
+                  "waitTime": 1.5
                 }
               }
             ]
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 10.0
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "SB-C3"
+            "pathName": "h-Uh"
           }
         }
       ]

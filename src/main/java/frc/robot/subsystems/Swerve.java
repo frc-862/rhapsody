@@ -267,7 +267,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     @Override
     public void simulationPeriodic() {
         /* Assume */
-        updateSimState(0.01, 12);
+        updateSimState(0.02, 12);
     }
 
     /**

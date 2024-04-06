@@ -226,7 +226,7 @@ public class Constants {
 
         public static final double kDriveGearRatio = 6.122448979591837;
         public static final double kSteerGearRatio = 21.428571428571427;
-        public static final double kWheelRadiusInches = 2;
+        public static final double kWheelRadiusInches = 1.95;
 
         private static final boolean kSteerMotorReversed = true;
         private static final boolean kInvertLeftSide = false;
@@ -669,16 +669,20 @@ public class Constants {
         public static final double C1_ANGLE = 0;
 
         // C2
-        public static final double C2_RPM = 0;
-        public static final double C2_ANGLE = 0;
+        public static final double C2_RPM = 4100;
+        public static final double C2_ANGLE = 28.7d;
 
         // C3
-        public static final double C3_RPM = 0;
-        public static final double C3_ANGLE = 0;
+        public static final double C3_RPM = 4100;
+        public static final double C3_ANGLE = 29.5d;
 
         // Line
-        public static final double LINE_RPM = 4100d;
+        public static final double LINE_RPM = 200d;
         public static final double LINE_ANGLE = 28.7;
+
+        // 3.5 shhhhhh
+        public static final double THREEFIVE_RPM = 500d;
+        public static final double THREEFIVE_ANGLE = 27d;
 
         // Source
         public static final double SOURCE_RPM = -300d; // TODO test
@@ -689,8 +693,7 @@ public class Constants {
         public static final double NOTE_PASS_RPM = 4500d;
 
         // TODO find time to shoot
-        public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer
-                                                       // start to flywheel exit
+        public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer start to flywheel exit
     }
 
     public class ClimbConstants { // TODO: find real values
@@ -709,10 +712,8 @@ public class Constants {
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
         public static final double MAX_HEIGHT = 8.83; // In rotations
-        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of
-                                                       // lower arm in inches
-        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of
-                                                       // upper arm in inches
+        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of lower arm in inches
+        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
 
         public static final double CLIMB_PID_SETPOINT_EXTENDED = MAX_HEIGHT;
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 1;

@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.36086297850199,
-        "y": 5.574358195791997
+        "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
         "x": 4.599753814892247,
-        "y": 5.663625173404194
+        "y": 5.639266977612197
       },
       "isLocked": false,
       "linkedName": "SubwooferFront"

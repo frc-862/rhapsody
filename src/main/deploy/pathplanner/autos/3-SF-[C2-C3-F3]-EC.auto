@@ -25,12 +25,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Bias-Down"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -45,12 +39,6 @@
                 "data": {
                   "name": "Smart-Collect"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "preAim"
-                }
               }
             ]
           }
@@ -58,7 +46,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Smart-Shoot"
+            "name": "Cand-C2"
           }
         },
         {
@@ -75,12 +63,6 @@
                 "type": "named",
                 "data": {
                   "name": "Smart-Collect"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "preAim"
                 }
               }
             ]
@@ -105,12 +87,6 @@
                       "data": {
                         "name": "Smart-Collect"
                       }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "preAim"
-                      }
                     }
                   ]
                 }
@@ -127,7 +103,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Smart-Shoot"
+            "name": "Cand-C3"
           }
         },
         {
@@ -168,12 +144,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "preAim"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Smart-Collect"
                 }
               }
@@ -197,12 +167,6 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "preAim"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
                         "name": "Smart-Collect"
                       }
                     }
@@ -221,7 +185,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Smart-Shoot"
+            "name": "Cand-3.5"
           }
         }
       ]

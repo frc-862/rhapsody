@@ -6,7 +6,7 @@
     "data": {
       "commands": [
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -18,22 +18,34 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 6.0
+                  "waitTime": 4.0
                 }
               }
             ]
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 10.0
+            "pathName": "nuh-Uh"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Reverse-Cheese-Paste"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SB-C3"
+            "pathName": "Womp1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Womp2"
           }
         }
       ]
