@@ -68,7 +68,7 @@ public class Constants {
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
 
-        public static final double ALIGNMENT_TOLERANCE = 3d;
+        public static final double ALIGNMENT_TOLERANCE = 1d;
     }
 
     public class RobotMap {
@@ -616,15 +616,15 @@ public class Constants {
             {
                 // As distance gets smaller angle goes up
                 put(1.21d, 50d);
-                put(1.63d, 47d);
-                put(2d, 43d);
-                put(2.5d, 39.5d);
-                put(3d, 35d);
-                put(3.5d, 30.5d);
-                put(4d, 29.5d);
-                put(4.3, 28d);
-                put(4.75d, 27.5d);
-                put(6.2d, 23.5d);
+                put(1.64d, 45d);
+                put(2d, 41d);
+                put(2.5d, 36d);
+                put(3d, 32.5d);
+                put(3.51d, 29.5d);
+                put(4.02d, 28.25d);
+                put(4.33, 27.5d);
+                put(4.71d, 26d);
+                // put(6.2d, 23.5d);
             }
         };
 
@@ -633,15 +633,15 @@ public class Constants {
             {
                 // As distance get smaller RPM gets smaller
                 put(1.21d, 2000d);
-                put(1.63d, 2360d);
+                put(1.64d, 2500d);
                 put(2d, 2500d);
-                put(2.5d, 3000d);
-                put(3d, 3500d);
-                put(3.5d, 3700d);
-                put(4d, 3700d);
-                put(4.3d, 4200d);
-                put(4.75d, 4200d);
-                put(6.2d, 5800d);
+                put(2.5d, 3200d);
+                put(3d, 3800d);
+                put(3.51d, 4000d);
+                put(4.02d, 4300d);
+                put(4.33d, 4500d);
+                put(4.71d, 5500d);
+                // put(6.2d, 5800d);
             }
         };
 

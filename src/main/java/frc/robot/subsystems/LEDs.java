@@ -93,9 +93,9 @@ public class LEDs extends SubsystemBase {
                 setSolidStrandHSV(-1, LEDsConstants.ORANGE_HUE, 255, 255);
                 break;
 
-            // case HAS_VISION:
-            //     setSolidStrandHSV(-1, LEDsConstants.PINK_HUE, 255, 255);
-            //     break;
+            case HAS_VISION:
+                setSolidStrandHSV(-1, LEDsConstants.PINK_HUE, 255, 255);
+                break;
 
             case DISABLED:
                 setSolidHSV(0, 0, 0);
