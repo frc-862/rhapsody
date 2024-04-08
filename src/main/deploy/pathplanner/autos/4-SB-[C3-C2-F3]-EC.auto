@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 4.0
                 }
               }
             ]
@@ -39,6 +39,81 @@
                 "data": {
                   "name": "Smart-Collect"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "preAim"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point-At-Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Collect"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "preAim"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Cand-3.5"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C3-C2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "preAim"
+                }
               }
             ]
           }
@@ -73,50 +148,18 @@
                 }
               },
               {
-                "type": "named",
-                "data": {
-                  "name": "Has-Piece"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.1
+                  "waitTime": 2.0
                 }
               }
             ]
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Smart-Shoot"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stop-Drive"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Has-Piece"
-                }
-              }
-            ]
+            "name": "Cand-3.5"
           }
         },
         {
@@ -126,7 +169,38 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "C3-C2"
+                  "pathName": "C2-F3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Flywheel"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Chase-Pieces"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "F3-TS"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "preAim"
                 }
               },
               {
@@ -155,183 +229,31 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "preAim"
+                        "name": "Smart-Collect"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Smart-Collect"
+                        "name": "preAim"
                       }
                     }
                   ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Has-Piece"
                 }
               },
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.1
+                  "waitTime": 2.0
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Smart-Shoot"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stop-Drive"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Has-Piece"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "C2-C1"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "preAim"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Smart-Collect"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Point-At-Speaker"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "preAim"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Smart-Collect"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Has-Piece"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.1
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Smart-Shoot"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stop-Drive"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Has-Piece"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "C1-F1"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Chase-Pieces"
+            "name": "Cand-3.5"
           }
         }
       ]

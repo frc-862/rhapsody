@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 1.36086297850199,
-        "y": 5.574358195791997
+        "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.4690930679800722,
-        "y": 4.723356888240638
+        "y": 4.698998692448641
       },
       "isLocked": false,
       "linkedName": "SubwooferFront"
     },
     {
       "anchor": {
-        "x": 2.3,
-        "y": 3.8
+        "x": 2.55,
+        "y": 4.1
       },
       "prevControl": {
-        "x": 1.0703621626929412,
-        "y": 3.788289163454219
+        "x": 1.3203621626929412,
+        "y": 4.088289163454219
       },
       "nextControl": null,
       "isLocked": false,

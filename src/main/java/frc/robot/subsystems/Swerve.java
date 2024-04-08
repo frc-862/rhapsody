@@ -10,6 +10,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.SteerRequestType;
+import com.ctre.phoenix6.signals.BridgeOutputValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -266,7 +267,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     @Override
     public void simulationPeriodic() {
         /* Assume */
-        updateSimState(0.01, 12);
+        updateSimState(0.02, 12);
     }
 
     /**

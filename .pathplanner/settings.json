@@ -5,13 +5,12 @@
   "pathFolders": [
     "Align Paths",
     "Bottom side paths",
-    "PathFind",
+    "Align",
     "Return Paths",
     "Top side paths"
   ],
   "autoFolders": [
-    "kinda",
-    "Done"
+    "Point Blank"
   ],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 4.0,

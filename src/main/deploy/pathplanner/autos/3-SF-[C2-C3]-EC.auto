@@ -18,16 +18,10 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 6.0
+                  "waitTime": 4.0
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Bias-Down"
           }
         },
         {
@@ -38,6 +32,31 @@
                 "type": "path",
                 "data": {
                   "pathName": "SF-C2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Cand-C2"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C2-C3"
                 }
               },
               {
@@ -72,7 +91,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "preAim"
+                        "name": "Smart-Collect"
                       }
                     }
                   ]
@@ -88,53 +107,9 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop-Drive"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "C2-F2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop-Flywheel"
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "Chase-Pieces"
+            "name": "Cand-C3"
           }
         }
       ]

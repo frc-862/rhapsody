@@ -25,6 +25,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Bias-Down"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "SB-F5"
@@ -88,12 +94,6 @@
                                   "data": {
                                     "name": "preAim"
                                   }
-                                },
-                                {
-                                  "type": "named",
-                                  "data": {
-                                    "name": "Smart-Collect"
-                                  }
                                 }
                               ]
                             }
@@ -101,7 +101,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 5.0
+                              "waitTime": 2.0
                             }
                           }
                         ]
@@ -136,6 +136,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop-Flywheel"
           }
         },
         {
@@ -215,7 +221,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 5.0
+                              "waitTime": 2.0
                             }
                           }
                         ]
@@ -251,10 +257,22 @@
               }
             ]
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop-Flywheel"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BS-F4"
+          }
         }
       ]
     }
   },
-  "folder": "Done",
+  "folder": null,
   "choreoAuto": false
 }

@@ -25,6 +25,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Bias-Down"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -38,43 +44,6 @@
                 "type": "named",
                 "data": {
                   "name": "Smart-Collect"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "preAim"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Smart-Shoot"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "C2-C3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "preAim"
                 }
               }
             ]
@@ -119,6 +88,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Smart-Shoot"
@@ -131,7 +106,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "C3-F3"
+                  "pathName": "C2-F3"
                 }
               },
               {
@@ -191,13 +166,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "preAim"
+                        "name": "Smart-Collect"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Smart-Collect"
+                        "name": "preAim"
                       }
                     }
                   ]
@@ -221,6 +196,6 @@
       ]
     }
   },
-  "folder": "Done",
+  "folder": null,
   "choreoAuto": false
 }

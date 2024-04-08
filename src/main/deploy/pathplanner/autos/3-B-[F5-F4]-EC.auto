@@ -333,6 +333,6 @@
       ]
     }
   },
-  "folder": "Done",
+  "folder": null,
   "choreoAuto": false
 }

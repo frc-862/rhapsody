@@ -19,7 +19,7 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Limelights;
 import frc.thunder.vision.Limelight;
 
-public class ChasePieces extends Command {
+public class ReverseChasePieces extends Command {
 
     private Swerve drivetrain;
     private Collector collector;
@@ -71,8 +71,7 @@ public class ChasePieces extends Command {
      * @param pivot      for smart collect
      * @param limelights to get vision data from dust
      */
-    public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel,
-            Limelights limelights) {
+    public ReverseChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel, Limelights limelights) {
         this.drivetrain = drivetrain;
         this.collector = collector;
         this.indexer = indexer;
@@ -81,15 +80,9 @@ public class ChasePieces extends Command {
 
         this.limelight = limelights.getDust();
 
-        if (DriverStation.isAutonomous()) {
-            this.drivePower = 1.5d;
-            this.rotPower = 1.5d; // TODO: get real >:)
-            this.maxCollectPower = 0.8d;
-        } else {
-            this.maxCollectPower = 1d;
-            this.drivePower = 5d;
-            this.rotPower = 1.5d; // TODO: get real >:)
-        }
+        this.drivePower = 1.5d;
+        this.rotPower = 1.5d;
+        this.maxCollectPower = 1d;
 
         addRequirements(drivetrain, collector, indexer, flywheel);
 
@@ -98,21 +91,16 @@ public class ChasePieces extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("AUTO - Chase pieces INIT");
+        System.out.println("AUTO - Reverse Chase pieces INIT");
 
         headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
         collectPower = maxCollectPower;
-        if (DriverStation.isAutonomous()) {
-            smartCollect = new AutonSmartCollect(() -> collectPower, () -> collectPower, collector, indexer);
-        } else {
-            smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot,
-                    flywheel);
-        }
+        
+        smartCollect = new AutonSmartCollect(() -> collectPower, () -> collectPower, collector, indexer);
 
         smartCollect.initialize();
 
         hasSeenTarget = false;
-
     }
 
     /**
@@ -151,56 +139,38 @@ public class ChasePieces extends Command {
 
         pidOutput = headingController.calculate(0, targetHeading);
 
-        if (DriverStation.isAutonomousEnabled()) {
-            collectPower = maxCollectPower;
-            if (!hasPiece) {
-                if (hasTarget) {
-                    if (trustValues()) {
-                        hasSeenTarget = true;
-                        if (!onTarget) {
-                            drivetrain.setRobot(drivePower, 0, -pidOutput);
-                        } else {
-                            drivetrain.setRobot(drivePower, 0, 0);
-                        }
-                    }
-                } else {
-                    if (!hasSeenTarget) {
-                        if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT) {
-                            if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                                drivetrain.setRobot(0.5, 0, -rotPower);
-                            } else {
-                                drivetrain.setRobot(0.5, 0, rotPower);
-                            }
-                        } else {
-                            if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                                drivetrain.setRobot(0.5, 0, rotPower);
-                            } else {
-                                drivetrain.setRobot(0.5, 0, -rotPower);
-                            }
-                        }
+        collectPower = maxCollectPower;
+        if (!hasPiece) {
+            if (hasTarget) {
+                if (trustValues()) {
+                    hasSeenTarget = true;
+                    if (!onTarget) {
+                        drivetrain.setRobot(drivePower, 0, -pidOutput);
                     } else {
                         drivetrain.setRobot(drivePower, 0, 0);
                     }
                 }
-            }
-        } else {
-            if (!hasPiece) {
-                if (hasTarget) {
-                    if (trustValues()) {
-                        collectPower = maxCollectPower;
-                        if (!onTarget) {
-                            drivetrain.setRobot(drivePower, 0, -pidOutput);
+            } else {
+                if (!hasSeenTarget) {
+                    if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT) {
+                        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+                            drivetrain.setRobot(0.5, 0, rotPower);
                         } else {
-                            drivetrain.setRobot(drivePower, 0, 0);
+                            drivetrain.setRobot(0.5, 0, -rotPower);
+                        }
+                    } else {
+                        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+                            drivetrain.setRobot(0.5, 0, -rotPower);
+                        } else {
+                            drivetrain.setRobot(0.5, 0, rotPower);
                         }
                     }
                 } else {
                     drivetrain.setRobot(drivePower, 0, 0);
                 }
-            } else {
-                drivetrain.setRobot(0, 0, 0);
             }
         }
+
 
         updateLogging();
     }
@@ -227,7 +197,7 @@ public class ChasePieces extends Command {
     public void end(boolean interrupted) {
         collectPower = 0d;
         smartCollect.end(interrupted);
-        // drivetrain.stop();
+
         System.out.println("AUTO - Chase pieces END");
     }
 
@@ -246,21 +216,15 @@ public class ChasePieces extends Command {
 
     @Override
     public boolean isFinished() {
-        if (DriverStation.isAutonomous()) {
-            if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                if (drivetrain.getPose().getX() > AutonomousConstants.CHASE_BOUNDARY) {
-                    return true;
-                }
-            } else {
-                if (drivetrain.getPose().getX() < AutonomousConstants.CHASE_BOUNDARY) {
-                    return true;
-                }
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+            if (drivetrain.getPose().getX() > AutonomousConstants.CHASE_BOUNDARY) {
+                return true;
             }
-            // return smartCollect.isFinished();
-            return indexer.hasNote();
         } else {
-            // return smartCollect.isFinished();
-            return indexer.getPieceState() == IndexerConstants.PieceState.IN_COLLECT;
+            if (drivetrain.getPose().getX() < AutonomousConstants.CHASE_BOUNDARY) {
+                return true;
+            }
         }
+        return indexer.hasNote();
     }
 }

@@ -1,6 +1,5 @@
 package frc.robot.command.shoot.AutonCand;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
 import frc.robot.subsystems.Flywheel;
@@ -12,10 +11,6 @@ public class CandC2 extends Command {
     private final Flywheel flywheel;
     private final Pivot pivot;
     private final Indexer indexer;
-
-    private boolean shot = false;
-    private double shotTime = 0;
-    private double startTime = 0;
 
     private boolean startIndexing = false;
 
@@ -36,9 +31,6 @@ public class CandC2 extends Command {
 
     @Override
     public void initialize() {
-        shot = false;
-        startIndexing = false;
-        startTime = Timer.getFPGATimestamp();
         flywheel.setAllMotorsRPM(CandConstants.C2_RPM + flywheel.getBias());
         pivot.setTargetAngle(CandConstants.C2_ANGLE + pivot.getBias());
     }
@@ -53,24 +45,22 @@ public class CandC2 extends Command {
         }
 
         if (startIndexing) {
-            shot = true;
-            shotTime = Timer.getFPGATimestamp();
             indexer.indexUp();
         }
 
-        flywheel.setAllMotorsRPM(CandConstants.C2_RPM + flywheel.getBias());
-        pivot.setTargetAngle(CandConstants.C2_ANGLE + pivot.getBias());
+        flywheel.setAllMotorsRPM(CandConstants.C2_RPM);
+        pivot.setTargetAngle(CandConstants.C2_ANGLE);
     }
 
     @Override
     public void end(boolean interrupted) {
-        flywheel.coast(true);
+        flywheel.coast(false);
         pivot.setTargetAngle(pivot.getStowAngle());
         indexer.stop();
     }
 
     @Override
     public boolean isFinished() {
-        return shot && shotTime - startTime >= CandConstants.TIME_TO_SHOOT;
+        return !indexer.hasNote();
     }
 }

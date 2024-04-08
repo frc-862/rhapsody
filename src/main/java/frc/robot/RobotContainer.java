@@ -43,6 +43,7 @@ import frc.robot.command.PathFindToAuton;
 import frc.robot.command.PathToPose;
 import frc.robot.command.PointAtPoint;
 import frc.robot.command.PointAtTag;
+import frc.robot.command.ReverseChasePieces;
 import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
@@ -58,10 +59,10 @@ import frc.robot.command.shoot.Stow;
 import frc.robot.command.shoot.Tune;
 import frc.robot.command.shoot.preAim;
 import frc.robot.command.shoot.AutonCand.AmpShotAuton;
+import frc.robot.command.shoot.AutonCand.Cand35;
 import frc.robot.command.shoot.AutonCand.CandC1;
 import frc.robot.command.shoot.AutonCand.CandC2;
 import frc.robot.command.shoot.AutonCand.CandC3;
-import frc.robot.command.shoot.AutonCand.CandLine;
 import frc.robot.command.shoot.AutonCand.PointBlankShotAuton;
 import frc.robot.command.tests.CollectorSystemTest;
 import frc.robot.command.tests.DrivetrainSystemTest;
@@ -167,7 +168,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-Line", new CandLine(flywheel, pivot, indexer));
+		NamedCommands.registerCommand("Cand-3.5", new Cand35(flywheel, pivot, indexer, collector));
 		NamedCommands.registerCommand("AMP", new AmpShotAuton(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
 		NamedCommands.registerCommand("Smart-Shoot",
@@ -187,10 +188,10 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
 		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
 		NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
-		NamedCommands.registerCommand("Stopme-Tag",
-				new InstantCommand(() -> limelights.setStopMePipeline(VisionConstants.Pipelines.TAG_PIPELINE)));
-		NamedCommands.registerCommand("Stopme-Speaker",
-				new InstantCommand(() -> limelights.setStopMePipeline(VisionConstants.Pipelines.SPEAKER_PIPELINE)));
+		NamedCommands.registerCommand("Bias-Down", new InstantCommand(() -> pivot.decreaseBias()));
+		NamedCommands.registerCommand("End-Kama", new InstantCommand(() -> flywheel.endKama()));
+		NamedCommands.registerCommand("Start-Kama", new InstantCommand(() -> flywheel.startKama()));
+		NamedCommands.registerCommand("Reverse-Cheese-Paste", new ReverseChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -262,9 +263,9 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(coPilot::getXButton)
 				.whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		// new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
-		new Trigger(coPilot::getYButton).whileTrue(new NotePass(flywheel, pivot));
-		// new Trigger(coPilot::getAButton).whileTrue(new Tune(flywheel, pivot)
-		// .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(coPilot::getYButton).whileTrue(new NotePass(flywheel, pivot));
+		new Trigger(coPilot::getYButton).whileTrue(new Tune(flywheel, pivot)
+		.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot)
 				.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		new Trigger(coPilot::getRightBumper)
@@ -296,7 +297,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState()
 				|| collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
-				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+				.whileTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 		new Trigger(() -> drivetrain.isInField() && triggerInit)
 				.whileFalse(leds.enableState(LED_STATES.BAD_POSE));
 		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled()

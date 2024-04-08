@@ -1,46 +1,43 @@
 package frc.robot.command.shoot.AutonCand;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
+import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Indexer;
 
-public class CandLine extends Command {
+public class Cand35 extends Command {
 
     private final Flywheel flywheel;
     private final Pivot pivot;
     private final Indexer indexer;
-
-    private boolean shot = false;
-    private double shotTime = 0;
-    private double startTime = 0;
+    private final Collector collector;
 
     private boolean startIndexing = false;
 
     /**
      * Creates a new CandLine.
      *
-     * @param flywheel subsystem
-     * @param pivot    subsystem
-     * @param indexer  subsystem
+     * @param flywheel  subsystem
+     * @param pivot     subsystem
+     * @param indexer   subsystem
+     * @param collector subsystem
      */
-    public CandLine(Flywheel flywheel, Pivot pivot, Indexer indexer) {
+    public Cand35(Flywheel flywheel, Pivot pivot, Indexer indexer, Collector collector) {
         this.flywheel = flywheel;
         this.pivot = pivot;
         this.indexer = indexer;
+        this.collector = collector;
 
-        addRequirements(flywheel, pivot, indexer);
+        addRequirements(flywheel, pivot, indexer, collector);
     }
 
     @Override
     public void initialize() {
-        shot = false;
         startIndexing = false;
-        startTime = Timer.getFPGATimestamp();
-        flywheel.setAllMotorsRPM(CandConstants.LINE_RPM + flywheel.getBias());
-        pivot.setTargetAngle(CandConstants.LINE_ANGLE + pivot.getBias());
+        flywheel.setAllMotorsRPM(CandConstants.THREEFIVE_RPM);
+        pivot.setTargetAngle(CandConstants.THREEFIVE_ANGLE);
     }
 
     @Override
@@ -53,13 +50,12 @@ public class CandLine extends Command {
         }
 
         if (startIndexing) {
-            shot = true;
-            shotTime = Timer.getFPGATimestamp();
             indexer.indexUp();
+            collector.setPower(1d);
         }
 
-        flywheel.setAllMotorsRPM(CandConstants.LINE_RPM + flywheel.getBias());
-        pivot.setTargetAngle(CandConstants.LINE_ANGLE + pivot.getBias());
+        flywheel.setAllMotorsRPM(CandConstants.THREEFIVE_RPM);
+        pivot.setTargetAngle(CandConstants.THREEFIVE_ANGLE);
     }
 
     @Override
@@ -67,10 +63,11 @@ public class CandLine extends Command {
         flywheel.coast(true);
         pivot.setTargetAngle(pivot.getStowAngle());
         indexer.stop();
+        collector.stop();
     }
 
     @Override
     public boolean isFinished() {
-        return shot && startTime - shotTime >= CandConstants.TIME_TO_SHOOT;
+        return flywheel.getKama();
     }
 }

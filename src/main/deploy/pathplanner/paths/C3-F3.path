@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3,
-        "y": 3.8
+        "x": 2.55,
+        "y": 4.1
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5553683061717036,
-        "y": 2.79888993444178
+        "x": 2.2573069707542923,
+        "y": 2.616413186042747
       },
       "isLocked": false,
       "linkedName": "C3"
@@ -89,7 +89,7 @@
   "reversed": false,
   "folder": "Top side paths",
   "previewStartingState": {
-    "rotation": -44.57088162757986,
+    "rotation": -46.45927290398714,
     "velocity": 0
   },
   "useDefaultConstraints": true

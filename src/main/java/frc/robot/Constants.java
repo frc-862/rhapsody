@@ -36,7 +36,7 @@ public class Constants {
         return MERCURY_PATH.toFile().exists();
     }
 
-    public static final String HOOT_PATH = "/home/lvuser/logs";
+    public static final String HOOT_PATH = "U/logs"; //"/home/lvuser/logs";
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
@@ -68,7 +68,7 @@ public class Constants {
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
 
-        public static final double ALIGNMENT_TOLERANCE = 3d;
+        public static final double ALIGNMENT_TOLERANCE = 1d;
     }
 
     public class RobotMap {
@@ -226,7 +226,7 @@ public class Constants {
 
         public static final double kDriveGearRatio = 6.122448979591837;
         public static final double kSteerGearRatio = 21.428571428571427;
-        public static final double kWheelRadiusInches = 2;
+        public static final double kWheelRadiusInches = 1.95;
 
         private static final boolean kSteerMotorReversed = true;
         private static final boolean kInvertLeftSide = false;
@@ -616,15 +616,15 @@ public class Constants {
             {
                 // As distance gets smaller angle goes up
                 put(1.21d, 50d);
-                put(1.63d, 47d);
-                put(2d, 43d);
-                put(2.5d, 39.5d);
-                put(3d, 35d);
-                put(3.5d, 30.5d);
-                put(4d, 29.5d);
-                put(4.3, 28d);
-                put(4.75d, 27.5d);
-                put(6.2d, 23.5d);
+                put(1.64d, 45d);
+                put(2d, 41d);
+                put(2.5d, 36d);
+                put(3d, 32.5d);
+                put(3.51d, 29.5d);
+                put(4.02d, 28.25d);
+                put(4.33, 27.5d);
+                put(4.71d, 26d);
+                // put(6.2d, 23.5d);
             }
         };
 
@@ -633,15 +633,15 @@ public class Constants {
             {
                 // As distance get smaller RPM gets smaller
                 put(1.21d, 2000d);
-                put(1.63d, 2360d);
+                put(1.64d, 2500d);
                 put(2d, 2500d);
-                put(2.5d, 3000d);
-                put(3d, 3500d);
-                put(3.5d, 3700d);
-                put(4d, 3700d);
-                put(4.3d, 4200d);
-                put(4.75d, 4200d);
-                put(6.2d, 5800d);
+                put(2.5d, 3200d);
+                put(3d, 3800d);
+                put(3.51d, 4000d);
+                put(4.02d, 4300d);
+                put(4.33d, 4500d);
+                put(4.71d, 5500d);
+                // put(6.2d, 5800d);
             }
         };
 
@@ -652,9 +652,9 @@ public class Constants {
 
     public class CandConstants { // TODO get real
         // Amp
-        public static final double AMP_TOP_RPM = 300;
-        public static final double AMP_BOTTOM_RPM = 700;
-        public static final double AMP_ANGLE = 93;
+        public static final double AMP_TOP_RPM = 325;
+        public static final double AMP_BOTTOM_RPM = 625;
+        public static final double AMP_ANGLE = 92;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2500;
@@ -669,16 +669,20 @@ public class Constants {
         public static final double C1_ANGLE = 0;
 
         // C2
-        public static final double C2_RPM = 0;
-        public static final double C2_ANGLE = 0;
+        public static final double C2_RPM = 4100;
+        public static final double C2_ANGLE = 28.7d;
 
         // C3
-        public static final double C3_RPM = 0;
-        public static final double C3_ANGLE = 0;
+        public static final double C3_RPM = 4100;
+        public static final double C3_ANGLE = 29.5d;
 
         // Line
-        public static final double LINE_RPM = 0;
-        public static final double LINE_ANGLE = 0;
+        public static final double LINE_RPM = 200d;
+        public static final double LINE_ANGLE = 28.7;
+
+        // 3.5 shhhhhh
+        public static final double THREEFIVE_RPM = 500d;
+        public static final double THREEFIVE_ANGLE = 27d;
 
         // Source
         public static final double SOURCE_RPM = -300d; // TODO test
@@ -689,8 +693,7 @@ public class Constants {
         public static final double NOTE_PASS_RPM = 4500d;
 
         // TODO find time to shoot
-        public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer
-                                                       // start to flywheel exit
+        public static final double TIME_TO_SHOOT = 1d; // Time in seconds it takes from indexer start to flywheel exit
     }
 
     public class ClimbConstants { // TODO: find real values
@@ -709,10 +712,8 @@ public class Constants {
         public static final double WINCH_CIRCUFERENCE = WINCH_DIAMETER_INCHES * Math.PI;
 
         public static final double MAX_HEIGHT = 8.83; // In rotations
-        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of
-                                                       // lower arm in inches
-        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of
-                                                       // upper arm in inches
+        public static final double LOWER_LENGTH = 22d; // center of pivot-center of pivot length of lower arm in inches
+        public static final double UPPER_LENGTH = 25d; // center of pivot-center of pivot length of upper arm in inches
 
         public static final double CLIMB_PID_SETPOINT_EXTENDED = MAX_HEIGHT;
         public static final double CLIMB_PID_SETPOINT_RETRACTED = 1;
