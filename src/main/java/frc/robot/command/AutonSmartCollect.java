@@ -41,10 +41,10 @@ public class AutonSmartCollect extends Command {
     }
 
     @Override
-    public void execute() { // TODO this needs to be cleaned up
+    public void execute() {
         if (indexer.getPieceState() == PieceState.IN_COLLECT) {
             indexer.setPower(indexerPower.getAsDouble() / 2);
-            collector.setPower(collectorPower.getAsDouble() / 2);
+            // collector.setPower(collectorPower.getAsDouble() / 2);
         } else {
             collector.setPower(collectorPower.getAsDouble());
             indexer.setPower(indexerPower.getAsDouble());
@@ -61,6 +61,6 @@ public class AutonSmartCollect extends Command {
 
     @Override
     public boolean isFinished() {
-        return indexer.getPieceState() == PieceState.IN_PIVOT && !collector.getEntryBeamBreakState();
+        return indexer.getPieceState() == PieceState.IN_PIVOT;
     }
 }
