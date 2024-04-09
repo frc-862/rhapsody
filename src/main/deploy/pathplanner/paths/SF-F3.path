@@ -8,27 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.599753814892247,
-        "y": 5.639266977612197
+        "x": 3.0932227630221023,
+        "y": 5.851897109199625
       },
       "isLocked": false,
       "linkedName": "SubwooferFront"
-    },
-    {
-      "anchor": {
-        "x": 4.935229870459742,
-        "y": 4.223051523026124
-      },
-      "prevControl": {
-        "x": 4.777358785486803,
-        "y": 4.282253179890976
-      },
-      "nextControl": {
-        "x": 5.852610625988531,
-        "y": 3.879033739702828
-      },
-      "isLocked": false,
-      "linkedName": null
     },
     {
       "anchor": {
@@ -36,8 +20,8 @@
         "y": 4.084914323674802
       },
       "prevControl": {
-        "x": 5.967962720540826,
-        "y": 4.1046482092964185
+        "x": 5.875878418423503,
+        "y": 3.6701471601141407
       },
       "nextControl": null,
       "isLocked": false,
@@ -54,7 +38,7 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": 0,
     "rotateFast": false
   },

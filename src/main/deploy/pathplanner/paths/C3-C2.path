@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5492329554305688,
-        "y": 4.3883180536977875
+        "x": 1.513990998898458,
+        "y": 4.123137615644601
       },
       "isLocked": false,
       "linkedName": "C3"
@@ -33,17 +33,17 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -1.3771435512067638,
+    "rotation": 0.0,
     "rotateFast": true
   },
   "reversed": false,
   "folder": "Top side paths",
   "previewStartingState": null,
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
