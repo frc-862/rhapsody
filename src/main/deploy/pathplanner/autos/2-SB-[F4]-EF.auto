@@ -6,6 +6,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Enable-Vision"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [
@@ -25,19 +31,50 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "SB-F4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Chase-Pieces"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SF-C2"
+                  "pathName": "F4-BS"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Collect"
+                  "name": "preAim"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point-At-Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "preAim"
                 }
               }
             ]
@@ -57,6 +94,25 @@
                 "type": "named",
                 "data": {
                   "name": "Stop-Drive"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BS-F4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Flywheel"
                 }
               }
             ]

@@ -155,9 +155,9 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeNamedCommands() {
-		NamedCommands.registerCommand("disable-Vision",
+		NamedCommands.registerCommand("Disable-Vision",
 				new InstantCommand(() -> drivetrain.disableVision()));
-		NamedCommands.registerCommand("enable-Vision",
+		NamedCommands.registerCommand("Enable-Vision",
 				new InstantCommand(() -> drivetrain.enableVision()));
 		NamedCommands.registerCommand("led-Shoot",
 				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));

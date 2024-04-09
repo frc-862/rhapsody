@@ -361,7 +361,7 @@ public class Constants {
         public static final double POINTATTAG_ALIGNMENT_TOLERANCE = 1d;
         public static final PIDController POINT_AIM_CONTROLLER = new PIDController(0.2, 0, 0.015, 0.01);
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0.01);
-        public static final PIDController COMBO_CONTROLLER = new PIDController(0.1, 0, 0);
+        public static final PIDController COMBO_CONTROLLER = new PIDController(0.1, 0, 0.01);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
 
         public static final double HALF_FIELD_HEIGHT = Units.feetToMeters(13);
@@ -371,6 +371,9 @@ public class Constants {
 
         public static final int[] SPEAKER_FILTERS = {4, 7};
         public static final int[] ALL_TAG_FILTERS  = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+
+        public static final double BLUE_SLOW_CHASE_RANGE = 8.25;
+        public static final double RED_SLOW_CHASE_RANGE = 7.80;
 
 
         public static class LimelightOrientation {
