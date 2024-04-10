@@ -42,7 +42,7 @@ public class ComboPoint extends Command {
     private PIDController tagController = VisionConstants.COMBO_CONTROLLER;
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.25, 0.5);
 
-    private Debouncer debouncer = new Debouncer(0.1);
+    private Debouncer debouncer = new Debouncer(0.2);
 
     private DoubleLogEntry deltaYLog;
     private DoubleLogEntry deltaXLog;
@@ -110,8 +110,8 @@ public class ComboPoint extends Command {
             targetPose = swapAlliance(originalTargetPose);
         }
 
-        stopMe.setPipeline(VisionConstants.Pipelines.SPEAKER_PIPELINE);
-        // stopMe.setFiducialIDFiltersOverride(VisionConstants.SPEAKER_FILTERS);
+        // stopMe.setPipeline(VisionConstants.Pipelines.SPEAKER_PIPELINE);
+        stopMe.setFiducialIDFiltersOverride(VisionConstants.SPEAKER_FILTERS);
         targetBias = 0;//5.5d;
 
         System.out.println("DRIVE - COMBO POINT START");
@@ -205,8 +205,8 @@ public class ComboPoint extends Command {
     @Override
     public void end(boolean interrupted) {
         System.out.println("DRIVE - COMBO POINT END");
-        stopMe.setPipeline(VisionConstants.Pipelines.TAG_PIPELINE);
-        // stopMe.setFiducialIDFiltersOverride(VisionConstants.ALL_TAG_FILTERS);
+        // stopMe.setPipeline(VisionConstants.Pipelines.TAG_PIPELINE);
+        stopMe.setFiducialIDFiltersOverride(VisionConstants.ALL_TAG_FILTERS);
         if (DriverStation.isAutonomous()) {
             drivetrain.setField(0d, 0d, 0d);
         }

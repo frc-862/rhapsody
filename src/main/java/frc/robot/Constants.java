@@ -166,10 +166,10 @@ public class Constants {
         public static final PathConstraints PATHFINDING_CONSTRAINTS = new PathConstraints(2.0, 1.0, 3.0, 1.5);
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
 
-        public static final double BLUE_CHASE_BOUNDARY = 8.5; // The highest X value the robot can
+        public static final double BLUE_CHASE_BOUNDARY = 8.3; // The highest X value the robot can
                                                               // be at before ending.
                                                               // Prevents going over center line.
-        public static final double RED_CHASE_BOUNDARY = 8;
+        public static final double RED_CHASE_BOUNDARY = 7.8;
 
         public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at
                                                          // before ending.
@@ -361,7 +361,7 @@ public class Constants {
         public static final double POINTATTAG_ALIGNMENT_TOLERANCE = 1d;
         public static final PIDController POINT_AIM_CONTROLLER = new PIDController(0.2, 0, 0.015, 0.01);
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0.01);
-        public static final PIDController COMBO_CONTROLLER = new PIDController(0.1, 0, 0.01);
+        public static final PIDController COMBO_CONTROLLER = new PIDController(0.05, 0, 0.01);
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
 
         public static final double HALF_FIELD_HEIGHT = Units.feetToMeters(13);
@@ -372,8 +372,8 @@ public class Constants {
         public static final int[] SPEAKER_FILTERS = {4, 7};
         public static final int[] ALL_TAG_FILTERS  = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
 
-        public static final double BLUE_SLOW_CHASE_RANGE = 8.25;
-        public static final double RED_SLOW_CHASE_RANGE = 7.80;
+        public static final double BLUE_SLOW_CHASE_RANGE = 8.05;
+        public static final double RED_SLOW_CHASE_RANGE = 7.60;
 
 
         public static class LimelightOrientation {
