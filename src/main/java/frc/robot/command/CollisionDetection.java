@@ -76,7 +76,7 @@ public class CollisionDetection extends Command {
     public boolean isFinished() {
         return false;
     }
-
+    
     /**
      * log velocities to calculate acceleration
      */
