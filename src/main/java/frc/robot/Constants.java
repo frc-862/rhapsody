@@ -38,23 +38,9 @@ public class Constants {
 
     public class DrivetrainConstants { // TODO Get new for new robot
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x
-                                                                                         // distance
-                                                                                         // from
-                                                                                         // center
-                                                                                         // of robot
-                                                                                         // to wheel
+        private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
-        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free
-                                                                                              // speed
-                                                                                              // /
-                                                                                              // circumference
-                                                                                              // of
-                                                                                              // circle
-                                                                                              // with
-                                                                                              // radius
-                                                                                              // of
-                                                                                              // wheelbase
+        TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
 
         public static final double ROT_MULT = 0.04; // TODO Tune for Driver
 
@@ -158,20 +144,18 @@ public class Constants {
         public static final double MAX_MODULE_VELOCITY = Units.feetToMeters(16.5); // f/s to m/s
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(10.825);
 
-        public static final double CONTROL_LOOP_PERIOD = 0.02; // constants
+        public static final double CONTROL_LOOP_PERIOD = 0.02;
 
         public static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, false); // TODO Should we enable dynamic replaning
         public static final PathConstraints PATHFINDING_CONSTRAINTS = new PathConstraints(2.0, 1.0, 3.0, 1.5);
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5); // TODO get constants
 
-        public static final double BLUE_CHASE_BOUNDARY = 8.3; // The highest X value the robot can
-                                                              // be at before ending.
-                                                              // Prevents going over center line.
-        public static final double RED_CHASE_BOUNDARY = 7.8;
+        public static final double BLUE_CHASE_BOUNDARY = 8.35; // The highest X value the robot can be at before ending. Prevents going over center line.
+        public static final double RED_CHASE_BOUNDARY = 8.25;
 
-        public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at
-                                                         // before ending.
-                                                         // Prevents going over center line.
+        public static final double BLUE_SLOW_CHASE_RANGE = 8.05;
+        public static final double RED_SLOW_CHASE_RANGE = 8.55;
+        public static final double CHASE_BOUNDARY = 8.3; // The highest X value the robot can be at before ending. Prevents going over center line.
 
         public static final Pose2d SOURCE_SUB_A_STARTPOSE_BLUE = new Pose2d(new Translation2d(0.72, 6.69),
                 new Rotation2d(60));
@@ -193,8 +177,7 @@ public class Constants {
     public static class TunerConstants {
         // Both sets of gains need to be tuned to your individual robot.
 
-        // The steer motor uses any SwerveModule.SteerRequestType control request with
-        // the
+        // The steer motor uses any SwerveModule.SteerRequestType control request with the
         // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
         private static final Slot0Configs steerGains = new Slot0Configs().withKP(100).withKI(0)
                 .withKD(0.2).withKS(0).withKV(1.5).withKA(0);
@@ -370,9 +353,6 @@ public class Constants {
         public static final int[] SPEAKER_FILTERS = {4, 7};
         public static final int[] ALL_TAG_FILTERS  = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
 
-        public static final double BLUE_SLOW_CHASE_RANGE = 8.05;
-        public static final double RED_SLOW_CHASE_RANGE = 7.60;
-
 
         public static class LimelightOrientation {
             public static final double STOPME_YAW = 180d;
@@ -380,9 +360,9 @@ public class Constants {
             public static final double STOPME_ROLL = 0d;
         }
 
-        public class Pipelines { // TODO get real
+        public class Pipelines { 
             public static final int TAG_PIPELINE = 0;
-            public static final int SPEAKER_PIPELINE = 1;
+            public static final int SPEAKER_PIPELINE = 1; // Not currently in use, using feducial filtering instead
             public static final int NOTE_PIPELINE = 0;
         }
     }
@@ -396,14 +376,11 @@ public class Constants {
         public static final double TIP_DEADZONE = 2d;
 
         public static final double ACCELERATION_DUE_TO_GRAVITY = 9.80665;
-        public static final double ACCELERATION_TOLERANCE_TELEOP = 3; // percent of
-                                                                      // pigeonAcceleration
+        public static final double ACCELERATION_TOLERANCE_TELEOP = 3; // percent of pigeonAcceleration
         public static final double MIN_ACCELERATION_DIFF_TELEOP = 0.25; // TODO: get real
-        public static final double ACCELERATION_TOLERANCE_AUTON = 2.00; // percent of
-                                                                        // pigeonAcceleration
+        public static final double ACCELERATION_TOLERANCE_AUTON = 2.00; // percent of pigeonAcceleration
         public static final double MIN_ACCELERATION_DIFF_AUTON = 0.25; // TODO: get real
-        public static final double ACCELERATION_TOLERANCE_SHOOTER = 1.00; // percent of
-                                                                          // pigeonAcceleration
+        public static final double ACCELERATION_TOLERANCE_SHOOTER = 1.00; // percent of pigeonAcceleration
         public static final double MIN_ACCELERATION_DIFF_SHOOTER = 0.25; // TODO: get real
 
         public enum CollisionType {
@@ -431,7 +408,7 @@ public class Constants {
         public static final List<String> SET_LIST = Arrays.asList(SONG_NAMES);
     }
 
-    public class CollectorConstants { // TODO: get real
+    public class CollectorConstants {
         public static final boolean COLLECTOR_MOTOR_INVERTED = true;
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 70;
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
@@ -521,10 +498,11 @@ public class Constants {
         public static final double MOTOR_KS = 0;
         public static final double MOTOR_KV = 3;
         public static final double MOTOR_KA = 0;
-
-        public static final double MAGIC_CRUISE_VEL = 0.01; // TODO: get real value
-        public static final double MAGIC_ACCEL = 0.02; // TODO: get real value
-        public static final double MAGIC_JERK = 0.2; // TODO: get real value
+ 
+        // Not currently using Motion magic
+        public static final double MAGIC_CRUISE_VEL = 0.01; 
+        public static final double MAGIC_ACCEL = 0.02; 
+        public static final double MAGIC_JERK = 0.2;
 
         public static final double ANGLE_TOLERANCE = 0.00208d;
 
@@ -545,7 +523,7 @@ public class Constants {
         public static final double PIVOT_SYSTEST_ANGLE = 90d;
     }
 
-    public class RhapsodyPivotConstants { // TODO: get real
+    public class RhapsodyPivotConstants {
         public static final boolean MOTOR_INVERT = true; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
@@ -557,13 +535,14 @@ public class Constants {
         public static final double MOTOR_KS = 50d;
         public static final double MOTOR_KA = 0d;
 
-        public static final double MAGIC_CRUISE_VEL = 0.01; // TODO: get real value
-        public static final double MAGIC_ACCEL = 0.02; // TODO: get real value
-        public static final double MAGIC_JERK = 0.2; // TODO: get real value
+        // Not currently using Motion magic
+        public static final double MAGIC_CRUISE_VEL = 0.01; 
+        public static final double MAGIC_ACCEL = 0.02; 
+        public static final double MAGIC_JERK = 0.2; 
 
         public static final double ANGLE_TOLERANCE = 0.00208d;
 
-        public static final double ENCODER_OFFSET = -0.913834;// -0.54008; // In rotations
+        public static final double ENCODER_OFFSET = -0.913834; // In rotations
         public static final SensorDirectionValue ENCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
         public static final double ENCODER_TO_MECHANISM_RATIO = 1d;
         public static final double ROTOR_TO_ENCODER_RATIO = 275d;

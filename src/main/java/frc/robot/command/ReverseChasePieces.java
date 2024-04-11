@@ -10,12 +10,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
-import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Limelights;
 import frc.thunder.vision.Limelight;
 
@@ -24,8 +21,6 @@ public class ReverseChasePieces extends Command {
     private Swerve drivetrain;
     private Collector collector;
     private Indexer indexer;
-    private Flywheel flywheel;
-    private Pivot pivot;
     private Limelight limelight;
 
     private double pidOutput;
@@ -66,17 +61,12 @@ public class ReverseChasePieces extends Command {
      * @param drivetrain to request movement
      * @param collector  for smart collect
      * @param indexer    for smart collect
-     * @param flywheel   for stopping the flywheels before collecting / for smart
-     *                   collect
-     * @param pivot      for smart collect
      * @param limelights to get vision data from dust
      */
-    public ReverseChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel, Limelights limelights) {
+    public ReverseChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Limelights limelights) {
         this.drivetrain = drivetrain;
         this.collector = collector;
         this.indexer = indexer;
-        this.flywheel = flywheel;
-        this.pivot = pivot;
 
         this.limelight = limelights.getDust();
 
@@ -84,7 +74,7 @@ public class ReverseChasePieces extends Command {
         this.rotPower = 1.5d;
         this.maxCollectPower = 1d;
 
-        addRequirements(drivetrain, collector, indexer, flywheel);
+        addRequirements(drivetrain, collector, indexer);
 
         initLogging();
     }

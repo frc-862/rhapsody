@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
@@ -65,15 +65,13 @@ public class ChasePieces extends Command {
      * Creates a new ChasePieces.
      *
      * @param drivetrain to request movement
-     * @param collector  for smart collect
-     * @param indexer    for smart collect
-     * @param flywheel   for stopping the flywheels before collecting / for smart
-     *                   collect
-     * @param pivot      for smart collect
+     * @param collector for smart collect
+     * @param indexer for smart collect
+     * @param flywheel for stopping the flywheels before collecting / for smart collect
+     * @param pivot for smart collect
      * @param limelights to get vision data from dust
      */
-    public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel,
-            Limelights limelights) {
+    public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel, Limelights limelights) {
         this.drivetrain = drivetrain;
         this.collector = collector;
         this.indexer = indexer;
@@ -106,14 +104,12 @@ public class ChasePieces extends Command {
         if (DriverStation.isAutonomous()) {
             smartCollect = new AutonSmartCollect(() -> collectPower, () -> collectPower, collector, indexer);
         } else {
-            smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot,
-                    flywheel);
+            smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
         }
 
         smartCollect.initialize();
 
         hasSeenTarget = false;
-
     }
 
     /**
@@ -230,13 +226,13 @@ public class ChasePieces extends Command {
 
     }
 
-    private void checkSlowdown(){
-        if (DriverStation.getAlliance().get() == Alliance.Blue){
-            if (drivetrain.getPose().getX() > VisionConstants.BLUE_SLOW_CHASE_RANGE){
+    private void checkSlowdown() {
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+            if (drivetrain.getPose().getX() > AutonomousConstants.BLUE_SLOW_CHASE_RANGE) {
                 drivePower = 0.5d;
             }
         } else {
-            if (drivetrain.getPose().getX() < VisionConstants.RED_SLOW_CHASE_RANGE){
+            if (drivetrain.getPose().getX() < AutonomousConstants.RED_SLOW_CHASE_RANGE) {
                 drivePower = 0.5d;
             }
         }
@@ -246,13 +242,11 @@ public class ChasePieces extends Command {
     public void end(boolean interrupted) {
         collectPower = 0d;
         smartCollect.end(interrupted);
-        // drivetrain.stop();
         System.out.println("AUTO - Chase pieces END");
     }
 
     /**
-     * Makes sure that the robot isn't jerking over to a different side while
-     * chasing pieces.
+     * Makes sure that the robot isn't jerking over to a different side while chasing pieces.
      *
      * @return t/f if the robot should trust the values
      */
@@ -267,19 +261,18 @@ public class ChasePieces extends Command {
     public boolean isFinished() {
         if (DriverStation.isAutonomous()) {
             if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                if (drivetrain.getPose().getX() > AutonomousConstants.CHASE_BOUNDARY) {
+                if (drivetrain.getPose().getX() > AutonomousConstants.BLUE_CHASE_BOUNDARY) {
                     return true;
                 }
             } else {
-                if (drivetrain.getPose().getX() < AutonomousConstants.CHASE_BOUNDARY) {
+                if (drivetrain.getPose().getX() < AutonomousConstants.RED_CHASE_BOUNDARY) {
                     return true;
                 }
             }
-            // return smartCollect.isFinished();
-            return indexer.hasNote();
+            return indexer.hasNote(); // If any beam break sees a note, stop chasing
         } else {
             // return smartCollect.isFinished();
-            return indexer.getPieceState() == IndexerConstants.PieceState.IN_COLLECT;
+            return indexer.getPieceState() == PieceState.IN_COLLECT;
         }
     }
 }
