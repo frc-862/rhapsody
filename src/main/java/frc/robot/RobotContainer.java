@@ -48,6 +48,7 @@ import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
+import frc.robot.command.UpdateOrientation;
 import frc.robot.command.stopDrive;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.FlywheelIN;
@@ -155,9 +156,9 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeNamedCommands() {
-		NamedCommands.registerCommand("disable-Vision",
+		NamedCommands.registerCommand("Disable-Vision",
 				new InstantCommand(() -> drivetrain.disableVision()));
-		NamedCommands.registerCommand("enable-Vision",
+		NamedCommands.registerCommand("Enable-Vision",
 				new InstantCommand(() -> drivetrain.enableVision()));
 		NamedCommands.registerCommand("led-Shoot",
 				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
@@ -184,7 +185,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain));
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
 		NamedCommands.registerCommand("Point-At-Speaker",
-				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights));
+				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0d));
 		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
 		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
 		NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
@@ -246,7 +247,7 @@ public class RobotContainer extends LightningContainer {
 		// .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain,
 		// driver));
 		new Trigger(driver::getLeftBumper).whileTrue(
-				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights));
+				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0d));
 
 		// new Trigger(driver::getYButton)
 		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
@@ -410,6 +411,8 @@ public class RobotContainer extends LightningContainer {
 		if (!Constants.IS_MERCURY) {
 			climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
 		}
+
+		// limelights.setDefaultCommand(new UpdateOrientation(limelights, drivetrain));
 	}
 
 	protected Command getAutonomousCommand() {

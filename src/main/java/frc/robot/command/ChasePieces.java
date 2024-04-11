@@ -17,6 +17,7 @@ import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Limelights;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 
 public class ChasePieces extends Command {
@@ -153,6 +154,7 @@ public class ChasePieces extends Command {
 
         if (DriverStation.isAutonomousEnabled()) {
             collectPower = maxCollectPower;
+            checkSlowdown();
             if (!hasPiece) {
                 if (hasTarget) {
                     if (trustValues()) {
@@ -221,6 +223,23 @@ public class ChasePieces extends Command {
         smartCollectPowerLog.append(collectPower);
         drivePowerLog.append(drivePower);
         maxCollectPowerLog.append(maxCollectPower);
+
+        LightningShuffleboard.setBool("ChasePieces", "Is Running", isFinished());
+        LightningShuffleboard.setDouble("ChasePieces", "DrivePower", drivePower);
+        LightningShuffleboard.setDouble("ChasePieces", "Current X", drivetrain.getPose().getX());
+
+    }
+
+    private void checkSlowdown(){
+        if (DriverStation.getAlliance().get() == Alliance.Blue){
+            if (drivetrain.getPose().getX() > VisionConstants.BLUE_SLOW_CHASE_RANGE){
+                drivePower = 0.5d;
+            }
+        } else {
+            if (drivetrain.getPose().getX() < VisionConstants.RED_SLOW_CHASE_RANGE){
+                drivePower = 0.5d;
+            }
+        }
     }
 
     @Override

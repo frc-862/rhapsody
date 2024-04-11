@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1759246595416282,
-        "y": 4.035579609620759
+        "x": 1.3182397535966242,
+        "y": 3.9474882553368715
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.05407822162073,
-        "y": 1.1302364819148607
+        "x": 3.1963933156757256,
+        "y": 1.0421451276309737
       },
       "isLocked": false,
       "linkedName": "SubwooferBottom"
@@ -38,7 +38,7 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 1.0,
+    "velocity": 0.0,
     "rotation": 0.0,
     "rotateFast": true
   },

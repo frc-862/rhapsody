@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.function.Consumer;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.VisionConstants.LimelightOrientation;
@@ -104,11 +105,7 @@ public class Limelights extends SubsystemBase {
     }
 
     public void setOrientations(){
-        // stopMe.setRobotOrientation(LimelightOrientation.STOPME_YAW,0, 
-        // LimelightOrientation.STOPME_PITCH, 0, 
-        // LimelightOrientation.STOPME_ROLL, 0);
-
-        // champs.setRobotOrientation(0, 0, 0, 0, 0, 0);
+        
     }
 
 }

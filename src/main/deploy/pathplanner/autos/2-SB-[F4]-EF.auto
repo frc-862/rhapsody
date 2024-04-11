@@ -18,7 +18,32 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
+                  "waitTime": 3.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SB-F4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Chase-Pieces"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "F4-BS"
                 }
               }
             ]
@@ -29,15 +54,28 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "race",
                 "data": {
-                  "pathName": "SF-C2"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point-At-Speaker"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 5.0
+                      }
+                    }
+                  ]
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Collect"
+                  "name": "preAim"
                 }
               }
             ]
@@ -51,12 +89,6 @@
                 "type": "named",
                 "data": {
                   "name": "Smart-Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop-Drive"
                 }
               }
             ]

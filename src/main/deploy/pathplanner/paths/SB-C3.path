@@ -3,37 +3,53 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1759246595416282,
-        "y": 4.035579609620759
+        "x": 1.3182397535966242,
+        "y": 3.9474882553368715
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7121880748754352,
-        "y": 4.028527771748839
+        "x": 1.854549532589,
+        "y": 3.9474882553368715
       },
       "isLocked": false,
       "linkedName": "SubwooferBottom"
     },
     {
       "anchor": {
-        "x": 2.55,
-        "y": 4.1
+        "x": 2.5292958694025494,
+        "y": 4.123137615644601
       },
       "prevControl": {
-        "x": 1.923062054584547,
-        "y": 4.195854323169192
+        "x": 1.8950725343919426,
+        "y": 4.123137615644601
+      },
+      "nextControl": {
+        "x": 2.7144209061955142,
+        "y": 4.123137615644601
+      },
+      "isLocked": false,
+      "linkedName": "C3"
+    },
+    {
+      "anchor": {
+        "x": 2.0115924916534516,
+        "y": 4.123137615644601
+      },
+      "prevControl": {
+        "x": 1.6824892164404543,
+        "y": 4.123137615644601
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "C3"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -48,5 +64,5 @@
     "rotation": -61.48875370589127,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

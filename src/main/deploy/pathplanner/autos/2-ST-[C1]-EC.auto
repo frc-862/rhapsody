@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
+                  "waitTime": 6.0
                 }
               }
             ]
@@ -31,7 +31,32 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SF-C2"
+                  "pathName": "ST-C1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point-At-Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "preAim"
                 }
               },
               {
