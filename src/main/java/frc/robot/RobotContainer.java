@@ -48,6 +48,7 @@ import frc.robot.command.SetPointClimb;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartClimb;
 import frc.robot.command.SmartCollect;
+import frc.robot.command.UpdateOrientation;
 import frc.robot.command.stopDrive;
 import frc.robot.command.shoot.AmpShot;
 import frc.robot.command.shoot.FlywheelIN;
@@ -410,6 +411,8 @@ public class RobotContainer extends LightningContainer {
 		if (!Constants.isMercury()) {
 			climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
 		}
+
+		// limelights.setDefaultCommand(new UpdateOrientation(limelights, drivetrain));
 	}
 
 	protected Command getAutonomousCommand() {

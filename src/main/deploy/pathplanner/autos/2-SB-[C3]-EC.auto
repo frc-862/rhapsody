@@ -44,6 +44,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Enable-Vision"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [

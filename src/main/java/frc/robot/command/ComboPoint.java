@@ -34,6 +34,7 @@ public class ComboPoint extends Command {
 
     private double pidOutput;
     private double targetHeading;
+    private double currentHeading;
     private double targetBias;
     private Translation2d targetPose;
     private Translation2d originalTargetPose;
@@ -42,7 +43,7 @@ public class ComboPoint extends Command {
     private PIDController tagController = VisionConstants.COMBO_CONTROLLER;
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.25, 0.5);
 
-    private Debouncer debouncer = new Debouncer(0.2);
+    private Debouncer debouncer = new Debouncer(0.6);
 
     private DoubleLogEntry deltaYLog;
     private DoubleLogEntry deltaXLog;
@@ -94,7 +95,7 @@ public class ComboPoint extends Command {
     // }
 
     private boolean inTolerance() {
-        return (Math.abs(targetHeading)) < VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE
+        return (Math.abs(currentHeading) - Math.abs(currentHeading + targetHeading)) < VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE
                 && stopMe.hasTarget();
     }
 
@@ -150,11 +151,10 @@ public class ComboPoint extends Command {
         var deltaX = targetPose.getX() - pose.getX();
         var deltaY = targetPose.getY() - pose.getY();
 
-        if (stopMe.hasTarget()
-                && stopMe.getPipeline() == VisionConstants.Pipelines.SPEAKER_PIPELINE) {
+        if (stopMe.hasTarget()) {
             targetHeading = stopMe.getTargetX() - targetBias;
             
-            double currentHeading = (pose.getRotation().getDegrees() + 360) % 360;
+            currentHeading = (pose.getRotation().getDegrees() + 360) % 360;
                 pidOutput = tagController.calculate(currentHeading, currentHeading - targetHeading);
         } else {
             targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 360 + 180;
@@ -175,8 +175,8 @@ public class ComboPoint extends Command {
 
         if (!DriverStation.isFMSAttached()) {
             LightningShuffleboard.setDouble("ComboPoint", "Target Heading", targetHeading);
-            LightningShuffleboard.setDouble("ComboPoint", "Current Heading",
-                    drivetrain.getPose().getRotation().getDegrees());
+            LightningShuffleboard.setDouble("ComboPoint", "Current Heading", Math.abs(
+                    drivetrain.getPose().getRotation().getDegrees()));
             LightningShuffleboard.setBool("ComboPoint", "In Tolerance", inTolerance());
             LightningShuffleboard.setDouble("ComboPoint", "Raw Output (PointController)", pidOutput);
             LightningShuffleboard.setDouble("ComboPoint", "Output (FeedForward)", feedForwardOutput);
@@ -207,9 +207,7 @@ public class ComboPoint extends Command {
         System.out.println("DRIVE - COMBO POINT END");
         // stopMe.setPipeline(VisionConstants.Pipelines.TAG_PIPELINE);
         stopMe.setFiducialIDFiltersOverride(VisionConstants.ALL_TAG_FILTERS);
-        if (DriverStation.isAutonomous()) {
-            drivetrain.setField(0d, 0d, 0d);
-        }
+
     }
 
     @Override
