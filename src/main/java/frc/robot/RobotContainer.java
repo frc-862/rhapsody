@@ -185,7 +185,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain));
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
 		NamedCommands.registerCommand("Point-At-Speaker",
-				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights));
+				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0d));
 		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
 		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
 		NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
@@ -247,7 +247,7 @@ public class RobotContainer extends LightningContainer {
 		// .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain,
 		// driver));
 		new Trigger(driver::getLeftBumper).whileTrue(
-				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights));
+				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0d));
 
 		// new Trigger(driver::getYButton)
 		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
