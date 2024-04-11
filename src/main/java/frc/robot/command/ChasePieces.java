@@ -33,15 +33,11 @@ public class ChasePieces extends Command {
     private double targetHeading;
     private double previousTargetHeading;
 
-    private double targetPitch;
-    private double collectPower;
-    private double maxCollectPower;
+    private final double collectPower = 1d;
+    private double defaultDrivePower;
     private double drivePower;
     private double rotPower;
-
-    private boolean onTarget;
-    private boolean hasPiece;
-    private boolean isDone;
+    private final double defaultRotPower = 1.5d;
     private boolean hasTarget;
     private boolean hasSeenTarget;
 
@@ -51,15 +47,11 @@ public class ChasePieces extends Command {
     private BooleanLogEntry onTargetLog;
     private BooleanLogEntry hasTargetLog;
     private BooleanLogEntry trustValuesLog;
-    private BooleanLogEntry isDoneLog;
-    private BooleanLogEntry hasPieceLog;
 
     private DoubleLogEntry targetHeadingLog;
-    private DoubleLogEntry targetYLog;
     private DoubleLogEntry pidOutputLog;
-    private DoubleLogEntry smartCollectPowerLog;
     private DoubleLogEntry drivePowerLog;
-    private DoubleLogEntry maxCollectPowerLog;
+    private DoubleLogEntry rotPowerLog;
 
     /**
      * Creates a new ChasePieces.
@@ -81,13 +73,9 @@ public class ChasePieces extends Command {
         this.limelight = limelights.getDust();
 
         if (DriverStation.isAutonomous()) {
-            this.drivePower = 1.5d;
-            this.rotPower = 1.5d; // TODO: get real >:)
-            this.maxCollectPower = 0.8d;
+            this.defaultDrivePower = 1.5d;
         } else {
-            this.maxCollectPower = 1d;
-            this.drivePower = 5d;
-            this.rotPower = 1.5d; // TODO: get real >:)
+            this.defaultDrivePower = 5d;
         }
 
         addRequirements(drivetrain, collector, indexer, flywheel);
@@ -99,8 +87,9 @@ public class ChasePieces extends Command {
     public void initialize() {
         System.out.println("AUTO - Chase pieces INIT");
 
-        headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
-        collectPower = maxCollectPower;
+        headingController.setTolerance(VisionConstants.CHASE_PIECE_ALIGNMENT_TOLERANCE);
+        headingController.setSetpoint(0);
+
         if (DriverStation.isAutonomous()) {
             smartCollect = new AutonSmartCollect(() -> collectPower, () -> collectPower, collector, indexer);
         } else {
@@ -121,15 +110,11 @@ public class ChasePieces extends Command {
         onTargetLog = new BooleanLogEntry(log, "/ChasePieces/On Target");
         hasTargetLog = new BooleanLogEntry(log, "/ChasePieces/Has Target");
         trustValuesLog = new BooleanLogEntry(log, "/ChasePieces/Trust Values");
-        isDoneLog = new BooleanLogEntry(log, "/ChasePieces/Is Done");
-        hasPieceLog = new BooleanLogEntry(log, "/ChasePieces/Has Piece");
 
         targetHeadingLog = new DoubleLogEntry(log, "/ChasePieces/Target Heading");
-        targetYLog = new DoubleLogEntry(log, "/ChasePieces/Target Y");
         pidOutputLog = new DoubleLogEntry(log, "/ChasePieces/Pid Output");
-        smartCollectPowerLog = new DoubleLogEntry(log, "/ChasePieces/SmartCollectPower");
         drivePowerLog = new DoubleLogEntry(log, "/ChasePieces/DrivePower");
-        maxCollectPowerLog = new DoubleLogEntry(log, "/ChasePieces/MaxCollectPower");
+        rotPowerLog = new DoubleLogEntry(log, "/ChasePieces/RotPower");
     }
 
     @Override
@@ -137,68 +122,55 @@ public class ChasePieces extends Command {
         hasTarget = limelight.hasTarget();
         smartCollect.execute();
 
-        if (hasTarget) {
+        if (hasTarget) { // If limelight sees a note, set heading offset
             previousTargetHeading = targetHeading;
             targetHeading = limelight.getTargetX();
-            targetPitch = limelight.getTargetY();
         }
 
-        onTarget = Math.abs(targetHeading) < VisionConstants.ALIGNMENT_TOLERANCE;
-        hasPiece = indexer.hasNote();
+        pidOutput = headingController.calculate(targetHeading);
 
-        pidOutput = headingController.calculate(0, targetHeading);
+        if (headingController.atSetpoint()) {
+            pidOutput = 0;
+        }
+
+
 
         if (DriverStation.isAutonomousEnabled()) {
-            collectPower = maxCollectPower;
             checkSlowdown();
-            if (!hasPiece) {
-                if (hasTarget) {
-                    if (trustValues()) {
-                        hasSeenTarget = true;
-                        if (!onTarget) {
-                            drivetrain.setRobot(drivePower, 0, -pidOutput);
-                        } else {
-                            drivetrain.setRobot(drivePower, 0, 0);
-                        }
-                    }
-                } else {
-                    if (!hasSeenTarget) {
-                        if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT) {
-                            if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                                drivetrain.setRobot(0.5, 0, -rotPower);
-                            } else {
-                                drivetrain.setRobot(0.5, 0, rotPower);
-                            }
-                        } else {
-                            if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                                drivetrain.setRobot(0.5, 0, rotPower);
-                            } else {
-                                drivetrain.setRobot(0.5, 0, -rotPower);
-                            }
-                        }
-                    } else {
-                        drivetrain.setRobot(drivePower, 0, 0);
-                    }
-                }
-            }
-        } else {
-            if (!hasPiece) {
-                if (hasTarget) {
-                    if (trustValues()) {
-                        collectPower = maxCollectPower;
-                        if (!onTarget) {
-                            drivetrain.setRobot(drivePower, 0, -pidOutput);
-                        } else {
-                            drivetrain.setRobot(drivePower, 0, 0);
-                        }
-                    }
-                } else {
-                    drivetrain.setRobot(drivePower, 0, 0);
+
+            if (hasTarget) { // If limelight sees a note
+                drivePower = defaultDrivePower;
+                if (trustValues()) {
+                    hasSeenTarget = true;
+                    rotPower = pidOutput;
                 }
             } else {
-                drivetrain.setRobot(0, 0, 0);
+                if (!hasSeenTarget) { // If the limelight never saw a note
+                    drivePower = 0.5;
+                    if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT) {
+                        rotPower = DriverStation.getAlliance().get() == Alliance.Blue ? -defaultRotPower : defaultRotPower;
+                    } else {
+                        rotPower = DriverStation.getAlliance().get() == Alliance.Blue ? defaultRotPower : -defaultRotPower;
+                    }
+                } else { // IF seen target, but lost it (Under bumper most likely)
+                    drivePower = defaultDrivePower;
+                    rotPower = 0;
+                }
             }
         }
+
+        else { // If in teleop
+            drivePower = defaultDrivePower;
+            if (hasTarget) { // If limelight sees a note
+                if (trustValues()) {
+                    rotPower = pidOutput;
+                }
+            } else { // If not drive forward
+                rotPower = 0;
+            }
+        }
+
+        drivetrain.setRobot(drivePower, 0, rotPower);
 
         updateLogging();
     }
@@ -207,54 +179,53 @@ public class ChasePieces extends Command {
      * Update logging
      */
     private void updateLogging() {
-        onTargetLog.append(onTarget);
+        onTargetLog.append(headingController.atSetpoint());
         hasTargetLog.append(hasTarget);
         trustValuesLog.append(trustValues());
-        isDoneLog.append(isDone);
-        hasPieceLog.append(hasPiece);
 
         targetHeadingLog.append(targetHeading);
-        targetYLog.append(targetPitch);
         pidOutputLog.append(pidOutput);
-        smartCollectPowerLog.append(collectPower);
         drivePowerLog.append(drivePower);
-        maxCollectPowerLog.append(maxCollectPower);
+        rotPowerLog.append(rotPower);
 
-        LightningShuffleboard.setBool("ChasePieces", "Is Running", isFinished());
-        LightningShuffleboard.setDouble("ChasePieces", "DrivePower", drivePower);
-        LightningShuffleboard.setDouble("ChasePieces", "Current X", drivetrain.getPose().getX());
 
+        if (!DriverStation.isAutonomous()) {
+            LightningShuffleboard.setBool("ChasePieces", "Is Running", isFinished());
+            LightningShuffleboard.setDouble("ChasePieces", "DrivePower", defaultDrivePower);
+            LightningShuffleboard.setDouble("ChasePieces", "Current X", drivetrain.getPose().getX());
+        }
     }
 
     private void checkSlowdown() {
         if (DriverStation.getAlliance().get() == Alliance.Blue) {
             if (drivetrain.getPose().getX() > AutonomousConstants.BLUE_SLOW_CHASE_RANGE) {
-                drivePower = 0.5d;
+                defaultDrivePower = 0.5d;
+            } else {
+                defaultDrivePower = 1.5d;
             }
         } else {
             if (drivetrain.getPose().getX() < AutonomousConstants.RED_SLOW_CHASE_RANGE) {
-                drivePower = 0.5d;
+                defaultDrivePower = 0.5d;
+            } else {
+                defaultDrivePower = 1.5d;
             }
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        collectPower = 0d;
         smartCollect.end(interrupted);
+        drivetrain.setRobot(0, 0, 0);
         System.out.println("AUTO - Chase pieces END");
     }
 
     /**
      * Makes sure that the robot isn't jerking over to a different side while chasing pieces.
-     *
+     * 
      * @return t/f if the robot should trust the values
      */
     public boolean trustValues() {
-        if ((Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6) {
-            return true;
-        }
-        return false;
+        return (Math.abs(targetHeading) - Math.abs(previousTargetHeading)) < 6d;
     }
 
     @Override

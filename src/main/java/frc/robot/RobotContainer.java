@@ -35,7 +35,7 @@ import frc.robot.command.Index;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PathFindToAuton;
 import frc.robot.command.PathToPose;
-import frc.robot.command.ReverseChasePieces;
+// import frc.robot.command.ReverseChasePieces;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartCollect;
 import frc.robot.command.UpdateOrientation;
@@ -181,7 +181,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Bias-Down", new InstantCommand(() -> pivot.decreaseBias()));
 		NamedCommands.registerCommand("End-Kama", new InstantCommand(() -> flywheel.endKama()));
 		NamedCommands.registerCommand("Start-Kama", new InstantCommand(() -> flywheel.startKama()));
-		NamedCommands.registerCommand("Reverse-Cheese-Paste", new ReverseChasePieces(drivetrain, collector, indexer, limelights));
+		// NamedCommands.registerCommand("Reverse-Cheese-Paste", new ReverseChasePieces(drivetrain, collector, indexer, limelights));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();

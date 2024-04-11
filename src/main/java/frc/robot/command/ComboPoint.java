@@ -73,7 +73,7 @@ public class ComboPoint extends Command {
     @Override
     public void initialize() {
         pidController.enableContinuousInput(0, 360);
-        pidController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
+        pidController.setTolerance(VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE);
 
         if (isBlueAlliance()) {
             targetPose = originalTargetPose;

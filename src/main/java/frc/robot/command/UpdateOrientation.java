@@ -39,7 +39,7 @@ public class UpdateOrientation extends Command {
 		drivetrainYawRate = pigeon.getRate();
 		if (!(drivetrainYawRate > 90)) {
 			drivetrainYaw = pigeon.getAngle();
-			stopMe.setRobotOrientation((drivetrainYaw) % 360, drivetrainYawRate, 55.5d, 0, 0, 0);
+			stopMe.setRobotOrientation((drivetrainYaw) % 360, drivetrainYawRate, 0d, 0d, 0d, 0d);
 		}
 	}
 

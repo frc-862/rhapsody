@@ -46,7 +46,7 @@ public class PointAtTag extends Command {
     public void initialize() {
         limelights.setStopMePipeline(VisionConstants.Pipelines.SPEAKER_PIPELINE);
 
-        headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
+        headingController.setTolerance(VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE);
 
         headingController.enableContinuousInput(-180, 180);
     }
