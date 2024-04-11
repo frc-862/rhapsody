@@ -39,7 +39,7 @@ public class Flywheel extends SubsystemBase {
     public Flywheel() {
         boolean topMotorInvert = FlywheelConstants.MOTOR_TOP_INVERT_Rhapsody;
 
-        if(Constants.isMercury()) {
+        if(Constants.IS_MERCURY) {
             topMotorInvert = FlywheelConstants.MOTOR_TOP_INVERT_Mercury;
         }
 

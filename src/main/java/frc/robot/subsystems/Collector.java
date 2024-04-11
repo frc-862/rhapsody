@@ -66,7 +66,7 @@ public class Collector extends SubsystemBase {
      * @return When an object is present, returns true, otherwise returns false
      */
     public boolean getEntryBeamBreakState() {
-        if (Constants.isMercury()) {
+        if (Constants.IS_MERCURY) {
             return entryDebouncer.calculate(!beamBreak.get());
         }
         return entryDebouncer.calculate(beamBreak.get());

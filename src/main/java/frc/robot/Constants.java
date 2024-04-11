@@ -32,9 +32,7 @@ public class Constants {
 
     public static final Path MERCURY_PATH = Paths.get("/home/lvuser/mercury");
 
-    public static final boolean isMercury() {
-        return MERCURY_PATH.toFile().exists();
-    }
+    public static final boolean IS_MERCURY = MERCURY_PATH.toFile().exists();
 
     public static final String HOOT_PATH = "U/logs"; //"/home/lvuser/logs";
 
@@ -337,7 +335,7 @@ public class Constants {
                 Units.inchesToMeters(kBackRightYPosInchesRh), kInvertRightSide);
 
         public static final Swerve getDrivetrain() {
-            if (Constants.isMercury()) {
+            if (Constants.IS_MERCURY) {
                 System.out.println("IS MERCURY");
                 return new Swerve(DrivetrainConstants, 250, FrontLeft, FrontRight, BackLeft,
                         BackRight);
