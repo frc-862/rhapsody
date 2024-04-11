@@ -152,7 +152,7 @@ public class Indexer extends SubsystemBase {
      * @return entry beambreak state
      */
     public boolean getEntryBeamBreakState() {
-        if (Constants.isMercury()) {
+        if (Constants.IS_MERCURY) {
             return entryDebouncer.calculate(!indexerSensorEntry.get());
         }
         return entryDebouncer.calculate(indexerSensorEntry.get());

@@ -127,9 +127,9 @@ public class RobotContainer extends LightningContainer {
 
 		collector = new Collector();
 		flywheel = new Flywheel();
-		pivot = Constants.isMercury() ? new PivotMercury() : new PivotRhapsody();
+		pivot = Constants.IS_MERCURY ? new PivotMercury() : new PivotRhapsody();
 		indexer = new Indexer(collector);
-		if (!Constants.isMercury()) {
+		if (!Constants.IS_MERCURY) {
 			climber = new Climber();
 		}
 		leds = new LEDs();
@@ -407,7 +407,7 @@ public class RobotContainer extends LightningContainer {
 		// () -> -coPilot.getRightY(),
 		// coPilot::getYButton).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
-		if (!Constants.isMercury()) {
+		if (!Constants.IS_MERCURY) {
 			climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
 		}
 	}
