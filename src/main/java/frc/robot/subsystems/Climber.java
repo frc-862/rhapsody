@@ -1,8 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
-import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -14,6 +12,7 @@ import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.RobotMap.CAN;
@@ -39,12 +38,8 @@ public class Climber extends SubsystemBase {
 
     public Climber() {
         // configure climb motors
-        climbMotorR = new ThunderBird(CAN.CLIMB_RIGHT, CAN.CANBUS_FD,
-                ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT,
-                ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
-        climbMotorL = new ThunderBird(CAN.CLIMB_LEFT, CAN.CANBUS_FD,
-                ClimbConstants.CLIMB_LEFT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT,
-                ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
+        climbMotorR = new ThunderBird(CAN.CLIMB_RIGHT, CAN.CANBUS_FD, ClimbConstants.CLIMB_RIGHT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
+        climbMotorL = new ThunderBird(CAN.CLIMB_LEFT, CAN.CANBUS_FD, ClimbConstants.CLIMB_LEFT_MOTOR_INVERT, ClimbConstants.CLIMB_MOTOR_STATOR_CURRENT_LIMIT, ClimbConstants.CLIMB_MOTOR_BRAKE_MODE);
 
         climbMotorL.configPIDF(0, ClimbConstants.UNLOADED_KP, ClimbConstants.UNLOADED_KI, ClimbConstants.UNLOADED_KD);
         climbMotorL.configPIDF(1, ClimbConstants.LOADED_KP, ClimbConstants.LOADED_KI, ClimbConstants.LOADED_KD);
@@ -74,24 +69,7 @@ public class Climber extends SubsystemBase {
         climbMotorL.setPosition(0d);
         climbMotorR.setPosition(0d);
 
-        // initOldLogging();
         initLogging();
-    }
-
-    @Deprecated
-    private void initOldLogging() {
-        LightningShuffleboard.setDoubleSupplier("Climb", "Left Height", () -> getHeightL());
-        LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
-        LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
-        LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
-        LightningShuffleboard.setDoubleSupplier("Climb", "Left Applied",
-                () -> climbMotorL.getMotorVoltage().getValueAsDouble());
-        LightningShuffleboard.setDoubleSupplier("Climb", "Right Applied",
-                () -> climbMotorR.getMotorVoltage().getValueAsDouble());
-        LightningShuffleboard.setBoolSupplier("Climb", "Foward Limit Left", () -> getForwardLimitLeft());
-        LightningShuffleboard.setBoolSupplier("Climb", "Foward Limit Right", () -> getForwardLimitRight());
-        LightningShuffleboard.setBoolSupplier("Climb", "Reverse Limit Left", () -> getReverseLimitLeft());
-        LightningShuffleboard.setBoolSupplier("Climb", "Reverse Limit Right", () -> getReverseLimitRight());
     }
 
     /**
@@ -106,6 +84,19 @@ public class Climber extends SubsystemBase {
         rightSetpointLog = new DoubleLogEntry(log, "/Climb/RightSetpoint");
         leftAppliedLog = new DoubleLogEntry(log, "/Climb/LeftApplied");
         rightAppliedLog = new DoubleLogEntry(log, "/Climb/RightApplied");
+
+        if (!DriverStation.isFMSAttached()) {
+            LightningShuffleboard.setDoubleSupplier("Climb", "Left Height", () -> getHeightL());
+            LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
+            LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
+            LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
+            LightningShuffleboard.setDoubleSupplier("Climb", "Left Applied", () -> climbMotorL.getMotorVoltage().getValueAsDouble());
+            LightningShuffleboard.setDoubleSupplier("Climb", "Right Applied", () -> climbMotorR.getMotorVoltage().getValueAsDouble());
+            LightningShuffleboard.setBoolSupplier("Climb", "Foward Limit Left", () -> getForwardLimitLeft());
+            LightningShuffleboard.setBoolSupplier("Climb", "Foward Limit Right", () -> getForwardLimitRight());
+            LightningShuffleboard.setBoolSupplier("Climb", "Reverse Limit Left", () -> getReverseLimitLeft());
+            LightningShuffleboard.setBoolSupplier("Climb", "Reverse Limit Right", () -> getReverseLimitRight());
+        }
     }
 
     /**
@@ -140,7 +131,7 @@ public class Climber extends SubsystemBase {
     /**
      * sets the setpoint of the climb motors
      *
-     * @param leftSetPoint  setpoint for left climb motor in pulley rotations
+     * @param leftSetPoint setpoint for left climb motor in pulley rotations
      * @param rightSetPoint setpoint for right climb motor in pulley rotations
      */
     public void setSetpoint(double leftSetPoint, double rightSetPoint) {
@@ -208,14 +199,13 @@ public class Climber extends SubsystemBase {
     }
 
     public boolean isManual() {
-        return climbMotorL.getControlMode().getValue().equals(ControlModeValue.DutyCycleOut)
-                | climbMotorR.getControlMode().getValue().equals(ControlModeValue.DutyCycleOut);
+        return climbMotorL.getControlMode().getValue().equals(ControlModeValue.DutyCycleOut) | climbMotorR.getControlMode().getValue().equals(ControlModeValue.DutyCycleOut);
     }
 
     @Override
     public void periodic() {
         // zeroes height if the limit switch is pressed or position is negative
-        for (TalonFX motor : new TalonFX[] { climbMotorR, climbMotorL }) {
+        for (TalonFX motor : new TalonFX[] {climbMotorR, climbMotorL}) {
             if (motor.getPosition().getValueAsDouble() < 0 || getReverseLimit(motor)) {
                 motor.setPosition(0d);
             }
