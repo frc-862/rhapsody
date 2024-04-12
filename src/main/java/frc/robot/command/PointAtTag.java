@@ -6,11 +6,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.vision.VisionPipeline;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
-import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PointAtTag extends Command {
 
@@ -48,7 +46,7 @@ public class PointAtTag extends Command {
     public void initialize() {
         limelights.setStopMePipeline(VisionConstants.Pipelines.SPEAKER_PIPELINE);
 
-        headingController.setTolerance(VisionConstants.ALIGNMENT_TOLERANCE);
+        headingController.setTolerance(VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE);
 
         headingController.enableContinuousInput(-180, 180);
     }

@@ -29,7 +29,6 @@ public class Collector extends SubsystemBase {
     private boolean hasPiece;
 
     private DoubleLogEntry collectorPowerLog;
-    private BooleanLogEntry beamBreakLog;
     private BooleanLogEntry hasPieceLog;
 
     private Debouncer entryDebouncer = new Debouncer(0.05);

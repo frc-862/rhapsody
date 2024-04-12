@@ -9,7 +9,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ClimbConstants;
+import frc.robot.Constants.PoseConstants.PathfindPoseConstants;
 import frc.robot.subsystems.Swerve;
 
 public class ClimbAlign extends Command {
@@ -56,15 +56,15 @@ public class ClimbAlign extends Command {
   private Pose2d[] getPoses(){
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
       return new Pose2d[] {
-        ClimbConstants.PATHFIND_CENTER_STAGE_START_POSE_BLUE,
-        ClimbConstants.PATHFIND_HIGH_STAGE_START_POSE_BLUE,
-        ClimbConstants.PATHFIND_LOW_STAGE_START_POSE_BLUE
+        PathfindPoseConstants.PATHFIND_CENTER_STAGE_START_POSE_BLUE,
+        PathfindPoseConstants.PATHFIND_HIGH_STAGE_START_POSE_BLUE,
+        PathfindPoseConstants.PATHFIND_LOW_STAGE_START_POSE_BLUE
       };
     }
     return new Pose2d[] {
-      ClimbConstants.PATHFIND_CENTER_STAGE_START_POSE_RED,
-      ClimbConstants.PATHFIND_HIGH_STAGE_START_POSE_RED,
-      ClimbConstants.PATHFIND_LOW_STAGE_START_POSE_RED
+      PathfindPoseConstants.PATHFIND_CENTER_STAGE_START_POSE_RED,
+      PathfindPoseConstants.PATHFIND_HIGH_STAGE_START_POSE_RED,
+      PathfindPoseConstants.PATHFIND_LOW_STAGE_START_POSE_RED
     };
   }
 
