@@ -41,6 +41,7 @@ import frc.robot.command.Index;
 import frc.robot.command.ManualClimb;
 import frc.robot.command.PathFindToAuton;
 import frc.robot.command.PathToPose;
+import frc.robot.command.PointAtPoint;
 // import frc.robot.command.ReverseChasePieces;
 import frc.robot.command.Sing;
 import frc.robot.command.SmartCollect;
