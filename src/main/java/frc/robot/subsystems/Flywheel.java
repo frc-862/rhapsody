@@ -5,7 +5,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants;
@@ -16,6 +19,11 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 public class Flywheel extends SubsystemBase {
     private ThunderBird topMotor;
     private ThunderBird bottomMotor;
+
+    private FlywheelSim flywheelSim = new FlywheelSim(
+        DCMotor.getFalcon500(2), FlywheelConstants.GEAR_RATIO, FlywheelConstants.MOMENT_OF_INERTIA);
+
+    
 
     private final VelocityVoltage topRPMPID = new VelocityVoltage(0);
     private final VelocityVoltage bottomRPMPID = new VelocityVoltage(0);
@@ -59,6 +67,8 @@ public class Flywheel extends SubsystemBase {
             FlywheelConstants.TOP_1_MOTOR_KD, FlywheelConstants.TOP_1_MOTOR_KS, FlywheelConstants.TOP_1_MOTOR_KV);
         bottomMotor.configPIDF(1, FlywheelConstants.BOTTOM_1_MOTOR_KP, FlywheelConstants.BOTTOM_1_MOTOR_KI,
             FlywheelConstants.BOTTOM_1_MOTOR_KD, FlywheelConstants.BOTTOM_1_MOTOR_KS, FlywheelConstants.BOTTOM_1_MOTOR_KV);
+
+        MotorSim topMotorSim = new MotorSim(DCMotor.getFalcon500(2), FlywheelConstants.GEAR_RATIO); 
 
         topMotor.applyConfig();
         bottomMotor.applyConfig();
@@ -107,6 +117,12 @@ public class Flywheel extends SubsystemBase {
         }
 
         updateLogging();
+    }
+
+    public void simulationPeriodic() {
+        flywheelSim.setInput(motorSim.getVelocity().getValue() * 60d * topMotor.getMotorVoltage().getValueAsDouble(),
+        bottomMotor.getVelocity().getValue() bottomMotor.getMotorVoltage().getValueAsDouble());
+        flywheelSim.update(0.01);
     }
 
     /**

@@ -493,6 +493,8 @@ public class Constants {
         public static final double COAST_VOLTAGE = 0.1;
 
         public static final double FLYWHEEL_SYSTEST_RPM = 1000;
+        public static final double GEAR_RATIO = 0;
+        public static final double MOMENT_OF_INERTIA = 0;
     }
 
     public class IndexerConstants { // TODO: get real
