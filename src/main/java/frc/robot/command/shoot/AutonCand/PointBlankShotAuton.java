@@ -3,6 +3,7 @@ package frc.robot.command.shoot.AutonCand;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Indexer;
@@ -71,6 +72,6 @@ public class PointBlankShotAuton extends Command {
 
     @Override
     public boolean isFinished() {
-        return shot && shotTime - startTime >= CandConstants.TIME_TO_SHOOT && !indexer.hasNote();
+        return shot && shotTime - startTime >= ShooterConstants.TIME_TO_SHOOT && !indexer.hasNote();
     }
 }

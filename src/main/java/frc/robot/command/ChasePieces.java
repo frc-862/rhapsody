@@ -8,8 +8,8 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.AutonomousConstants;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.ChaseConstants;
+import frc.robot.Constants.PoseConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
@@ -38,7 +38,7 @@ public class ChasePieces extends Command {
     private boolean hasSeenTarget;
 
     private Command smartCollect;
-    private PIDController headingController = VisionConstants.CHASE_CONTROLLER;
+    private PIDController headingController = ChaseConstants.CHASE_CONTROLLER;
 
     private BooleanLogEntry onTargetLog;
     private BooleanLogEntry hasTargetLog;
@@ -80,7 +80,7 @@ public class ChasePieces extends Command {
     public void initialize() {
         System.out.println("AUTO - Chase pieces INIT");
 
-        headingController.setTolerance(VisionConstants.CHASE_PIECE_ALIGNMENT_TOLERANCE);
+        headingController.setTolerance(ChaseConstants.CHASE_PIECE_ALIGNMENT_TOLERANCE);
         headingController.setSetpoint(0);
 
         smartCollect = new AutonSmartCollect(() -> collectPower, () -> collectPower, collector, indexer);
@@ -134,7 +134,7 @@ public class ChasePieces extends Command {
             } else {
                 if (!hasSeenTarget) { // If the limelight never saw a note
                     drivePower = 0.5;
-                    if (drivetrain.getPose().getY() > VisionConstants.HALF_FIELD_HEIGHT) {
+                    if (drivetrain.getPose().getY() > PoseConstants.HALF_FIELD_HEIGHT) {
                         rotPower = DriverStation.getAlliance().get() == Alliance.Blue ? -defaultRotPower : defaultRotPower;
                     } else {
                         rotPower = DriverStation.getAlliance().get() == Alliance.Blue ? defaultRotPower : -defaultRotPower;
@@ -183,13 +183,13 @@ public class ChasePieces extends Command {
 
     private void checkSlowdown() {
         if (DriverStation.getAlliance().get() == Alliance.Blue) {
-            if (drivetrain.getPose().getX() > AutonomousConstants.BLUE_SLOW_CHASE_RANGE) {
+            if (drivetrain.getPose().getX() > ChaseConstants.BLUE_SLOW_CHASE_RANGE) {
                 defaultDrivePower = 0.5d;
             } else {
                 defaultDrivePower = 1.5d;
             }
         } else {
-            if (drivetrain.getPose().getX() < AutonomousConstants.RED_SLOW_CHASE_RANGE) {
+            if (drivetrain.getPose().getX() < ChaseConstants.RED_SLOW_CHASE_RANGE) {
                 defaultDrivePower = 0.5d;
             } else {
                 defaultDrivePower = 1.5d;
@@ -217,11 +217,11 @@ public class ChasePieces extends Command {
     public boolean isFinished() {
         if (DriverStation.isAutonomous()) {
             if (DriverStation.getAlliance().get() == Alliance.Blue) {
-                if (drivetrain.getPose().getX() > AutonomousConstants.BLUE_CHASE_BOUNDARY) {
+                if (drivetrain.getPose().getX() > ChaseConstants.BLUE_CHASE_BOUNDARY) {
                     return true;
                 }
             } else {
-                if (drivetrain.getPose().getX() < AutonomousConstants.RED_CHASE_BOUNDARY) {
+                if (drivetrain.getPose().getX() < ChaseConstants.RED_CHASE_BOUNDARY) {
                     return true;
                 }
             }

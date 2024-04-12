@@ -106,7 +106,7 @@ public class SmartShoot extends Command {
 				indexer.indexUp();
 				collector.setPower(.75d);
 				// Once shoot critera met moves to shot
-				if ((Timer.getFPGATimestamp() - shotTime >= CandConstants.TIME_TO_SHOOT) && !indexer.hasNote()) {
+				if ((Timer.getFPGATimestamp() - shotTime >= ShooterConstants.TIME_TO_SHOOT) && !indexer.hasNote()) {
 					state = ShootingState.SHOT;
 				}
 				break;

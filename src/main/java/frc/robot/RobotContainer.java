@@ -24,6 +24,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PathFindingConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
+import frc.robot.Constants.PoseConstants.StartingPoseConstants;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.command.AutonSmartCollect;
 import frc.robot.command.ChasePieces;
@@ -100,7 +101,7 @@ public class RobotContainer extends LightningContainer {
 	Telemetry logger;
 
 	private Boolean triggerInit;
-	private static double bias = 0d;
+	public static double bias = 0d;
 
 	@Override
 	protected void initializeSubsystems() {
@@ -134,7 +135,7 @@ public class RobotContainer extends LightningContainer {
 		triggerInit = false;
 
 		boolean setPath = SignalLogger.setPath(Constants.HOOT_PATH).isOK();
-		SignalLogger.enableAutoLogging(true); // TODO Return during COMPS
+		SignalLogger.enableAutoLogging(true);
 		boolean startedLogs = SignalLogger.start().isOK();
 
 		if (startedLogs && setPath) {
@@ -329,22 +330,7 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
 		// .onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
 		// .onFalse(new InstantCommand(() -> drivetrain.swap(driver, coPilot)));
-		// BLUE Alliance set
-		// new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED A",
-		// false))
-		// .onTrue(new InstantCommand(
-		// () ->
-		// drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_RED)));
-		// new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED B",
-		// false))
-		// .onTrue(new InstantCommand(
-		// () ->
-		// drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_RED)));
-		// new Trigger(() -> LightningShuffleboard.getBool("Auton", "POSE RED C",
-		// false))
-		// .onTrue(new InstantCommand(
-		// () ->
-		// drivetrain.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_RED)));
+		
 
 		/* Button Box */
 		// new Trigger(() -> buttonBox.getRawButton(ButtonBox.PINK)).whileTrue(new
@@ -356,29 +342,29 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(
 				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE A", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
-						.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_BLUE)));
+						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_A_STARTPOSE_BLUE)));
 		new Trigger(
 				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE B", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
-						.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_BLUE)));
+						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_B_STARTPOSE_BLUE)));
 		new Trigger(
 				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE C", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
-						.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_BLUE)));
+						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_C_STARTPOSE_BLUE)));
 
 		// BLUE Alliance set
 		new Trigger(
 				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED A", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
-						.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_A_STARTPOSE_RED)));
+						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_A_STARTPOSE_RED)));
 		new Trigger(
 				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED B", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
-						.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_B_STARTPOSE_RED)));
+						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_B_STARTPOSE_RED)));
 		new Trigger(
 				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED C", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
-						.setDrivetrainPose(AutonomousConstants.SOURCE_SUB_C_STARTPOSE_RED)));
+						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_C_STARTPOSE_RED)));
 	}
 
 	@Override

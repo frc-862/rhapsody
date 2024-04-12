@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.PoseConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
@@ -100,7 +101,7 @@ public class ComboPoint extends Command {
      * @return the new pose
      */
     private Translation2d swapAlliance(Translation2d pose) {
-        return new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY());
+        return new Translation2d(PoseConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY());
     }
 
     private boolean inTolerance() {

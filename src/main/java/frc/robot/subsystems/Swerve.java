@@ -32,8 +32,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.CollisionConstants;
 import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.PoseConstants;
 import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.util.Pose4d;
@@ -43,7 +42,7 @@ import frc.thunder.util.Pose4d;
  */
 public class Swerve extends SwerveDrivetrain implements Subsystem {
 
-    static RectangularRegionConstraint field = new RectangularRegionConstraint(new Translation2d(0, 0), VisionConstants.FIELD_LIMIT, null);
+    static RectangularRegionConstraint field = new RectangularRegionConstraint(new Translation2d(0, 0), PoseConstants.FIELD_LIMIT, null);
 
     private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric();
@@ -58,7 +57,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private LinearFilter xFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter yFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter rotFilter = LinearFilter.singlePoleIIR(2, 0.01);
-    private Translation2d speakerPose = VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d();
+    private Translation2d speakerPose = PoseConstants.BLUE_SPEAKER_LOCATION.toTranslation2d();
 
     private DoubleLogEntry timerLog;
     private DoubleLogEntry robotHeadingLog;
@@ -375,7 +374,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return boolean if the robot is in the wing to start aiming STATE priming
      */
     public boolean inWing() {
-        return (getPose().getX() < ShooterConstants.FAR_WING_X);
+        return (getPose().getX() < PoseConstants.FAR_WING_X);
     }
 
     public void disableVision() {
@@ -390,7 +389,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
 
     public void setSpeakerPose(Alliance alliance) {
         if (alliance == Alliance.Red) {
-            speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
+            speakerPose = PoseConstants.RED_SPEAKER_LOCATION.toTranslation2d();
         }
     }
 
