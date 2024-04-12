@@ -13,9 +13,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
-import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Limelights;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
@@ -25,8 +23,6 @@ public class ChasePieces extends Command {
     private Swerve drivetrain;
     private Collector collector;
     private Indexer indexer;
-    private Flywheel flywheel;
-    private Pivot pivot;
     private Limelight limelight;
 
     private double pidOutput;
@@ -60,15 +56,12 @@ public class ChasePieces extends Command {
      * @param collector for smart collect
      * @param indexer for smart collect
      * @param flywheel for stopping the flywheels before collecting / for smart collect
-     * @param pivot for smart collect
      * @param limelights to get vision data from dust
      */
-    public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel, Limelights limelights) {
+    public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Limelights limelights) {
         this.drivetrain = drivetrain;
         this.collector = collector;
         this.indexer = indexer;
-        this.flywheel = flywheel;
-        this.pivot = pivot;
 
         this.limelight = limelights.getDust();
 
@@ -78,7 +71,7 @@ public class ChasePieces extends Command {
             this.defaultDrivePower = 5d;
         }
 
-        addRequirements(drivetrain, collector, indexer, flywheel);
+        addRequirements(drivetrain, collector, indexer);
 
         initLogging();
     }
@@ -90,11 +83,7 @@ public class ChasePieces extends Command {
         headingController.setTolerance(VisionConstants.CHASE_PIECE_ALIGNMENT_TOLERANCE);
         headingController.setSetpoint(0);
 
-        if (DriverStation.isAutonomous()) {
-            smartCollect = new AutonSmartCollect(() -> collectPower, () -> collectPower, collector, indexer);
-        } else {
-            smartCollect = new SmartCollect(() -> collectPower, () -> collectPower, collector, indexer, pivot, flywheel);
-        }
+        smartCollect = new AutonSmartCollect(() -> collectPower, () -> collectPower, collector, indexer);
 
         smartCollect.initialize();
 
@@ -133,8 +122,6 @@ public class ChasePieces extends Command {
             pidOutput = 0;
         }
 
-
-
         if (DriverStation.isAutonomousEnabled()) {
             checkSlowdown();
 
@@ -157,10 +144,8 @@ public class ChasePieces extends Command {
                     rotPower = 0;
                 }
             }
-        }
-
-        else { // If in teleop
-            drivePower = defaultDrivePower;
+        } else { // If in teleop
+            drivePower = 5;
             if (hasTarget) { // If limelight sees a note
                 if (trustValues()) {
                     rotPower = pidOutput;
@@ -189,7 +174,7 @@ public class ChasePieces extends Command {
         rotPowerLog.append(rotPower);
 
 
-        if (!DriverStation.isAutonomous()) {
+        if (!DriverStation.isFMSAttached()) {
             LightningShuffleboard.setBool("ChasePieces", "Is Running", isFinished());
             LightningShuffleboard.setDouble("ChasePieces", "DrivePower", defaultDrivePower);
             LightningShuffleboard.setDouble("ChasePieces", "Current X", drivetrain.getPose().getX());
@@ -242,8 +227,7 @@ public class ChasePieces extends Command {
             }
             return indexer.hasNote(); // If any beam break sees a note, stop chasing
         } else {
-            // return smartCollect.isFinished();
-            return indexer.getPieceState() == PieceState.IN_COLLECT;
+            return indexer.getPieceState() == PieceState.IN_INDEXER || indexer.getPieceState() == PieceState.IN_PIVOT;
         }
     }
 }

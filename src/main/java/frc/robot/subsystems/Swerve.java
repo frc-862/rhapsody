@@ -155,8 +155,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         yFilter.calculate(getPose().getY());
         rotFilter.calculate(getPose().getRotation().getDegrees());
 
-
-
         updateLogging();
     }
 

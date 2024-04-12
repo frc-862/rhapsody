@@ -100,6 +100,7 @@ public class RobotContainer extends LightningContainer {
 	Telemetry logger;
 
 	private Boolean triggerInit;
+	private static double bias = 0d;
 
 	@Override
 	protected void initializeSubsystems() {
@@ -166,7 +167,7 @@ public class RobotContainer extends LightningContainer {
 						.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
 		NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
 		NamedCommands.registerCommand("Chase-Pieces",
-				new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
+				new ChasePieces(drivetrain, collector, indexer, limelights));
 		NamedCommands.registerCommand("Smart-Collect",
 				new AutonSmartCollect(() -> 0.5, () -> 0.6, collector, indexer)
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
@@ -174,7 +175,9 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain));
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
 		NamedCommands.registerCommand("Point-At-Speaker",
-				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0d));
+				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0));
+		NamedCommands.registerCommand("Point-At-Speaker-left",
+				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, -3));
 		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
 		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
 		NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
@@ -210,7 +213,7 @@ public class RobotContainer extends LightningContainer {
 
 		// makes the robot chase pieces
 		new Trigger(driver::getRightBumper).whileTrue(
-				new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights)
+				new ChasePieces(drivetrain, collector, indexer, limelights)
 						.deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
 		// new Trigger(driver::getRightBumper)

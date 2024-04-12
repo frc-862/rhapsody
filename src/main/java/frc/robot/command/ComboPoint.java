@@ -56,7 +56,7 @@ public class ComboPoint extends Command {
      * @param drivetrain to request movement
      * @param driver the driver's controller, used for drive input
      * @param limelights for tag align
-     * @param bias the bias to subtract from the target heading
+     * @param bias the bias to add from the target heading
      */
     public ComboPoint(Translation2d targetPose, Swerve drivetrain, XboxController driver, Limelights limelights, double bias) {
         this.drivetrain = drivetrain;
@@ -77,13 +77,13 @@ public class ComboPoint extends Command {
 
         if (isBlueAlliance()) {
             targetPose = originalTargetPose;
-            stopMe.setPriorityTag(4);
+            stopMe.setPriorityTag(7);
         } else {
             targetPose = swapAlliance(originalTargetPose);
-            stopMe.setPriorityTag(7);
+            stopMe.setPriorityTag(4);
         }
 
-        // stopMe.setFiducialIDFiltersOverride(VisionConstants.SPEAKER_FILTERS); Hopefully the above change makes this unnecessary
+        stopMe.setFiducialIDFiltersOverride(VisionConstants.SPEAKER_FILTERS);// Hopefully the above change makes this unnecessary
 
         System.out.println("DRIVE - COMBO POINT START");
     }
@@ -104,10 +104,9 @@ public class ComboPoint extends Command {
     }
 
     private boolean inTolerance() {
-        // return (Math.abs(currentHeading) - Math.abs(currentHeading + targetHeading)) < VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE && stopMe.hasTarget();
         double difference = Math.abs(currentHeading - targetHeading);
         difference = difference > 180 ? 360 - difference : difference;
-        return Math.abs(currentHeading - targetHeading) <= VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE && stopMe.hasTarget(); // TODO not has Target but if the correct filter is set
+        return difference <= VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE && stopMe.hasTarget(); // TODO not has Target but if the correct filter is set
     }
 
     @Override
@@ -119,7 +118,7 @@ public class ComboPoint extends Command {
         currentHeading = (pose.getRotation().getDegrees() + 360) % 360;
 
         if (stopMe.hasTarget()) {
-            targetHeading = stopMe.getTargetX() - targetBias;
+            targetHeading = (stopMe.getTargetX() - 1.592) + targetBias;
             targetHeading = currentHeading - targetHeading;
         } else {
             // Calculate vector to target, add 180 to make it point backwards
@@ -135,9 +134,14 @@ public class ComboPoint extends Command {
         pidOutput = pidController.calculate(currentHeading, targetHeading);
         feedForwardOutput = feedforward.calculate(pidOutput);
         
+        if(inTolerance()) {
+            feedForwardOutput = 0;
+        }
         drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), feedForwardOutput);
 
         updateLogging();
+
+        tuning();
     }
 
     public void tuning() {
@@ -180,17 +184,18 @@ public class ComboPoint extends Command {
 
         if (!DriverStation.isFMSAttached()) {
             LightningShuffleboard.setDouble("ComboPoint", "Target Heading", targetHeading);
-            LightningShuffleboard.setDouble("ComboPoint", "Current Heading", Math.abs(drivetrain.getPose().getRotation().getDegrees()));
+            LightningShuffleboard.setDouble("ComboPoint", "Current Heading", currentHeading);
             LightningShuffleboard.setBool("ComboPoint", "In Tolerance", inTolerance());
             LightningShuffleboard.setDouble("ComboPoint", "Raw Output (PointController)", pidOutput);
             LightningShuffleboard.setDouble("ComboPoint", "Output (FeedForward)", feedForwardOutput);
             LightningShuffleboard.setBool("ComboPoint", "HasTarget", stopMe.hasTarget());
+            LightningShuffleboard.setDouble("ComboPoint", "Bias", targetBias);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        // stopMe.setFiducialIDFiltersOverride(VisionConstants.ALL_TAG_FILTERS);
+        stopMe.setFiducialIDFiltersOverride(VisionConstants.ALL_TAG_FILTERS);
         System.out.println("DRIVE - COMBO POINT END");
     }
 
