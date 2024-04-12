@@ -66,6 +66,9 @@ public class Constants {
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
 
+        public static final Translation2d RED_CORNER_POSE = new Translation2d(0d, 0d);
+        public static final Translation2d BLUE_CORNER_POSE = new Translation2d(0d, 0d); // TODO get real >:)
+
         public static final double ALIGNMENT_TOLERANCE = 1d;
     }
 
@@ -646,6 +649,18 @@ public class Constants {
             }
         };
 
+        public static final InterpolationMap NOTEPASS_ANGLE_MAP = new InterpolationMap() {
+            {
+                put(0d, 45d);
+            }
+        };
+
+        public static final InterpolationMap NOTEPASS_SPEED_MAP = new InterpolationMap() {
+            {
+                put(0d, 4500d);
+            }
+        };
+
         public enum ShootingState {
             AIM, SHOOT, SHOT
         }
@@ -804,3 +819,4 @@ public class Constants {
         }
     }
 }
+

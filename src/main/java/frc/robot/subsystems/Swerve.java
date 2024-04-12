@@ -65,6 +65,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private LinearFilter yFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter rotFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private Translation2d speakerPose = VisionConstants.BLUE_SPEAKER_LOCATION.toTranslation2d();
+    private Translation2d cornerPose = DrivetrainConstants.BLUE_CORNER_POSE;
 
     private DoubleLogEntry timerLog;
     private DoubleLogEntry robotHeadingLog;
@@ -426,11 +427,16 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void setSpeakerPose(Alliance alliance) {
         if (alliance == Alliance.Red) {
             speakerPose = VisionConstants.RED_SPEAKER_LOCATION.toTranslation2d();
+            cornerPose = DrivetrainConstants.RED_CORNER_POSE;
         }
     }
 
     public double distanceToSpeaker() {
         return speakerPose.getDistance(getPose().getTranslation());
+    }
+
+    public double distanceToCorner() {
+        return cornerPose.getDistance(getPose().getTranslation());
     }
 
     public void setDrivetrainPose(Pose2d newPose) {

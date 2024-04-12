@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -9,12 +11,15 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -109,8 +114,9 @@ public class RobotContainer extends LightningContainer {
 	SwerveRequest.RobotCentric slowRobotCentric;
 	SwerveRequest.PointWheelsAt point;
 	Telemetry logger;
-
+	
 	private Boolean triggerInit;
+	private boolean notePassOnTarget = false;
 
 	@Override
 	protected void initializeSubsystems() {
@@ -192,7 +198,8 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Bias-Down", new InstantCommand(() -> pivot.decreaseBias()));
 		NamedCommands.registerCommand("End-Kama", new InstantCommand(() -> flywheel.endKama()));
 		NamedCommands.registerCommand("Start-Kama", new InstantCommand(() -> flywheel.startKama()));
-		NamedCommands.registerCommand("Reverse-Cheese-Paste", new ReverseChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
+		NamedCommands.registerCommand("Reverse-Cheese-Paste",
+				new ReverseChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -261,15 +268,18 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
 		// new Trigger(coPilot::getBButton)
-		// 	.whileTrue(new AutonSmartCollect(() -> 0.65, () -> 0.75, collector, indexer)
-			// .deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
+		// .whileTrue(new AutonSmartCollect(() -> 0.65, () -> 0.75, collector, indexer)
+		// .deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 
 		// cand shots for the robot
 		new Trigger(coPilot::getXButton)
 				.whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		// new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
-		new Trigger(coPilot::getYButton).whileTrue(new NotePass(flywheel, pivot)
-				.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		new Trigger(coPilot::getYButton).whileTrue(new ParallelCommandGroup(
+				new PointAtPoint(new Translation2d(
+						DriverStation.getAlliance().get() == Alliance.Red ? 0d : 0d,
+						DriverStation.getAlliance().get() == Alliance.Red ? 0d : 0d), drivetrain, driver, true, (value) -> { notePassOnTarget = value; }),
+				new NotePass(drivetrain, flywheel, pivot, () -> notePassOnTarget)));
 		// new Trigger(coPilot::getYButton).whileTrue(new Tune(flywheel, pivot)
 		// .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot)
