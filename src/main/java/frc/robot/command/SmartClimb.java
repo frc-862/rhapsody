@@ -29,7 +29,6 @@ public class SmartClimb extends Command {
      * 
      * @param climber subsystem, requires
      * @param drivetrain subsystem
-     * @param pivot subsystem, requires
      * @param leds subsystem
      * @param leftPower power to apply to left climber motor
      * @param rightPower power to apply to right climber motor

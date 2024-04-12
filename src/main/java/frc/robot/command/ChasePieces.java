@@ -55,7 +55,6 @@ public class ChasePieces extends Command {
      * @param drivetrain to request movement
      * @param collector for smart collect
      * @param indexer for smart collect
-     * @param flywheel for stopping the flywheels before collecting / for smart collect
      * @param limelights to get vision data from dust
      */
     public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Limelights limelights) {
