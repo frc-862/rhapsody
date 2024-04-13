@@ -388,7 +388,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         System.out.println("Vision Enabled");
     }
 
-    public void setSpeakerPose(Alliance alliance) {
+    public void setAlliancePose(Alliance alliance) {
         if (alliance == Alliance.Red) {
             speakerPose = PoseConstants.RED_SPEAKER_LOCATION.toTranslation2d();
             cornerPose = DrivetrainConstants.RED_CORNER_POSE;

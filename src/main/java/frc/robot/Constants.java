@@ -273,6 +273,7 @@ public class Constants {
         public static final double PROCESS_LATENCY = 0.0472; // TODO test this value
 
         public static final double POINTATTAG_ALIGNMENT_TOLERANCE = 1d;
+        public static final double POINTATPOINT_ALIGNMENT_TOLERANCE = 1d;
         public static final PIDController POINT_AIM_CONTROLLER = new PIDController(0.2, 0, 0.015, 0.01);
         public static final PIDController TAG_AIM_CONTROLLER = new PIDController(0.1, 0, 0.01);
         public static final PIDController COMBO_CONTROLLER = new PIDController(0.1, 0, 0.01);
@@ -573,13 +574,23 @@ public class Constants {
 
         public static final InterpolationMap NOTEPASS_ANGLE_MAP = new InterpolationMap() {
             {
-                put(0d, 45d);
+                put(13.716, 36d);
+                put(12.192, 36d);
+                put(10.668, 37d);
+                put(9.144, 38d);
+                put(7.62, 41d);
+                put(6.096, 46d);
             }
         };
 
         public static final InterpolationMap NOTEPASS_SPEED_MAP = new InterpolationMap() {
             {
-                put(0d, 4500d);
+                put(13.716, 3600d);
+                put(12.192, 3300d);
+                put(20.668, 2900d);
+                put(9.144, 2600d);
+                put(7.62, 2250d);
+                put(6.096, 1900d);
             }
         };
 
