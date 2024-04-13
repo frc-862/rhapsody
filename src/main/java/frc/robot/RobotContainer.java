@@ -249,8 +249,9 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getLeftBumper).whileTrue(
 				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0d));
 
-		// new Trigger(driver::getYButton)
-		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
+		new Trigger(driver::getYButton)
+		.whileTrue(new NotePass(drivetrain, flywheel, pivot, driver, indexer)
+				.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
@@ -268,7 +269,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(coPilot::getXButton)
 				.whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		// new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
-		new Trigger(coPilot::getYButton).whileTrue(new NotePass(drivetrain, flywheel, pivot, driver, indexer));
+		// new Trigger(coPilot::getYButton).whileTrue(new NotePass(drivetrain, flywheel, pivot, driver, indexer));
 		// new Trigger(coPilot::getYButton).whileTrue(new Tune(flywheel, pivot));
 		// .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot)
