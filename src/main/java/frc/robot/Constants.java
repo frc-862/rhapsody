@@ -43,7 +43,7 @@ public class Constants {
 
         public static final double ROT_MULT = 0.04; // TODO Tune for Driver
 
-        public static final double SLOW_ROT_MULT = 0.3;
+        public static final double SLOW_ROT_MULT = 0.7;
         public static final double SLOW_SPEED_MULT = 0.4;
 
         public static final double SYS_TEST_SPEED_DRIVE = 0.5;

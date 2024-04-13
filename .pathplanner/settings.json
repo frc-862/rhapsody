@@ -10,7 +10,8 @@
     "Top side paths"
   ],
   "autoFolders": [
-    "Hide"
+    "Hide",
+    "New Folder"
   ],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 4.0,

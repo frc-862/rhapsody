@@ -369,8 +369,8 @@ public class RobotContainer extends LightningContainer {
 		/* driver */
 		drivetrain.registerTelemetry(logger::telemeterize);
 
-		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(() -> -driver.getLeftY(),
-				() -> -driver.getLeftX(), () -> -driver.getRightX()));
+		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(() -> -(driver.getLeftY() * drivetrain.getSpeedMult()),
+				() -> -(driver.getLeftX() * drivetrain.getSpeedMult()), () -> -(driver.getRightX() * drivetrain.getRotMult())));
 		// .alongWith(new CollisionDetection(drivetrain, CollisionType.TELEOP)));
 
 		/* copilot */
