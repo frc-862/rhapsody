@@ -31,7 +31,6 @@ public class NotePass extends Command {
 	private final Swerve drivetrain;
   	private final Flywheel flywheel;
 	private final Pivot pivot;
-	private BooleanSupplier doHaptic;
 	private Translation2d targetPose;
 	private double currentHeading;
 	private double targetHeading;
@@ -48,13 +47,11 @@ public class NotePass extends Command {
 	 * @param drivetrain subsystem
 	 * @param pivot    subsystem
 	 * @param flywheel subsystem
-	 * @param doHaptic used for checking point on point on target
 	 */
-	public NotePass(Swerve drivetrain, Flywheel flywheel, Pivot pivot, BooleanSupplier doHaptic, XboxControllerFilter driver, Indexer indexer) {
+	public NotePass(Swerve drivetrain, Flywheel flywheel, Pivot pivot, XboxControllerFilter driver, Indexer indexer) {
 		this.drivetrain = drivetrain;
 		this.flywheel = flywheel;
 		this.pivot = pivot;
-		this.doHaptic = doHaptic;
 		this.driver = driver;
 		this.indexer = indexer;
 
@@ -66,8 +63,6 @@ public class NotePass extends Command {
 		if(isBlueAlliance()){
 			targetPose = DrivetrainConstants.BLUE_CORNER_POSE;
 		} else targetPose = DrivetrainConstants.RED_CORNER_POSE;
-
-		LightningShuffleboard.setDoubleSupplier("NotePass", "Distance to Corner", () -> drivetrain.distanceToCorner());
 	}
 
 	@Override
@@ -80,7 +75,6 @@ public class NotePass extends Command {
 
         // Calculate vector to target, add 180 to make it point backwards
         targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 180; 
-
         targetHeading = (targetHeading + 360) % 360; // Modulo 360 to keep it in the range of 0-360
         
         pidOutput = pidController.calculate(currentHeading, targetHeading);
@@ -95,20 +89,30 @@ public class NotePass extends Command {
 		flywheel.setAllMotorsRPM(ShooterConstants.NOTEPASS_SPEED_MAP.get(drivetrain.distanceToCorner()) + flywheel.getBias());
 		pivot.setTargetAngle(ShooterConstants.NOTEPASS_ANGLE_MAP.get(drivetrain.distanceToCorner()) + pivot.getBias());
 
-		if (flywheel.allMotorsOnTarget() && pivot.onTarget() && doHaptic.getAsBoolean() && inTolerance())
+		if (flywheel.allMotorsOnTarget() && pivot.onTarget() /*&& inTolerance() */) {
 			indexer.indexUp();
 			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
+			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
+		}
+
+		if (!DriverStation.isFMSAttached()) {
+			LightningShuffleboard.setBool("Note-Pass", "In tloeracnce", inTolerance());
+			LightningShuffleboard.setDouble("Note-Pass", "CurrentHeading", currentHeading);
+			LightningShuffleboard.setDouble("Note-Pass", "TargetHeading", targetHeading);
+			LightningShuffleboard.setDouble("Note-Pass", "Distance to Corner", drivetrain.distanceToCorner());
+		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
 		pivot.setTargetAngle(pivot.getStowAngle());
+		indexer.stop();
 	}
 
 	@Override
 	public boolean isFinished() {
-		return false;
+		return !indexer.hasNote();
 	}
 
 	private boolean isBlueAlliance() {
