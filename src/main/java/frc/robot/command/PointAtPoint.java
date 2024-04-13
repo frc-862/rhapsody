@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.PoseConstants;
@@ -42,32 +41,21 @@ public class PointAtPoint extends Command {
     private DoubleLogEntry currentLog;
     private BooleanLogEntry inToleranceLog;
 
-    private boolean finishAutomatically;
-
-    private BooleanConsumer onTarget;
-
     /**
      * Creates a new PointAtPoint.
      *
      * @param targetPose the target pose to point at
      * @param drivetrain to request movement
      * @param driver     the driver's controller, used for drive input
-     * @param finishAutomatically checks inTolerance isFinished condition
      */
-    public PointAtPoint(Translation2d targetPose, Swerve drivetrain, XboxController driver, boolean finishAutomatically, BooleanConsumer onTarget) {
+    public PointAtPoint(Translation2d targetPose, Swerve drivetrain, XboxController driver) {
         this.drivetrain = drivetrain;
         this.driver = driver;
         this.originalTargetPose = targetPose;
-        this.finishAutomatically = finishAutomatically;
-        this.onTarget = onTarget;
 
         addRequirements(drivetrain);
 
         initLogging();
-    }
-    
-    public PointAtPoint(Translation2d targetPose, Swerve drivetrain, XboxController driver) {
-        this(targetPose, drivetrain, driver, false, (v) -> {});
     }
 
     public PointAtPoint(double targetX, double targetY, Swerve drivetrain, XboxController driver) {
@@ -150,9 +138,6 @@ public class PointAtPoint extends Command {
         // LightningShuffleboard.setBool("Point-At-Point", "In Tolerance", inTolerance());
 
         updateLogging();
-
-        if (finishAutomatically)
-            onTarget.accept(inTolerance());
     }
 
     /**
@@ -177,7 +162,7 @@ public class PointAtPoint extends Command {
 
     @Override
     public boolean isFinished() {
-        if (DriverStation.isAutonomous() || finishAutomatically) {
+        if (DriverStation.isAutonomous()) {
             return inTolerance();
         }
         return false;
