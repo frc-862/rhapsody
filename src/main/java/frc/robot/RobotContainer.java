@@ -300,7 +300,7 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
 		new Trigger(() -> indexer.hasNote() && DriverStation.isEnabled())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
-				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+				.whileTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
 		new Trigger(() -> DriverStation.isDisabled() && triggerInit 
 				&& !(limelights.getStopMe().hasTarget() || drivetrain.isInField() || drivetrain.isStable()))

@@ -18,35 +18,22 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
+                  "waitTime": 3.0
                 }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SF-C2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
-                }
-              }
-            ]
+            "pathName": "SB-F4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Cand-C2"
+            "name": "Chase-Pieces"
           }
         },
         {
@@ -56,19 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "C2-C3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop-Flywheel"
+                  "pathName": "F4-BS"
                 }
               }
             ]
@@ -85,13 +60,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Point-At-Speaker"
+                        "name": "Point-At-Speaker-left"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Smart-Collect"
+                        "name": "preAim"
                       }
                     }
                   ]
@@ -100,16 +75,29 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.0
+                  "waitTime": 3.0
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "Cand-C3"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BS-F4"
           }
         }
       ]

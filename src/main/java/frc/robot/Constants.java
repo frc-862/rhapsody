@@ -36,7 +36,7 @@ public class Constants {
     public static final String HOOT_PATH = "U/logs"; // "/home/lvuser/logs";
 
     public class DrivetrainConstants {
-        public static final double MaxSpeed = Units.feetToMeters(16.5); // 16.5 ft/s to meters per second top speed (5.0292m/s)
+        public static final double MaxSpeed = Units.feetToMeters(18); // 16.5 ft/s to meters per second top speed (5.0292m/s)
         private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
         public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
         TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
@@ -182,7 +182,7 @@ public class Constants {
 
         // The stator current at which the wheels start to slip;
         // This needs to be tuned to your individual robot
-        private static final double kSlipCurrentA = 50d;
+        private static final double kSlipCurrentA = 60d;
 
         // Theoretical free speed (m/s) at 12v applied output;
         // This needs to be tuned to your individual robot
@@ -547,6 +547,7 @@ public class Constants {
                 put(1.64d, 45d);
                 put(2d, 41d);
                 put(2.5d, 36d);
+                put(2.9d, 33.5d);
                 put(3d, 32.5d);
                 put(3.51d, 29.5d);
                 put(4.02d, 28.25d);
@@ -564,6 +565,7 @@ public class Constants {
                 put(1.64d, 2500d);
                 put(2d, 2500d);
                 put(2.5d, 3200d);
+                put(2.9d, 3550d);
                 put(3d, 3800d);
                 put(3.51d, 4000d);
                 put(4.02d, 4300d);
