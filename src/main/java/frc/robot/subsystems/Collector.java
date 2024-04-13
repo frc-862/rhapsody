@@ -7,6 +7,8 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -39,7 +41,6 @@ public class Collector extends SubsystemBase {
                 CollectorConstants.COLLECTOR_MOTOR_INVERTED,
                 CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT,
                 CollectorConstants.COLLECTOR_MOTOR_BRAKE_MODE);
-
         motor.configPIDF(0, CollectorConstants.MOTOR_KP, CollectorConstants.MOTOR_KI,
                 CollectorConstants.MOTOR_KD, CollectorConstants.MOTOR_KS, CollectorConstants.MOTOR_KV);
 
@@ -120,5 +121,15 @@ public class Collector extends SubsystemBase {
      */
     public void stop() {
         setPower(0d);
+    }
+
+    public void setAutonCurrentLimit(){
+        motor.applyConfig(new TalonFXConfiguration().withCurrentLimits(
+            new CurrentLimitsConfigs().withStatorCurrentLimit(CollectorConstants.AUTON_COLLECTOR_STATOR_LIMIT)));
+    }
+
+    public void setTeleopCurrentLimit(){
+        motor.applyConfig(new TalonFXConfiguration().withCurrentLimits(
+            new CurrentLimitsConfigs().withStatorCurrentLimit(CollectorConstants.COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT)));
     }
 }
