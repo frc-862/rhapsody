@@ -47,6 +47,8 @@ public class NotePass extends Command {
 	 * @param drivetrain subsystem
 	 * @param pivot    subsystem
 	 * @param flywheel subsystem
+	 * @param driver   the driver's controller, used for drive input
+	 * @param indexer  subsystem
 	 */
 	public NotePass(Swerve drivetrain, Flywheel flywheel, Pivot pivot, XboxControllerFilter driver, Indexer indexer) {
 		this.drivetrain = drivetrain;
@@ -62,7 +64,9 @@ public class NotePass extends Command {
 	public void initialize() {
 		if(isBlueAlliance()){
 			targetPose = DrivetrainConstants.BLUE_CORNER_POSE;
-		} else targetPose = DrivetrainConstants.RED_CORNER_POSE;
+		} else {
+			targetPose = DrivetrainConstants.RED_CORNER_POSE;
+		}
 	}
 
 	@Override
