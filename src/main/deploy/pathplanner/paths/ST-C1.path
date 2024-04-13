@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7121783474336195,
-        "y": 6.739121939782341
+        "x": 1.3041949160821413,
+        "y": 6.916726910376898
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5770914424711733,
-        "y": 6.915037974220092
+        "x": 1.738340399757724,
+        "y": 7.084464938160646
       },
       "isLocked": false,
       "linkedName": "SubwooferTop"
@@ -20,8 +20,8 @@
         "y": 7.007485005961003
       },
       "prevControl": {
-        "x": 2.0485713043498155,
-        "y": 6.887303864697819
+        "x": 2.1527519978116896,
+        "y": 7.005529395674177
       },
       "nextControl": null,
       "isLocked": false,
@@ -40,7 +40,7 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": 0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Top side paths",

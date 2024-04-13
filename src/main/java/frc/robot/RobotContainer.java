@@ -296,27 +296,17 @@ public class RobotContainer extends LightningContainer {
 						.alongWith(new InstantCommand(() -> flywheel.resetBias())));
 
 		/* Other */
-		new Trigger(
-				() -> ((limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())
-						&& DriverStation.isEnabled()))
+		new Trigger(() -> ((limelights.getStopMe().hasTarget()) && DriverStation.isEnabled()))
 				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState()
-				|| collector.getEntryBeamBreakState())
+		new Trigger(() -> indexer.hasNote() && DriverStation.isEnabled())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
-				.whileTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
-		new Trigger(() -> drivetrain.isInField() && triggerInit)
-				.whileFalse(leds.enableState(LED_STATES.BAD_POSE));
-		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled()
-				&& !(limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget()
-						|| limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget()))
+				.onTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+
+		new Trigger(() -> DriverStation.isDisabled() && triggerInit 
+				&& !(limelights.getStopMe().hasTarget() || drivetrain.isInField() || drivetrain.isStable()))
 				.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
-		new Trigger(() -> DriverStation.isDisabled()
-				&& !(limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget()
-						|| limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget()))
-				.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
-		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled()
-				&& (limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget()
-						|| limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget()))
+		new Trigger(() -> drivetrain.isStable() && DriverStation.isDisabled() && drivetrain.isInField()
+				&& limelights.getStopMe().hasTarget() && triggerInit)
 				.whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
 		triggerInit = true;
 
