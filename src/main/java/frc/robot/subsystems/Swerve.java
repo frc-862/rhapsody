@@ -53,7 +53,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private boolean disableVision = false;
     private boolean robotCentricControl = false;
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
+    private double speedMult = 1;
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
+    private double angularMult = 1;
     private LinearFilter xFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter yFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter rotFilter = LinearFilter.singlePoleIIR(2, 0.01);
@@ -327,12 +329,20 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public void setSlowMode(boolean slow) {
         if (slow) {
-            maxSpeed = DrivetrainConstants.MaxSpeed * DrivetrainConstants.SLOW_SPEED_MULT;
-            maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT * DrivetrainConstants.SLOW_ROT_MULT;
+            speedMult = DrivetrainConstants.SLOW_SPEED_MULT;
+            angularMult = DrivetrainConstants.SLOW_ROT_MULT;
         } else {
-            maxSpeed = DrivetrainConstants.MaxSpeed;
-            maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
+            speedMult = 1;
+            angularMult = 1;
         }
+    }
+
+    public double getSpeedMult() {
+        return speedMult;
+    }
+
+    public double getRotMult() {
+        return angularMult;
     }
 
     public boolean isInField() {

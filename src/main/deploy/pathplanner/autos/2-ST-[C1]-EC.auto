@@ -25,6 +25,31 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Enable-Vision"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Flywheel"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -39,33 +64,26 @@
                 "data": {
                   "name": "Smart-Collect"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Flywheel"
+                }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point-At-Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "preAim"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
-                }
-              }
-            ]
+            "name": "Point-At-Speaker"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         },
         {
@@ -90,6 +108,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "New Folder",
   "choreoAuto": false
 }

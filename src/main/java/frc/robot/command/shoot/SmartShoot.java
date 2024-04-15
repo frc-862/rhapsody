@@ -41,15 +41,14 @@ public class SmartShoot extends Command {
 	/**
 	 * SmartShoot to control flywheel, pivot, drivetrain, and indexer
 	 * 
-	 * @param flywheel   subsystem to set target RPM
-	 * @param pivot      subsystem to set target angle
+	 * @param flywheel subsystem to set target RPM
+	 * @param pivot subsystem to set target angle
 	 * @param drivetrain subsystem to get distance from speaker
-	 * @param indexer    subsystem to set power
-	 * @param collector  subsystem to set power
-	 * @param leds       subsystem to provide driver feedback
+	 * @param indexer subsystem to set power
+	 * @param collector subsystem to set power
+	 * @param leds subsystem to provide driver feedback
 	 */
-	public SmartShoot(Flywheel flywheel, Pivot pivot, Swerve drivetrain, Indexer indexer, Collector collector,
-			LEDs leds) {
+	public SmartShoot(Flywheel flywheel, Pivot pivot, Swerve drivetrain, Indexer indexer, Collector collector, LEDs leds) {
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 		this.drivetrain = drivetrain;

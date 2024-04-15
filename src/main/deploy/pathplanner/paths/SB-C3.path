@@ -3,32 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3182397535966242,
-        "y": 3.9474882553368715
+        "x": 0.9626945359454185,
+        "y": 3.9699735890199306
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.854549532589,
-        "y": 3.9474882553368715
+        "x": 1.4990043149377943,
+        "y": 3.9699735890199306
       },
       "isLocked": false,
-      "linkedName": "SubwooferBottom"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.5292958694025494,
-        "y": 4.123137615644601
+        "x": 2.6460991383521244,
+        "y": 4.09478126648561
       },
       "prevControl": {
-        "x": 1.8950725343919426,
-        "y": 4.123137615644601
+        "x": 2.0118758033415176,
+        "y": 4.09478126648561
       },
       "nextControl": {
-        "x": 2.7144209061955142,
-        "y": 4.123137615644601
+        "x": 2.8312241751450893,
+        "y": 4.09478126648561
       },
       "isLocked": false,
-      "linkedName": "C3"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -44,7 +44,13 @@
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -55,7 +61,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": -33.32764937243033,
     "rotateFast": true
   },
   "reversed": false,

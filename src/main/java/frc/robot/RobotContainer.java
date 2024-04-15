@@ -249,13 +249,14 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getLeftBumper).whileTrue(
 				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0d));
 
-		// new Trigger(driver::getYButton)
-		// .whileTrue(new MoveToPose(AutonomousConstants.TARGET_POSE, drivetrain));
+		new Trigger(driver::getYButton)
+		.whileTrue(new NotePass(drivetrain, flywheel, pivot, driver, indexer)
+				.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* COPILOT */
-		new Trigger(coPilot::getBButton)
+		new Trigger(() -> (coPilot.getBButton() && !driver.getRightBumper()))
 				.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
 						.andThen(new SmartCollect(() -> 0.65, () -> 0.9, collector, indexer, pivot, flywheel))
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
@@ -265,10 +266,10 @@ public class RobotContainer extends LightningContainer {
 		// .deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 
 		// cand shots for the robot
-		new Trigger(coPilot::getXButton)
+		new Trigger(() -> coPilot.getXButton() && !driver.getAButton())
 				.whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		// new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
-		new Trigger(coPilot::getYButton).whileTrue(new NotePass(drivetrain, flywheel, pivot, driver, indexer));
+		// new Trigger(coPilot::getYButton).whileTrue(new NotePass(drivetrain, flywheel, pivot, driver, indexer));
 		// new Trigger(coPilot::getYButton).whileTrue(new Tune(flywheel, pivot));
 		// .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot)
@@ -295,27 +296,17 @@ public class RobotContainer extends LightningContainer {
 						.alongWith(new InstantCommand(() -> flywheel.resetBias())));
 
 		/* Other */
-		new Trigger(
-				() -> ((limelights.getStopMe().hasTarget() || limelights.getChamps().hasTarget())
-						&& DriverStation.isEnabled()))
+		new Trigger(() -> ((limelights.getStopMe().hasTarget()) && DriverStation.isEnabled()))
 				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		new Trigger(() -> indexer.getEntryBeamBreakState() || indexer.getExitBeamBreakState()
-				|| collector.getEntryBeamBreakState())
+		new Trigger(() -> indexer.hasNote() && DriverStation.isEnabled())
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.whileTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
-		new Trigger(() -> drivetrain.isInField() && triggerInit)
-				.whileFalse(leds.enableState(LED_STATES.BAD_POSE));
-		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled()
-				&& !(limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget()
-						|| limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget()))
+
+		new Trigger(() -> DriverStation.isDisabled() && triggerInit 
+				&& !(limelights.getStopMe().hasTarget() || drivetrain.isInField() || drivetrain.isStable()))
 				.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
-		new Trigger(() -> DriverStation.isDisabled()
-				&& !(limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget()
-						|| limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget()))
-				.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
-		new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled()
-				&& (limelights.getStopMe().getBlueAlliancePose().getMoreThanOneTarget()
-						|| limelights.getChamps().getBlueAlliancePose().getMoreThanOneTarget()))
+		new Trigger(() -> drivetrain.isStable() && DriverStation.isDisabled() && drivetrain.isInField()
+				&& limelights.getStopMe().hasTarget() && triggerInit)
 				.whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
 		triggerInit = true;
 
@@ -378,8 +369,8 @@ public class RobotContainer extends LightningContainer {
 		/* driver */
 		drivetrain.registerTelemetry(logger::telemeterize);
 
-		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(() -> -driver.getLeftY(),
-				() -> -driver.getLeftX(), () -> -driver.getRightX()));
+		drivetrain.setDefaultCommand(drivetrain.applyPercentRequestField(() -> -(driver.getLeftY() * drivetrain.getSpeedMult()),
+				() -> -(driver.getLeftX() * drivetrain.getSpeedMult()), () -> -(driver.getRightX() * drivetrain.getRotMult())));
 		// .alongWith(new CollisionDetection(drivetrain, CollisionType.TELEOP)));
 
 		/* copilot */

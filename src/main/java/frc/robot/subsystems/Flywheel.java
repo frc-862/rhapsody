@@ -99,8 +99,8 @@ public class Flywheel extends SubsystemBase {
     @Override
     public void periodic() {
         if (coast) {
-            bottomMotor.set(0d);
-            topMotor.set(0d);
+            applyPowerTop(-8.33d);
+            applyPowerBottom(-8.33d);
         } else {
             applyPowerTop(topTargetRPS + bias);
             applyPowerBottom(bottomTargetRPS + bias);

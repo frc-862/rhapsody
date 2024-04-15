@@ -29,7 +29,7 @@ import frc.thunder.shuffleboard.LightningShuffleboard;
 public class NotePass extends Command {
 
 	private final Swerve drivetrain;
-  	private final Flywheel flywheel;
+	private final Flywheel flywheel;
 	private final Pivot pivot;
 	private Translation2d targetPose;
 	private double currentHeading;
@@ -37,7 +37,7 @@ public class NotePass extends Command {
 	private double feedForwardOutput;
 	private double pidOutput;
 	private PIDController pidController = VisionConstants.COMBO_CONTROLLER; // TAG_AIM_CONTROLLER
-    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.25, 0.5);
+	private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.25, 0.5);
 	private XboxControllerFilter driver;
 	private Indexer indexer;
 
@@ -45,10 +45,10 @@ public class NotePass extends Command {
 	 * Creates a new NotePass.
 	 *
 	 * @param drivetrain subsystem
-	 * @param pivot    subsystem
+	 * @param pivot subsystem
 	 * @param flywheel subsystem
-	 * @param driver   the driver's controller, used for drive input
-	 * @param indexer  subsystem
+	 * @param driver the driver's controller, used for drive input
+	 * @param indexer subsystem
 	 */
 	public NotePass(Swerve drivetrain, Flywheel flywheel, Pivot pivot, XboxControllerFilter driver, Indexer indexer) {
 		this.drivetrain = drivetrain;
@@ -62,7 +62,7 @@ public class NotePass extends Command {
 
 	@Override
 	public void initialize() {
-		if(isBlueAlliance()){
+		if (isBlueAlliance()) {
 			targetPose = DrivetrainConstants.BLUE_CORNER_POSE;
 		} else {
 			targetPose = DrivetrainConstants.RED_CORNER_POSE;
@@ -72,28 +72,28 @@ public class NotePass extends Command {
 	@Override
 	public void execute() {
 		Pose2d pose = drivetrain.getPose();
-        var deltaX = targetPose.getX() - pose.getX();
-        var deltaY = targetPose.getY() - pose.getY();
+		var deltaX = targetPose.getX() - pose.getX();
+		var deltaY = targetPose.getY() - pose.getY();
 
-        currentHeading = (pose.getRotation().getDegrees() + 360) % 360;
+		currentHeading = (pose.getRotation().getDegrees() + 360) % 360;
 
-        // Calculate vector to target, add 180 to make it point backwards
-        targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 180; 
-        targetHeading = (targetHeading + 360) % 360; // Modulo 360 to keep it in the range of 0-360
-        
-        pidOutput = pidController.calculate(currentHeading, targetHeading);
-        feedForwardOutput = feedforward.calculate(pidOutput);
-        
-        if(inTolerance()) {
-            feedForwardOutput = 0;
-        }
+		// Calculate vector to target, add 180 to make it point backwards
+		targetHeading = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 180;
+		targetHeading = (targetHeading + 360) % 360; // Modulo 360 to keep it in the range of 0-360
 
-        drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), feedForwardOutput);
-		
+		pidOutput = pidController.calculate(currentHeading, targetHeading);
+		feedForwardOutput = feedforward.calculate(pidOutput);
+
+		if (inTolerance()) {
+			feedForwardOutput = 0;
+		}
+
+		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), feedForwardOutput);
+
 		flywheel.setAllMotorsRPM(ShooterConstants.NOTEPASS_SPEED_MAP.get(drivetrain.distanceToCorner()) + flywheel.getBias());
 		pivot.setTargetAngle(ShooterConstants.NOTEPASS_ANGLE_MAP.get(drivetrain.distanceToCorner()) + pivot.getBias());
 
-		if (flywheel.allMotorsOnTarget() && pivot.onTarget() /*&& inTolerance() */) {
+		if (flywheel.allMotorsOnTarget() && pivot.onTarget() && inTolerance()) {
 			indexer.indexUp();
 			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
@@ -120,13 +120,13 @@ public class NotePass extends Command {
 	}
 
 	private boolean isBlueAlliance() {
-        var alliance = DriverStation.getAlliance();
-        return alliance.isPresent() && alliance.get() == Alliance.Blue;
-    }
+		var alliance = DriverStation.getAlliance();
+		return alliance.isPresent() && alliance.get() == Alliance.Blue;
+	}
 
 	private boolean inTolerance() {
-        double difference = Math.abs(currentHeading - targetHeading);
-        difference = difference > 180 ? 360 - difference : difference;
-        return difference <= VisionConstants.POINTATPOINT_ALIGNMENT_TOLERANCE; // TODO not has Target but if the correct filter is set
-    }
+		double difference = Math.abs(currentHeading - targetHeading);
+		difference = difference > 180 ? 360 - difference : difference;
+		return difference <= VisionConstants.POINTATPOINT_ALIGNMENT_TOLERANCE; // TODO not has Target but if the correct filter is set
+	}
 }

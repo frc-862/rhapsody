@@ -3,47 +3,50 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.49989451479273267,
-        "y": 1.5050796425884936
+        "x": 2.3679949214391995,
+        "y": 3.4664076175513263
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.958851917703837,
-        "y": 2.5062034739454107
+        "x": 2.1364289542011607,
+        "y": 3.4537736294760353
       },
       "isLocked": false,
-      "linkedName": "BottomBack"
+      "linkedName": "C3"
     },
     {
       "anchor": {
-        "x": 0.9626945359454185,
-        "y": 3.9699735890199306
+        "x": 2.1103565174320065,
+        "y": 4.133925300660873
       },
       "prevControl": {
-        "x": 1.1141331061329973,
-        "y": 2.9196157097460684
+        "x": 2.3679949214391995,
+        "y": 4.157346973752436
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "SubwooferBottom"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 122.07002657156208,
+    "rotation": -34.777831366363976,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Bottom side paths",
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "folder": "Return Paths",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }

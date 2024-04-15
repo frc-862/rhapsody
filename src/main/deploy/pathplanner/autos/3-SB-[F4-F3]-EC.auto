@@ -18,35 +18,22 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
+                  "waitTime": 3.0
                 }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SF-C2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
-                }
-              }
-            ]
+            "pathName": "SB-F4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Cand-C2"
+            "name": "Chase-Pieces"
           }
         },
         {
@@ -56,13 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "C2-C3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
+                  "pathName": "F4-BS"
                 }
               }
             ]
@@ -79,13 +60,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Point-At-Speaker"
+                        "name": "Point-At-Speaker-left"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Smart-Collect"
+                        "name": "preAim"
                       }
                     }
                   ]
@@ -94,16 +75,10 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.0
+                  "waitTime": 2.5
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Cand-C3"
           }
         },
         {
@@ -111,18 +86,18 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "C3-F3"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
-                  "name": "Stop-Flywheel"
+                  "name": "Smart-Shoot"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BS-F3"
           }
         },
         {
@@ -144,7 +119,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Collect"
+                  "name": "preAim"
                 }
               }
             ]
@@ -167,7 +142,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Smart-Collect"
+                        "name": "preAim"
                       }
                     }
                   ]
@@ -176,16 +151,29 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.0
+                  "waitTime": 1.5
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "Cand-3.5"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Drive"
+                }
+              }
+            ]
           }
         }
       ]

@@ -18,7 +18,32 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
+                  "waitTime": 6.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Enable-Vision"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Flywheel"
                 }
               }
             ]
@@ -38,6 +63,12 @@
                 "type": "named",
                 "data": {
                   "name": "Smart-Collect"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Flywheel"
                 }
               }
             ]
@@ -65,6 +96,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "New Folder",
   "choreoAuto": false
 }
