@@ -256,7 +256,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* COPILOT */
-		new Trigger(coPilot::getBButton)
+		new Trigger(() -> (coPilot.getBButton() && !driver.getRightBumper()))
 				.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
 						.andThen(new SmartCollect(() -> 0.65, () -> 0.9, collector, indexer, pivot, flywheel))
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
@@ -266,7 +266,7 @@ public class RobotContainer extends LightningContainer {
 		// .deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 
 		// cand shots for the robot
-		new Trigger(coPilot::getXButton)
+		new Trigger(() -> coPilot.getXButton() && !driver.getAButton())
 				.whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		// new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new NotePass(drivetrain, flywheel, pivot, driver, indexer));
