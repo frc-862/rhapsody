@@ -122,12 +122,6 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Smart-Collect"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
                         "name": "preAim"
                       }
                     }
@@ -144,9 +138,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "Smart-Shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Drive"
+                }
+              }
+            ]
           }
         }
       ]

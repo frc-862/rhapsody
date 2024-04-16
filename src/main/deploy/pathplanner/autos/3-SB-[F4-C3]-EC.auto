@@ -185,6 +185,6 @@
       ]
     }
   },
-  "folder": "Hide",
+  "folder": null,
   "choreoAuto": false
 }
