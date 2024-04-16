@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 2.0
                 }
               }
             ]
@@ -47,7 +47,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": null
+                        "pathName": "F4-BP"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Note-Pass"
                       }
                     }
                   ]
@@ -60,6 +66,163 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BP-F4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Chase-Pieces"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "F4-BP"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Note-Pass"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Has-Piece"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BP-TP"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Note-Pass"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Has-Piece"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TP-F2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Chase-Pieces"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "F2-TP"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Note-Pass"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Has-Piece"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TP-F1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Chase-Pieces"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "F1-TP"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Note-Pass"
           }
         }
       ]
