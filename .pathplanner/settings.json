@@ -3,10 +3,10 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "Align Paths",
-    "Bottom side paths",
     "Align",
+    "Bottom side paths",
     "Return Paths",
+    "Silly",
     "Top side paths"
   ],
   "autoFolders": [],
