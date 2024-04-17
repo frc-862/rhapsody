@@ -90,6 +90,12 @@
                 "data": {
                   "name": "Smart-Shoot"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Drive"
+                }
               }
             ]
           }

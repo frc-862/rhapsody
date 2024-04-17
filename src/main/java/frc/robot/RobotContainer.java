@@ -192,6 +192,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Bias-Down", new InstantCommand(() -> pivot.decreaseBias()));
 		NamedCommands.registerCommand("End-Kama", new InstantCommand(() -> flywheel.endKama()));
 		NamedCommands.registerCommand("Start-Kama", new InstantCommand(() -> flywheel.startKama()));
+		NamedCommands.registerCommand("Note-Pass", new NotePass(drivetrain, flywheel, pivot, driver, indexer));
 		// NamedCommands.registerCommand("Reverse-Cheese-Paste", new ReverseChasePieces(drivetrain, collector, indexer, limelights));
 
 		// make sure named commands are initialized before autobuilder!
