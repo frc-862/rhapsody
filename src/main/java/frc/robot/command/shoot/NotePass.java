@@ -1,5 +1,7 @@
 package frc.robot.command.shoot;
 
+import java.sql.Driver;
+import java.util.function.BooleanSupplier;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -28,6 +30,7 @@ public class NotePass extends Command {
 	private final Swerve drivetrain;
 	private final Flywheel flywheel;
 	private final Pivot pivot;
+
 	private Translation2d targetPose;
 	private double currentHeading;
 	private double targetHeading;
@@ -38,7 +41,6 @@ public class NotePass extends Command {
 	private SimpleMotorFeedforward feedforward = PassConstants.FEED_FORWARD;
 	private XboxControllerFilter driver;
 	private Indexer indexer;
-
 
 	private DoubleLogEntry currentHeadingLog;
 	private DoubleLogEntry targetHeadingLog;
@@ -63,7 +65,11 @@ public class NotePass extends Command {
 		this.driver = driver;
 		this.indexer = indexer;
 
-		addRequirements(flywheel, pivot, drivetrain, indexer);
+		if (DriverStation.isAutonomous()) {
+			addRequirements(flywheel, pivot, drivetrain, indexer);
+		} else {
+			addRequirements(flywheel, pivot, drivetrain);
+		}
 	}
 
 	@Override
@@ -103,7 +109,8 @@ public class NotePass extends Command {
 		pivot.setTargetAngle(ShooterConstants.NOTEPASS_ANGLE_MAP.get(distanceToCorner) + pivot.getBias());
 
 		if (flywheel.allMotorsOnTarget() && pivot.onTarget() && inTolerance()) {
-			indexer.indexUp();
+			if (DriverStation.isAutonomous())
+				indexer.indexUp();
 			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
 		}
@@ -115,7 +122,8 @@ public class NotePass extends Command {
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
 		pivot.setTargetAngle(pivot.getStowAngle());
-		indexer.stop();
+		if (DriverStation.isAutonomous())
+			indexer.stop();
 	}
 
 	@Override
@@ -131,7 +139,7 @@ public class NotePass extends Command {
 	private boolean inTolerance() {
 		double difference = Math.abs(currentHeading - targetHeading);
 		difference = difference > 180 ? 360 - difference : difference;
-		return difference <= PassConstants.POINT_TOLERANCE; 
+		return difference <= PassConstants.POINT_TOLERANCE;
 	}
 
 	/**
@@ -157,9 +165,9 @@ public class NotePass extends Command {
 	}
 
 	/**
-     * update logging
-     */
-    public void updateLogging() {
+	 * update logging
+	 */
+	public void updateLogging() {
 		currentHeadingLog.append(currentHeading);
 		targetHeadingLog.append(targetHeading);
 		pidOutputLog.append(feedForwardOutput);
@@ -167,5 +175,5 @@ public class NotePass extends Command {
 
 		headingOnTargetLog.append(inTolerance());
 		shooterOnTargetLog.append(flywheel.allMotorsOnTarget() && pivot.onTarget());
-    }
+	}
 }
