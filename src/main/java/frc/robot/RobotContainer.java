@@ -107,7 +107,6 @@ public class RobotContainer extends LightningContainer {
 	Telemetry logger;
 	
 	private Boolean triggerInit;
-	private boolean notePassOnTarget = false;
 	public static double bias = 0d;
 
 	@Override

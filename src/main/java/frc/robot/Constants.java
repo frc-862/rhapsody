@@ -18,6 +18,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -161,6 +162,13 @@ public class Constants {
 
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final double CHASE_PIECE_ALIGNMENT_TOLERANCE = 3d;
+    }
+
+    public static class PassConstants {
+        public static final double POINT_TOLERANCE = 3d;
+
+        public static final PIDController PASS_CONTROLLER = new PIDController(0.1, 0, 0.01);
+        public static final SimpleMotorFeedforward FEED_FORWARD = new SimpleMotorFeedforward(0.25, 0.5);
     }
 
     public static class TunerConstants {
