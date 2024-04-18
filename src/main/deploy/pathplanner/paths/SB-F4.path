@@ -39,8 +39,8 @@
   },
   "goalEndState": {
     "velocity": 1.0,
-    "rotation": 1.301952672578864,
-    "rotateFast": false
+    "rotation": 0.0,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Bottom side paths",
