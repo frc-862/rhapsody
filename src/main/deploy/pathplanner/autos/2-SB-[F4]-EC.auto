@@ -67,12 +67,6 @@
               }
             ]
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BS-F3"
-          }
         }
       ]
     }
