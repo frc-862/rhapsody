@@ -45,6 +45,12 @@
                 "data": {
                   "pathName": "F4-BS-Close"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "preAim"
+                }
               }
             ]
           }
@@ -60,7 +66,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Point-At-Speaker-left"
+                        "name": "Point-At-Speaker"
                       }
                     },
                     {
@@ -98,12 +104,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BS-F4"
           }
         }
       ]
