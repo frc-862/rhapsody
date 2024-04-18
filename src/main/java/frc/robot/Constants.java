@@ -376,6 +376,8 @@ public class Constants {
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 90;
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
 
+        public static final double COLLECTOR_DEBOUNCE_TIME = 0.5d;
+
         public static final double MOTOR_KP = 0;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
@@ -447,7 +449,7 @@ public class Constants {
 
         public static final double INDEXER_DEFAULT_POWER = 1d;
         public static final double INDEXER_MANUAL_POWER = 1d;
-        public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
+        public static final double INDEXER_DEBOUNCE_TIME = 0.5d;
         public static final double INDEXER_SYSTEST_POWER = 0.25d;
     }
 
