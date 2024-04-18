@@ -100,9 +100,10 @@ public class SmartCollect extends Command {
                     indexer.setPower(0.9 * indexerPower.getAsDouble());
                 } else if (reversedFromExit) {
                     indexer.stop();
-                    if(!DriverStation.isAutonomous()){
+                    if (!DriverStation.isAutonomous()){
                         flywheel.coast(true);
                     }
+                    new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
                     new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
                 }
                 break;
