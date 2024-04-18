@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": null
+                  "pathName": "F4-BS-Close"
                 }
               }
             ]
@@ -75,7 +75,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 2.5
                 }
               }
             ]
@@ -103,7 +103,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BS-F4"
+            "pathName": "BS-F5-Close"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Chase-Pieces"
           }
         }
       ]
