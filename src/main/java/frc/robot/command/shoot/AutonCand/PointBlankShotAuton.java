@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Indexer;
@@ -13,6 +14,7 @@ public class PointBlankShotAuton extends Command {
     private final Flywheel flywheel;
     private final Pivot pivot;
     private final Indexer indexer;
+    private final Collector collector;
 
     private boolean shot = false;
     private double startTime = 0;
@@ -27,12 +29,13 @@ public class PointBlankShotAuton extends Command {
      * @param pivot    subsystem
      * @param indexer  subsystem
      */
-    public PointBlankShotAuton(Flywheel flywheel, Pivot pivot, Indexer indexer) {
+    public PointBlankShotAuton(Flywheel flywheel, Pivot pivot, Indexer indexer, Collector collector) {
         this.flywheel = flywheel;
         this.pivot = pivot;
         this.indexer = indexer;
+        this.collector = collector;
 
-        addRequirements(flywheel, pivot, indexer);
+        addRequirements(flywheel, pivot, indexer, collector);
     }
 
     @Override
@@ -57,6 +60,7 @@ public class PointBlankShotAuton extends Command {
             shot = true;
             shotTime = Timer.getFPGATimestamp();
             indexer.indexUp();
+            collector.setPower(1d);
         }
 
         flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());
@@ -68,6 +72,7 @@ public class PointBlankShotAuton extends Command {
         flywheel.coast(true);
         pivot.setTargetAngle(pivot.getStowAngle());
         indexer.stop();
+        collector.stop();
     }
 
     @Override
