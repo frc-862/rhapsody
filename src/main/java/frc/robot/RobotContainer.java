@@ -258,7 +258,7 @@ public class RobotContainer extends LightningContainer {
 		/* COPILOT */
 		new Trigger(() -> (coPilot.getBButton() && !driver.getRightBumper()))
 				.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
-						.andThen(new SmartCollect(() -> 1d, () -> .9, collector, indexer, pivot, flywheel))
+						.andThen(new SmartCollect(() -> 1d, () -> 1d, collector, indexer, pivot, flywheel))
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
 		// new Trigger(coPilot::getBButton)
