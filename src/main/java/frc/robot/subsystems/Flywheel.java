@@ -69,8 +69,6 @@ public class Flywheel extends SubsystemBase {
         bottomMotor.configPIDF(1, FlywheelConstants.BOTTOM_1_MOTOR_KP, FlywheelConstants.BOTTOM_1_MOTOR_KI,
             FlywheelConstants.BOTTOM_1_MOTOR_KD, FlywheelConstants.BOTTOM_1_MOTOR_KS, FlywheelConstants.BOTTOM_1_MOTOR_KV);
 
-        MotorSim topMotorSim = new MotorSim(DCMotor.getFalcon500(2), FlywheelConstants.GEAR_RATIO); 
-
         topMotor.applyConfig();
         bottomMotor.applyConfig();
 
