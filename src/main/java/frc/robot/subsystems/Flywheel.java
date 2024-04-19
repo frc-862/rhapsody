@@ -20,10 +20,11 @@ public class Flywheel extends SubsystemBase {
     private ThunderBird topMotor;
     private ThunderBird bottomMotor;
 
-    private FlywheelSim flywheelSim = new FlywheelSim(
-        DCMotor.getFalcon500(2), FlywheelConstants.GEAR_RATIO, FlywheelConstants.MOMENT_OF_INERTIA);
+    private FlywheelSim flywheelSimTop = new FlywheelSim(
+        DCMotor.getFalcon500(1), FlywheelConstants.GEAR_RATIO, FlywheelConstants.MOMENT_OF_INERTIA);
 
-    
+    private FlywheelSim flywheelSimBottom = new FlywheelSim(
+        DCMotor.getFalcon500(1), FlywheelConstants.GEAR_RATIO, FlywheelConstants.MOMENT_OF_INERTIA);
 
     private final VelocityVoltage topRPMPID = new VelocityVoltage(0);
     private final VelocityVoltage bottomRPMPID = new VelocityVoltage(0);
@@ -120,9 +121,11 @@ public class Flywheel extends SubsystemBase {
     }
 
     public void simulationPeriodic() {
-        flywheelSim.setInput(motorSim.getVelocity().getValue() * 60d * topMotor.getMotorVoltage().getValueAsDouble(),
-        bottomMotor.getVelocity().getValue() bottomMotor.getMotorVoltage().getValueAsDouble());
-        flywheelSim.update(0.01);
+        flywheelSimTop.setInput(topMotor.get() * 12);
+        flywheelSimTop.update(0.01);
+
+        flywheelSimBottom.setInput(bottomMotor.get() * 12);
+        flywheelSimBottom.update(0.01);
     }
 
     /**
