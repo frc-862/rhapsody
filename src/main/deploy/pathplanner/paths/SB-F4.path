@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3182397535966242,
-        "y": 3.9474882553368715
+        "x": 0.9626945359454185,
+        "y": 3.9699735890199306
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.1436198255133565,
-        "y": 1.8512344381172867
+        "x": 3.866981999299233,
+        "y": 1.7332038087756627
       },
       "isLocked": false,
       "linkedName": "SubwooferBottom"
     },
     {
       "anchor": {
-        "x": 7.234849785014885,
-        "y": 2.0523241046482092
+        "x": 7.052329539751803,
+        "y": 2.318745636064738
       },
       "prevControl": {
-        "x": 4.679311597015431,
-        "y": 1.0656298235673392
+        "x": 5.31912573097614,
+        "y": 0.9485777602083012
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,8 +38,8 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 16.587338556927435,
+    "velocity": 1.0,
+    "rotation": 1.301952672578864,
     "rotateFast": false
   },
   "reversed": false,

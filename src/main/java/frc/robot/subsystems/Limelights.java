@@ -2,10 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.function.Consumer;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants.VisionConstants.LimelightOrientation;
 import frc.robot.Constants.VisionConstants.Pipelines;
 import frc.thunder.util.Pose4d;
 import frc.thunder.vision.Limelight;
@@ -25,10 +22,9 @@ public class Limelights extends SubsystemBase {
         dust = new Limelight("limelight-dust", "10.8.62.12"); // LL2+ Front
         champs = new Limelight("limelight-champs", "10.8.62.13"); // LL3 Front
 
-        // TODO: make actual pipelines... maybe an enum? At least use constants
-        stopMe.setPipeline(0);
-        dust.setPipeline(0);
-        champs.setPipeline(0);
+        stopMe.setPipeline(Pipelines.TAG_PIPELINE);
+        dust.setPipeline(Pipelines.NOTE_PIPELINE);
+        champs.setPipeline(Pipelines.TAG_PIPELINE);
 
         setOrientations();
 

@@ -10,11 +10,13 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants;
 import frc.robot.Constants.CollectorConstants;
 import frc.thunder.hardware.ThunderBird;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Collector extends SubsystemBase {
 
@@ -27,9 +29,9 @@ public class Collector extends SubsystemBase {
             0, false, false, false);
 
     private boolean hasPiece;
+    private double targetPower;
 
     private DoubleLogEntry collectorPowerLog;
-    private BooleanLogEntry beamBreakLog;
     private BooleanLogEntry hasPieceLog;
 
     private Debouncer entryDebouncer = new Debouncer(0.05);
@@ -81,6 +83,7 @@ public class Collector extends SubsystemBase {
         // Convert from -1,1 to RPS
         power = power * 100;
         motor.setControl(velocityVoltage.withVelocity(power));
+        targetPower = power;
     }
 
     /**
@@ -105,6 +108,11 @@ public class Collector extends SubsystemBase {
     public void updateLogging() {
         collectorPowerLog.append(motor.get());
         hasPieceLog.append(hasPiece());
+
+        if(!DriverStation.isFMSAttached()) {
+            LightningShuffleboard.setDouble("Collector", "Collector power", getPower());
+            LightningShuffleboard.setDouble("Collector", "Collector target power", targetPower);
+        }
     }
 
     /**

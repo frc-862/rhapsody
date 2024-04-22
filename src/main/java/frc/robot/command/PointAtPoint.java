@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.PoseConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.shuffleboard.LightningShuffleboard;
@@ -67,7 +68,7 @@ public class PointAtPoint extends Command {
     }
 
     private Translation2d swapAlliance(Translation2d pose) {
-        return new Translation2d(VisionConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY());
+        return new Translation2d(PoseConstants.FIELD_LIMIT.getX() - pose.getX(), pose.getY());
     }
 
     private boolean inTolerance() {

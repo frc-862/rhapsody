@@ -108,8 +108,8 @@ public class Flywheel extends SubsystemBase {
     @Override
     public void periodic() {
         if (coast) {
-            bottomMotor.set(0d);
-            topMotor.set(0d);
+            applyPowerTop(-8.33d);
+            applyPowerBottom(-8.33d);
         } else {
             applyPowerTop(topTargetRPS + bias);
             applyPowerBottom(bottomTargetRPS + bias);
@@ -231,7 +231,7 @@ public class Flywheel extends SubsystemBase {
     }
 
     /**
-     * @return The bias to add to the target RPM of the flywheel
+     * @return The bias to add to the target RPS of the flywheel
      */
     public double getBias() {
         return bias;
@@ -277,8 +277,6 @@ public class Flywheel extends SubsystemBase {
     private void applyPowerTop(double targetRPS) {
         if(targetRPS > 100) {
             topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(false).withSlot(0));
-        // } else if (targetRPS > 50){
-        //     topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(1));
         } else {
             topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(0));
         }
@@ -291,8 +289,6 @@ public class Flywheel extends SubsystemBase {
     private void applyPowerBottom(double targetRPS) {
         if(targetRPS > 100) {
             bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(false).withSlot(0));
-        // } else if (targetRPS > 50){
-        //     bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(1));
         } else {
             bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(0));
         }

@@ -50,32 +50,32 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "race",
+                "type": "deadline",
                 "data": {
                   "commands": [
                     {
                       "type": "named",
                       "data": {
-                        "name": "Point-At-Speaker"
+                        "name": "Point-At-Speaker-left"
                       }
                     },
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 5.0
+                        "name": "preAim"
                       }
                     }
                   ]
                 }
               },
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "preAim"
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -90,8 +90,20 @@
                 "data": {
                   "name": "Smart-Shoot"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop-Drive"
+                }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BS-F4"
           }
         }
       ]

@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -146,6 +145,7 @@ public class LEDs extends SubsystemBase {
                 setStrandSingleHSV(1, 7, LEDsConstants.RED_HUE, 255, 255);
             }
         }
+        
         leds.setData(ledBuffer);
     }
 
@@ -157,9 +157,7 @@ public class LEDs extends SubsystemBase {
         return new StartEndCommand(
                 () -> {
                     ledStates.put(state, true);
-                    if (state.getPriority() > this.state.getPriority()) {
-                        this.state = state;
-                    }
+                    reloadStates();
                 },
                 () -> {
                     ledStates.put(state, false);
@@ -169,7 +167,6 @@ public class LEDs extends SubsystemBase {
 
     public void setState(LED_STATES state, boolean value) {
         ledStates.put(state, value);
-        System.out.println("Setting " + state + " to " + value);
     }
 
     public void reloadStates() {

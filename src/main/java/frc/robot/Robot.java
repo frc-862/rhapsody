@@ -38,7 +38,7 @@ public class Robot extends LightningRobot {
 
         RobotContainer container = (RobotContainer) getContainer();
         if (haveDriverStation) {
-            container.drivetrain.setSpeakerPose(DriverStation.getAlliance().get());
+            container.drivetrain.setAlliancePose(DriverStation.getAlliance().get());
         }
         container.pivot.resetBias();
 
