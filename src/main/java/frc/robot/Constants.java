@@ -717,7 +717,28 @@ public class Constants {
         public static final int PINK_HUE = 355;
 
         public enum LED_STATES {
-            CUSTOMCONTROL(0), DISABLED(1), EMERGENCY(2), START(3), GOOD_POSE(4), COLLECT_PLANNED(5), COLLECTED(6), SHOT(7), FINISHED_CLIMB(8), SHOOTING(9), COLLECTING(10), CHASING(11), CLIMBING(12), BAD_POSE(13), HAS_PIECE(14), HAS_VISION(15), DEFAULT(16), PIVOT_BOTTOM_SWITCH(17), PIVOT_TOP_SWITCH(18), COLLECTOR_BEAMBREAK(19), INDEXER_ENTER_BEAMBREAK(20), INDEXER_EXIT_BEAMBREAK(21);
+            CUSTOMCONTROL(0), 
+            DISABLED(1), 
+            EMERGENCY(2), 
+            START(3), 
+            GOOD_POSE(4), 
+            COLLECT_PLANNED(5), 
+            COLLECTED(6), 
+            SHOT(7), 
+            FINISHED_CLIMB(8), 
+            SHOOTING(9), 
+            COLLECTING(10), 
+            CHASING(11), 
+            CLIMBING(12), 
+            BAD_POSE(13), 
+            HAS_PIECE(14), 
+            HAS_VISION(15), 
+            DEFAULT(16), 
+            PIVOT_BOTTOM_SWITCH(17), 
+            PIVOT_TOP_SWITCH(18), 
+            COLLECTOR_BEAMBREAK(19), 
+            INDEXER_ENTER_BEAMBREAK(20), 
+            INDEXER_EXIT_BEAMBREAK(21);
 
             private final int priority;
 

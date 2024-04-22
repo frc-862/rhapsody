@@ -302,12 +302,22 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.whileTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
-		new Trigger(() -> DriverStation.isDisabled() && triggerInit 
-				&& !(limelights.getStopMe().hasTarget() || drivetrain.isInField() || drivetrain.isStable()))
-				.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
+		// new Trigger(() -> DriverStation.isDisabled() && triggerInit 
+		// 		&& !(limelights.getStopMe().hasTarget() || drivetrain.isInField() || drivetrain.isStable()))
+		// 		.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
+
+		// new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled() && !drivetrain.isInField()
+		// 		&& !limelights.getStopMe().hasTarget() && triggerInit)
+		// 		.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
+		
+		new Trigger(() -> ((!drivetrain.isStable() || !drivetrain.isInField() || !limelights.getStopMe().hasTarget())
+			 && DriverStation.isDisabled() && triggerInit))
+			.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
+
 		new Trigger(() -> drivetrain.isStable() && DriverStation.isDisabled() && drivetrain.isInField()
 				&& limelights.getStopMe().hasTarget() && triggerInit)
 				.whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
+
 		triggerInit = true;
 
 		new Trigger(() -> collector.getEntryBeamBreakState())
