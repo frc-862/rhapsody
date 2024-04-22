@@ -90,7 +90,7 @@ public class RobotContainer extends LightningContainer {
 	// Subsystems
 	public Swerve drivetrain;
 	private Limelights limelights;
-	private Collector collector;
+	public Collector collector;
 	private Flywheel flywheel;
 	public Pivot pivot;
 	private Indexer indexer;

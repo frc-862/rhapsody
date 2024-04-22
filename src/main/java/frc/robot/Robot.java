@@ -51,6 +51,8 @@ public class Robot extends LightningRobot {
 
         RobotContainer container = (RobotContainer) getContainer();
         container.drivetrain.disableVision();
+
+        container.collector.setAutonCurrentLimit();
     }
 
     @Override
@@ -59,5 +61,7 @@ public class Robot extends LightningRobot {
 
         RobotContainer container = (RobotContainer) getContainer();
         container.drivetrain.enableVision();
+
+        container.collector.setTeleopCurrentLimit();
     }
 }

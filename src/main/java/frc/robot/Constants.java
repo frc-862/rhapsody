@@ -366,6 +366,7 @@ public class Constants {
     public class CollectorConstants {
         public static final boolean COLLECTOR_MOTOR_INVERTED = true;
         public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 70;
+        public static final int AUTON_COLLECTOR_STATOR_LIMIT = 200;
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
 
         public static final double MOTOR_KP = 0;
