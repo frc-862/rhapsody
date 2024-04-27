@@ -11,12 +11,12 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.PoseConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
+import frc.thunder.filter.XboxControllerFilter;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 
@@ -24,7 +24,7 @@ public class ComboPoint extends Command {
     private double minPower = 0.3;
 
     private Swerve drivetrain;
-    private XboxController driver;
+    private XboxControllerFilter driver;
     private Limelight stopMe;
 
     private double pidOutput;
@@ -59,7 +59,7 @@ public class ComboPoint extends Command {
      * @param limelights for tag align
      * @param bias the bias to add from the target heading
      */
-    public ComboPoint(Translation2d targetPose, Swerve drivetrain, XboxController driver, Limelights limelights, double bias) {
+    public ComboPoint(Translation2d targetPose, Swerve drivetrain, XboxControllerFilter driver, Limelights limelights, double bias) {
         this.drivetrain = drivetrain;
         this.driver = driver;
         this.originalTargetPose = targetPose;

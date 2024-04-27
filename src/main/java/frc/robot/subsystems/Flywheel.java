@@ -1,13 +1,16 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
+
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
@@ -20,6 +23,7 @@ public class Flywheel extends SubsystemBase {
     private ThunderBird topMotor;
     private ThunderBird bottomMotor;
 
+    // sim flywheels
     private FlywheelSim flywheelSimTop = new FlywheelSim(
         DCMotor.getFalcon500(1), FlywheelConstants.GEAR_RATIO, FlywheelConstants.MOMENT_OF_INERTIA);
 
@@ -44,6 +48,10 @@ public class Flywheel extends SubsystemBase {
     private DoubleLogEntry topPowerLog;
     private DoubleLogEntry bottomPowerLog;
     private DoubleLogEntry biasLog;
+    private PIDController simTopFlywheelPID = new PIDController(FlywheelConstants.TOP_0_MOTOR_KP,
+        FlywheelConstants.TOP_0_MOTOR_KI, FlywheelConstants.TOP_0_MOTOR_KD);
+    private PIDController simBottomFlywheelPID = new PIDController(FlywheelConstants.BOTTOM_0_MOTOR_KP, 
+        FlywheelConstants.BOTTOM_0_MOTOR_KI, FlywheelConstants.BOTTOM_0_MOTOR_KD);
 
     public Flywheel() {
         boolean topMotorInvert = FlywheelConstants.MOTOR_TOP_INVERT_Rhapsody;
@@ -102,13 +110,6 @@ public class Flywheel extends SubsystemBase {
             LightningShuffleboard.setBoolSupplier("Flywheel", "Bottom on Target", () -> bottomMotorRPMOnTarget());
 
             LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", () -> getBias());
-        }
-    }
-
-    @Override
-    public void periodic() {
-        if (coast) {
-            applyPowerTop(-8.33d);
             applyPowerBottom(-8.33d);
         } else {
             applyPowerTop(topTargetRPS + bias);
@@ -119,10 +120,15 @@ public class Flywheel extends SubsystemBase {
     }
 
     public void simulationPeriodic() {
-        flywheelSimTop.setInput(topMotor.get() * 12);
-        flywheelSimTop.update(0.01);
+        // set unputs to the sim flywheels
 
-        flywheelSimBottom.setInput(bottomMotor.get() * 12);
+        double topPIDOutput = simTopFlywheelPID.calculate(flywheelSimTop.getAngularVelocityRPM(), topTargetRPS * 60);
+        double bottomPIDOutput = simBottomFlywheelPID.calculate(flywheelSimBottom.getAngularVelocityRPM(), bottomTargetRPS * 60);
+
+        flywheelSimTop.setInputVoltage(topPIDOutput * 12);
+        flywheelSimBottom.setInputVoltage(bottomPIDOutput * 12);
+
+        flywheelSimTop.update(0.01);
         flywheelSimBottom.update(0.01);
     }
 
@@ -173,6 +179,9 @@ public class Flywheel extends SubsystemBase {
      * @return The current RPM of flywheel top
      */
     public double getTopMotorRPM() {
+        if (RobotBase.isSimulation()){
+            return flywheelSimTop.getAngularVelocityRPM();
+        }
         return (topMotor.getVelocity().getValue() * 60d);
     }
 
@@ -180,6 +189,9 @@ public class Flywheel extends SubsystemBase {
      * @return The current RPM of flywheel bottom
      */
     public double getBottomMotorRPM() {
+        if (RobotBase.isSimulation()){
+            return flywheelSimBottom.getAngularVelocityRPM();
+        }
         return (bottomMotor.getVelocity().getValue() * 60d);
     }
 

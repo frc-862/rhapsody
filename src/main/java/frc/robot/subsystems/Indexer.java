@@ -3,10 +3,14 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -21,6 +25,10 @@ import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Indexer extends SubsystemBase {
+
+    // sim indexer
+    private LinearSystemSim indexerSim = new LinearSystemSim(LinearSystemId.identifyVelocitySystem(
+        IndexerConstants.SIM_KV, IndexerConstants.SIM_KA));
 
     private Collector collector;
 
@@ -75,7 +83,7 @@ public class Indexer extends SubsystemBase {
         hasPieceLog = new BooleanLogEntry(log, "/Indexer/HasPiece");
 
 		if (!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setDoubleSupplier("Indexer", "Power", () -> motor.get());
+            LightningShuffleboard.setDoubleSupplier("Indexer", "Power", () -> getPower());
 
             LightningShuffleboard.setBoolSupplier("Indexer", "EntryBeamBreak", () -> getEntryBeamBreakState());
             LightningShuffleboard.setBoolSupplier("Indexer", "ExitBeamBreak", () -> getExitBeamBreakState());
@@ -122,6 +130,9 @@ public class Indexer extends SubsystemBase {
      * @return current power of the indexer motor
      */
     public double getPower() {
+        if (RobotBase.isSimulation()){
+            return indexerSim.getOutput(0);
+        }
         return motor.get();
     }
 
@@ -193,15 +204,6 @@ public class Indexer extends SubsystemBase {
         didShoot = false;
     }
 
-    /**
-     * Get the current power of the indexer motor
-     *
-     * @return current power of the indexer motor
-     */
-    public double getIndexerPower() {
-        return motor.get();
-    }
-
     @Override
     public void periodic() {
         // Update piece state based on beambreaks
@@ -220,6 +222,13 @@ public class Indexer extends SubsystemBase {
         }
 
         updateLogging();
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        // set inputs for simulation
+        indexerSim.setInput(targetPower * 12);
+        indexerSim.update(0.01);
     }
 
     /**

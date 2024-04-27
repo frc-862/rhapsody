@@ -375,6 +375,8 @@ public class Constants {
         public static final double MOTOR_KV = 0.145;
         public static final double MOTOR_KA = 0;
 
+        public static final double SIM_KA = 0.145;
+
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
         public static final double COLLECTOR_GRABANDGO_POWER = 0.75;
     }
@@ -425,8 +427,8 @@ public class Constants {
         public static final double COAST_VOLTAGE = 0.1;
 
         public static final double FLYWHEEL_SYSTEST_RPM = 1000;
-        public static final double GEAR_RATIO = 0;
-        public static final double MOMENT_OF_INERTIA = 0;
+        public static final double GEAR_RATIO = 1;
+        public static final double MOMENT_OF_INERTIA = 0.08;
     }
 
     public class IndexerConstants {
@@ -443,6 +445,8 @@ public class Constants {
         public static final double INDEXER_MANUAL_POWER = 1d;
         public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
         public static final double INDEXER_SYSTEST_POWER = 0.25d;
+        public static final double SIM_KV = 100;
+        public static final double SIM_KA = 100;
     }
 
     public class MercuryPivotConstants {
@@ -492,6 +496,10 @@ public class Constants {
         public static final double MOTOR_KS = 50d;
         public static final double MOTOR_KA = 0d;
 
+        public static final double SIM_KP = 1;
+        public static final double SIM_KI = 0.1;
+        public static final double SIM_KD = 0.15;
+
         public static final double ANGLE_TOLERANCE = 0.00208d; // .75 degrees
 
         public static final double ENCODER_OFFSET = -0.913834; // In rotations
@@ -509,6 +517,10 @@ public class Constants {
         public static final double MAX_ANGLE = 105d;
 
         public static final double PIVOT_SYSTEST_ANGLE = 90d;
+
+        public static final double GEAR_RATIO = 1;
+        public static final double LENGTH = 1;
+        public static final double PIVOT_MASS = 10;
     }
 
     public class ShooterConstants {

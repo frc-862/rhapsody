@@ -1,7 +1,6 @@
 package frc.robot.command;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -9,12 +8,13 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Swerve;
+import frc.thunder.filter.XboxControllerFilter;
 
 public class PointAtTag extends Command {
 
     protected Swerve drivetrain;
     protected Limelights limelights;
-    protected XboxController driver;
+    protected XboxControllerFilter driver;
 
     private double pidOutput;
     private double targetHeading;
@@ -32,7 +32,7 @@ public class PointAtTag extends Command {
      * @param limelights to get the limelight from
      * @param driver     the driver's controller, used for drive input
      */
-    public PointAtTag(Swerve drivetrain, Limelights limelights, XboxController driver) {
+    public PointAtTag(Swerve drivetrain, Limelights limelights, XboxControllerFilter driver) {
         this.drivetrain = drivetrain;
         this.limelights = limelights;
         this.driver = driver;

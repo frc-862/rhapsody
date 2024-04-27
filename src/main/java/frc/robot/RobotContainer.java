@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -126,7 +127,7 @@ public class RobotContainer extends LightningContainer {
 
 		collector = new Collector();
 		flywheel = new Flywheel();
-		pivot = Constants.IS_MERCURY ? new PivotMercury() : new PivotRhapsody();
+		pivot = Constants.IS_MERCURY ? new PivotMercury() : new PivotRhapsody(drivetrain);
 		indexer = new Indexer(collector);
 		if (!Constants.IS_MERCURY) {
 			climber = new Climber();
@@ -363,6 +364,10 @@ public class RobotContainer extends LightningContainer {
 				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED C", false) : false)
 				.onTrue(new InstantCommand(() -> drivetrain
 						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_C_STARTPOSE_RED)));
+
+		// TESTSIMS
+		new Trigger(() -> RobotBase.isSimulation() && DriverStation.isEnabled()).whileTrue( // TODO: remove
+			new NotePass(drivetrain, flywheel, pivot, driver, indexer));
 	}
 
 	@Override

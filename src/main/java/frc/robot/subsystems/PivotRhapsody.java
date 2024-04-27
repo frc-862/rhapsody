@@ -7,19 +7,41 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.robot.Constants.RhapsodyPivotConstants;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 
 public class PivotRhapsody extends SubsystemBase implements Pivot {
+
+    // sim pivot
+    private DCMotor simGearbox = DCMotor.getFalcon500(2);
+    private SingleJointedArmSim pivotSim = new SingleJointedArmSim(LinearSystemId.createSingleJointedArmSystem(
+        simGearbox, SingleJointedArmSim.estimateMOI(RhapsodyPivotConstants.LENGTH, RhapsodyPivotConstants.PIVOT_MASS), 
+        RhapsodyPivotConstants.GEAR_RATIO), simGearbox, RhapsodyPivotConstants.GEAR_RATIO, RhapsodyPivotConstants.LENGTH, 
+        Units.degreesToRadians(RhapsodyPivotConstants.MIN_ANGLE), Units.degreesToRadians(RhapsodyPivotConstants.MAX_ANGLE),
+        true, Units.degreesToRadians(RhapsodyPivotConstants.STOW_ANGLE));
+
+    private PIDController simPivotPid = new PIDController(RhapsodyPivotConstants.SIM_KP, RhapsodyPivotConstants.SIM_KI, 
+        RhapsodyPivotConstants.SIM_KD);
+
+    private Pose3d simPivotPose;
 
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
@@ -37,8 +59,11 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     private BooleanLogEntry forwardLimitLog;
     private BooleanLogEntry reverseLimitLog;
     private DoubleLogEntry powerLog;
+    private Swerve drivetrain;
 
-    public PivotRhapsody() {
+    public PivotRhapsody(Swerve drivetrain) {
+        this.drivetrain = drivetrain;
+
         System.out.println("RHAPSODY PIVOT");
         CANcoderConfiguration angleConfig = new CANcoderConfiguration();
         angleConfig.MagnetSensor.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
@@ -115,6 +140,24 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         updateLogging();
     }
 
+    @Override
+    public void simulationPeriodic() {
+        // sim pivot
+
+        double pivotPIDOutput = simPivotPid.calculate(getAngle() * 360, targetAngle * 360);
+
+        pivotSim.setInputVoltage(pivotPIDOutput * 12);
+        pivotSim.update(0.01);
+
+        simPivotPose = new Pose3d(
+            drivetrain.getPose().getX() + Math.cos(drivetrain.getPose().getRotation().getRadians()) 
+            * RhapsodyPivotConstants.LENGTH * Math.cos(pivotSim.getAngleRads()), 
+            drivetrain.getPose().getY() + Math.sin(drivetrain.getPose().getRotation().getRadians())
+            * RhapsodyPivotConstants.LENGTH * Math.cos(pivotSim.getAngleRads()),
+            RhapsodyPivotConstants.LENGTH * Math.sin(pivotSim.getAngleRads()),
+            new Rotation3d(0d, pivotSim.getAngleRads(), drivetrain.getPose().getRotation().getRadians()));
+    }
+
     /**
      * update logging
      */
@@ -158,6 +201,9 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
      * @return The current angle of the pivot in rotations
      */
     public double getAngle() {
+        if (RobotBase.isSimulation()) {
+            return Units.radiansToRotations(pivotSim.getAngleRads());
+        }
         return angleMotor.getPosition().getValue();
     }
 

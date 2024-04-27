@@ -4,13 +4,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants;
@@ -19,6 +23,14 @@ import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Collector extends SubsystemBase {
+
+    // sim collector
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private LinearSystemSim collectorSim = new LinearSystemSim(LinearSystemId.identifyVelocitySystem(
+        CollectorConstants.MOTOR_KV, CollectorConstants.SIM_KA));
+
+    private PIDController collectorController = new PIDController(CollectorConstants.MOTOR_KP, 
+        CollectorConstants.MOTOR_KI, CollectorConstants.MOTOR_KD);
 
     // Declare collector hardware
     private ThunderBird motor;
@@ -92,6 +104,9 @@ public class Collector extends SubsystemBase {
      * @return the current power of the collector motor
      */
     public double getPower() {
+        if (RobotBase.isSimulation()){
+            return collectorSim.getOutput(0);
+        }
         return motor.get();
     }
 
@@ -100,6 +115,13 @@ public class Collector extends SubsystemBase {
         // tells robot if we have a piece in collector
         hasPiece = getEntryBeamBreakState();
         updateLogging();
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        double collectorPIDOutput = collectorController.calculate(targetPower, collectorSim.getOutput(0));
+        collectorSim.setInput(collectorPIDOutput * 12);
+        collectorSim.update(0.01);
     }
 
     /**
