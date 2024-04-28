@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.lang.annotation.Target;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -144,7 +146,14 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     public void simulationPeriodic() {
         // sim pivot
 
-        double pivotPIDOutput = simPivotPid.calculate(getAngle() * 360, targetAngle * 360);
+        simPivotPid.setIntegratorRange(-Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+
+        simPivotPid.setSetpoint(targetAngle * 360);
+
+        double pivotPIDOutput = simPivotPid.calculate(getAngle() * 360);
+
+        LightningShuffleboard.setDouble("Pivot", "SimPIDOutput", pivotPIDOutput);
+        LightningShuffleboard.setDouble("Pivot", "SimIntegral", simPivotPid.getI());
 
         pivotSim.setInputVoltage(pivotPIDOutput * 12);
         pivotSim.update(0.01);

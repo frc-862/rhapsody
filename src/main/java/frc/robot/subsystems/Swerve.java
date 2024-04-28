@@ -202,6 +202,10 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed).withRotationalRate(rot).withDriveRequestType(DriveRequestType.Velocity));
     }
 
+    public void setFieldDriver2(double x, double y, double rot) {
+        this.setControl(driveField.withVelocityX(x).withVelocityY(y).withRotationalRate(rot));
+    }
+
     /**
      * Apply a percentage Robot centric request to the drivetrain
      *

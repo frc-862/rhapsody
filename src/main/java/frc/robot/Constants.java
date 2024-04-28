@@ -496,9 +496,9 @@ public class Constants {
         public static final double MOTOR_KS = 50d;
         public static final double MOTOR_KA = 0d;
 
-        public static final double SIM_KP = 1;
-        public static final double SIM_KI = 0.1;
-        public static final double SIM_KD = 0.15;
+        public static final double SIM_KP = 3d;
+        public static final double SIM_KI = 3d;
+        public static final double SIM_KD = 0.5;
 
         public static final double ANGLE_TOLERANCE = 0.00208d; // .75 degrees
 
