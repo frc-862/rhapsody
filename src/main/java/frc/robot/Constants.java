@@ -19,7 +19,9 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
@@ -429,6 +431,7 @@ public class Constants {
         public static final double FLYWHEEL_SYSTEST_RPM = 1000;
         public static final double GEAR_RATIO = 1;
         public static final double MOMENT_OF_INERTIA = 0.08;
+        public static final double CIRCUMFRENCE = 0;
     }
 
     public class IndexerConstants {
@@ -733,6 +736,24 @@ public class Constants {
                 return priority;
             }
         }
+    }
+
+    public class PeiceSimConstants {
+        public static final Pose3d C1B = new Pose3d(0d, 0d, 0d, new Rotation3d(0d, 0d, 0d));
+        public static final Pose3d C2B = new Pose3d(0d, 0d, 0d, new Rotation3d(0d, 0d, 0d));
+        public static final Pose3d C3B = new Pose3d(0d, 0d, 0d, new Rotation3d(0d, 0d, 0d));
+        public static final Pose3d C1R = new Pose3d(0d, 0d, 0d, new Rotation3d(0d, 0d, 0d));
+        public static final Pose3d C2R = new Pose3d(0d, 0d, 0d, new Rotation3d(0d, 0d, 0d));
+        public static final Pose3d C3R = new Pose3d(0d, 0d, 0d, new Rotation3d(0d, 0d, 0d));
+        public static final Pose3d F1B = new Pose3d(0d, 0d, 0d, new Rotation3d(0d, 0d, 0d));
+        public static final Pose3d F2B = new Pose3d(0d, 0d, 0d, new Rotation3d(0d, 0d, 0d));
+        public static final Pose3d F3B = new Pose3d(0d, 0d, 0d, new Rotation3d(0d, 0d, 0d));
+        public static final Pose3d F4B = new Pose3d(0d, 0d, 0d, new Rotation3d(0d, 0d, 0d));
+        public static final Pose3d F5B = new Pose3d(0d, 0d, 0d, new Rotation3d(0d, 0d, 0d));
+        public static final Pose3d FROM_SOURCE = new Pose3d(0d, 0d, 0d, new Rotation3d(0d, 0d, 0d));
+        public static final double COLLECT_DISTANCE = 1;
+        public static final Rotation2d COLLECT_ANGLE_MAX = new Rotation2d(1d);
+        public static final Rotation2d COLLECT_ANGLE_MIN = new Rotation2d(-1d);
     }
 }
 

@@ -43,7 +43,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     private PIDController simPivotPid = new PIDController(RhapsodyPivotConstants.SIM_KP, RhapsodyPivotConstants.SIM_KI, 
         RhapsodyPivotConstants.SIM_KD);
 
-    private Pose3d simPivotPose;
+    Pose3d simPivotPose;
 
     private ThunderBird angleMotor;
     private CANcoder angleEncoder;
