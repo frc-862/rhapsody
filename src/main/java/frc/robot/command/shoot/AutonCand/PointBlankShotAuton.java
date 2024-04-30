@@ -28,6 +28,7 @@ public class PointBlankShotAuton extends Command {
      * @param flywheel subsystem
      * @param pivot    subsystem
      * @param indexer  subsystem
+     * @param collector subsystem
      */
     public PointBlankShotAuton(Flywheel flywheel, Pivot pivot, Indexer indexer, Collector collector) {
         this.flywheel = flywheel;

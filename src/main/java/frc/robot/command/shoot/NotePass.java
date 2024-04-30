@@ -109,8 +109,9 @@ public class NotePass extends Command {
 		pivot.setTargetAngle(ShooterConstants.NOTEPASS_ANGLE_MAP.get(distanceToCorner) + pivot.getBias());
 
 		if (flywheel.allMotorsOnTarget() && pivot.onTarget() && inTolerance()) {
-			if (DriverStation.isAutonomous())
+			if (DriverStation.isAutonomous()) {
 				indexer.indexUp();
+			}
 			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
 		}
@@ -122,8 +123,9 @@ public class NotePass extends Command {
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
 		pivot.setTargetAngle(pivot.getStowAngle());
-		if (DriverStation.isAutonomous())
+		if (DriverStation.isAutonomous()) {
 			indexer.stop();
+		}
 	}
 
 	@Override
