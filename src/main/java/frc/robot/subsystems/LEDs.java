@@ -49,11 +49,11 @@ public class LEDs extends SubsystemBase {
                 break;
 
             case BAD_POSE:
-                pulse(-1, LEDsConstants.BLUE_HUE);
+                pulse(-1, LEDsConstants.RED_HUE);
                 break;
 
             case GOOD_POSE:
-                blink(-1, LEDsConstants.PINK_HUE);
+                blink(-1, LEDsConstants.GREEN_HUE);
                 break;
 
             case COLLECT_PLANNED:

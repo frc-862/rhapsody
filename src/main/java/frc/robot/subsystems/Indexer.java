@@ -37,8 +37,8 @@ public class Indexer extends SubsystemBase {
     private PieceState currentState = PieceState.NONE;
     private boolean didShoot = false;
 
-    private Debouncer entryDebouncer = new Debouncer(0.05);
-    private Debouncer exitDebouncer = new Debouncer(0.05);
+    private Debouncer entryDebouncer = new Debouncer(IndexerConstants.INDEXER_DEBOUNCE_TIME);
+    private Debouncer exitDebouncer = new Debouncer(0.1);
 
     private DoubleLogEntry indexerPowerLog;
     private DoubleLogEntry indexerTargetPowerLog;

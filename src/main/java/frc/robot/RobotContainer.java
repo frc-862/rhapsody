@@ -107,7 +107,6 @@ public class RobotContainer extends LightningContainer {
 	Telemetry logger;
 	
 	private Boolean triggerInit;
-	private boolean notePassOnTarget = false;
 	public static double bias = 0d;
 
 	@Override
@@ -162,7 +161,7 @@ public class RobotContainer extends LightningContainer {
 				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
 		NamedCommands.registerCommand("Cand-Sub",
-				new PointBlankShotAuton(flywheel, pivot, indexer)
+				new PointBlankShotAuton(flywheel, pivot, indexer, collector)
 						.deadlineWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
 		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
 		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
@@ -259,7 +258,7 @@ public class RobotContainer extends LightningContainer {
 		/* COPILOT */
 		new Trigger(() -> (coPilot.getBButton() && !driver.getRightBumper()))
 				.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
-						.andThen(new SmartCollect(() -> 0.65, () -> 0.9, collector, indexer, pivot, flywheel))
+						.andThen(new SmartCollect(() -> 1d, () -> 1d, collector, indexer, pivot, flywheel))
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
 		// new Trigger(coPilot::getBButton)
@@ -303,12 +302,22 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
 				.whileTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
-		new Trigger(() -> DriverStation.isDisabled() && triggerInit 
-				&& !(limelights.getStopMe().hasTarget() || drivetrain.isInField() || drivetrain.isStable()))
-				.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
+		// new Trigger(() -> DriverStation.isDisabled() && triggerInit 
+		// 		&& !(limelights.getStopMe().hasTarget() || drivetrain.isInField() || drivetrain.isStable()))
+		// 		.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
+
+		// new Trigger(() -> !drivetrain.isStable() && DriverStation.isDisabled() && !drivetrain.isInField()
+		// 		&& !limelights.getStopMe().hasTarget() && triggerInit)
+		// 		.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
+		
+		new Trigger(() -> ((!drivetrain.isStable() || !drivetrain.isInField() || !limelights.getStopMe().hasTarget())
+			 && DriverStation.isDisabled() && triggerInit))
+			.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
+
 		new Trigger(() -> drivetrain.isStable() && DriverStation.isDisabled() && drivetrain.isInField()
 				&& limelights.getStopMe().hasTarget() && triggerInit)
 				.whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
+
 		triggerInit = true;
 
 		new Trigger(() -> collector.getEntryBeamBreakState())
@@ -414,9 +423,7 @@ public class RobotContainer extends LightningContainer {
 	@Override
 	protected void configureSystemTests() {
 		SystemTest.registerTest("Drive Test",
-				new DrivetrainSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_DRIVE)); // to
-																									// be
-																									// tested
+				new DrivetrainSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_DRIVE)); // to be tested
 		SystemTest.registerTest("Azimuth Test",
 				new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 

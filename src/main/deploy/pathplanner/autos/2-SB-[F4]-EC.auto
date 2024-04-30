@@ -43,39 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "F4-BS"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Point-At-Speaker-left"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "preAim"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 3.0
+                  "pathName": "F4-BS-Close"
                 }
               }
             ]
@@ -88,7 +56,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "name": "Cand-Sub"
                 }
               },
               {
@@ -98,12 +66,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BS-F4"
           }
         }
       ]

@@ -295,7 +295,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public boolean isStable() {
-        return (Math.abs(rotFilter.lastValue() - getPose().getRotation().getDegrees()) < 1 && Math.abs(xFilter.lastValue() - getPose().getX()) < 1 && Math.abs(yFilter.lastValue() - getPose().getY()) < 1);
+        return (Math.abs(rotFilter.lastValue() - getPose().getRotation().getDegrees()) < 2 && Math.abs(xFilter.lastValue() - getPose().getX()) < 1 && Math.abs(yFilter.lastValue() - getPose().getY()) < 1);
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
