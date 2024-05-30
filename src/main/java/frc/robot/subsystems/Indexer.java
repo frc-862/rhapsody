@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -29,6 +30,9 @@ public class Indexer extends SubsystemBase {
     // sim indexer
     private LinearSystemSim indexerSim = new LinearSystemSim(LinearSystemId.identifyVelocitySystem(
         IndexerConstants.SIM_KV, IndexerConstants.SIM_KA));
+
+    private PIDController indexerController = new PIDController(IndexerConstants.SIM_KP, 
+        IndexerConstants.SIM_KI, IndexerConstants.SIM_KD);
 
     private Collector collector;
 
@@ -83,6 +87,7 @@ public class Indexer extends SubsystemBase {
         hasPieceLog = new BooleanLogEntry(log, "/Indexer/HasPiece");
 
 		if (!DriverStation.isFMSAttached()) {
+            LightningShuffleboard.setDoubleSupplier("Indexer", "TargetPower", () -> targetPower);
             LightningShuffleboard.setDoubleSupplier("Indexer", "Power", () -> getPower());
 
             LightningShuffleboard.setBoolSupplier("Indexer", "EntryBeamBreak", () -> getEntryBeamBreakState());
@@ -227,7 +232,9 @@ public class Indexer extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
         // set inputs for simulation
-        indexerSim.setInput(targetPower * 12);
+        double pidoutput = indexerController.calculate(indexerSim.getOutput(0), targetPower);
+
+        indexerSim.setInput(pidoutput * 12);
         indexerSim.update(0.01);
     }
 

@@ -34,11 +34,12 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     // sim pivot
     private DCMotor simGearbox = DCMotor.getFalcon500(2);
-    private SingleJointedArmSim pivotSim = new SingleJointedArmSim(LinearSystemId.createSingleJointedArmSystem(
-        simGearbox, SingleJointedArmSim.estimateMOI(RhapsodyPivotConstants.LENGTH, RhapsodyPivotConstants.PIVOT_MASS), 
-        RhapsodyPivotConstants.GEAR_RATIO), simGearbox, RhapsodyPivotConstants.GEAR_RATIO, RhapsodyPivotConstants.LENGTH, 
+    private SingleJointedArmSim pivotSim = new SingleJointedArmSim(
+        LinearSystemId.createSingleJointedArmSystem(simGearbox, SingleJointedArmSim.estimateMOI(RhapsodyPivotConstants.LENGTH, 
+        RhapsodyPivotConstants.PIVOT_MASS), RhapsodyPivotConstants.GEAR_RATIO),
+        simGearbox, RhapsodyPivotConstants.GEAR_RATIO, RhapsodyPivotConstants.LENGTH, 
         Units.degreesToRadians(RhapsodyPivotConstants.MIN_ANGLE), Units.degreesToRadians(RhapsodyPivotConstants.MAX_ANGLE),
-        true, Units.degreesToRadians(RhapsodyPivotConstants.STOW_ANGLE));
+        false, Units.degreesToRadians(RhapsodyPivotConstants.STOW_ANGLE));
 
     private PIDController simPivotPid = new PIDController(RhapsodyPivotConstants.SIM_KP, RhapsodyPivotConstants.SIM_KI, 
         RhapsodyPivotConstants.SIM_KD);
@@ -146,7 +147,7 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     public void simulationPeriodic() {
         // sim pivot
 
-        simPivotPid.setIntegratorRange(-Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+        // simPivotPid.setIntegratorRange(-Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
         simPivotPid.setSetpoint(targetAngle * 360);
 
@@ -154,8 +155,12 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
         LightningShuffleboard.setDouble("Pivot", "SimPIDOutput", pivotPIDOutput);
         LightningShuffleboard.setDouble("Pivot", "SimIntegral", simPivotPid.getI());
+        LightningShuffleboard.setDoubleArray("Pivot", "simPivotPose", 
+            () -> new double[] {simPivotPose.getX(), simPivotPose.getY(), simPivotPose.getZ(),
+            simPivotPose.getRotation().getX(), simPivotPose.getRotation().getY(), simPivotPose.getRotation().getZ()});
 
         pivotSim.setInputVoltage(pivotPIDOutput * 12);
+
         pivotSim.update(0.01);
 
         simPivotPose = new Pose3d(

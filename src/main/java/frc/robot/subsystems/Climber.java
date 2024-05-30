@@ -10,9 +10,11 @@ import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.RobotMap.CAN;

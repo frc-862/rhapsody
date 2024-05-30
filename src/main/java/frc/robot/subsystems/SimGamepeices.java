@@ -4,6 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.Utils;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -13,7 +14,7 @@ import frc.robot.Constants.FlywheelConstants;
 import frc.robot.Constants.PeiceSimConstants;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
-public class SimGamepeices implements Subsystem{
+public class SimGamepeices extends SubsystemBase{
     public Peice[] peices;
     public PivotRhapsody pivot;
     public Flywheel flywheel;
@@ -55,6 +56,8 @@ public class SimGamepeices implements Subsystem{
             new Peice(PeiceSimConstants.C3B), new Peice(PeiceSimConstants.C1R), new Peice(PeiceSimConstants.C2R), 
             new Peice(PeiceSimConstants.C3R), new Peice (PeiceSimConstants.F1B), new Peice(PeiceSimConstants.F2B), 
             new Peice(PeiceSimConstants.F3B), new Peice(PeiceSimConstants.F4B), new Peice(PeiceSimConstants.F5B),};
+
+        System.out.println("constructing");
 
         this.pivot = pivot;
         this.flywheel = flywheel;
@@ -150,6 +153,8 @@ public class SimGamepeices implements Subsystem{
     public void publish(){
         for (int i = 0; i < peices.length; i++) {
             Peice peice = peices[i];
+            System.out.println("publishing");
+            LightningShuffleboard.setDoubleArray("Peice", "test", () -> new double[] {12, 281, 128});
             LightningShuffleboard.setDoubleArray("Peice", "Peice " + i, () -> new double[] { 
                 peice.pose.getTranslation().getX(), peice.pose.getTranslation().getY(), peice.pose.getTranslation().getZ(), 
                 peice.pose.getRotation().getX(), peice.pose.getRotation().getY(), peice.pose.getRotation().getZ(), 
@@ -157,8 +162,9 @@ public class SimGamepeices implements Subsystem{
         }
     }
 
-    @Override
-    public void periodic(){
+    
+    public void simulationPeriodic(){
+        System.out.println("periodictest");
         collect();
 
         if (indexer.getPower() > 0 && heldPeice != null && Utils.getCurrentTimeSeconds() - heldPeice.timeHeld > 1) {

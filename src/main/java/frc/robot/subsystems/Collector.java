@@ -29,8 +29,8 @@ public class Collector extends SubsystemBase {
     private LinearSystemSim collectorSim = new LinearSystemSim(LinearSystemId.identifyVelocitySystem(
         CollectorConstants.MOTOR_KV, CollectorConstants.SIM_KA));
 
-    private PIDController collectorController = new PIDController(CollectorConstants.MOTOR_KP, 
-        CollectorConstants.MOTOR_KI, CollectorConstants.MOTOR_KD);
+    private PIDController collectorController = new PIDController(CollectorConstants.SIM_KP, 
+        CollectorConstants.SIM_KI, CollectorConstants.SIM_KD);
 
     // Declare collector hardware
     private ThunderBird motor;
@@ -42,6 +42,7 @@ public class Collector extends SubsystemBase {
 
     private boolean hasPiece;
     private double targetPower;
+    private double pidOutPut;
 
     private DoubleLogEntry collectorPowerLog;
     private BooleanLogEntry hasPieceLog;
@@ -119,8 +120,9 @@ public class Collector extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        double collectorPIDOutput = collectorController.calculate(targetPower, collectorSim.getOutput(0));
-        collectorSim.setInput(collectorPIDOutput * 12);
+        pidOutPut = -collectorController.calculate(targetPower, collectorSim.getOutput(0));
+
+        collectorSim.setInput(pidOutPut * 12);
         collectorSim.update(0.01);
     }
 
@@ -134,6 +136,7 @@ public class Collector extends SubsystemBase {
         if(!DriverStation.isFMSAttached()) {
             LightningShuffleboard.setDouble("Collector", "Collector power", getPower());
             LightningShuffleboard.setDouble("Collector", "Collector target power", targetPower);
+            LightningShuffleboard.setDouble("Collector", "pidOutPut", pidOutPut);
         }
     }
 

@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.text.Normalizer.Form;
 import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.Orchestra;
@@ -76,6 +77,7 @@ import frc.robot.subsystems.Limelights;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.PivotMercury;
 import frc.robot.subsystems.PivotRhapsody;
+import frc.robot.subsystems.SimGamepeices;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.LightningContainer;
 import frc.thunder.filter.XboxControllerFilter;
@@ -96,6 +98,7 @@ public class RobotContainer extends LightningContainer {
 	public Pivot pivot;
 	private Indexer indexer;
 	private Climber climber;
+	private SimGamepeices simGamepeices;
 	LEDs leds;
 	Orchestra sing;
 
@@ -141,6 +144,9 @@ public class RobotContainer extends LightningContainer {
 		logger = new Telemetry(DrivetrainConstants.MaxSpeed);
 
 		triggerInit = false;
+
+		simGamepeices = new SimGamepeices((PivotRhapsody) pivot, flywheel, collector, drivetrain, indexer);
+		// simGamepeices = RobotBase.isSimulation() ? new SimGamepeices((PivotRhapsody) pivot, flywheel, collector, drivetrain, indexer) : null;
 
 		boolean setPath = SignalLogger.setPath(Constants.HOOT_PATH).isOK();
 		SignalLogger.enableAutoLogging(true);
@@ -367,7 +373,10 @@ public class RobotContainer extends LightningContainer {
 
 		// TESTSIMS
 		new Trigger(() -> RobotBase.isSimulation() && DriverStation.isEnabled()).whileTrue( // TODO: remove
-			new NotePass(drivetrain, flywheel, pivot, driver, indexer));
+			new Index(() -> 0.6, indexer));
+
+		new Trigger(() -> RobotBase.isSimulation() && !DriverStation.isEnabled()).whileTrue( // TODO: remove
+			new Index(() -> 0, indexer));
 	}
 
 	@Override

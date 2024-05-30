@@ -377,6 +377,9 @@ public class Constants {
         public static final double MOTOR_KV = 0.145;
         public static final double MOTOR_KA = 0;
 
+        public static final double SIM_KP = 0.1;
+        public static final double SIM_KI = 0.05;
+        public static final double SIM_KD = 0;
         public static final double SIM_KA = 0.145;
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
@@ -448,8 +451,11 @@ public class Constants {
         public static final double INDEXER_MANUAL_POWER = 1d;
         public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
         public static final double INDEXER_SYSTEST_POWER = 0.25d;
-        public static final double SIM_KV = 100;
-        public static final double SIM_KA = 100;
+        public static final double SIM_KV = 0.145;
+        public static final double SIM_KA = 0.145;
+        public static final double SIM_KP = 0.1;
+        public static final double SIM_KI = 0.05;
+        public static final double SIM_KD = 0;
     }
 
     public class MercuryPivotConstants {
@@ -499,9 +505,9 @@ public class Constants {
         public static final double MOTOR_KS = 50d;
         public static final double MOTOR_KA = 0d;
 
-        public static final double SIM_KP = 3d;
-        public static final double SIM_KI = 3d;
-        public static final double SIM_KD = 0.5;
+        public static final double SIM_KP  = 0.01d;
+        public static final double SIM_KI = 0d;
+        public static final double SIM_KD = 0.005d;
 
         public static final double ANGLE_TOLERANCE = 0.00208d; // .75 degrees
 
@@ -522,8 +528,8 @@ public class Constants {
         public static final double PIVOT_SYSTEST_ANGLE = 90d;
 
         public static final double GEAR_RATIO = 1;
-        public static final double LENGTH = 1;
-        public static final double PIVOT_MASS = 10;
+        public static final double LENGTH = 0.35;
+        public static final double PIVOT_MASS = 7;
     }
 
     public class ShooterConstants {
@@ -690,6 +696,8 @@ public class Constants {
         public static final double CLIMB_RETURN_TO_GROUND_MAX_POWER = 0.05;
 
         public static final double CLIMB_SYSTEST_POWER = 0.1;
+		public static final double SIM_KV = 0;
+        public static final double SIM_KA = 0;
     }
 
     public class LEDsConstants {
