@@ -47,7 +47,7 @@ public class Collector extends SubsystemBase {
     private DoubleLogEntry collectorPowerLog;
     private BooleanLogEntry hasPieceLog;
 
-    private Debouncer entryDebouncer = new Debouncer(0.05);
+    private Debouncer entryDebouncer = new Debouncer(0.4);
 
     public Collector() {
         motor = new ThunderBird(

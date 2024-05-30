@@ -82,7 +82,7 @@ public class SmartCollect extends Command {
             case IN_COLLECT: /* Note has passed beambreak past collector */
                 if (allowIndex) {
                     // Slow down collector to prevent jamming
-                    collector.setPower(0.65 * collectorPower.getAsDouble());
+                    collector.setPower(collectorPower.getAsDouble());
                     indexer.setPower(indexerPower.getAsDouble());
                     if(!DriverStation.isAutonomous()){
                         flywheel.setAllMotorsRPM(-500);
@@ -100,9 +100,10 @@ public class SmartCollect extends Command {
                     indexer.setPower(0.9 * indexerPower.getAsDouble());
                 } else if (reversedFromExit) {
                     indexer.stop();
-                    if(!DriverStation.isAutonomous()){
+                    if (!DriverStation.isAutonomous()) {
                         flywheel.coast(true);
                     }
+                    new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
                     new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
                 }
                 break;

@@ -9,7 +9,10 @@
     "Silly",
     "Top side paths"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "LOL",
+    "CAND"
+  ],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 4.0,
   "defaultMaxAngVel": 540.0,

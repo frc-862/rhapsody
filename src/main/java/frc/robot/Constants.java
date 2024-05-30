@@ -18,6 +18,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -163,6 +164,13 @@ public class Constants {
 
         public static final PIDController CHASE_CONTROLLER = new PIDController(0.05, 0, 0);
         public static final double CHASE_PIECE_ALIGNMENT_TOLERANCE = 3d;
+    }
+
+    public static class PassConstants {
+        public static final double POINT_TOLERANCE = 3d;
+
+        public static final PIDController PASS_CONTROLLER = new PIDController(0.1, 0, 0.01);
+        public static final SimpleMotorFeedforward FEED_FORWARD = new SimpleMotorFeedforward(0.25, 0.5);
     }
 
     public static class TunerConstants {
@@ -367,8 +375,10 @@ public class Constants {
 
     public class CollectorConstants {
         public static final boolean COLLECTOR_MOTOR_INVERTED = true;
-        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 70;
+        public static final int COLLECTOR_MOTOR_STATOR_CURRENT_LIMIT = 140;
         public static final boolean COLLECTOR_MOTOR_BRAKE_MODE = false;
+
+        public static final double COLLECTOR_DEBOUNCE_TIME = 0.5d;
 
         public static final double MOTOR_KP = 0;
         public static final double MOTOR_KI = 0;
@@ -449,7 +459,7 @@ public class Constants {
 
         public static final double INDEXER_DEFAULT_POWER = 1d;
         public static final double INDEXER_MANUAL_POWER = 1d;
-        public static final double INDEXER_DEBOUNCE_TIME = 0.1d;
+        public static final double INDEXER_DEBOUNCE_TIME = 0.5d;
         public static final double INDEXER_SYSTEST_POWER = 0.25d;
         public static final double SIM_KV = 0.145;
         public static final double SIM_KA = 0.145;
@@ -629,8 +639,8 @@ public class Constants {
 
     public class CandConstants {
         // Amp
-        public static final double AMP_TOP_RPM = 325;
-        public static final double AMP_BOTTOM_RPM = 625;
+        public static final double AMP_TOP_RPM = 400;
+        public static final double AMP_BOTTOM_RPM = 700;
         public static final double AMP_ANGLE = 92;
 
         // PointBlank
@@ -732,7 +742,28 @@ public class Constants {
         public static final int PINK_HUE = 355;
 
         public enum LED_STATES {
-            CUSTOMCONTROL(0), DISABLED(1), EMERGENCY(2), START(3), GOOD_POSE(4), COLLECT_PLANNED(5), COLLECTED(6), SHOT(7), FINISHED_CLIMB(8), SHOOTING(9), COLLECTING(10), CHASING(11), CLIMBING(12), BAD_POSE(13), HAS_PIECE(14), HAS_VISION(15), DEFAULT(16), PIVOT_BOTTOM_SWITCH(17), PIVOT_TOP_SWITCH(18), COLLECTOR_BEAMBREAK(19), INDEXER_ENTER_BEAMBREAK(20), INDEXER_EXIT_BEAMBREAK(21);
+            CUSTOMCONTROL(0), 
+            DISABLED(1), 
+            EMERGENCY(2), 
+            START(3), 
+            GOOD_POSE(4), 
+            COLLECT_PLANNED(5), 
+            COLLECTED(6), 
+            SHOT(7), 
+            FINISHED_CLIMB(8), 
+            SHOOTING(9), 
+            COLLECTING(10), 
+            CHASING(11), 
+            CLIMBING(12), 
+            BAD_POSE(13), 
+            HAS_PIECE(14), 
+            HAS_VISION(15), 
+            DEFAULT(16), 
+            PIVOT_BOTTOM_SWITCH(17), 
+            PIVOT_TOP_SWITCH(18), 
+            COLLECTOR_BEAMBREAK(19), 
+            INDEXER_ENTER_BEAMBREAK(20), 
+            INDEXER_EXIT_BEAMBREAK(21);
 
             private final int priority;
 

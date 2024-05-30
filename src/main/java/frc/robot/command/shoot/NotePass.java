@@ -1,23 +1,22 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.command.shoot;
 
+import java.sql.Driver;
 import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.PassConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
@@ -31,15 +30,24 @@ public class NotePass extends Command {
 	private final Swerve drivetrain;
 	private final Flywheel flywheel;
 	private final Pivot pivot;
+
 	private Translation2d targetPose;
 	private double currentHeading;
 	private double targetHeading;
+	private double distanceToCorner;
 	private double feedForwardOutput;
 	private double pidOutput;
-	private PIDController pidController = VisionConstants.COMBO_CONTROLLER; // TAG_AIM_CONTROLLER
-	private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.25, 0.5);
+	private PIDController pidController = PassConstants.PASS_CONTROLLER;
+	private SimpleMotorFeedforward feedforward = PassConstants.FEED_FORWARD;
 	private XboxControllerFilter driver;
 	private Indexer indexer;
+
+	private DoubleLogEntry currentHeadingLog;
+	private DoubleLogEntry targetHeadingLog;
+	private DoubleLogEntry pidOutputLog;
+	private DoubleLogEntry distanceToCornerLog;
+	private BooleanLogEntry headingOnTargetLog;
+	private BooleanLogEntry shooterOnTargetLog;
 
 	/**
 	 * Creates a new NotePass.
@@ -57,7 +65,11 @@ public class NotePass extends Command {
 		this.driver = driver;
 		this.indexer = indexer;
 
-		addRequirements(flywheel, pivot, drivetrain, indexer);
+		if (DriverStation.isAutonomous()) {
+			addRequirements(flywheel, pivot, drivetrain, indexer);
+		} else {
+			addRequirements(flywheel, pivot, drivetrain);
+		}
 	}
 
 	@Override
@@ -67,6 +79,8 @@ public class NotePass extends Command {
 		} else {
 			targetPose = DrivetrainConstants.RED_CORNER_POSE;
 		}
+
+		initLogging();
 	}
 
 	@Override
@@ -75,6 +89,7 @@ public class NotePass extends Command {
 		var deltaX = targetPose.getX() - pose.getX();
 		var deltaY = targetPose.getY() - pose.getY();
 
+		distanceToCorner = drivetrain.distanceToCorner();
 		currentHeading = (pose.getRotation().getDegrees() + 360) % 360;
 
 		// Calculate vector to target, add 180 to make it point backwards
@@ -90,28 +105,27 @@ public class NotePass extends Command {
 
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), feedForwardOutput);
 
-		flywheel.setAllMotorsRPM(ShooterConstants.NOTEPASS_SPEED_MAP.get(drivetrain.distanceToCorner()) + flywheel.getBias());
-		pivot.setTargetAngle(ShooterConstants.NOTEPASS_ANGLE_MAP.get(drivetrain.distanceToCorner()) + pivot.getBias());
+		flywheel.setAllMotorsRPM(ShooterConstants.NOTEPASS_SPEED_MAP.get(distanceToCorner) + flywheel.getBias());
+		pivot.setTargetAngle(ShooterConstants.NOTEPASS_ANGLE_MAP.get(distanceToCorner) + pivot.getBias());
 
 		if (flywheel.allMotorsOnTarget() && pivot.onTarget() && inTolerance()) {
-			indexer.indexUp();
+			if (DriverStation.isAutonomous()) {
+				indexer.indexUp();
+			}
 			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
 		}
 
-		if (!DriverStation.isFMSAttached()) {
-			LightningShuffleboard.setBool("Note-Pass", "In tloeracnce", inTolerance());
-			LightningShuffleboard.setDouble("Note-Pass", "CurrentHeading", currentHeading);
-			LightningShuffleboard.setDouble("Note-Pass", "TargetHeading", targetHeading);
-			LightningShuffleboard.setDouble("Note-Pass", "Distance to Corner", drivetrain.distanceToCorner());
-		}
+		updateLogging();
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
 		pivot.setTargetAngle(pivot.getStowAngle());
-		indexer.stop();
+		if (DriverStation.isAutonomous()) {
+			indexer.stop();
+		}
 	}
 
 	@Override
@@ -127,6 +141,41 @@ public class NotePass extends Command {
 	private boolean inTolerance() {
 		double difference = Math.abs(currentHeading - targetHeading);
 		difference = difference > 180 ? 360 - difference : difference;
-		return difference <= VisionConstants.POINTATPOINT_ALIGNMENT_TOLERANCE; // TODO not has Target but if the correct filter is set
+		return difference <= PassConstants.POINT_TOLERANCE;
+	}
+
+	/**
+	 * initialize logging
+	 */
+	private void initLogging() {
+		DataLog log = DataLogManager.getLog();
+
+		currentHeadingLog = new DoubleLogEntry(log, "/NotePass/CurrentHeading");
+		targetHeadingLog = new DoubleLogEntry(log, "/NotePass/TargetHeading");
+		pidOutputLog = new DoubleLogEntry(log, "/NotePass/PIDoutput");
+		distanceToCornerLog = new DoubleLogEntry(log, "/NotePass/DistanceTOCorner");
+
+		headingOnTargetLog = new BooleanLogEntry(log, "/NotePass/Heading-OnTarget");
+		shooterOnTargetLog = new BooleanLogEntry(log, "/NotePass/Shooter-OnTarget");
+
+		if (!DriverStation.isFMSAttached()) {
+			LightningShuffleboard.setBoolSupplier("Note-Pass", "In tloeracnce", () -> inTolerance());
+			LightningShuffleboard.setDoubleSupplier("Note-Pass", "CurrentHeading", () -> currentHeading);
+			LightningShuffleboard.setDoubleSupplier("Note-Pass", "TargetHeading", () -> targetHeading);
+			LightningShuffleboard.setDoubleSupplier("Note-Pass", "Distance to Corner", () -> distanceToCorner);
+		}
+	}
+
+	/**
+	 * update logging
+	 */
+	public void updateLogging() {
+		currentHeadingLog.append(currentHeading);
+		targetHeadingLog.append(targetHeading);
+		pidOutputLog.append(feedForwardOutput);
+		distanceToCornerLog.append(distanceToCorner);
+
+		headingOnTargetLog.append(inTolerance());
+		shooterOnTargetLog.append(flywheel.allMotorsOnTarget() && pivot.onTarget());
 	}
 }

@@ -9,7 +9,6 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.CandConstants;
 import frc.robot.Constants.LEDsConstants.LED_STATES;
 import frc.robot.Constants.ShooterConstants.ShootingState;
 import frc.robot.Constants.ShooterConstants;
