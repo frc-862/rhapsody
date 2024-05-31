@@ -78,7 +78,7 @@ public class SimGamepeices extends SubsystemBase{
         if (heldPeice != null) {
           return;
         }
-
+        
         for (Peice peice : peices) {
             if (Math.hypot(peice.pose.getTranslation().getX(), peice.pose.getTranslation().getY()) 
             < PeiceSimConstants.COLLECT_DISTANCE && !peice.isHeld && collector.getPower() > 0
@@ -86,7 +86,7 @@ public class SimGamepeices extends SubsystemBase{
             && drivetrain.getPose().getRotation().getDegrees() > PeiceSimConstants.COLLECT_ANGLE_MIN.getDegrees()) {
                 peice.isHeld = true;
                 heldPeice = peice;
-                if (peice.pose == PeiceSimConstants.FROM_SOURCE) {
+                if (peice == dispensedPeice) {
                     dispensedPeice = null;
                 }
                 break;
@@ -133,17 +133,15 @@ public class SimGamepeices extends SubsystemBase{
             dy = dx * Math.sin(initialPose.getRotation().getDegrees()) + initialPose.getY();
             peice.pose = new Pose3d(dx, dy, dz, new Rotation3d(0, 0, initialPose.getRotation().getDegrees()));
         }
-        // publish(peice);
     }
 
     public void dispensePeiceFromSource(){
-        if(dispensedPeice != null || DriverStation.isAutonomous() || !DriverStation.isEnabled()){
-            System.out.println("no dispensed peice");
+        if(dispensedPeice != null || DriverStation.isAutonomous() /*|| !DriverStation.isEnabled()*/){
             return;
         }
-        System.out.println("dispensed peice");
-        addPeice(new Peice(PeiceSimConstants.FROM_SOURCE, peices.length - 2));
-        publish(peices[peices.length - 3]);
+        addPeice(new Peice(PeiceSimConstants.FROM_SOURCE, peices.length));
+        dispensedPeice = peices[peices.length - 1];
+        publish(peices[peices.length - 1]);
     }
 
     public void updateHeldPeicePose(){
@@ -157,12 +155,10 @@ public class SimGamepeices extends SubsystemBase{
             * (RhapsodyPivotConstants.LENGTH / 2) * Math.cos(pivot.getAngle() * 2 * Math.PI),
             (RhapsodyPivotConstants.LENGTH / 2) * Math.sin(pivot.getAngle() * 2 * Math.PI),
             new Rotation3d(0d, pivot.getAngle() * 2 * Math.PI, drivetrain.getPose().getRotation().getRadians()));
-
-        // publish(heldPeice);
     }
 
     public void addPeice(Peice peice){
-        Peice[] newPeices = new Peice[peices.length + 1];
+        Peice[] newPeices = new Peice[peices.length + 1]; 
         for (int i = 0; i < peices.length; i++) {
             newPeices[i] = peices[i];
         }
