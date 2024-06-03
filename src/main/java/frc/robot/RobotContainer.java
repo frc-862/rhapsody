@@ -203,14 +203,14 @@ public class RobotContainer extends LightningContainer {
 	protected void configureButtonBindings() {
 		/* driver */
 		// field centric for the robot
-		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
+		new Trigger(() -> LightningShuffleboard.getBool("DEMO", "Robot Centric", false))
 				.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
 				.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(),
 						() -> -driver.getLeftX(), () -> -driver.getRightX()))
 				.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
 		// enables slow mode for driving
-		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
+		new Trigger(() -> LightningShuffleboard.getBool("DEMO", "Slow Mode", true))
 				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
 				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
@@ -220,16 +220,16 @@ public class RobotContainer extends LightningContainer {
 						.setOperatorPerspectiveForward(new Rotation2d(Math.toRadians(0))))));
 
 		// makes the robot chase pieces
-		new Trigger(driver::getRightBumper).whileTrue(
-				new ChasePieces(drivetrain, collector, indexer, limelights)
-						.deadlineWith(leds.enableState(LED_STATES.CHASING)));
+		// new Trigger(driver::getRightBumper).whileTrue(
+		// 		new ChasePieces(drivetrain, collector, indexer, limelights)
+		// 				.deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
 		// new Trigger(driver::getRightBumper)
 		// .whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"),
 		// drivetrain, driver));
 
 		// parks the robot
-		new Trigger(driver::getXButton).whileTrue(new RunCommand(() -> drivetrain.brake()));
+		// new Trigger(driver::getXButton).whileTrue(new RunCommand(() -> drivetrain.brake()));
 
 		// smart shoot for the robot
 		new Trigger(driver::getAButton)
@@ -238,8 +238,8 @@ public class RobotContainer extends LightningContainer {
 
 		// new Trigger(driver::getBButton).whileTrue(new PathFindToAuton(
 		// PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
-		new Trigger(driver::getBButton)
-				.whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
+		// new Trigger(driver::getBButton)
+		// 		.whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
 
 		// new Trigger(driver::getYButton) // TODO Make align to TRAP
 
@@ -266,7 +266,7 @@ public class RobotContainer extends LightningContainer {
 		// .deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 
 		// cand shots for the robot
-		new Trigger(() -> coPilot.getXButton() && !driver.getAButton())
+		new Trigger(() -> coPilot.getXButton())
 				.whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		// new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new NotePass(drivetrain, flywheel, pivot, driver, indexer));
