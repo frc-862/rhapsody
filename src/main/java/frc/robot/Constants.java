@@ -39,13 +39,13 @@ public class Constants {
     public class DrivetrainConstants {
         public static final double MaxSpeed = Units.feetToMeters(18); // 16.5 ft/s to meters per second top speed (5.0292m/s)
         private static final double WHEELBASE = TunerConstants.kFrontLeftXPosInches * 2; // 2 * x distance from center of robot to wheel
-        public static final double MaxAngularRate = 2 * Math.PI * ( // convert to radians per second
+        public static final double MaxAngularRate = 2 * Math.PI * ( // convert to rad-ians per second
         TunerConstants.kSpeedAt12VoltsMps / Math.PI * Math.sqrt(2 * Math.pow(WHEELBASE, 2))); // free speed / circumference of circle with radius of wheelbase
 
         public static final double ROT_MULT = 0.04; // TODO Tune for Driver
 
-        public static final double SLOW_ROT_MULT = 0.7;
-        public static final double SLOW_SPEED_MULT = 0.4;
+        public static final double SLOW_ROT_MULT = 0.4;
+        public static final double SLOW_SPEED_MULT = 0.1;
 
         public static final double SYS_TEST_SPEED_DRIVE = 0.5;
         public static final double SYS_TEST_SPEED_TURN = 0.7d;

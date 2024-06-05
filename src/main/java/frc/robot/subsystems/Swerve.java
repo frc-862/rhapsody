@@ -56,6 +56,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private double speedMult = 1;
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
     private double angularMult = 1;
+    private double SLOW_SPEED_MULT = DrivetrainConstants.SLOW_ROT_MULT;
+    private double SLOW_ROT_MULT = DrivetrainConstants.SLOW_SPEED_MULT;
     private LinearFilter xFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter yFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter rotFilter = LinearFilter.singlePoleIIR(2, 0.01);
@@ -156,6 +158,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         xFilter.calculate(getPose().getX());
         yFilter.calculate(getPose().getY());
         rotFilter.calculate(getPose().getRotation().getDegrees());
+
+        setSlowSpeedMult(LightningShuffleboard.getDouble("DEMO", "Speed", SLOW_SPEED_MULT), LightningShuffleboard.getDouble("DEMO", "Rot", SLOW_ROT_MULT));
 
         updateLogging();
     }
@@ -329,12 +333,22 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      */
     public void setSlowMode(boolean slow) {
         if (slow) {
-            speedMult = DrivetrainConstants.SLOW_SPEED_MULT;
-            angularMult = DrivetrainConstants.SLOW_ROT_MULT;
+            speedMult = SLOW_SPEED_MULT;
+            angularMult = SLOW_ROT_MULT;
         } else {
             speedMult = 1;
             angularMult = 1;
         }
+    }
+
+    /**
+     * Set slow mode speed
+     * @param mult
+     * @param rot
+     */
+    public void setSlowSpeedMult(double mult, double rot) {
+        SLOW_SPEED_MULT = mult;
+        SLOW_ROT_MULT = rot;
     }
 
     public double getSpeedMult() {
@@ -416,5 +430,4 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     public void setDrivetrainPose(Pose2d newPose) {
         seedFieldRelative(newPose);
     }
-
 }

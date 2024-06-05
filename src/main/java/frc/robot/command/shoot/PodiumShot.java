@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
+import frc.thunder.LightningContainer;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PodiumShot extends Command {
 
@@ -29,8 +31,8 @@ public class PodiumShot extends Command {
 
     @Override
     public void execute() {
-        flywheel.setAllMotorsRPM(CandConstants.PODIUM_RPM + flywheel.getBias());
-        pivot.setTargetAngle(CandConstants.PODIUM_ANGLE + pivot.getBias());
+        flywheel.setAllMotorsRPM(LightningShuffleboard.getDouble("DEMO", "RPM ", 0) + flywheel.getBias());
+        pivot.setTargetAngle(LightningShuffleboard.getDouble("DEMO", "Angle", 28) + pivot.getBias());
     }
 
     @Override
