@@ -91,11 +91,11 @@ public class RobotContainer extends LightningContainer {
 	// Subsystems
 	public Swerve drivetrain;
 	private Limelights limelights;
-	private Collector collector;
-	private Flywheel flywheel;
-	public Pivot pivot;
-	private Indexer indexer;
-	private Climber climber;
+	// private Collector collector;
+	// private Flywheel flywheel;
+	// public Pivot pivot;
+	// private Indexer indexer;
+	// private Climber climber;
 	LEDs leds;
 	Orchestra sing;
 
@@ -124,12 +124,12 @@ public class RobotContainer extends LightningContainer {
 		limelights = new Limelights();
 		limelights.setApplyVisionUpdate(drivetrain::applyVisionPose);
 
-		collector = new Collector();
-		flywheel = new Flywheel();
-		pivot = Constants.IS_MERCURY ? new PivotMercury() : new PivotRhapsody();
-		indexer = new Indexer(collector);
+		// collector = new Collector();
+		// flywheel = new Flywheel();
+		// pivot = Constants.IS_MERCURY ? new PivotMercury() : new PivotRhapsody();
+		// indexer = new Indexer(collector);
 		if (!Constants.IS_MERCURY) {
-			climber = new Climber();
+			// climber = new Climber();
 		}
 		leds = new LEDs();
 		sing = new Orchestra();
@@ -154,7 +154,7 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeNamedCommands() {
-		NamedCommands.registerCommand("Note-Pass", new NotePass(drivetrain, flywheel, pivot, driver, indexer));
+		// NamedCommands.registerCommand("Note-Pass", new NotePass(drivetrain, flywheel, pivot, driver, indexer));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -190,57 +190,57 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(driver::getXButton).whileTrue(new RunCommand(() -> drivetrain.brake()));
 
 		// smart shoot for the robot
-		new Trigger(driver::getAButton)
-				.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, collector, leds)
-						.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(driver::getAButton)
+		// 		.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, collector, leds)
+		// 				.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		new Trigger(driver::getLeftBumper).whileTrue(
 				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0d));
 
-		new Trigger(driver::getYButton)
-		.whileTrue(new NotePass(drivetrain, flywheel, pivot, driver, indexer)
-				.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+		// new Trigger(driver::getYButton)
+		// .whileTrue(new NotePass(drivetrain, flywheel, pivot, driver, indexer)
+		// 		.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* COPILOT */
-		new Trigger(() -> (coPilot.getBButton() && !driver.getRightBumper()))
-				.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
-						.andThen(new SmartCollect(() -> 1d, () -> 1d, collector, indexer, pivot, flywheel))
-						.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
+		// new Trigger(() -> (coPilot.getBButton() && !driver.getRightBumper()))
+		// 		.whileTrue(new InstantCommand(() -> flywheel.stop(), flywheel)
+		// 				.andThen(new SmartCollect(() -> 1d, () -> 1d, collector, indexer, pivot, flywheel))
+		// 				.deadlineWith(leds.enableState(LED_STATES.COLLECTING)));
 
 		// cand shots for the robot
-		new Trigger(() -> coPilot.getXButton())
-				.whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-		new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
-		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot)
-				.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
-		new Trigger(coPilot::getRightBumper)
-				.whileTrue(new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
-		new Trigger(coPilot::getLeftBumper)
-				.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer)
-						.deadlineWith(new FlywheelIN(flywheel)));
+		// new Trigger(() -> coPilot.getXButton())
+		// 		.whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(coPilot::getYButton).whileTrue(new PodiumShot(flywheel, pivot));
+		// new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot)
+		// 		.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(coPilot::getRightBumper)
+		// 		.whileTrue(new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
+		// new Trigger(coPilot::getLeftBumper)
+		// 		.whileTrue(new Index(() -> -IndexerConstants.INDEXER_DEFAULT_POWER, indexer)
+		// 				.deadlineWith(new FlywheelIN(flywheel)));
 
 		/* BIAS */
-		new Trigger(() -> coPilot.getPOV() == 0)
-				.onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
-		new Trigger(() -> coPilot.getPOV() == 180)
-				.onTrue(new InstantCommand(() -> pivot.decreaseBias())); // DOWN
+		// new Trigger(() -> coPilot.getPOV() == 0)
+		// 		.onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
+		// new Trigger(() -> coPilot.getPOV() == 180)
+		// 		.onTrue(new InstantCommand(() -> pivot.decreaseBias())); // DOWN
 
-		new Trigger(() -> coPilot.getPOV() == 90)
-				.onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
-		new Trigger(() -> coPilot.getPOV() == 270)
-				.onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
+		// new Trigger(() -> coPilot.getPOV() == 90)
+		// 		.onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
+		// new Trigger(() -> coPilot.getPOV() == 270)
+		// 		.onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
 
-		new Trigger(() -> coPilot.getBackButton() && coPilot.getStartButton())
-				.onTrue(new InstantCommand(() -> pivot.resetBias())
-						.alongWith(new InstantCommand(() -> flywheel.resetBias())));
+		// new Trigger(() -> coPilot.getBackButton() && coPilot.getStartButton())
+		// 		.onTrue(new InstantCommand(() -> pivot.resetBias())
+		// 				.alongWith(new InstantCommand(() -> flywheel.resetBias())));
 
 		/* Other */
 		new Trigger(() -> ((limelights.getStopMe().hasTarget()) && DriverStation.isEnabled()))
 				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		new Trigger(() -> indexer.hasNote() && DriverStation.isEnabled())
-				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
-				.whileTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+		// new Trigger(() -> indexer.hasNote() && DriverStation.isEnabled())
+		// 		.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
+		// 		.whileTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 		
 		new Trigger(() -> ((!drivetrain.isStable() || !drivetrain.isInField() || !limelights.getStopMe().hasTarget())
 			 && DriverStation.isDisabled() && triggerInit))
@@ -252,16 +252,16 @@ public class RobotContainer extends LightningContainer {
 
 		triggerInit = true;
 
-		new Trigger(() -> collector.getEntryBeamBreakState())
-				.whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
-		new Trigger(() -> indexer.getEntryBeamBreakState())
-				.whileTrue(leds.enableState(LED_STATES.INDEXER_ENTER_BEAMBREAK));
-		new Trigger(() -> indexer.getExitBeamBreakState())
-				.whileTrue(leds.enableState(LED_STATES.INDEXER_EXIT_BEAMBREAK));
-		new Trigger(() -> pivot.getForwardLimit())
-				.whileTrue(leds.enableState(LED_STATES.PIVOT_BOTTOM_SWITCH));
-		new Trigger(() -> pivot.getReverseLimit())
-				.whileTrue(leds.enableState(LED_STATES.PIVOT_TOP_SWITCH));
+		// new Trigger(() -> collector.getEntryBeamBreakState())
+		// 		.whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
+		// new Trigger(() -> indexer.getEntryBeamBreakState())
+		// 		.whileTrue(leds.enableState(LED_STATES.INDEXER_ENTER_BEAMBREAK));
+		// new Trigger(() -> indexer.getExitBeamBreakState())
+		// 		.whileTrue(leds.enableState(LED_STATES.INDEXER_EXIT_BEAMBREAK));
+		// new Trigger(() -> pivot.getForwardLimit())
+		// 		.whileTrue(leds.enableState(LED_STATES.PIVOT_BOTTOM_SWITCH));
+		// new Trigger(() -> pivot.getReverseLimit())
+				// .whileTrue(leds.enableState(LED_STATES.PIVOT_TOP_SWITCH));
 
 		// new Trigger(() -> LightningShuffleboard.getBool("Swerve", "Swap", false))
 		// .onTrue(new InstantCommand(() -> drivetrain.swap(driver, coPilot)))
@@ -305,13 +305,13 @@ public class RobotContainer extends LightningContainer {
 				() -> -(driver.getLeftX() * drivetrain.getSpeedMult()), () -> -(driver.getRightX() * drivetrain.getRotMult())));
 
 		/* copilot */
-		collector.setDefaultCommand(new Collect(() -> MathUtil.applyDeadband(
-				(coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()),
-				ControllerConstants.DEADBAND), collector));
+		// collector.setDefaultCommand(new Collect(() -> MathUtil.applyDeadband(
+		// 		(coPilot.getRightTriggerAxis() - coPilot.getLeftTriggerAxis()),
+		// 		ControllerConstants.DEADBAND), collector));
 
-		if (!Constants.IS_MERCURY) {
-			climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
-		}
+		// if (!Constants.IS_MERCURY) {
+		// 	climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
+		// }
 
 	}
 
@@ -345,17 +345,17 @@ public class RobotContainer extends LightningContainer {
 		// SystemTest.registerTest("Single Note Cycle", new CycleSytemTest(collector,
 		// indexer, pivot, flywheel, () -> 0.5d, () -> 0.6d, () -> 250));
 
-		SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
-				Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
+		// 		Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
 		// SystemTest.registerTest("Pivot 90 Degrees", new PivotAngleTest(pivot,
 		// Constants.PivotConstants.PIVOT_SYSTEST_ANGLE));
 
-		SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
-				indexer, pivot, Constants.FlywheelConstants.FLYWHEEL_SYSTEST_RPM));
+		// SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
+		// 		indexer, pivot, Constants.FlywheelConstants.FLYWHEEL_SYSTEST_RPM));
 
-		SystemTest.registerTest("Indexer Test",
-				new IndexerSystemTest(indexer, Constants.IndexerConstants.INDEXER_SYSTEST_POWER));
+		// SystemTest.registerTest("Indexer Test",
+		// 		new IndexerSystemTest(indexer, Constants.IndexerConstants.INDEXER_SYSTEST_POWER));
 
 		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
 		// Constants.ClimbConstants.CLIMB_SYSTEST_POWER));

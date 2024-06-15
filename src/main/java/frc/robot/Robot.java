@@ -40,7 +40,7 @@ public class Robot extends LightningRobot {
         if (haveDriverStation) {
             container.drivetrain.setAlliancePose(DriverStation.getAlliance().get());
         }
-        container.pivot.resetBias();
+        // container.pivot.resetBias();
 
         container.drivetrain.brake();
     }
