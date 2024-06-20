@@ -181,7 +181,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyPercentRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
-        return run(() -> this.setControl(driveField.withVelocityX(x.getAsDouble() * maxSpeed).withVelocityY(y.getAsDouble() * maxSpeed).withRotationalRate(rot.getAsDouble() * maxAngularRate).withDriveRequestType(DriveRequestType.Velocity)));
+        return run(() -> this.setControl(driveField.withVelocityX(x.getAsDouble() * maxSpeed * SLOW_SPEED_MULT).withVelocityY(y.getAsDouble() * maxSpeed * SLOW_SPEED_MULT).withRotationalRate(rot.getAsDouble() * maxAngularRate * SLOW_ROT_MULT).withDriveRequestType(DriveRequestType.Velocity)));
     }
 
     /**

@@ -47,10 +47,10 @@ public class Robot extends LightningRobot {
 
     @Override
     public void autonomousInit() {
-        super.autonomousInit();
+        // super.autonomousInit();
 
-        RobotContainer container = (RobotContainer) getContainer();
-        container.drivetrain.disableVision();
+        // RobotContainer container = (RobotContainer) getContainer();
+        // container.drivetrain.disableVision();
     }
 
     @Override
