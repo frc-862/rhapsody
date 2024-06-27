@@ -238,8 +238,8 @@ public class RobotContainer extends LightningContainer {
 
 		// new Trigger(driver::getBButton).whileTrue(new PathFindToAuton(
 		// PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
-		new Trigger(driver::getBButton)
-				.whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
+		// new Trigger(driver::getBButton)
+		// 		.whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
 
 		// new Trigger(driver::getYButton) // TODO Make align to TRAP
 
