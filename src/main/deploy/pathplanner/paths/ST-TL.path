@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3041949160821413,
-        "y": 6.916726910376898
+        "x": 1.1956585451632455,
+        "y": 6.9956624528633675
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.315915480064651,
-        "y": 6.665408416960925
+        "x": 2.207379109145755,
+        "y": 6.744343959447394
       },
       "isLocked": false,
       "linkedName": "SubwooferTop"
@@ -65,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Top side paths",
+  "folder": null,
   "previewStartingState": {
     "rotation": -120.0,
     "velocity": 0
