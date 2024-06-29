@@ -50,7 +50,7 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -62,13 +62,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Collect"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop-Flywheel"
+                  "name": "Smart-Collect-Tele"
                 }
               }
             ]
