@@ -89,7 +89,8 @@ public class NotePass extends Command {
 		var deltaX = targetPose.getX() - pose.getX();
 		var deltaY = targetPose.getY() - pose.getY();
 
-		distanceToCorner = drivetrain.distanceToCorner();
+		// distanceToCorner = drivetrain.distanceToCorner();
+		distanceToCorner = drivetrain.distanceToSpeaker();
 		currentHeading = (pose.getRotation().getDegrees() + 360) % 360;
 
 		// Calculate vector to target, add 180 to make it point backwards
