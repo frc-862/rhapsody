@@ -40,7 +40,6 @@ public class NotePass extends Command {
 	private PIDController pidController = PassConstants.PASS_CONTROLLER;
 	private SimpleMotorFeedforward feedforward = PassConstants.FEED_FORWARD;
 	private XboxControllerFilter driver;
-	// private Indexer indexer;
 
 	private DoubleLogEntry currentHeadingLog;
 	private DoubleLogEntry targetHeadingLog;
@@ -56,20 +55,14 @@ public class NotePass extends Command {
 	 * @param pivot subsystem
 	 * @param flywheel subsystem
 	 * @param driver the driver's controller, used for drive input
-	 * @param indexer subsystem
 	 */
-	public NotePass(Swerve drivetrain, Flywheel flywheel, Pivot pivot, XboxControllerFilter driver) { //, Indexer indexer) {
+	public NotePass(Swerve drivetrain, Flywheel flywheel, Pivot pivot, XboxControllerFilter driver) {
 		this.drivetrain = drivetrain;
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 		this.driver = driver;
-		// this.indexer = indexer;
 
-		// if (DriverStation.isAutonomous()) {
-		// 	addRequirements(flywheel, pivot, drivetrain, indexer);
-		// } else {
 		addRequirements(flywheel, pivot, drivetrain);
-		// }
 	}
 
 	@Override
@@ -110,9 +103,6 @@ public class NotePass extends Command {
 		pivot.setTargetAngle(ShooterConstants.NOTEPASS_ANGLE_MAP.get(distanceToCorner) + pivot.getBias());
 
 		if (flywheel.allMotorsOnTarget() && pivot.onTarget() && inTolerance()) {
-			// if (DriverStation.isAutonomous()) {
-			// 	indexer.indexUp();
-			// }
 			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
 		}
@@ -124,14 +114,11 @@ public class NotePass extends Command {
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
 		pivot.setTargetAngle(pivot.getStowAngle());
-		// if (DriverStation.isAutonomous()) {
-		// 	indexer.stop();
-		// }
 	}
 
 	@Override
 	public boolean isFinished() {
-		return false;//!indexer.hasNote();
+		return false;
 	}
 
 	private boolean isBlueAlliance() {
