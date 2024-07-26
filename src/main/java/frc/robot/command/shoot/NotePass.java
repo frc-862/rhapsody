@@ -140,16 +140,16 @@ public class NotePass extends Command {
 		currentHeadingLog = new DoubleLogEntry(log, "/NotePass/CurrentHeading");
 		targetHeadingLog = new DoubleLogEntry(log, "/NotePass/TargetHeading");
 		pidOutputLog = new DoubleLogEntry(log, "/NotePass/PIDoutput");
-		distanceToSpeakerLog = new DoubleLogEntry(log, "/NotePass/DistanceTOCorner");
+		distanceToSpeakerLog = new DoubleLogEntry(log, "/NotePass/DistanceToSpeaker");
 
 		headingOnTargetLog = new BooleanLogEntry(log, "/NotePass/Heading-OnTarget");
 		shooterOnTargetLog = new BooleanLogEntry(log, "/NotePass/Shooter-OnTarget");
 
 		if (!DriverStation.isFMSAttached()) {
-			LightningShuffleboard.setBoolSupplier("Note-Pass", "In tloeracnce", () -> inTolerance());
+			LightningShuffleboard.setBoolSupplier("Note-Pass", "In tolerance", () -> inTolerance());
 			LightningShuffleboard.setDoubleSupplier("Note-Pass", "CurrentHeading", () -> currentHeading);
 			LightningShuffleboard.setDoubleSupplier("Note-Pass", "TargetHeading", () -> targetHeading);
-			LightningShuffleboard.setDoubleSupplier("Note-Pass", "Distance to Corner", () -> distanceToSpeaker);
+			LightningShuffleboard.setDoubleSupplier("Note-Pass", "Distance to Speaker", () -> distanceToSpeaker);
 		}
 	}
 

@@ -449,7 +449,7 @@ public class Constants {
 
         public static final double INDEXER_DEFAULT_POWER = 1d;
         public static final double INDEXER_MANUAL_POWER = 1d;
-        public static final double INDEXER_DEBOUNCE_TIME = 0.5d;
+        public static final double INDEXER_DEBOUNCE_TIME = 0.25d;
         public static final double INDEXER_SYSTEST_POWER = 0.25d;
     }
 
