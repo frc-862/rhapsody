@@ -18,24 +18,43 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 6.0
                 }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
+          "data": {
+            "name": "Enable-Vision"
+          }
+        },
+        {
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "wait",
                 "data": {
-                  "pathName": "SB-F4"
+                  "waitTime": 1.0
                 }
               },
               {
-                "type": "race",
+                "type": "named",
+                "data": {
+                  "name": "Stop-Flywheel"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "parallel",
                 "data": {
                   "commands": [
                     {
@@ -45,9 +64,9 @@
                       }
                     },
                     {
-                      "type": "wait",
+                      "type": "path",
                       "data": {
-                        "waitTime": 3.0
+                        "pathName": "ST-C1"
                       }
                     }
                   ]
@@ -57,20 +76,13 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "F4-BS-Close"
-                }
-              }
-            ]
+            "pathName": "C1-ST"
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -80,9 +92,9 @@
                 }
               },
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "Stop-Drive"
+                  "waitTime": 6.0
                 }
               }
             ]
@@ -91,7 +103,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SB-F5"
+            "pathName": "ST-C1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop-Drive"
           }
         }
       ]

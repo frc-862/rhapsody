@@ -44,25 +44,32 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "SB-C3"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "SB-C3"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Smart-Collect-Tele"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "Smart-Collect"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop-Flywheel"
+                  "waitTime": 3.25
                 }
               }
             ]
@@ -88,12 +95,6 @@
                 "type": "named",
                 "data": {
                   "name": "preAim"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
                 }
               }
             ]
@@ -121,6 +122,6 @@
       ]
     }
   },
-  "folder": "CAND",
+  "folder": null,
   "choreoAuto": false
 }

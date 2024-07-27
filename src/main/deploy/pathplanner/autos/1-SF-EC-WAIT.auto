@@ -1,12 +1,18 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.3633965729469937,
+      "y": 5.555088802485298
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -18,22 +24,22 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
+                  "waitTime": 2.0
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "nuh-Uh"
+            "waitTime": 12.75
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Reverse-Cheese-Paste"
+            "pathName": "SF-C2"
           }
         }
       ]

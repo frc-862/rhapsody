@@ -178,6 +178,9 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Smart-Collect",
 				new AutonSmartCollect(() -> 0.5, () -> 0.6, collector, indexer)
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
+		NamedCommands.registerCommand("Smart-Collect-Tele",
+				new SmartCollect(() -> 0.5, () -> 0.6, collector, indexer, pivot, flywheel)
+						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain));
 		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
@@ -191,7 +194,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Bias-Down", new InstantCommand(() -> pivot.decreaseBias()));
 		NamedCommands.registerCommand("End-Kama", new InstantCommand(() -> flywheel.endKama()));
 		NamedCommands.registerCommand("Start-Kama", new InstantCommand(() -> flywheel.startKama()));
-		NamedCommands.registerCommand("Note-Pass", new NotePass(drivetrain, flywheel, pivot, driver, indexer));
+		NamedCommands.registerCommand("Note-Pass", new InstantCommand()); // Why is this here?? IDK but im gonna keep it here so we don't break things
 		// NamedCommands.registerCommand("Reverse-Cheese-Paste", new ReverseChasePieces(drivetrain, collector, indexer, limelights));
 
 		// make sure named commands are initialized before autobuilder!
@@ -238,8 +241,8 @@ public class RobotContainer extends LightningContainer {
 
 		// new Trigger(driver::getBButton).whileTrue(new PathFindToAuton(
 		// PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
-		new Trigger(driver::getBButton)
-				.whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
+		// new Trigger(driver::getBButton)
+		// 		.whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
 
 		// new Trigger(driver::getYButton) // TODO Make align to TRAP
 
@@ -249,8 +252,7 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getLeftBumper).whileTrue(
 				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0d));
 
-		new Trigger(driver::getYButton)
-		.whileTrue(new NotePass(drivetrain, flywheel, pivot, driver, indexer)
+		new Trigger(driver::getYButton).whileTrue(new NotePass(drivetrain, flywheel, pivot, driver)
 				.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));

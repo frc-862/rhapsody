@@ -449,7 +449,7 @@ public class Constants {
 
         public static final double INDEXER_DEFAULT_POWER = 1d;
         public static final double INDEXER_MANUAL_POWER = 1d;
-        public static final double INDEXER_DEBOUNCE_TIME = 0.5d;
+        public static final double INDEXER_DEBOUNCE_TIME = 0.25d;
         public static final double INDEXER_SYSTEST_POWER = 0.25d;
     }
 
@@ -492,12 +492,12 @@ public class Constants {
         public static final boolean MOTOR_INVERT = true; // POS power is up
         public static final int MOTOR_STATOR_CURRENT_LIMIT = 60;
         public static final boolean MOTOR_BRAKE_MODE = true;
-        public static final double MOTOR_KP = 220;
+        public static final double MOTOR_KP = 190;
         public static final double MOTOR_KI = 0;
         public static final double MOTOR_KD = 0;
         public static final double MOTOR_KG = 0.393;
         public static final double MOTOR_KV = 50d;
-        public static final double MOTOR_KS = 50d;
+        public static final double MOTOR_KS = 20d;
         public static final double MOTOR_KA = 0d;
 
         public static final double ANGLE_TOLERANCE = 0.00208d; // .75 degrees
@@ -622,7 +622,7 @@ public class Constants {
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2500;
-        public static final double POINT_BLANK_ANGLE = 50;
+        public static final double POINT_BLANK_ANGLE = 49.5;
 
         // Podium
         public static final double PODIUM_RPM = 3000;
