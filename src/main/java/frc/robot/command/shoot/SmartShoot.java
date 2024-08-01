@@ -160,7 +160,7 @@ public class SmartShoot extends Command {
 		if (Constants.IS_MERCURY) {
 			return ShooterConstants.TUBE_ANGLE_MAP.get(distance);
 		}
-		return ShooterConstants.STEALTH_ANGLE_MAP.get(distance);
+		return ShooterConstants.ONESIDE_ANGLE_MAP.get(distance);
 	}
 
 	/**
@@ -173,6 +173,6 @@ public class SmartShoot extends Command {
 		if (Constants.IS_MERCURY) {
 			return ShooterConstants.TUBE_SPEED_MAP.get(distance);
 		}
-		return ShooterConstants.STEALTH_SPEED_MAP.get(distance);
+		return ShooterConstants.ONESIDE_SPEED_MAP.get(distance);
 	}
 }

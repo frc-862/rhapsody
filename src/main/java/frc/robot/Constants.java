@@ -585,6 +585,32 @@ public class Constants {
             }
         };
 
+        // Distance in meters, angle in degrees
+        public static final InterpolationMap ONESIDE_ANGLE_MAP = new InterpolationMap() {
+            {
+
+                put(1.21d, 41.5d);
+                put(1.64d, 36d);
+                put(2.032d, 32.25d);
+                put(2.54d, 30d);
+                put(2.794d, 27.5d);
+                put(2.795d, 27d);
+            }
+        };
+
+        // Distance in meters, speed in RPM
+        public static final InterpolationMap ONESIDE_SPEED_MAP = new InterpolationMap() {
+            {
+                put(1.21d, 4250d);
+                put(1.64d, 4500d);
+                put(2.032d, 4750d);
+                put(2.54d,4750d);
+                put(2.794d, 5000d);
+                put(2.795d, 0d);
+
+            }
+        };
+
         public static final InterpolationMap NOTEPASS_ANGLE_MAP = new InterpolationMap() {
             {
                 put(13.716, 36d);
@@ -621,8 +647,8 @@ public class Constants {
         public static final double AMP_ANGLE = 92;
 
         // PointBlank
-        public static final double POINT_BLANK_RPM = 2500;
-        public static final double POINT_BLANK_ANGLE = 49.5;
+        public static final double POINT_BLANK_RPM = 4000;
+        public static final double POINT_BLANK_ANGLE = 46.5;
 
         // Podium
         public static final double PODIUM_RPM = 3000;
