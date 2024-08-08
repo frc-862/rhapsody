@@ -594,7 +594,8 @@ public class Constants {
                 put(2.032d, 32.25d);
                 put(2.54d, 30d);
                 put(2.794d, 27.5d);
-                put(2.795d, 27d);
+                put(3.303d, 27d);
+                put(3.304d, 27d);
             }
         };
 
@@ -606,7 +607,8 @@ public class Constants {
                 put(2.032d, 4750d);
                 put(2.54d,4750d);
                 put(2.794d, 5000d);
-                put(2.795d, 0d);
+                put(3.303d, 5000d);
+                put(3.304d, 0d);
 
             }
         };
