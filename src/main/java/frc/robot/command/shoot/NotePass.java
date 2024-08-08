@@ -34,18 +34,17 @@ public class NotePass extends Command {
 	private Translation2d targetPose;
 	private double currentHeading;
 	private double targetHeading;
-	private double distanceToCorner;
+	private double distanceToSpeaker;
 	private double feedForwardOutput;
 	private double pidOutput;
 	private PIDController pidController = PassConstants.PASS_CONTROLLER;
 	private SimpleMotorFeedforward feedforward = PassConstants.FEED_FORWARD;
 	private XboxControllerFilter driver;
-	private Indexer indexer;
 
 	private DoubleLogEntry currentHeadingLog;
 	private DoubleLogEntry targetHeadingLog;
 	private DoubleLogEntry pidOutputLog;
-	private DoubleLogEntry distanceToCornerLog;
+	private DoubleLogEntry distanceToSpeakerLog;
 	private BooleanLogEntry headingOnTargetLog;
 	private BooleanLogEntry shooterOnTargetLog;
 
@@ -56,20 +55,14 @@ public class NotePass extends Command {
 	 * @param pivot subsystem
 	 * @param flywheel subsystem
 	 * @param driver the driver's controller, used for drive input
-	 * @param indexer subsystem
 	 */
-	public NotePass(Swerve drivetrain, Flywheel flywheel, Pivot pivot, XboxControllerFilter driver, Indexer indexer) {
+	public NotePass(Swerve drivetrain, Flywheel flywheel, Pivot pivot, XboxControllerFilter driver) {
 		this.drivetrain = drivetrain;
 		this.flywheel = flywheel;
 		this.pivot = pivot;
 		this.driver = driver;
-		this.indexer = indexer;
 
-		if (DriverStation.isAutonomous()) {
-			addRequirements(flywheel, pivot, drivetrain, indexer);
-		} else {
-			addRequirements(flywheel, pivot, drivetrain);
-		}
+		addRequirements(flywheel, pivot, drivetrain);
 	}
 
 	@Override
@@ -89,7 +82,7 @@ public class NotePass extends Command {
 		var deltaX = targetPose.getX() - pose.getX();
 		var deltaY = targetPose.getY() - pose.getY();
 
-		distanceToCorner = drivetrain.distanceToCorner();
+		distanceToSpeaker = drivetrain.distanceToSpeaker();
 		currentHeading = (pose.getRotation().getDegrees() + 360) % 360;
 
 		// Calculate vector to target, add 180 to make it point backwards
@@ -105,13 +98,10 @@ public class NotePass extends Command {
 
 		drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), feedForwardOutput);
 
-		flywheel.setAllMotorsRPM(ShooterConstants.NOTEPASS_SPEED_MAP.get(distanceToCorner) + flywheel.getBias());
-		pivot.setTargetAngle(ShooterConstants.NOTEPASS_ANGLE_MAP.get(distanceToCorner) + pivot.getBias());
+		flywheel.setAllMotorsRPM(ShooterConstants.NOTEPASS_SPEED_MAP.get(distanceToSpeaker) + flywheel.getBias());
+		pivot.setTargetAngle(ShooterConstants.NOTEPASS_ANGLE_MAP.get(distanceToSpeaker) + pivot.getBias());
 
 		if (flywheel.allMotorsOnTarget() && pivot.onTarget() && inTolerance()) {
-			if (DriverStation.isAutonomous()) {
-				indexer.indexUp();
-			}
 			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
 		}
@@ -123,14 +113,11 @@ public class NotePass extends Command {
 	public void end(boolean interrupted) {
 		flywheel.coast(true);
 		pivot.setTargetAngle(pivot.getStowAngle());
-		if (DriverStation.isAutonomous()) {
-			indexer.stop();
-		}
 	}
 
 	@Override
 	public boolean isFinished() {
-		return !indexer.hasNote();
+		return false;
 	}
 
 	private boolean isBlueAlliance() {
@@ -153,16 +140,16 @@ public class NotePass extends Command {
 		currentHeadingLog = new DoubleLogEntry(log, "/NotePass/CurrentHeading");
 		targetHeadingLog = new DoubleLogEntry(log, "/NotePass/TargetHeading");
 		pidOutputLog = new DoubleLogEntry(log, "/NotePass/PIDoutput");
-		distanceToCornerLog = new DoubleLogEntry(log, "/NotePass/DistanceTOCorner");
+		distanceToSpeakerLog = new DoubleLogEntry(log, "/NotePass/DistanceToSpeaker");
 
 		headingOnTargetLog = new BooleanLogEntry(log, "/NotePass/Heading-OnTarget");
 		shooterOnTargetLog = new BooleanLogEntry(log, "/NotePass/Shooter-OnTarget");
 
 		if (!DriverStation.isFMSAttached()) {
-			LightningShuffleboard.setBoolSupplier("Note-Pass", "In tloeracnce", () -> inTolerance());
+			LightningShuffleboard.setBoolSupplier("Note-Pass", "In tolerance", () -> inTolerance());
 			LightningShuffleboard.setDoubleSupplier("Note-Pass", "CurrentHeading", () -> currentHeading);
 			LightningShuffleboard.setDoubleSupplier("Note-Pass", "TargetHeading", () -> targetHeading);
-			LightningShuffleboard.setDoubleSupplier("Note-Pass", "Distance to Corner", () -> distanceToCorner);
+			LightningShuffleboard.setDoubleSupplier("Note-Pass", "Distance to Speaker", () -> distanceToSpeaker);
 		}
 	}
 
@@ -173,7 +160,7 @@ public class NotePass extends Command {
 		currentHeadingLog.append(currentHeading);
 		targetHeadingLog.append(targetHeading);
 		pidOutputLog.append(feedForwardOutput);
-		distanceToCornerLog.append(distanceToCorner);
+		distanceToSpeakerLog.append(distanceToSpeaker);
 
 		headingOnTargetLog.append(inTolerance());
 		shooterOnTargetLog.append(flywheel.allMotorsOnTarget() && pivot.onTarget());
