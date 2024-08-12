@@ -25,15 +25,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "SB-F4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Chase-Pieces"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SB-F4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect"
+                }
+              }
+            ]
           }
         },
         {
@@ -75,15 +82,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "SB-F3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Chase-Pieces"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SB-F3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect"
+                }
+              }
+            ]
           }
         },
         {

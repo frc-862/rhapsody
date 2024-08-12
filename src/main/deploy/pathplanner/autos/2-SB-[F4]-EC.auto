@@ -63,29 +63,22 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "F4-BS-Close"
+                  "pathName": "F4-BS"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect-Tele"
                 }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Cand-Sub"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop-Drive"
-                }
-              }
-            ]
+            "name": "Smart-Shoot"
           }
         },
         {

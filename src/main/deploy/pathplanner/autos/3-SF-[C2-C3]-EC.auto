@@ -43,7 +43,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Collect"
+                  "name": "Smart-Collect-Tele"
                 }
               }
             ]
@@ -74,7 +74,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Collect"
+                  "name": "Smart-Collect-Tele"
                 }
               },
               {
@@ -103,7 +103,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Smart-Collect"
+                        "name": "Smart-Collect-Tele"
                       }
                     }
                   ]

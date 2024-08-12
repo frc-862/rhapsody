@@ -554,14 +554,22 @@ public class Constants {
             {
                 // As distance gets smaller angle goes up
                 put(1.21d, 50d);
-                put(1.64d, 45d);
-                put(2d, 41d);
-                put(2.5d, 36d);
-                put(2.9d, 33.5d);
-                put(3d, 32.5d);
-                put(3.51d, 29.5d);
-                put(4.02d, 28.25d);
-                put(4.33, 27.5d);
+                put(1.67d, 40d);
+                put(1.819, 38d);
+                //switch
+                put(1.82, 34d);
+                //linear
+                put(2.5d, 34d);
+                put(2.6d, 32d);
+                put(2.7, 31d);
+                put(3d, 30.0d);
+                put(3.08, 29d);
+                put(3.15, 28d);
+                put(3.23, 28d);
+                put(3.51d, 27d);
+                //end of travel
+                put(4.0d, 26d);
+                put(4.33, 26d);
                 put(4.71d, 26d);
                 // put(6.2d, 23.5d);
             }
@@ -573,13 +581,14 @@ public class Constants {
                 // As distance get smaller RPM gets smaller
                 put(1.21d, 2000d);
                 put(1.64d, 2500d);
-                put(2d, 2500d);
-                put(2.5d, 3200d);
-                put(2.9d, 3550d);
-                put(3d, 3800d);
+                put(1.819, 3000d);
+                //switch
+                put(1.82, 4000d);
+                //linear
                 put(3.51d, 4000d);
-                put(4.02d, 4300d);
-                put(4.33d, 4500d);
+                //end of travel
+                put(4.0d, 3500d);
+                put(4.33d, 3000d);
                 put(4.71d, 5500d);
                 // put(6.2d, 5800d);
             }
@@ -622,7 +631,7 @@ public class Constants {
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2500;
-        public static final double POINT_BLANK_ANGLE = 49.5;
+        public static final double POINT_BLANK_ANGLE = 48.5;
 
         // Podium
         public static final double PODIUM_RPM = 3000;
@@ -641,7 +650,7 @@ public class Constants {
         public static final double C3_ANGLE = 29.5d;
 
         // Line
-        public static final double LINE_RPM = 200d;
+        public static final double LINE_RPM = 2000d;
         public static final double LINE_ANGLE = 28.7;
 
         // 3.5 shhhhhh
