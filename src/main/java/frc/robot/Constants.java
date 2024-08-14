@@ -556,9 +556,9 @@ public class Constants {
                 put(1.21d, 50d);
                 put(1.67d, 40d);
                 put(1.819, 38d);
-                //switch
+                // switch
                 put(1.82, 34d);
-                //linear
+                // linear
                 put(2.5d, 34d);
                 put(2.6d, 32d);
                 put(2.7, 31d);
@@ -567,10 +567,10 @@ public class Constants {
                 put(3.15, 28d);
                 put(3.23, 28d);
                 put(3.51d, 27d);
-                //end of travel
+                // end of travel
                 put(4.0d, 26d);
                 put(4.33, 26d);
-                put(4.71d, 26d);
+                // put(4.71d, 26d);
                 // put(6.2d, 23.5d);
             }
         };
@@ -582,14 +582,14 @@ public class Constants {
                 put(1.21d, 2000d);
                 put(1.64d, 2500d);
                 put(1.819, 3000d);
-                //switch
+                // switch
                 put(1.82, 4000d);
-                //linear
+                // linear
                 put(3.51d, 4000d);
-                //end of travel
+                // end of travel
                 put(4.0d, 3500d);
                 put(4.33d, 3000d);
-                put(4.71d, 5500d);
+                // put(4.71d, 5500d);
                 // put(6.2d, 5800d);
             }
         };
