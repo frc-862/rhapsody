@@ -51,6 +51,8 @@ public class Constants {
         public static final double SYS_TEST_SPEED_TURN = 0.7d;
 
         public static final Translation2d SPEAKER_POSE = new Translation2d(0d, 5.547393);
+        public static final Translation2d RED_SPEAKER_POSE = new Translation2d(15.6592d, 5.547393d);
+        public static final Translation2d BLUE_SPEAKER_POSE = new Translation2d(0.8d, 5.547393d);
 
         public static final Translation2d RED_CORNER_POSE = new Translation2d(15.6592d, 7.5d);
         public static final Translation2d BLUE_CORNER_POSE = new Translation2d(0.8d, 7.5d); // TODO get real >:)
@@ -596,23 +598,27 @@ public class Constants {
 
         public static final InterpolationMap NOTEPASS_ANGLE_MAP = new InterpolationMap() {
             {
-                put(13.716, 36d);
-                put(12.192, 36d);
-                put(10.668, 37d);
-                put(9.144, 38d);
-                put(7.62, 41d);
-                put(6.096, 46d);
+                // put(13.716, 36d);
+                // put(12.192, 36d);
+                // put(10.668, 37d);
+                // put(9.144, 38d);
+                // put(7.62, 41d);
+                // put(6.096, 46d);
+                put(10.1d, 38d);
+                put(11.03d, 36d);
             }
         };
 
         public static final InterpolationMap NOTEPASS_SPEED_MAP = new InterpolationMap() {
             {
-                put(13.716, 3600d);
-                put(12.192, 3300d);
-                put(20.668, 2900d);
-                put(9.144, 2600d);
-                put(7.62, 2250d);
-                put(6.096, 1900d);
+                // put(13.716, 3600d);
+                // put(12.192, 3300d);
+                // put(20.668, 2900d);
+                // put(9.144, 2600d);
+                // put(7.62, 2250d);
+                // put(6.096, 1900d);
+                put(10.1d, 5500d);
+                put(11.03d, 6000d);
             }
         };
 
@@ -625,9 +631,9 @@ public class Constants {
 
     public class CandConstants {
         // Amp
-        public static final double AMP_TOP_RPM = 400;
-        public static final double AMP_BOTTOM_RPM = 700;
-        public static final double AMP_ANGLE = 92;
+        public static final double AMP_TOP_RPM = 500;
+        public static final double AMP_BOTTOM_RPM = 725;
+        public static final double AMP_ANGLE = 94;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2500;

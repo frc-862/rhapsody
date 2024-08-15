@@ -68,7 +68,7 @@ public class NotePass extends Command {
 	@Override
 	public void initialize() {
 		if (isBlueAlliance()) {
-			targetPose = DrivetrainConstants.BLUE_CORNER_POSE;
+			targetPose = DrivetrainConstants.BLUE_SPEAKER_POSE;
 		} else {
 			targetPose = DrivetrainConstants.RED_CORNER_POSE;
 		}
