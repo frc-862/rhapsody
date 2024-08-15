@@ -179,7 +179,7 @@ public class RobotContainer extends LightningContainer {
 				new AutonSmartCollect(() -> 0.5, () -> 0.6, collector, indexer)
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Smart-Collect-Tele",
-				new SmartCollect(() -> 0.5, () -> 0.6, collector, indexer, pivot, flywheel)
+				new SmartCollect(() -> 0.5, () -> 0.6, collector, indexer, pivot, flywheel, true)
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain));
@@ -195,7 +195,7 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("End-Kama", new InstantCommand(() -> flywheel.endKama()));
 		NamedCommands.registerCommand("Start-Kama", new InstantCommand(() -> flywheel.startKama()));
 		NamedCommands.registerCommand("Note-Pass", new InstantCommand()); // Why is this here?? IDK but im gonna keep it here so we don't break things
-		// NamedCommands.registerCommand("Reverse-Cheese-Paste", new ReverseChasePieces(drivetrain, collector, indexer, limelights));
+		NamedCommands.registerCommand("Reverse-Cheese-Paste", new InstantCommand()); //new ReverseChasePieces(drivetrain, collector, indexer, limelights));
 
 		// make sure named commands are initialized before autobuilder!
 		autoChooser = AutoBuilder.buildAutoChooser();
