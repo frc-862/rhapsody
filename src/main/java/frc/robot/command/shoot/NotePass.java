@@ -1,7 +1,5 @@
 package frc.robot.command.shoot;
 
-import java.sql.Driver;
-import java.util.function.BooleanSupplier;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,7 +16,6 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.PassConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.thunder.command.TimedCommand;
@@ -52,9 +49,9 @@ public class NotePass extends Command {
 	 * Creates a new NotePass.
 	 *
 	 * @param drivetrain subsystem
-	 * @param pivot subsystem
-	 * @param flywheel subsystem
-	 * @param driver the driver's controller, used for drive input
+	 * @param pivot      subsystem
+	 * @param flywheel   subsystem
+	 * @param driver     the driver's controller, used for drive input
 	 */
 	public NotePass(Swerve drivetrain, Flywheel flywheel, Pivot pivot, XboxControllerFilter driver) {
 		this.drivetrain = drivetrain;
@@ -67,8 +64,14 @@ public class NotePass extends Command {
 
 	@Override
 	public void initialize() {
+		/*
+		 * Because the flywheels are on one side, the note will spin slightly
+		 * which is why we want to use the corner pose on blue and
+		 * the speaker pose on red.
+		 * I may be going crazy but whatever!!
+		 */
 		if (isBlueAlliance()) {
-			targetPose = DrivetrainConstants.BLUE_CORNER_POSE;
+			targetPose = DrivetrainConstants.BLUE_SPEAKER_POSE;
 		} else {
 			targetPose = DrivetrainConstants.RED_CORNER_POSE;
 		}

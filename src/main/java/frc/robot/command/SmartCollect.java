@@ -39,9 +39,10 @@ public class SmartCollect extends Command {
      * @param indexer        subsystem
      * @param pivot          subsystem (read only)
      * @param flywheel       subsystem
+     * @param isAutonomous   whether or not this command is being used in autonomous
      */
     public SmartCollect(DoubleSupplier collectorPower, DoubleSupplier indexerPower, Collector collector,
-            Indexer indexer, Pivot pivot, Flywheel flywheel) {
+            Indexer indexer, Pivot pivot, Flywheel flywheel, boolean isAutonomous) {
         this.collector = collector;
         this.indexer = indexer;
         this.pivot = pivot;
@@ -49,11 +50,17 @@ public class SmartCollect extends Command {
         this.collectorPower = collectorPower;
         this.indexerPower = indexerPower;
 
-        if (DriverStation.isAutonomous()) {
+        if (isAutonomous || DriverStation.isAutonomous()) {
             addRequirements(collector, indexer);
         } else {
             addRequirements(collector, indexer, flywheel);
         }
+    }
+
+    // Overloaded constructor for use in teleop
+    public SmartCollect(DoubleSupplier collectorPower, DoubleSupplier indexerPower, Collector collector,
+            Indexer indexer, Pivot pivot, Flywheel flywheel) {
+        this(collectorPower, indexerPower, collector, indexer, pivot, flywheel, false);
     }
 
     @Override
