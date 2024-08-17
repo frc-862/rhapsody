@@ -31,7 +31,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SF-C2"
+                  "pathName": "SB-C3"
                 }
               },
               {
@@ -65,26 +65,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C2-F3-CHASE"
+            "pathName": "C3-F4-CHASE"
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Chase-Pieces"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 3.0
-                }
-              }
-            ]
+            "name": "Chase-Pieces"
           }
         },
         {
@@ -94,7 +81,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "F3-C2"
+                  "pathName": "F4-BS"
                 }
               },
               {
@@ -111,9 +98,22 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "Smart-Shoot"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point-At-Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "preAim"
+                      }
+                    }
+                  ]
                 }
               },
               {

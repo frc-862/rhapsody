@@ -31,13 +31,45 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SF-C2"
+                  "pathName": "ST-C1"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Smart-Collect-Tele"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point-At-Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "preAim"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 5.0
                 }
               }
             ]
@@ -56,7 +88,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 4.0
                 }
               }
             ]
@@ -65,26 +97,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C2-F3-CHASE"
+            "pathName": "C1-F2"
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Chase-Pieces"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 3.0
-                }
-              }
-            ]
+            "name": "Chase-Pieces"
           }
         },
         {
@@ -94,13 +113,45 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "F3-C2"
+                  "pathName": "F2-C1"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Smart-Collect-Tele"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point-At-Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "preAim"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 5.0
                 }
               }
             ]
@@ -119,7 +170,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 4.0
                 }
               }
             ]

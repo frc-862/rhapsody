@@ -8,42 +8,45 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.81174067379557,
-        "y": 6.63734080626455
+        "x": 4.655577599443487,
+        "y": 1.8212065252959344
       },
       "isLocked": false,
       "linkedName": "C3"
     },
     {
       "anchor": {
-        "x": 7.122594559026493,
-        "y": 5.8788399459823175
+        "x": 7.086934534229428,
+        "y": 2.4406016379600333
       },
       "prevControl": {
-        "x": 5.718718464463955,
-        "y": 6.434313409167359
+        "x": 5.764941980334411,
+        "y": 1.016917349150014
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "F2"
+      "linkedName": "F4-CHASE"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -12.935160798543349,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Top side paths",
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }
