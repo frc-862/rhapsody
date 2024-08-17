@@ -272,7 +272,7 @@ public class RobotContainer extends LightningContainer {
 				.whileTrue(new PointBlankShot(flywheel, pivot).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		// new Trigger(coPilot::getYButton).whileTrue(new PivotUP(pivot));
 		// new Trigger(coPilot::getYButton).whileTrue(new NotePass(drivetrain, flywheel, pivot, driver, indexer));
-		new Trigger(coPilot::getYButton).whileTrue(new Tune(flywheel, pivot));
+		// new Trigger(coPilot::getYButton).whileTrue(new Tune(flywheel, pivot));
 		// .deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 		new Trigger(coPilot::getAButton).whileTrue(new AmpShot(flywheel, pivot)
 				.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
