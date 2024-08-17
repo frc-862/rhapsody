@@ -10,8 +10,10 @@
     "Top side paths"
   ],
   "autoFolders": [
-    "LOL",
-    "CAND"
+    "Good",
+    "Questionable",
+    "Untested",
+    "no."
   ],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 4.0,

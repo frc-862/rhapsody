@@ -31,70 +31,32 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SB-F4"
+                  "pathName": "SF-C2"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Smart-Collect"
+                  "name": "Smart-Collect-Tele"
                 }
               }
             ]
           }
         },
         {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "F4-BS-Close"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "preAim"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "Cand-Sub"
+                  "name": "Smart-Shoot"
                 }
               },
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "Stop-Drive"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SB-F3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Collect"
+                  "waitTime": 5.0
                 }
               }
             ]
@@ -103,18 +65,69 @@
         {
           "type": "path",
           "data": {
-            "pathName": "F3-BS-Close"
+            "pathName": "C2-F3-CHASE"
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Cand-Sub"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Chase-Pieces"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "F3-C2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect-Tele"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 5.0
+                }
+              }
+            ]
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Untested",
   "choreoAuto": false
 }
