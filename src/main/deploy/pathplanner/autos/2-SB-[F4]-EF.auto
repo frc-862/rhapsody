@@ -25,7 +25,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -35,22 +35,9 @@
                 }
               },
               {
-                "type": "race",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Smart-Collect-Tele"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 3.0
-                      }
-                    }
-                  ]
+                  "name": "Smart-Collect-Tele"
                 }
               }
             ]
@@ -82,9 +69,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "SB-F5"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SB-F5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect-Tele"
+                }
+              }
+            ]
           }
         }
       ]

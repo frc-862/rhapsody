@@ -18,22 +18,29 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
+                  "waitTime": 3.0
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "SB-F5"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Chase-Pieces"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SB-F5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect-Tele"
+                }
+              }
+            ]
           }
         },
         {
@@ -81,7 +88,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -100,7 +107,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -109,12 +116,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BS-F5-Close"
+            "pathName": "BS-F5-CHASE"
           }
         }
       ]
     }
   },
-  "folder": "Untested",
+  "folder": "Good",
   "choreoAuto": false
 }

@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -56,32 +56,26 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 3.0
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "C2-F3-CHASE"
-          }
-        },
-        {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Chase-Pieces"
+                  "pathName": "C2-F3"
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 3.0
+                  "name": "Smart-Collect-Tele"
                 }
               }
             ]
@@ -119,7 +113,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -128,6 +122,6 @@
       ]
     }
   },
-  "folder": "Untested",
+  "folder": "Good",
   "choreoAuto": false
 }
