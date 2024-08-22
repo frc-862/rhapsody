@@ -18,7 +18,45 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 4.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SB-C3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Collect-Tele"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Smart-Shoot"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 5.0
                 }
               }
             ]
@@ -27,7 +65,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SB-F4"
+            "pathName": "C3-F4-CHASE"
           }
         },
         {
@@ -45,90 +83,14 @@
                 "data": {
                   "pathName": "F4-BS"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Point-At-Speaker-left"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "preAim"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Shoot"
-                }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Stop-Drive"
+                  "name": "Smart-Collect-Tele"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "BS-C3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop-Flywheel"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Chase-Pieces"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "C3-SB"
           }
         },
         {
@@ -157,26 +119,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.0
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Smart-Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop-Drive"
+                  "waitTime": 5.0
                 }
               }
             ]
@@ -185,6 +128,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Untested",
   "choreoAuto": false
 }
