@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.constraint.RectangularRegionConstraint;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -177,6 +178,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyPercentRequestField(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
+        // if (RobotBase.isSimulation()){
+        //     return run(() -> this.setControl(driveField.withVelocityX(x.getAsDouble() * maxSpeed).withVelocityY(y.getAsDouble() * maxSpeed).withRotationalRate(rot.getAsDouble() * maxAngularRate)));
+        // }
         return run(() -> this.setControl(driveField.withVelocityX(x.getAsDouble() * maxSpeed).withVelocityY(y.getAsDouble() * maxSpeed).withRotationalRate(rot.getAsDouble() * maxAngularRate).withDriveRequestType(DriveRequestType.Velocity)));
     }
 
@@ -188,7 +192,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rot the rotational velocity in rad/s
      */
     public void setField(double x, double y, double rot) {
-        this.setControl(driveField.withVelocityX(x).withVelocityY(y).withRotationalRate(rot).withDriveRequestType(DriveRequestType.Velocity));
+        if (RobotBase.isSimulation()){
+            this.setControl(driveField.withVelocityX(x).withVelocityY(y).withRotationalRate(rot));
+        } else {
+            this.setControl(driveField.withVelocityX(x).withVelocityY(y).withRotationalRate(rot).withDriveRequestType(DriveRequestType.Velocity));
+        }
     }
 
     /**
@@ -199,7 +207,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rot the rotational, percent of max velocity rad/s
      */
     public void setFieldDriver(double x, double y, double rot) {
-        this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed).withRotationalRate(rot).withDriveRequestType(DriveRequestType.Velocity));
+        if (RobotBase.isSimulation()){
+            this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed).withRotationalRate(rot));
+        } else {
+            this.setControl(driveField.withVelocityX(x * maxSpeed).withVelocityY(y * maxSpeed).withRotationalRate(rot).withDriveRequestType(DriveRequestType.Velocity));
+        }
     }
 
     public void setFieldDriver2(double x, double y, double rot) {
@@ -215,6 +227,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @return the request to drive for the drivetrain
      */
     public Command applyPercentRequestRobot(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
+        if (RobotBase.isSimulation()){
+            return run(() -> this.setControl(driveRobot.withVelocityX(x.getAsDouble() * maxSpeed).withVelocityY(y.getAsDouble() * maxSpeed).withRotationalRate(rot.getAsDouble() * maxAngularRate)));
+        }
         return run(() -> this.setControl(driveRobot.withVelocityX(x.getAsDouble() * maxSpeed).withVelocityY(y.getAsDouble() * maxSpeed).withRotationalRate(rot.getAsDouble() * maxAngularRate).withDriveRequestType(DriveRequestType.Velocity)));
     }
 
@@ -226,7 +241,11 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param rot the rotational velocity in rad/s
      */
     public void setRobot(double x, double y, double rot) {
-        this.setControl(driveRobot.withVelocityX(x).withVelocityY(y).withRotationalRate(rot).withDriveRequestType(DriveRequestType.Velocity));
+        if (RobotBase.isSimulation()){
+            this.setControl(driveRobot.withVelocityX(x).withVelocityY(y).withRotationalRate(rot));
+        } else {
+            this.setControl(driveRobot.withVelocityX(x).withVelocityY(y).withRotationalRate(rot).withDriveRequestType(DriveRequestType.Velocity));
+        }
     }
 
     /**

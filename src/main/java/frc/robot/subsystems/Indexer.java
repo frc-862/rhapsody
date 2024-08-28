@@ -22,6 +22,7 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
+import frc.thunder.hardware.LightningBeamBreak;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
@@ -37,8 +38,8 @@ public class Indexer extends SubsystemBase {
     private Collector collector;
 
     private ThunderBird motor;
-    private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_ENTER_BEAMBREAK);
-    private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_EXIT_BEAMBREAK);
+    public LightningBeamBreak indexerSensorEntry = new LightningBeamBreak(DIO.INDEXER_ENTER_BEAMBREAK);
+    public LightningBeamBreak indexerSensorExit = new LightningBeamBreak(DIO.INDEXER_EXIT_BEAMBREAK);
 
     private DutyCycleOut dutyCycleControl = new DutyCycleOut(0).withEnableFOC(true);
 
@@ -233,6 +234,8 @@ public class Indexer extends SubsystemBase {
     public void simulationPeriodic() {
         // set inputs for simulation
         double pidoutput = indexerController.calculate(indexerSim.getOutput(0), targetPower);
+
+        LightningShuffleboard.setDouble("Indexer", "pidoutput", pidoutput);
 
         indexerSim.setInput(pidoutput * 12);
         indexerSim.update(0.01);

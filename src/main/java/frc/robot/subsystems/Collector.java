@@ -19,6 +19,7 @@ import frc.robot.Constants.RobotMap.CAN;
 import frc.robot.Constants.RobotMap.DIO;
 import frc.robot.Constants;
 import frc.robot.Constants.CollectorConstants;
+import frc.thunder.hardware.LightningBeamBreak;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
@@ -34,7 +35,7 @@ public class Collector extends SubsystemBase {
 
     // Declare collector hardware
     private ThunderBird motor;
-    private DigitalInput beamBreak;
+    public LightningBeamBreak beamBreak;
 
     private final VelocityVoltage velocityVoltage = new VelocityVoltage(
             0, 0, true, CollectorConstants.MOTOR_KV,
@@ -59,7 +60,7 @@ public class Collector extends SubsystemBase {
         motor.configPIDF(0, CollectorConstants.MOTOR_KP, CollectorConstants.MOTOR_KI,
                 CollectorConstants.MOTOR_KD, CollectorConstants.MOTOR_KS, CollectorConstants.MOTOR_KV);
 
-        beamBreak = new DigitalInput(DIO.COLLECTOR_BEAMBREAK);
+        beamBreak = new LightningBeamBreak(DIO.COLLECTOR_BEAMBREAK);
         motor.applyConfig();
 
         initLogging();

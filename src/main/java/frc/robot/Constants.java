@@ -391,6 +391,7 @@ public class Constants {
         public static final double SIM_KI = 0.05;
         public static final double SIM_KD = 0;
         public static final double SIM_KA = 0.145;
+        public static final double MaxAngularRate = 10; // m/s (this is a total geuss for simulatiuon)
 
         public static final double COLLECTOR_SYSTEST_POWER = 0.25;
         public static final double COLLECTOR_GRABANDGO_POWER = 0.75;
@@ -466,6 +467,7 @@ public class Constants {
         public static final double SIM_KP = 0.1;
         public static final double SIM_KI = 0.05;
         public static final double SIM_KD = 0;
+        public static final double MaxAngularRate = 10; // m/s (this is a total geuss for simulatiuon)
     }
 
     public class MercuryPivotConstants {
@@ -793,6 +795,9 @@ public class Constants {
         public static final double COLLECT_DISTANCE = 1;
         public static final Rotation2d COLLECT_ANGLE_MAX = new Rotation2d(1d);
         public static final Rotation2d COLLECT_ANGLE_MIN = new Rotation2d(-1d);
+
+        public static final double DistanceFromStartToIndexerEntry = 0.0762; // meters
+        public static final double DistanceFromStartToIndexerExit = 0.33;
     }
 }
 

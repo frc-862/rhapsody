@@ -6,11 +6,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Constants.CollectorConstants;
 import frc.robot.Constants.FlywheelConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PeiceSimConstants;
 import frc.robot.Constants.RhapsodyPivotConstants;
 import frc.thunder.shuffleboard.LightningShuffleboard;
+import java.util.function.DoubleSupplier;
 
 public class SimGamepeices extends SubsystemBase{
     public Peice[] peices;
@@ -26,7 +30,7 @@ public class SimGamepeices extends SubsystemBase{
         public Pose3d pose;
         public boolean isHeld;
         public double timeHeld;
-        public double peiceNum;
+        public double peiceNum; // for publishing
 
         public Peice(Pose3d pose, boolean isHeld, double peiceNum) {
             this.pose = pose;
@@ -72,15 +76,20 @@ public class SimGamepeices extends SubsystemBase{
         for (Peice peice : peices) {
             publish(peice);
         }
+
+        addPeice(new Peice(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)), 11));
+        peices[11].isHeld = true;
+        heldPeice = peices[11];
     }
 
     public void collect(){
         if (heldPeice != null) {
           return;
         }
-        
+
         for (Peice peice : peices) {
-            if (Math.hypot(peice.pose.getTranslation().getX(), peice.pose.getTranslation().getY()) 
+            if (Math.hypot(drivetrain.getPose().getX() - peice.pose.getTranslation().getX(), 
+            drivetrain.getPose().getY() - peice.pose.getTranslation().getY())
             < PeiceSimConstants.COLLECT_DISTANCE && !peice.isHeld && collector.getPower() > 0
             && drivetrain.getPose().getRotation().getDegrees() < PeiceSimConstants.COLLECT_ANGLE_MAX.getDegrees()
             && drivetrain.getPose().getRotation().getDegrees() > PeiceSimConstants.COLLECT_ANGLE_MIN.getDegrees()) {
@@ -91,16 +100,45 @@ public class SimGamepeices extends SubsystemBase{
                 }
                 break;
             }
+
+
         }
     }
 
-    public void shoot(){
+    public void simBeamBreaks(){
         if (heldPeice == null) {
             return;
         }
-        if (indexer.getPower() > 0 && heldPeice != null && Utils.getCurrentTimeSeconds() - heldPeice.timeHeld > 1 
-            && flywheel.getTopMotorRPM() > 0 && flywheel.getBottomMotorRPM() > 0) 
-        {
+
+        double distanceFromStart = -0.5;
+        double timeAtCollection = Utils.getCurrentTimeSeconds();
+
+        while (distanceFromStart <= 1.5){
+            double collectorSpeed = collector.getPower() * CollectorConstants.MaxAngularRate;
+            double indexerSpeed = indexer.getPower() * IndexerConstants.MaxAngularRate;
+            double flywheelSpeed = (flywheel.getBottomMotorRPM() + flywheel.getTopMotorRPM()) / 2 * FlywheelConstants.CIRCUMFRENCE / 60;
+            double t = Utils.getCurrentTimeSeconds() - timeAtCollection;
+            
+            if (distanceFromStart >= -0.5 && distanceFromStart < -0.25) {
+                // In Colelector only
+                distanceFromStart =+ t * collectorSpeed;
+            } else if (distanceFromStart >= -0.25 && distanceFromStart < 0.5) {
+                // In Collector and Indexer
+                distanceFromStart =+ (t * collectorSpeed + t * indexerSpeed) / 2;
+            } else if (distanceFromStart >= 0.5 && distanceFromStart < 1.5) {
+                // In Indexer and Flywheel
+                distanceFromStart =+ (t * indexerSpeed + t * flywheelSpeed) / 2;
+            } else {
+                // In Flywheel only
+                distanceFromStart =+ t * flywheelSpeed;
+            }
+        }
+        shoot();
+    }
+
+    public void shoot(){
+        
+            System.out.println("Sim shooting");
             heldPeice.isHeld = false;
             simShootTraj(heldPeice);
             heldPeice = null;
@@ -129,19 +167,18 @@ public class SimGamepeices extends SubsystemBase{
             // dx = vx * t
             dx = vx * t;
 
-            dx = dx * Math.cos(initialPose.getRotation().getDegrees()) + initialPose.getX();
             dy = dx * Math.sin(initialPose.getRotation().getDegrees()) + initialPose.getY();
+            dx = dx * Math.cos(initialPose.getRotation().getDegrees()) + initialPose.getX();
             peice.pose = new Pose3d(dx, dy, dz, new Rotation3d(0, 0, initialPose.getRotation().getDegrees()));
         }
     }
 
     public void dispensePeiceFromSource(){
-        if(dispensedPeice != null || DriverStation.isAutonomous() /*|| !DriverStation.isEnabled()*/){
+        if(dispensedPeice != null || DriverStation.isAutonomous() || !DriverStation.isEnabled()){
             return;
         }
         addPeice(new Peice(PeiceSimConstants.FROM_SOURCE, peices.length));
         dispensedPeice = peices[peices.length - 1];
-        publish(peices[peices.length - 1]);
     }
 
     public void updateHeldPeicePose(){
@@ -164,6 +201,7 @@ public class SimGamepeices extends SubsystemBase{
         }
         newPeices[peices.length] = peice;
         peices = newPeices;
+        publish(peice);
     }
 
     public void deletePeice(Peice peice){
@@ -181,7 +219,8 @@ public class SimGamepeices extends SubsystemBase{
     public void publish(Peice peice){
         LightningShuffleboard.setDoubleArray("Peices", "peice #" + peice.peiceNum, 
             () -> new double[] {peice.pose.getX(), peice.pose.getY(), peice.pose.getZ(),
-            peice.pose.getRotation().getX(), peice.pose.getRotation().getY(), peice.pose.getRotation().getZ()});
+            Units.radiansToDegrees(peice.pose.getRotation().getX()), Units.radiansToDegrees(peice.pose.getRotation().getY()), 
+            Units.radiansToDegrees(peice.pose.getRotation().getZ())});
     }
 
     

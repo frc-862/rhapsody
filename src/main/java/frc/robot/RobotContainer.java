@@ -381,11 +381,11 @@ public class RobotContainer extends LightningContainer {
 						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_C_STARTPOSE_RED)));
 
 		// TESTSIMS
-		new Trigger(() -> RobotBase.isSimulation() && DriverStation.isEnabled()).whileTrue( // TODO: remove
-			new Index(() -> 0.6, indexer));
+		// new Trigger(() -> RobotBase.isSimulation() && DriverStation.isEnabled()).whileTrue( // TODO: remove
+			// new NotePass(drivetrain, flywheel, pivot, driver, indexer).deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
-		new Trigger(() -> RobotBase.isSimulation() && !DriverStation.isEnabled()).whileTrue( // TODO: remove
-			new Index(() -> 0, indexer));
+		// new Trigger(() -> RobotBase.isSimulation() && !DriverStation.isEnabled()).whileTrue( // TODO: remove
+		// 	new Index(() -> 0, indexer));
 	}
 
 	@Override

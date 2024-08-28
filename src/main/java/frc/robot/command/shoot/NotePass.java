@@ -109,9 +109,11 @@ public class NotePass extends Command {
 		pivot.setTargetAngle(ShooterConstants.NOTEPASS_ANGLE_MAP.get(distanceToCorner) + pivot.getBias());
 
 		if (flywheel.allMotorsOnTarget() && pivot.onTarget() && inTolerance()) {
-			if (DriverStation.isAutonomous()) {
-				indexer.indexUp();
-			}
+			// if (DriverStation.isAutonomous()) {
+			// 	indexer.indexUp();
+			// }
+			indexer.indexUp();
+			System.out.println("passing note");
 			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
 		}
@@ -159,10 +161,11 @@ public class NotePass extends Command {
 		shooterOnTargetLog = new BooleanLogEntry(log, "/NotePass/Shooter-OnTarget");
 
 		if (!DriverStation.isFMSAttached()) {
-			LightningShuffleboard.setBoolSupplier("Note-Pass", "In tloeracnce", () -> inTolerance());
+			LightningShuffleboard.setBoolSupplier("Note-Pass", "In toleracnce", () -> inTolerance());
 			LightningShuffleboard.setDoubleSupplier("Note-Pass", "CurrentHeading", () -> currentHeading);
 			LightningShuffleboard.setDoubleSupplier("Note-Pass", "TargetHeading", () -> targetHeading);
 			LightningShuffleboard.setDoubleSupplier("Note-Pass", "Distance to Corner", () -> distanceToCorner);
+			LightningShuffleboard.setDoubleSupplier("Note-Pass", "PID Output", () -> pidOutput);
 		}
 	}
 

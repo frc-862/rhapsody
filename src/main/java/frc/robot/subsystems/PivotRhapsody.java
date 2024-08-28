@@ -157,7 +157,8 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         LightningShuffleboard.setDouble("Pivot", "SimIntegral", simPivotPid.getI());
         LightningShuffleboard.setDoubleArray("Pivot", "simPivotPose", 
             () -> new double[] {simPivotPose.getX(), simPivotPose.getY(), simPivotPose.getZ(),
-            simPivotPose.getRotation().getX(), simPivotPose.getRotation().getY(), simPivotPose.getRotation().getZ()});
+            Units.radiansToDegrees(simPivotPose.getRotation().getX()), Units.radiansToDegrees(simPivotPose.getRotation().getY()), 
+            Units.radiansToDegrees(simPivotPose.getRotation().getZ())});
 
         pivotSim.setInputVoltage(pivotPIDOutput * 12);
 

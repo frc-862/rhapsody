@@ -96,11 +96,13 @@ public class SmartShoot extends Command {
 					state = ShootingState.SHOOT;
 					shotTime = Timer.getFPGATimestamp();
 				}
+				System.out.println("Aiming :)");
 				break;
 			case SHOOT:
 				// Continues aiming, indexs to shoot
 				pivot.setTargetAngle(calculateTargetAngle(distance));
 				flywheel.setAllMotorsRPM(calculateTargetRPM(distance));
+				System.out.println("Indexing :)");
 				indexer.indexUp();
 				collector.setPower(.75d);
 				// Once shoot critera met moves to shot
