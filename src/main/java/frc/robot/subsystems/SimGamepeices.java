@@ -14,8 +14,8 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.PeiceSimConstants;
 import frc.robot.Constants.RhapsodyPivotConstants;
 import frc.thunder.shuffleboard.LightningShuffleboard;
-import java.util.function.DoubleSupplier;
 
+// store all game peice poses, simulate interactions with the robot, and publish to shuffleboard
 public class SimGamepeices extends SubsystemBase{
     public Peice[] peices;
     public PivotRhapsody pivot;
