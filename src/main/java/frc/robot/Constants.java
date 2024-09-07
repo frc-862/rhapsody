@@ -441,7 +441,7 @@ public class Constants {
 
     public class IndexerConstants {
         public static final boolean MOTOR_INVERT = true;
-        public static final int MOTOR_STATOR_CURRENT_LIMIT = 100;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 120;
 
         public enum PieceState {
             IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE
