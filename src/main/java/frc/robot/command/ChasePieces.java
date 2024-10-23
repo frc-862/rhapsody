@@ -1,5 +1,7 @@
 package frc.robot.command;
 
+import java.sql.Driver;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -13,8 +15,10 @@ import frc.robot.Constants.PoseConstants;
 import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Limelights;
+import frc.robot.subsystems.Pivot;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 import frc.thunder.vision.Limelight;
 
@@ -24,12 +28,15 @@ public class ChasePieces extends Command {
     private Collector collector;
     private Indexer indexer;
     private Limelight limelight;
+    private Pivot pivot;
+    private Flywheel flywheel;
 
     private double pidOutput;
     private double targetHeading;
     private double previousTargetHeading;
 
-    private final double collectPower = 1d;
+    private final double collectPower = .8d;
+    private final double indexerPower = .6d;
     private double defaultDrivePower;
     private double drivePower;
     private double rotPower;
@@ -55,12 +62,17 @@ public class ChasePieces extends Command {
      * @param drivetrain to request movement
      * @param collector for smart collect
      * @param indexer for smart collect
+     * @param pivot its a pivot!
+     * @param flywheel woah its a flywheel!
      * @param limelights to get vision data from dust
      */
-    public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Limelights limelights) {
+    public ChasePieces(Swerve drivetrain, Collector collector, Indexer indexer, Pivot pivot, Flywheel flywheel, Limelights limelights) {
         this.drivetrain = drivetrain;
         this.collector = collector;
         this.indexer = indexer;
+        this.pivot = pivot;
+        this.flywheel = flywheel;
+
 
         this.limelight = limelights.getDust();
 
@@ -82,7 +94,8 @@ public class ChasePieces extends Command {
         headingController.setTolerance(ChaseConstants.CHASE_PIECE_ALIGNMENT_TOLERANCE);
         headingController.setSetpoint(0);
 
-        smartCollect = new AutonSmartCollect(() -> collectPower, () -> collectPower, collector, indexer);
+        smartCollect = new SmartCollect(() -> collectPower, () -> indexerPower, collector,
+             indexer, pivot, flywheel, DriverStation.isAutonomous());
 
         smartCollect.initialize();
 

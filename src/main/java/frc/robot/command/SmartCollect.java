@@ -117,7 +117,7 @@ public class SmartCollect extends Command {
 
             case IN_INDEXER: /* Note has touched exit indexer beambreak */
                 collector.stop();
-                indexer.setPower(-0.25 * indexerPower.getAsDouble());
+                indexer.setPower(-0.45 * indexerPower.getAsDouble());
                 reversedFromExit = true;
                 break;
         }

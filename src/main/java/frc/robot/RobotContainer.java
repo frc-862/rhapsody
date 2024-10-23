@@ -163,18 +163,18 @@ public class RobotContainer extends LightningContainer {
 		NamedCommands.registerCommand("Cand-Sub",
 				new PointBlankShotAuton(flywheel, pivot, indexer, collector)
 						.deadlineWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
-		NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Cand-3.5", new Cand35(flywheel, pivot, indexer, collector));
-		NamedCommands.registerCommand("AMP", new AmpShotAuton(flywheel, pivot, indexer));
-		NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot));
+		// NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer)); // literally all of these are outdated
+		// NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer)); // literally all of these are outdated
+		// NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer)); // literally all of these are outdated
+		// NamedCommands.registerCommand("Cand-3.5", new Cand35(flywheel, pivot, indexer, collector)); // literally all of these are outdated
+		// NamedCommands.registerCommand("AMP", new AmpShotAuton(flywheel, pivot, indexer)); // literally all of these are outdated
+		// NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot)); // literally all of these are outdated
 		NamedCommands.registerCommand("Smart-Shoot",
 				new SmartShoot(flywheel, pivot, drivetrain, indexer, collector, leds)
 						.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
 		NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
 		NamedCommands.registerCommand("Chase-Pieces",
-				new ChasePieces(drivetrain, collector, indexer, limelights));
+				new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
 		NamedCommands.registerCommand("Smart-Collect",
 				new AutonSmartCollect(() -> 0.5, () -> 0.6, collector, indexer)
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
@@ -182,14 +182,14 @@ public class RobotContainer extends LightningContainer {
 				new SmartCollect(() -> 0.5, () -> 0.6, collector, indexer, pivot, flywheel, true)
 						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
 		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
-		NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain));
-		NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer));
+		// NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain)); // not needed for auton
+		// NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer)); // went unused in auton
 		NamedCommands.registerCommand("Point-At-Speaker",
 				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0));
 		NamedCommands.registerCommand("Point-At-Speaker-left",
 				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, -3));
 		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
-		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain));
+		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain)); // not needed with griplocks?
 		NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
 		NamedCommands.registerCommand("Bias-Down", new InstantCommand(() -> pivot.decreaseBias()));
 		NamedCommands.registerCommand("End-Kama", new InstantCommand(() -> flywheel.endKama()));
@@ -224,7 +224,7 @@ public class RobotContainer extends LightningContainer {
 
 		// makes the robot chase pieces
 		new Trigger(driver::getRightBumper).whileTrue(
-				new ChasePieces(drivetrain, collector, indexer, limelights)
+				new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights)
 						.deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
 		// new Trigger(driver::getRightBumper)

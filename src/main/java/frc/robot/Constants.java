@@ -225,19 +225,19 @@ public class Constants {
         private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory().withDriveMotorGearRatio(kDriveGearRatio).withSteerMotorGearRatio(kSteerGearRatio).withWheelRadius(kWheelRadiusInches).withSlipCurrent(kSlipCurrentA).withSteerMotorGains(steerGains).withDriveMotorGains(driveGains).withSteerMotorClosedLoopOutput(steerClosedLoopOutput).withDriveMotorClosedLoopOutput(driveClosedLoopOutput).withSpeedAt12VoltsMps(kSpeedAt12VoltsMps).withSteerInertia(kSteerInertia).withDriveInertia(kDriveInertia).withSteerFrictionVoltage(kSteerFrictionVoltage).withDriveFrictionVoltage(kDriveFrictionVoltage).withFeedbackSource(SteerFeedbackType.FusedCANcoder).withCouplingGearRatio(kCoupleRatio).withSteerMotorInverted(kSteerMotorReversed);
 
         // OFFSETS Rhapsody
-        private static final double kFrontLeftEncoderOffsetRh = 0.0546875;
+        private static final double kFrontLeftEncoderOffsetRh = 0.046142578125;
         private static final double kFrontLeftXPosInchesRh = 10.825;
         private static final double kFrontLeftYPosInchesRh = 10.825;
 
-        private static final double kFrontRightEncoderOffsetRh = 0.287353515625;
+        private static final double kFrontRightEncoderOffsetRh = 0.29931640625;
         private static final double kFrontRightXPosInchesRh = 10.825;
         private static final double kFrontRightYPosInchesRh = -10.825;
 
-        private static final double kBackLeftEncoderOffsetRh = 0.243408203125;
+        private static final double kBackLeftEncoderOffsetRh = 0.196533203125;
         private static final double kBackLeftXPosInchesRh = -10.825;
         private static final double kBackLeftYPosInchesRh = 10.825;
 
-        private static final double kBackRightEncoderOffsetRh = -0.052734375;
+        private static final double kBackRightEncoderOffsetRh = -0.03662109375;
         private static final double kBackRightXPosInchesRh = -10.825;
         private static final double kBackRightYPosInchesRh = -10.825;
 
@@ -441,7 +441,7 @@ public class Constants {
 
     public class IndexerConstants {
         public static final boolean MOTOR_INVERT = true;
-        public static final int MOTOR_STATOR_CURRENT_LIMIT = 100;
+        public static final int MOTOR_STATOR_CURRENT_LIMIT = 170;
 
         public enum PieceState {
             IN_COLLECT, IN_PIVOT, IN_INDEXER, NONE
@@ -632,12 +632,12 @@ public class Constants {
     public class CandConstants {
         // Amp
         public static final double AMP_TOP_RPM = 500;
-        public static final double AMP_BOTTOM_RPM = 725;
+        public static final double AMP_BOTTOM_RPM = 700;
         public static final double AMP_ANGLE = 94;
 
         // PointBlank
         public static final double POINT_BLANK_RPM = 2500;
-        public static final double POINT_BLANK_ANGLE = 48.5;
+        public static final double POINT_BLANK_ANGLE = 48;
 
         // Podium
         public static final double PODIUM_RPM = 3000;
