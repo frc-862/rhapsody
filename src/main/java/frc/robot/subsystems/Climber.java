@@ -68,35 +68,6 @@ public class Climber extends SubsystemBase {
 
         climbMotorL.setPosition(0d);
         climbMotorR.setPosition(0d);
-
-        initLogging();
-    }
-
-    /**
-     * initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        leftHeightLog = new DoubleLogEntry(log, "/Climb/LeftHeight");
-        rightHeightLog = new DoubleLogEntry(log, "/Climb/RightHeight");
-        leftSetpointLog = new DoubleLogEntry(log, "/Climb/LeftSetpoint");
-        rightSetpointLog = new DoubleLogEntry(log, "/Climb/RightSetpoint");
-        leftAppliedLog = new DoubleLogEntry(log, "/Climb/LeftApplied");
-        rightAppliedLog = new DoubleLogEntry(log, "/Climb/RightApplied");
-
-        if (!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setDoubleSupplier("Climb", "Left Height", () -> getHeightL());
-            LightningShuffleboard.setDoubleSupplier("Climb", "Right Height", () -> getHeightR());
-            LightningShuffleboard.setDoubleSupplier("Climb", "Left Setpoint", () -> getSetpointL());
-            LightningShuffleboard.setDoubleSupplier("Climb", "Right Setpoint", () -> getSetpointR());
-            LightningShuffleboard.setDoubleSupplier("Climb", "Left Applied", () -> climbMotorL.getMotorVoltage().getValueAsDouble());
-            LightningShuffleboard.setDoubleSupplier("Climb", "Right Applied", () -> climbMotorR.getMotorVoltage().getValueAsDouble());
-            LightningShuffleboard.setBoolSupplier("Climb", "Foward Limit Left", () -> getForwardLimitLeft());
-            LightningShuffleboard.setBoolSupplier("Climb", "Foward Limit Right", () -> getForwardLimitRight());
-            LightningShuffleboard.setBoolSupplier("Climb", "Reverse Limit Left", () -> getReverseLimitLeft());
-            LightningShuffleboard.setBoolSupplier("Climb", "Reverse Limit Right", () -> getReverseLimitRight());
-        }
     }
 
     /**
@@ -214,20 +185,6 @@ public class Climber extends SubsystemBase {
                 motor.setPosition(ClimbConstants.MAX_HEIGHT); // If soft limit triggered Set pos to max height
             }
         }
-
-        updateLogging();
-    }
-
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        leftHeightLog.append(getHeightL());
-        rightHeightLog.append(getHeightR());
-        leftSetpointLog.append(getSetpointL());
-        rightSetpointLog.append(getSetpointR());
-        leftAppliedLog.append(climbMotorL.getMotorVoltage().getValueAsDouble());
-        rightAppliedLog.append(climbMotorR.getMotorVoltage().getValueAsDouble());
     }
 
     /**

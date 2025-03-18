@@ -75,8 +75,6 @@ public class NotePass extends Command {
 		} else {
 			targetPose = DrivetrainConstants.RED_CORNER_POSE;
 		}
-
-		initLogging();
 	}
 
 	@Override
@@ -108,8 +106,6 @@ public class NotePass extends Command {
 			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 			new TimedCommand(RobotContainer.hapticDriverCommand(), 1d).schedule();
 		}
-
-		updateLogging();
 	}
 
 	@Override
@@ -132,40 +128,5 @@ public class NotePass extends Command {
 		double difference = Math.abs(currentHeading - targetHeading);
 		difference = difference > 180 ? 360 - difference : difference;
 		return difference <= PassConstants.POINT_TOLERANCE;
-	}
-
-	/**
-	 * initialize logging
-	 */
-	private void initLogging() {
-		DataLog log = DataLogManager.getLog();
-
-		currentHeadingLog = new DoubleLogEntry(log, "/NotePass/CurrentHeading");
-		targetHeadingLog = new DoubleLogEntry(log, "/NotePass/TargetHeading");
-		pidOutputLog = new DoubleLogEntry(log, "/NotePass/PIDoutput");
-		distanceToSpeakerLog = new DoubleLogEntry(log, "/NotePass/DistanceToSpeaker");
-
-		headingOnTargetLog = new BooleanLogEntry(log, "/NotePass/Heading-OnTarget");
-		shooterOnTargetLog = new BooleanLogEntry(log, "/NotePass/Shooter-OnTarget");
-
-		if (!DriverStation.isFMSAttached()) {
-			LightningShuffleboard.setBoolSupplier("Note-Pass", "In tolerance", () -> inTolerance());
-			LightningShuffleboard.setDoubleSupplier("Note-Pass", "CurrentHeading", () -> currentHeading);
-			LightningShuffleboard.setDoubleSupplier("Note-Pass", "TargetHeading", () -> targetHeading);
-			LightningShuffleboard.setDoubleSupplier("Note-Pass", "Distance to Speaker", () -> distanceToSpeaker);
-		}
-	}
-
-	/**
-	 * update logging
-	 */
-	public void updateLogging() {
-		currentHeadingLog.append(currentHeading);
-		targetHeadingLog.append(targetHeading);
-		pidOutputLog.append(feedForwardOutput);
-		distanceToSpeakerLog.append(distanceToSpeaker);
-
-		headingOnTargetLog.append(inTolerance());
-		shooterOnTargetLog.append(flywheel.allMotorsOnTarget() && pivot.onTarget());
 	}
 }

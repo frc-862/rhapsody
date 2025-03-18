@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -153,69 +154,69 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void initializeNamedCommands() {
-		NamedCommands.registerCommand("Disable-Vision",
-				new InstantCommand(() -> drivetrain.disableVision()));
-		NamedCommands.registerCommand("Enable-Vision",
-				new InstantCommand(() -> drivetrain.enableVision()));
-		NamedCommands.registerCommand("led-Shoot",
-				leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
+		// NamedCommands.registerCommand("Disable-Vision",
+		// 		new InstantCommand(() -> drivetrain.disableVision()));
+		// NamedCommands.registerCommand("Enable-Vision",
+		// 		new InstantCommand(() -> drivetrain.enableVision()));
+		// NamedCommands.registerCommand("led-Shoot",
+		// 		leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5));
 
-		NamedCommands.registerCommand("Cand-Sub",
-				new PointBlankShotAuton(flywheel, pivot, indexer, collector)
-						.deadlineWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
+		// NamedCommands.registerCommand("Cand-Sub",
+		// 		new PointBlankShotAuton(flywheel, pivot, indexer, collector)
+		// 				.deadlineWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(1)));
 		// NamedCommands.registerCommand("Cand-C1", new CandC1(flywheel, pivot, indexer)); // literally all of these are outdated
 		// NamedCommands.registerCommand("Cand-C2", new CandC2(flywheel, pivot, indexer)); // literally all of these are outdated
 		// NamedCommands.registerCommand("Cand-C3", new CandC3(flywheel, pivot, indexer)); // literally all of these are outdated
 		// NamedCommands.registerCommand("Cand-3.5", new Cand35(flywheel, pivot, indexer, collector)); // literally all of these are outdated
 		// NamedCommands.registerCommand("AMP", new AmpShotAuton(flywheel, pivot, indexer)); // literally all of these are outdated
 		// NamedCommands.registerCommand("Stow", new Stow(flywheel, pivot)); // literally all of these are outdated
-		NamedCommands.registerCommand("Smart-Shoot",
-				new SmartShoot(flywheel, pivot, drivetrain, indexer, collector, leds)
-						.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
-		NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
-		NamedCommands.registerCommand("Chase-Pieces",
-				new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
-		NamedCommands.registerCommand("Smart-Collect",
-				new AutonSmartCollect(() -> 0.5, () -> 0.6, collector, indexer)
-						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
-		NamedCommands.registerCommand("Smart-Collect-Tele",
-				new SmartCollect(() -> 0.5, () -> 0.6, collector, indexer, pivot, flywheel, true)
-						.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
-		NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
+		// NamedCommands.registerCommand("Smart-Shoot",
+		// 		new SmartShoot(flywheel, pivot, drivetrain, indexer, collector, leds)
+		// 				.alongWith(leds.enableState(LED_STATES.SHOOTING).withTimeout(0.5)));
+		// NamedCommands.registerCommand("preAim", new preAim(flywheel, pivot, drivetrain));
+		// NamedCommands.registerCommand("Chase-Pieces",
+		// 		new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights));
+		// NamedCommands.registerCommand("Smart-Collect",
+		// 		new AutonSmartCollect(() -> 0.5, () -> 0.6, collector, indexer)
+		// 				.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
+		// NamedCommands.registerCommand("Smart-Collect-Tele",
+		// 		new SmartCollect(() -> 0.5, () -> 0.6, collector, indexer, pivot, flywheel, true)
+		// 				.deadlineWith(leds.enableState(LED_STATES.COLLECTING).withTimeout(1)));
+		// NamedCommands.registerCommand("Index-Up", new Index(() -> IndexerConstants.INDEXER_DEFAULT_POWER, indexer));
 		// NamedCommands.registerCommand("PathFind", new PathToPose(PathFindingConstants.TEST_POSE, drivetrain)); // not needed for auton
 		// NamedCommands.registerCommand("Collect-And-Go", new CollectAndGo(collector, flywheel, indexer)); // went unused in auton
-		NamedCommands.registerCommand("Point-At-Speaker",
-				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0));
-		NamedCommands.registerCommand("Point-At-Speaker-left",
-				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, -3));
-		NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
-		NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain)); // not needed with griplocks?
-		NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
-		NamedCommands.registerCommand("Bias-Down", new InstantCommand(() -> pivot.decreaseBias()));
-		NamedCommands.registerCommand("End-Kama", new InstantCommand(() -> flywheel.endKama()));
-		NamedCommands.registerCommand("Start-Kama", new InstantCommand(() -> flywheel.startKama()));
-		NamedCommands.registerCommand("Note-Pass", new InstantCommand()); // Why is this here?? IDK but im gonna keep it here so we don't break things
-		NamedCommands.registerCommand("Reverse-Cheese-Paste", new InstantCommand()); //new ReverseChasePieces(drivetrain, collector, indexer, limelights));
+		// NamedCommands.registerCommand("Point-At-Speaker",
+		// 		new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0));
+		// NamedCommands.registerCommand("Point-At-Speaker-left",
+		// 		new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, -3));
+		// NamedCommands.registerCommand("Has-Piece", new HasPieceAuto(indexer));
+		// NamedCommands.registerCommand("Stop-Drive", new stopDrive(drivetrain)); // not needed with griplocks?
+		// NamedCommands.registerCommand("Stop-Flywheel", new FlywheelIN(flywheel));
+		// NamedCommands.registerCommand("Bias-Down", new InstantCommand(() -> pivot.decreaseBias()));
+		// NamedCommands.registerCommand("End-Kama", new InstantCommand(() -> flywheel.endKama()));
+		// NamedCommands.registerCommand("Start-Kama", new InstantCommand(() -> flywheel.startKama()));
+		// NamedCommands.registerCommand("Note-Pass", new InstantCommand()); // Why is this here?? IDK but im gonna keep it here so we don't break things
+		// NamedCommands.registerCommand("Reverse-Cheese-Paste", new InstantCommand()); //new ReverseChasePieces(drivetrain, collector, indexer, limelights));
 
 		// make sure named commands are initialized before autobuilder!
-		autoChooser = AutoBuilder.buildAutoChooser();
-		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
+		// autoChooser = AutoBuilder.buildAutoChooser();
+		// LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
 	}
 
 	@Override
 	protected void configureButtonBindings() {
 		/* driver */
 		// field centric for the robot
-		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
-				.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
-				.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(),
-						() -> -driver.getLeftX(), () -> -driver.getRightX()))
-				.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
+		// new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
+		// 		.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
+		// 		.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(),
+		// 				() -> -driver.getLeftX(), () -> -driver.getRightX()))
+		// 		.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
 
 		// enables slow mode for driving
-		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
-				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
-				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+		// new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
+		// 		.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
+		// 		.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
 		// sets field relative forward to the direction the robot is facing
 		new Trigger(() -> driver.getStartButton() && driver.getBackButton()).onTrue(drivetrain
@@ -223,9 +224,9 @@ public class RobotContainer extends LightningContainer {
 						.setOperatorPerspectiveForward(new Rotation2d(Math.toRadians(0))))));
 
 		// makes the robot chase pieces
-		new Trigger(driver::getRightBumper).whileTrue(
-				new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights)
-						.deadlineWith(leds.enableState(LED_STATES.CHASING)));
+		// new Trigger(driver::getRightBumper).whileTrue(
+		// 		new ChasePieces(drivetrain, collector, indexer, pivot, flywheel, limelights)
+		// 				.deadlineWith(leds.enableState(LED_STATES.CHASING)));
 
 		// new Trigger(driver::getRightBumper)
 		// .whileTrue(new PathFindToAuton(PathPlannerPath.fromPathFile("PathFind-AMP"),
@@ -235,9 +236,9 @@ public class RobotContainer extends LightningContainer {
 		new Trigger(driver::getXButton).whileTrue(new RunCommand(() -> drivetrain.brake()));
 
 		// smart shoot for the robot
-		new Trigger(driver::getAButton)
-				.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, collector, leds)
-						.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(driver::getAButton)
+		// 		.whileTrue(new SmartShoot(flywheel, pivot, drivetrain, indexer, collector, leds)
+		// 				.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
 		// new Trigger(driver::getBButton).whileTrue(new PathFindToAuton(
 		// PathPlannerPath.fromPathFile("PathFind-AMP"), drivetrain));
@@ -249,13 +250,13 @@ public class RobotContainer extends LightningContainer {
 		// new Trigger(driver::getLeftBumper)
 		// .whileTrue(new PointAtPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain,
 		// driver));
-		new Trigger(driver::getLeftBumper).whileTrue(
-				new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0d));
+		// new Trigger(driver::getLeftBumper).whileTrue(
+		// 		new ComboPoint(DrivetrainConstants.SPEAKER_POSE, drivetrain, driver, limelights, 0d));
 
-		new Trigger(driver::getYButton).whileTrue(new NotePass(drivetrain, flywheel, pivot, driver)
-				.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
+		// new Trigger(driver::getYButton).whileTrue(new NotePass(drivetrain, flywheel, pivot, driver)
+		// 		.deadlineWith(leds.enableState(LED_STATES.SHOOTING)));
 
-		new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
+		// new Trigger(() -> driver.getPOV() == 0).toggleOnTrue(leds.enableState(LED_STATES.DISABLED));
 
 		/* COPILOT */
 		new Trigger(() -> (coPilot.getBButton() && !driver.getRightBumper()))
@@ -283,26 +284,26 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(new FlywheelIN(flywheel)));
 
 		/* BIAS */
-		new Trigger(() -> coPilot.getPOV() == 0)
-				.onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
-		new Trigger(() -> coPilot.getPOV() == 180)
-				.onTrue(new InstantCommand(() -> pivot.decreaseBias())); // DOWN
+		// new Trigger(() -> coPilot.getPOV() == 0)
+		// 		.onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
+		// new Trigger(() -> coPilot.getPOV() == 180)
+		// 		.onTrue(new InstantCommand(() -> pivot.decreaseBias())); // DOWN
 
-		new Trigger(() -> coPilot.getPOV() == 90)
-				.onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
-		new Trigger(() -> coPilot.getPOV() == 270)
-				.onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
+		// new Trigger(() -> coPilot.getPOV() == 90)
+		// 		.onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
+		// new Trigger(() -> coPilot.getPOV() == 270)
+		// 		.onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
 
-		new Trigger(() -> coPilot.getBackButton() && coPilot.getStartButton())
-				.onTrue(new InstantCommand(() -> pivot.resetBias())
-						.alongWith(new InstantCommand(() -> flywheel.resetBias())));
+		// new Trigger(() -> coPilot.getBackButton() && coPilot.getStartButton())
+		// 		.onTrue(new InstantCommand(() -> pivot.resetBias())
+		// 				.alongWith(new InstantCommand(() -> flywheel.resetBias())));
 
 		/* Other */
-		new Trigger(() -> ((limelights.getStopMe().hasTarget()) && DriverStation.isEnabled()))
-				.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
-		new Trigger(() -> indexer.hasNote() && DriverStation.isEnabled())
-				.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
-				.whileTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
+		// new Trigger(() -> ((limelights.getStopMe().hasTarget()) && DriverStation.isEnabled()))
+		// 		.whileTrue(leds.enableState(LED_STATES.HAS_VISION));
+		// new Trigger(() -> indexer.hasNote() && DriverStation.isEnabled())
+		// 		.whileTrue(leds.enableState(LED_STATES.HAS_PIECE))
+		// 		.whileTrue(leds.enableState(LED_STATES.COLLECTED).withTimeout(2));
 
 		// new Trigger(() -> DriverStation.isDisabled() && triggerInit 
 		// 		&& !(limelights.getStopMe().hasTarget() || drivetrain.isInField() || drivetrain.isStable()))
@@ -312,15 +313,15 @@ public class RobotContainer extends LightningContainer {
 		// 		&& !limelights.getStopMe().hasTarget() && triggerInit)
 		// 		.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
 		
-		new Trigger(() -> ((!drivetrain.isStable() || !drivetrain.isInField() || !limelights.getStopMe().hasTarget())
-			 && DriverStation.isDisabled() && triggerInit))
-			.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
+		// new Trigger(() -> ((!drivetrain.isStable() || !drivetrain.isInField() || !limelights.getStopMe().hasTarget())
+		// 	 && DriverStation.isDisabled() && triggerInit))
+		// 	.whileTrue(leds.enableState(LED_STATES.BAD_POSE));
 
-		new Trigger(() -> drivetrain.isStable() && DriverStation.isDisabled() && drivetrain.isInField()
-				&& limelights.getStopMe().hasTarget() && triggerInit)
-				.whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
+		// new Trigger(() -> drivetrain.isStable() && DriverStation.isDisabled() && drivetrain.isInField()
+		// 		&& limelights.getStopMe().hasTarget() && triggerInit)
+		// 		.whileTrue(leds.enableState(LED_STATES.GOOD_POSE));
 
-		triggerInit = true;
+		// triggerInit = true;
 
 		new Trigger(() -> collector.getEntryBeamBreakState())
 				.whileTrue(leds.enableState(LED_STATES.COLLECTOR_BEAMBREAK));
@@ -348,32 +349,35 @@ public class RobotContainer extends LightningContainer {
 		// 1).whileTrue(new PivotUP(pivot));
 
 		// BLUE Alliance set
-		new Trigger(
-				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE A", false) : false)
-				.onTrue(new InstantCommand(() -> drivetrain
-						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_A_STARTPOSE_BLUE)));
-		new Trigger(
-				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE B", false) : false)
-				.onTrue(new InstantCommand(() -> drivetrain
-						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_B_STARTPOSE_BLUE)));
-		new Trigger(
-				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE C", false) : false)
-				.onTrue(new InstantCommand(() -> drivetrain
-						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_C_STARTPOSE_BLUE)));
+		// new Trigger(
+		// 		() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE A", false) : false)
+		// 		.onTrue(new InstantCommand(() -> drivetrain
+		// 				.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_A_STARTPOSE_BLUE)));
+		// new Trigger(
+		// 		() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE B", false) : false)
+		// 		.onTrue(new InstantCommand(() -> drivetrain
+		// 				.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_B_STARTPOSE_BLUE)));
+		// new Trigger(
+		// 		() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE BLUE C", false) : false)
+		// 		.onTrue(new InstantCommand(() -> drivetrain
+		// 				.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_C_STARTPOSE_BLUE)));
 
 		// BLUE Alliance set
-		new Trigger(
-				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED A", false) : false)
-				.onTrue(new InstantCommand(() -> drivetrain
-						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_A_STARTPOSE_RED)));
-		new Trigger(
-				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED B", false) : false)
-				.onTrue(new InstantCommand(() -> drivetrain
-						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_B_STARTPOSE_RED)));
-		new Trigger(
-				() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED C", false) : false)
-				.onTrue(new InstantCommand(() -> drivetrain
-						.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_C_STARTPOSE_RED)));
+		// new Trigger(
+		// 		() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED A", false) : false)
+		// 		.onTrue(new InstantCommand(() -> drivetrain
+		// 				.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_A_STARTPOSE_RED)));
+		// new Trigger(
+		// 		() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED B", false) : false)
+		// 		.onTrue(new InstantCommand(() -> drivetrain
+		// 				.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_B_STARTPOSE_RED)));
+		// new Trigger(
+		// 		() -> DriverStation.isDisabled() ? LightningShuffleboard.getBool("Auton", "POSE RED C", false) : false)
+		// 		.onTrue(new InstantCommand(() -> drivetrain
+		// 				.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_C_STARTPOSE_RED)));
+
+		SmartDashboard.putString("DRIVER INSTRUCTIONS", "DRIVER: Joysticks = driving, X Button = park, Start + Back Buttons = reset forward");
+		SmartDashboard.putString("COPILOT INSTRUCTIONS: ", "COPILOT: X Button = point blank shot, A Button = amp shot, Left/Right Bumpers = indexer, Left/Right Triggers = collector");
 	}
 
 	@Override
@@ -395,9 +399,9 @@ public class RobotContainer extends LightningContainer {
 		// () -> -coPilot.getRightY(),
 		// coPilot::getYButton).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
-		if (!Constants.IS_MERCURY) {
-			climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
-		}
+		// if (!Constants.IS_MERCURY) {
+		// 	climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
+		// }
 
 		// limelights.setDefaultCommand(new UpdateOrientation(limelights, drivetrain));
 	}
@@ -424,25 +428,25 @@ public class RobotContainer extends LightningContainer {
 
 	@Override
 	protected void configureSystemTests() {
-		SystemTest.registerTest("Drive Test",
-				new DrivetrainSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_DRIVE)); // to be tested
-		SystemTest.registerTest("Azimuth Test",
-				new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
+		// SystemTest.registerTest("Drive Test",
+		// 		new DrivetrainSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_DRIVE)); // to be tested
+		// SystemTest.registerTest("Azimuth Test",
+		// 		new TurnSystemTest(drivetrain, DrivetrainConstants.SYS_TEST_SPEED_TURN));
 
 		// SystemTest.registerTest("Single Note Cycle", new CycleSytemTest(collector,
 		// indexer, pivot, flywheel, () -> 0.5d, () -> 0.6d, () -> 250));
 
-		SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
-				Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
+		// SystemTest.registerTest("Collector Test", new CollectorSystemTest(collector,
+		// 		Constants.CollectorConstants.COLLECTOR_SYSTEST_POWER));
 
 		// SystemTest.registerTest("Pivot 90 Degrees", new PivotAngleTest(pivot,
 		// Constants.PivotConstants.PIVOT_SYSTEST_ANGLE));
 
-		SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
-				indexer, pivot, Constants.FlywheelConstants.FLYWHEEL_SYSTEST_RPM));
+		// SystemTest.registerTest("Flywheel Test", new FlywheelSystemTest(flywheel, collector,
+		// 		indexer, pivot, Constants.FlywheelConstants.FLYWHEEL_SYSTEST_RPM));
 
-		SystemTest.registerTest("Indexer Test",
-				new IndexerSystemTest(indexer, Constants.IndexerConstants.INDEXER_SYSTEST_POWER));
+		// SystemTest.registerTest("Indexer Test",
+		// 		new IndexerSystemTest(indexer, Constants.IndexerConstants.INDEXER_SYSTEST_POWER));
 
 		// SystemTest.registerTest("Climb Test", new ClimbSystemTest(climber,
 		// Constants.ClimbConstants.CLIMB_SYSTEST_POWER));

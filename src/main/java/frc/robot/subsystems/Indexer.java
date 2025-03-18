@@ -55,37 +55,6 @@ public class Indexer extends SubsystemBase {
         motor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
                 IndexerConstants.MOTOR_INVERT, IndexerConstants.MOTOR_STATOR_CURRENT_LIMIT,
                 IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
-                
-        initLogging();
-    }
-
-    /**
-     * initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        indexerPowerLog = new DoubleLogEntry(log, "/Indexer/Power");
-        indexerTargetPowerLog = new DoubleLogEntry(log, "/Indexer/TargetPower");
-        entryBeamBreakLog = new BooleanLogEntry(log, "/Indexer/EntryBeamBreak");
-        exitBeamBreakLog = new BooleanLogEntry(log, "/Indexer/ExitBeamBreak");
-        pieceStateLog = new StringLogEntry(log, "/Indexer/PieceState");
-        hasShotLog = new BooleanLogEntry(log, "/Indexer/HasShot");
-        isExitingLog = new BooleanLogEntry(log, "/Indexer/IsExiting");
-        hasPieceLog = new BooleanLogEntry(log, "/Indexer/HasPiece");
-
-		if (!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setDoubleSupplier("Indexer", "Power", () -> motor.get());
-
-            LightningShuffleboard.setBoolSupplier("Indexer", "EntryBeamBreak", () -> getEntryBeamBreakState());
-            LightningShuffleboard.setBoolSupplier("Indexer", "ExitBeamBreak", () -> getExitBeamBreakState());
-
-            LightningShuffleboard.setStringSupplier("Indexer", "PieceState", () -> getPieceState().toString());
-
-            LightningShuffleboard.setBoolSupplier("Indexer", "HasShot", () -> hasShot());
-            LightningShuffleboard.setBoolSupplier("Indexer", "IsExiting", () -> isExiting());
-            LightningShuffleboard.setBoolSupplier("Indexer", "HasPiece", () -> hasNote());
-        }
     }
 
     /**
@@ -218,22 +187,6 @@ public class Indexer extends SubsystemBase {
             didShoot = didShoot || hasNote();
             setPieceState(PieceState.NONE);
         }
-
-        updateLogging();
-    }
-
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        indexerPowerLog.append(motor.get());
-        indexerTargetPowerLog.append(targetPower);
-        entryBeamBreakLog.append(getEntryBeamBreakState());
-        exitBeamBreakLog.append(getExitBeamBreakState());
-        pieceStateLog.append(getPieceState().toString());
-        hasShotLog.append(hasShot());
-        isExitingLog.append(isExiting());
-        hasPieceLog.append(hasNote());
     }
 
     /**

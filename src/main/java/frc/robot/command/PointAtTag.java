@@ -38,8 +38,6 @@ public class PointAtTag extends Command {
         this.driver = driver;
 
         addRequirements(drivetrain);
-
-        initLogging();
     }
 
     @Override
@@ -49,16 +47,6 @@ public class PointAtTag extends Command {
         headingController.setTolerance(VisionConstants.POINTATTAG_ALIGNMENT_TOLERANCE);
 
         headingController.enableContinuousInput(-180, 180);
-    }
-
-    /**
-     * Initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        deltaYLog = new DoubleLogEntry(log, "/PointAtTag/deltaY");
-        deltaXLog = new DoubleLogEntry(log, "/PointAtTag/deltaX");
     }
 
     @Override
@@ -79,16 +67,6 @@ public class PointAtTag extends Command {
                 driver.getLeftY(),
                 driver.getLeftX(),
                 pidOutput);
-
-        updateLogging();
-    }
-
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        deltaYLog.append(limelights.getStopMe().getTargetY());
-        deltaXLog.append(limelights.getStopMe().getTargetX());
     }
 
     @Override

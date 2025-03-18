@@ -6,11 +6,14 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 import frc.thunder.command.TimedCommand;
+import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class PointBlankShot extends Command {
 
 	private final Flywheel flywheel;
 	private final Pivot pivot;
+
+	private double powerMult;
 
 	/**
 	 * Creates a new PointBlankShot.
@@ -33,8 +36,10 @@ public class PointBlankShot extends Command {
 
 	@Override
 	public void execute() {
-		flywheel.setAllMotorsRPM(CandConstants.POINT_BLANK_RPM + pivot.getBias());
-		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + flywheel.getBias());
+		powerMult = LightningShuffleboard.getDouble("Demo", "Point Blank Shot Mult", 1d);
+
+		flywheel.setAllMotorsRPM((CandConstants.POINT_BLANK_RPM + flywheel.getBias()) * powerMult);
+		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());
 		if(flywheel.allMotorsOnTarget() && pivot.onTarget()) {
 			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 		}

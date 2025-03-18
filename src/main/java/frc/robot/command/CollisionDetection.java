@@ -36,8 +36,6 @@ public class CollisionDetection extends Command {
     public CollisionDetection(Swerve drivetrain, CollisionType type) {
         this.drivetrain = drivetrain;
         this.type = type;
-
-        initLogging();
     }
 
     @Override
@@ -46,27 +44,9 @@ public class CollisionDetection extends Command {
         setDisplayAccelerationTolerances(type); // set acceleration tolerance based on type
     }
 
-    /**
-     * initialize logging
-     */
-    public void initLogging(){
-        DataLog log = DataLogManager.getLog();
-
-        collidedLog = new BooleanLogEntry(log, "/CollisionDetection/collided");
-    }
-
     @Override
     public void execute() {
         storeVelocities();
-
-        updateLogging();
-    }
-
-    /**
-     * update logging
-     */
-    public void updateLogging(){
-        ((BooleanLogEntry) collidedLog).append(getIfCollided()[3]);
     }
 
     @Override

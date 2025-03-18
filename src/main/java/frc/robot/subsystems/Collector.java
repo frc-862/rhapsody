@@ -48,18 +48,6 @@ public class Collector extends SubsystemBase {
 
         beamBreak = new DigitalInput(DIO.COLLECTOR_BEAMBREAK);
         motor.applyConfig();
-
-        initLogging();
-    }
-
-    /**
-     * initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        collectorPowerLog = new DoubleLogEntry(log, "/Collector/Power");
-        hasPieceLog = new BooleanLogEntry(log, "/Collector/HasPiece");
     }
 
     /**
@@ -99,20 +87,6 @@ public class Collector extends SubsystemBase {
     public void periodic() {
         // tells robot if we have a piece in collector
         hasPiece = getEntryBeamBreakState();
-        updateLogging();
-    }
-
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        collectorPowerLog.append(motor.get());
-        hasPieceLog.append(hasPiece());
-
-        if(!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setDouble("Collector", "Collector power", getPower());
-            LightningShuffleboard.setDouble("Collector", "Collector target power", targetPower);
-        }
     }
 
     /**

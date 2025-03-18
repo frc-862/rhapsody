@@ -79,38 +79,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         configurePathPlanner();
 
         setRampRate();
-
-        initLogging();
-    }
-
-    /**
-     * initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        timerLog = new DoubleLogEntry(log, "/Swerve/Timer");
-        robotHeadingLog = new DoubleLogEntry(log, "/Swerve/Robot Heading");
-        odoXLog = new DoubleLogEntry(log, "/Swerve/Odo X");
-        odoYLog = new DoubleLogEntry(log, "/Swerve/Odo Y");
-        slowModeLog = new BooleanLogEntry(log, "/Swerve/Slow mode");
-        robotCentricLog = new BooleanLogEntry(log, "/Swerve/Robot Centric");
-        tippedLog = new BooleanLogEntry(log, "/Swerve/Tipped");
-        velocityXLog = new DoubleLogEntry(log, "/Swerve/velocity x");
-        velocityYLog = new DoubleLogEntry(log, "/Swerve/velocity y");
-        distanceToSpeakerLog = new DoubleLogEntry(log, "/Swerve/Distance to Speaker");
-
-        if (!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setBoolSupplier("Swerve", "Slow Mode", () -> inSlowMode());
-            LightningShuffleboard.setBoolSupplier("Swerve", "Robot Centric", () -> isRobotCentricControl());
-            LightningShuffleboard.setBoolSupplier("Swerve", "Tipped", () -> isTipped());
-
-            LightningShuffleboard.setDoubleSupplier("Swerve", "Odometry X", () -> getPose().getX());
-            LightningShuffleboard.setDoubleSupplier("Swerve", "Odometry Y", () -> getPose().getY());
-
-            LightningShuffleboard.setDoubleSupplier("Swerve", "Robot Heading", () -> getPose().getRotation().getDegrees());
-            LightningShuffleboard.setDoubleSupplier("Swerve", "Distance to speaker", () -> distanceToSpeaker());
-        }
     }
 
     private void setRampRate() {
@@ -156,8 +124,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         xFilter.calculate(getPose().getX());
         yFilter.calculate(getPose().getY());
         rotFilter.calculate(getPose().getRotation().getDegrees());
-
-        updateLogging();
     }
 
     public void applyVisionPose(Pose4d pose) {
@@ -252,22 +218,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         updateSimState(0.02, 12);
     }
 
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        timerLog.append(Timer.getFPGATimestamp());
-        robotHeadingLog.append(getPigeon2().getAngle());
-        odoXLog.append(getPose().getX());
-        odoYLog.append(getPose().getY());
-        slowModeLog.append(inSlowMode());
-        robotCentricLog.append(isRobotCentricControl());
-        tippedLog.append(isTipped());
-        velocityXLog.append(getPigeon2().getAngularVelocityXDevice().getValueAsDouble());
-        velocityYLog.append(getPigeon2().getAngularVelocityYDevice().getValueAsDouble());
-        distanceToSpeakerLog.append(distanceToSpeaker());
-    }
-
     private void configurePathPlanner() {
         AutoBuilder.configureHolonomic(() -> getPose(), // Supplier of current robot pose
                 this::seedFieldRelative, // Consumer for seeding pose against auto
@@ -338,10 +288,14 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public double getSpeedMult() {
+        speedMult = LightningShuffleboard.getDouble("Demo", "Speed Mult", 1d);
+
         return speedMult;
     }
 
     public double getRotMult() {
+        angularMult = LightningShuffleboard.getDouble("Demo", "Rot Mult", 1d);
+
         return angularMult;
     }
 

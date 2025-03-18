@@ -67,8 +67,6 @@ public class ComboPoint extends Command {
         this.targetBias = bias;
 
         addRequirements(drivetrain);
-
-        initLogging();
     }
 
     @Override
@@ -140,8 +138,6 @@ public class ComboPoint extends Command {
         }
         drivetrain.setField(-driver.getLeftY(), -driver.getLeftX(), feedForwardOutput);
 
-        updateLogging();
-
         tuning();
     }
 
@@ -150,48 +146,6 @@ public class ComboPoint extends Command {
         pidController.setI(LightningShuffleboard.getDouble("ComboPoint", "I", pidController.getI()));
         pidController.setD(LightningShuffleboard.getDouble("ComboPoint", "D", pidController.getD()));
         minPower = LightningShuffleboard.getDouble("ComboPoint", "Min Power", minPower);
-    }
-
-    /**
-     * Set log paths
-     */
-    public void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        deltaYLog = new DoubleLogEntry(log, "/ComboPoint/Delta Y");
-        deltaXLog = new DoubleLogEntry(log, "/ComboPoint/Delta X");
-        targetHeadingLog = new DoubleLogEntry(log, "/ComboPoint/Target Heading");
-        targetYLog = new DoubleLogEntry(log, "/ComboPoint/Target Pose Y");
-        targetXLog = new DoubleLogEntry(log, "/ComboPoint/Target Pose X");
-        pidOutputLog = new DoubleLogEntry(log, "/ComboPoint/Pid Output");
-        targetMinusCurrentHeadingLog = new DoubleLogEntry(log, "/ComboPoint/Target minus current heading");
-        currentHeadingLog = new DoubleLogEntry(log, "/ComboPoint/Current-Heading");
-        inToleranceLog = new BooleanLogEntry(log, "/ComboPoint/InTolerance");
-    }
-
-    /**
-     * update logging with values
-     */
-    public void updateLogging() {
-        deltaYLog.append(targetPose.getY() - drivetrain.getPose().getY());
-        deltaXLog.append(targetPose.getX() - drivetrain.getPose().getX());
-        targetHeadingLog.append(targetHeading);
-        targetYLog.append(targetPose.getY());
-        targetXLog.append(targetPose.getX());
-        pidOutputLog.append(pidOutput);
-        targetMinusCurrentHeadingLog.append(targetHeading - currentHeading);
-        currentHeadingLog.append(currentHeading);
-        inToleranceLog.append(inTolerance());
-
-        if (!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setDouble("ComboPoint", "Target Heading", targetHeading);
-            LightningShuffleboard.setDouble("ComboPoint", "Current Heading", currentHeading);
-            LightningShuffleboard.setBool("ComboPoint", "In Tolerance", inTolerance());
-            LightningShuffleboard.setDouble("ComboPoint", "Raw Output (PointController)", pidOutput);
-            LightningShuffleboard.setDouble("ComboPoint", "Output (FeedForward)", feedForwardOutput);
-            LightningShuffleboard.setBool("ComboPoint", "HasTarget", stopMe.hasTarget());
-            LightningShuffleboard.setDouble("ComboPoint", "Bias", targetBias);
-        }
     }
 
     @Override

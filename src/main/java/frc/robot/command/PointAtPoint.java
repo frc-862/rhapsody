@@ -54,8 +54,6 @@ public class PointAtPoint extends Command {
         this.originalTargetPose = targetPose;
 
         addRequirements(drivetrain);
-
-        initLogging();
     }
 
     public PointAtPoint(double targetX, double targetY, Swerve drivetrain, XboxController driver) {
@@ -86,23 +84,6 @@ public class PointAtPoint extends Command {
         }
 
         System.out.println("DRIVE - Point AT Point START");
-    }
-
-    /**
-     * update logging
-     */
-    public void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        deltaYLog = new DoubleLogEntry(log, "/PointAtPoint/Delta Y");
-        deltaXLog = new DoubleLogEntry(log, "/PointAtPoint/Delta X");
-        targetHeadingLog = new DoubleLogEntry(log, "/PointAtPoint/Target Heading");
-        targetYLog = new DoubleLogEntry(log, "/PointAtPoint/Target Pose Y");
-        targetXLog = new DoubleLogEntry(log, "/PointAtPoint/Target Pose X");
-        pidOutputLog = new DoubleLogEntry(log, "/PointAtPoint/Pid Output");
-        targetMinusCurrentHeadingLog = new DoubleLogEntry(log, "/PointAtPoint/target minus current heading");
-        currentLog = new DoubleLogEntry(log, "/PointAtPoint/Current");
-        inToleranceLog = new BooleanLogEntry(log, "/PointAtPoint/InTolerance");
     }
 
 
@@ -136,23 +117,6 @@ public class PointAtPoint extends Command {
         // LightningShuffleboard.setDouble("Point-At-Point", "Current Heading",
         //         (drivetrain.getPose().getRotation().getDegrees() + 360) % 360);
         // LightningShuffleboard.setBool("Point-At-Point", "In Tolerance", inTolerance());
-
-        updateLogging();
-    }
-
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        deltaYLog.append(targetPose.getY() - drivetrain.getPose().getY());
-        deltaXLog.append(targetPose.getX() - drivetrain.getPose().getX());
-        targetHeadingLog.append(targetHeading);
-        targetYLog.append(targetPose.getY());
-        targetXLog.append(targetPose.getX());
-        pidOutputLog.append(pidOutput);
-        targetMinusCurrentHeadingLog.append(Math.abs(targetHeading - drivetrain.getPose().getRotation().getDegrees()));
-        currentLog.append(drivetrain.getPose().getRotation().getDegrees());
-        inToleranceLog.append(inTolerance());
     }
 
     @Override

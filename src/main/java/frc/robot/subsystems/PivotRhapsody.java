@@ -68,36 +68,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         angleMotor.applyConfig(motorConfig);
 
         setTargetAngle(targetAngle);
-
-        initLogging();
-    }
-
-    /**
-     * initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        currentAngleLog = new DoubleLogEntry(log, "/Pivot/CurrentAngle");
-        targetAngleRotLog = new DoubleLogEntry(log, "/Pivot/TargetAngleRot");
-        targetAngleDegLog = new DoubleLogEntry(log, "/Pivot/TargetAngleDeg");
-
-        onTargetLog = new BooleanLogEntry(log, "/Pivot/OnTarget");
-
-        biasLog = new DoubleLogEntry(log, "/Pivot/Bias");
-
-        forwardLimitLog = new BooleanLogEntry(log, "/Pivot/ForwardLimit");
-        reverseLimitLog = new BooleanLogEntry(log, "/Pivot/ReverseLimit");
-
-        powerLog = new DoubleLogEntry(log, "/Pivot/Power");
-
-        if (!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> (getAngle() * 360));
-            LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle * 360);
-            LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
-
-            LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
-        }
     }
 
     @Override
@@ -111,26 +81,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         // }
 
         moveToTarget();
-
-        updateLogging();
-    }
-
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        currentAngleLog.append(getAngle());
-        targetAngleRotLog.append(targetAngle);
-        targetAngleDegLog.append(targetAngle * 360);
-
-        onTargetLog.append(onTarget());
-
-        biasLog.append(bias);
-
-        forwardLimitLog.append(getForwardLimit());
-        reverseLimitLog.append(getReverseLimit());
-
-        powerLog.append(angleMotor.get());
     }
 
     /**

@@ -71,34 +71,6 @@ public class PivotMercury extends SubsystemBase implements Pivot {
         angleController.setTolerance(MercuryPivotConstants.ANGLE_TOLERANCE);
 
         setTargetAngle(targetAngle);
-
-        initLogging();
-    }
-
-    /**
-     * initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        currentAngleLog = new DoubleLogEntry(log, "/Pivot/CurrentAngle");
-        targetAngleLog = new DoubleLogEntry(log, "/Pivot/TargetAngle");
-        onTargetLog = new BooleanLogEntry(log, "/Pivot/OnTarget");
-
-        biasLog = new DoubleLogEntry(log, "/Pivot/Bias");
-
-        forwardLimitLog = new BooleanLogEntry(log, "/Pivot/ForwardLimit");
-        reverseLimitLog = new BooleanLogEntry(log, "/Pivot/ReverseLimit");
-
-        powerLog = new DoubleLogEntry(log, "/Pivot/Power");
-
-        if (!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> getAngle());
-            LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle);
-            LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
-
-            LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
-        }
     }
 
     @Override
@@ -112,27 +84,9 @@ public class PivotMercury extends SubsystemBase implements Pivot {
 
         moveToTarget();
 
-        updateLogging();
-
         // LightningShuffleboard.setDouble("Pivot", "Target ", targetAngle);
         // LightningShuffleboard.setDouble("Pivot", "Current angle", getAngle());
         // LightningShuffleboard.setDouble("Pivot", "BIAS", bias);
-    }
-
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        currentAngleLog.append(getAngle());
-        targetAngleLog.append(targetAngle);
-        onTargetLog.append(onTarget());
-
-        biasLog.append(bias);
-
-        forwardLimitLog.append(getForwardLimit());
-        reverseLimitLog.append(getReverseLimit());
-
-        powerLog.append(angleMotor.get());
     }
 
     /**

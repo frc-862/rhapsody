@@ -56,8 +56,6 @@ public class SmartShoot extends Command {
 		this.leds = leds;
 
 		addRequirements(pivot, flywheel, indexer, collector);
-
-		initLogging();
 	}
 
 	@Override
@@ -66,16 +64,6 @@ public class SmartShoot extends Command {
 		// Always start with aiming
 		state = ShootingState.AIM;
 		indexer.clearHasShot();
-	}
-
-	/**
-	 * initialize logging
-	 */
-	private void initLogging() {
-		DataLog log = DataLogManager.getLog();
-
-		distanceLog = new DoubleLogEntry(log, "/SmartShoot/distance");
-		stateLog = new StringLogEntry(log, "/SmartShoot/state");
 	}
 
 	@Override
@@ -115,16 +103,6 @@ public class SmartShoot extends Command {
 				leds.enableState(LED_STATES.SHOT).withTimeout(2).schedule();
 				break;
 		}
-
-		updateLogging();
-	}
-
-	/**
-	 * update logging
-	 */
-	private void updateLogging() {
-		distanceLog.append(distance);
-		stateLog.append(state.toString());
 	}
 
 	@Override

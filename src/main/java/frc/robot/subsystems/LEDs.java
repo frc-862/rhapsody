@@ -40,71 +40,68 @@ public class LEDs extends SubsystemBase {
     @Override
     public void periodic() {
         switch (state) {
-            case EMERGENCY:
-                blink(-1, LEDsConstants.RED_HUE);
-                break;
+            // case EMERGENCY:
+            //     blink(-1, LEDsConstants.RED_HUE);
+            //     break;
 
-            case START:
-                rainbow(-1);
-                break;
+            // case START:
+            //     rainbow(-1);
+            //     break;
 
-            case BAD_POSE:
-                pulse(-1, LEDsConstants.RED_HUE);
-                break;
+            // case BAD_POSE:
+            //     pulse(-1, LEDsConstants.RED_HUE);
+            //     break;
 
-            case GOOD_POSE:
-                blink(-1, LEDsConstants.GREEN_HUE);
-                break;
+            // case GOOD_POSE:
+            //     blink(-1, LEDsConstants.GREEN_HUE);
+            //     break;
 
-            case COLLECT_PLANNED:
-                pulse(-1, LEDsConstants.BLUE_HUE);
-                break;
+            // case COLLECT_PLANNED:
+            //     pulse(-1, LEDsConstants.BLUE_HUE);
+            //     break;
 
-            case COLLECTED:
-                pulse(-1, LEDsConstants.GREEN_HUE);
-                break;
+            // case COLLECTED:
+            //     pulse(-1, LEDsConstants.GREEN_HUE);
+            //     break;
 
-            case SHOT:
-                pulse(-1, LEDsConstants.GREEN_HUE);
-                break;
+            // case SHOT:
+            //     pulse(-1, LEDsConstants.GREEN_HUE);
+            //     break;
 
-            case FINISHED_CLIMB:
-                rainbow(-1);
-                break;
+            // case FINISHED_CLIMB:
+            //     rainbow(-1);
+            //     break;
 
-            case SHOOTING:
-                blink(-1, LEDsConstants.YELLOW_HUE);
-                break;
+            // case SHOOTING:
+            //     blink(-1, LEDsConstants.YELLOW_HUE);
+            //     break;
 
-            case COLLECTING:
-                pulse(-1, LEDsConstants.RED_HUE);
-                break;
+            // case COLLECTING:
+            //     pulse(-1, LEDsConstants.RED_HUE);
+            //     break;
 
-            case CHASING:
-                pulse(-1, LEDsConstants.RED_HUE);
-                break;
+            // case CHASING:
+            //     pulse(-1, LEDsConstants.RED_HUE);
+            //     break;
 
-            case CLIMBING:
-                blink(-1, LEDsConstants.PURPLE_HUE);
-                break;
+            // case CLIMBING:
+            //     blink(-1, LEDsConstants.PURPLE_HUE);
+            //     break;
 
-            case HAS_PIECE:
-                setSolidStrandHSV(-1, LEDsConstants.ORANGE_HUE, 255, 255);
-                break;
+            // case HAS_PIECE:
+            //     setSolidStrandHSV(-1, LEDsConstants.ORANGE_HUE, 255, 255);
+            //     break;
 
-            case HAS_VISION:
-                setSolidStrandHSV(-1, LEDsConstants.PINK_HUE, 255, 255);
-                break;
+            // case HAS_VISION:
+            //     setSolidStrandHSV(-1, LEDsConstants.PINK_HUE, 255, 255);
+            //     break;
 
-            case DISABLED:
-                setSolidHSV(0, 0, 0);
-                break;
-
-            case DEFAULT:
-                swirl(-1);
-                break;
+            // case DISABLED:
+            //     setSolidHSV(0, 0, 0);
+            //     break;
 
             default:
+                swirl(-1);
                 break;
         }
 

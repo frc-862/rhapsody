@@ -83,8 +83,6 @@ public class ChasePieces extends Command {
         }
 
         addRequirements(drivetrain, collector, indexer);
-
-        initLogging();
     }
 
     @Override
@@ -100,22 +98,6 @@ public class ChasePieces extends Command {
         smartCollect.initialize();
 
         hasSeenTarget = false;
-    }
-
-    /**
-     * Initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        onTargetLog = new BooleanLogEntry(log, "/ChasePieces/On Target");
-        hasTargetLog = new BooleanLogEntry(log, "/ChasePieces/Has Target");
-        trustValuesLog = new BooleanLogEntry(log, "/ChasePieces/Trust Values");
-
-        targetHeadingLog = new DoubleLogEntry(log, "/ChasePieces/Target Heading");
-        pidOutputLog = new DoubleLogEntry(log, "/ChasePieces/Pid Output");
-        drivePowerLog = new DoubleLogEntry(log, "/ChasePieces/DrivePower");
-        rotPowerLog = new DoubleLogEntry(log, "/ChasePieces/RotPower");
     }
 
     @Override
@@ -168,29 +150,6 @@ public class ChasePieces extends Command {
         }
 
         drivetrain.setRobot(drivePower, 0, rotPower);
-
-        updateLogging();
-    }
-
-    /**
-     * Update logging
-     */
-    private void updateLogging() {
-        onTargetLog.append(headingController.atSetpoint());
-        hasTargetLog.append(hasTarget);
-        trustValuesLog.append(trustValues());
-
-        targetHeadingLog.append(targetHeading);
-        pidOutputLog.append(pidOutput);
-        drivePowerLog.append(drivePower);
-        rotPowerLog.append(rotPower);
-
-
-        if (!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setBool("ChasePieces", "Is Running", isFinished());
-            LightningShuffleboard.setDouble("ChasePieces", "DrivePower", defaultDrivePower);
-            LightningShuffleboard.setDouble("ChasePieces", "Current X", drivetrain.getPose().getX());
-        }
     }
 
     private void checkSlowdown() {

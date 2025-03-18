@@ -62,38 +62,6 @@ public class Flywheel extends SubsystemBase {
 
         topMotor.applyConfig();
         bottomMotor.applyConfig();
-
-        initLogging();
-    }
-
-    /**
-     * initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        topRPMLog = new DoubleLogEntry(log, "/Flywheel/TopRPM");
-        bottomRPMLog = new DoubleLogEntry(log, "/Flywheel/BottomRPM");
-        topTargetRPMLog = new DoubleLogEntry(log, "/Flywheel/TopTargetRPM");
-        bottomTargetRPMLog = new DoubleLogEntry(log, "/Flywheel/BottomTargetRPM");
-        topOnTargetLog = new BooleanLogEntry(log, "/Flywheel/TopOnTarget");
-        bottomOnTargetLog = new BooleanLogEntry(log, "/Flywheel/BottomOnTarget");
-        topPowerLog = new DoubleLogEntry(log, "/Flywheel/TopPower");
-        bottomPowerLog = new DoubleLogEntry(log, "/Flywheel/BottomPower");
-        biasLog = new DoubleLogEntry(log, "/Flywheel/Bias");
-
-		if (!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setDoubleSupplier("Flywheel", "Top RPM", () -> getTopMotorRPM());
-            LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom RPM", () -> getBottomMotorRPM());
-
-            LightningShuffleboard.setDoubleSupplier("Flywheel", "Top Target RPM", () -> topMotorTargetRPM());
-            LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Target RPM", () -> bottomMotorTargetRPM());
-
-            LightningShuffleboard.setBoolSupplier("Flywheel", "Top on Target", () -> topMotorRPMOnTarget());
-            LightningShuffleboard.setBoolSupplier("Flywheel", "Bottom on Target", () -> bottomMotorRPMOnTarget());
-
-            LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", () -> getBias());
-        }
     }
 
     @Override
@@ -105,23 +73,6 @@ public class Flywheel extends SubsystemBase {
             applyPowerTop(topTargetRPS + bias);
             applyPowerBottom(bottomTargetRPS + bias);
         }
-
-        updateLogging();
-    }
-
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        topRPMLog.append(getTopMotorRPM());
-        bottomRPMLog.append(getBottomMotorRPM());
-        topTargetRPMLog.append(topMotorTargetRPM());
-        bottomTargetRPMLog.append(bottomMotorTargetRPM());
-        topOnTargetLog.append(topMotorRPMOnTarget());
-        bottomOnTargetLog.append(bottomMotorRPMOnTarget());
-        topPowerLog.append(topMotor.get());
-        bottomPowerLog.append(bottomMotor.get());
-        biasLog.append(getBias());
     }
 
     /**

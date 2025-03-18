@@ -35,24 +35,10 @@ public class MoveToPose extends Command {
         this.drivetrain = drivetrain;
 
         addRequirements(drivetrain);
-
-        initLogging();
     }
 
     @Override
     public void initialize() {}
-
-    /**
-     * initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        dxLog = new DoubleLogEntry(log, "/MoveToPose/dx");
-        dyLog = new DoubleLogEntry(log, "/MoveToPose/dy");
-        targetXLog = new DoubleLogEntry(log, "/MoveToPose/targetX");
-        targetYLog = new DoubleLogEntry(log, "/MoveToPose/targetY");
-    }
 
     @Override
     public void execute() {
@@ -88,18 +74,6 @@ public class MoveToPose extends Command {
         }
 
         drivetrain.setField(powerx, powery, 0);
-
-        updateLogging();
-    }
-
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        dxLog.append(dx);
-        dyLog.append(dy);
-        targetXLog.append(target.getTranslation().getX());
-        targetYLog.append(target.getTranslation().getY());
     }
 
     @Override
