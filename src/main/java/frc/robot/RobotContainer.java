@@ -282,15 +282,15 @@ public class RobotContainer extends LightningContainer {
 						.deadlineWith(new FlywheelIN(flywheel)));
 
 		/* BIAS */
-		// new Trigger(() -> coPilot.getPOV() == 0)
-		// 		.onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
-		// new Trigger(() -> coPilot.getPOV() == 180)
-		// 		.onTrue(new InstantCommand(() -> pivot.decreaseBias())); // DOWN
+		new Trigger(() -> coPilot.getPOV() == 0)
+				.onTrue(new InstantCommand(() -> pivot.increaseBias())); // UP
+		new Trigger(() -> coPilot.getPOV() == 180)
+				.onTrue(new InstantCommand(() -> pivot.decreaseBias())); // DOWN
 
-		// new Trigger(() -> coPilot.getPOV() == 90)
-		// 		.onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
-		// new Trigger(() -> coPilot.getPOV() == 270)
-		// 		.onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
+		new Trigger(() -> coPilot.getPOV() == 90)
+				.onTrue(new InstantCommand(() -> flywheel.increaseBias())); // RIGHT
+		new Trigger(() -> coPilot.getPOV() == 270)
+				.onTrue(new InstantCommand(() -> flywheel.decreaseBias())); // LEFT
 
 		// new Trigger(() -> coPilot.getBackButton() && coPilot.getStartButton())
 		// 		.onTrue(new InstantCommand(() -> pivot.resetBias())
@@ -397,9 +397,9 @@ public class RobotContainer extends LightningContainer {
 		// () -> -coPilot.getRightY(),
 		// coPilot::getYButton).deadlineWith(leds.enableState(LED_STATES.CLIMBING)));
 
-		// if (!Constants.IS_MERCURY) {
-		// 	climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
-		// }
+		if (!Constants.IS_MERCURY) {
+			climber.setDefaultCommand(new ManualClimb(() -> -coPilot.getRightY(), () -> -coPilot.getLeftY(), climber));
+		}
 
 		// limelights.setDefaultCommand(new UpdateOrientation(limelights, drivetrain));
 	}
