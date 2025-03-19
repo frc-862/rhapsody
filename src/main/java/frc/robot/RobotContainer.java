@@ -207,11 +207,9 @@ public class RobotContainer extends LightningContainer {
 	protected void configureButtonBindings() {
 		/* driver */
 		// field centric for the robot
-		// new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
-		// 		.onTrue(new InstantCommand(() -> drivetrain.setRobotCentricControl(true)))
-		// 		.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(),
-		// 				() -> -driver.getLeftX(), () -> -driver.getRightX()))
-		// 		.onFalse(new InstantCommand(() -> drivetrain.setRobotCentricControl(false)));
+		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
+				.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(),
+						() -> -driver.getLeftX(), () -> -driver.getRightX()));
 
 		// enables slow mode for driving
 		// new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
@@ -376,7 +374,7 @@ public class RobotContainer extends LightningContainer {
 		// 		.onTrue(new InstantCommand(() -> drivetrain
 		// 				.setDrivetrainPose(StartingPoseConstants.SOURCE_SUB_C_STARTPOSE_RED)));
 
-		SmartDashboard.putString("DRIVER INSTRUCTIONS", "DRIVER: Joysticks = driving, X Button = park, Start + Back Buttons = reset forward");
+		SmartDashboard.putString("DRIVER INSTRUCTIONS", "DRIVER: Joysticks = driving, X Button = park, Start + Back Buttons = reset forward, Left Trigger = robot centric");
 		SmartDashboard.putString("COPILOT INSTRUCTIONS: ", "COPILOT: X Button = point blank shot, A Button = amp shot, Left/Right Bumpers = indexer, Left/Right Triggers = collector");
 	}
 
