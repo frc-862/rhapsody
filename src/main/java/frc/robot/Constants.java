@@ -523,6 +523,10 @@ public class Constants {
 
     public class ShooterConstants {
 
+        public enum SHOOTER_SPEEDS{
+            SLOW, MODERATE, FAST
+        }
+
         // Distance in meters, angle in degrees
         public static final InterpolationMap TUBE_ANGLE_MAP = new InterpolationMap() {
             {

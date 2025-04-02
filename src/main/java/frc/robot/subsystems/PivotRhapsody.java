@@ -39,7 +39,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
     private DoubleLogEntry powerLog;
 
     public PivotRhapsody() {
-        System.out.println("RHAPSODY PIVOT");
         CANcoderConfiguration angleConfig = new CANcoderConfiguration();
         angleConfig.MagnetSensor.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
                 .withMagnetOffset(RhapsodyPivotConstants.ENCODER_OFFSET)
@@ -68,69 +67,12 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
         angleMotor.applyConfig(motorConfig);
 
         setTargetAngle(targetAngle);
-
-        initLogging();
-    }
-
-    /**
-     * initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        currentAngleLog = new DoubleLogEntry(log, "/Pivot/CurrentAngle");
-        targetAngleRotLog = new DoubleLogEntry(log, "/Pivot/TargetAngleRot");
-        targetAngleDegLog = new DoubleLogEntry(log, "/Pivot/TargetAngleDeg");
-
-        onTargetLog = new BooleanLogEntry(log, "/Pivot/OnTarget");
-
-        biasLog = new DoubleLogEntry(log, "/Pivot/Bias");
-
-        forwardLimitLog = new BooleanLogEntry(log, "/Pivot/ForwardLimit");
-        reverseLimitLog = new BooleanLogEntry(log, "/Pivot/ReverseLimit");
-
-        powerLog = new DoubleLogEntry(log, "/Pivot/Power");
-
-        if (!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setDoubleSupplier("Pivot", "CurrentAngle", () -> (getAngle() * 360));
-            LightningShuffleboard.setDoubleSupplier("Pivot", "TargetAngle", () -> targetAngle * 360);
-            LightningShuffleboard.setBoolSupplier("Pivot", "OnTarget", () -> onTarget());
-
-            LightningShuffleboard.setDoubleSupplier("Pivot", "Bias", () -> bias);
-        }
     }
 
     @Override
     public void periodic() {
-
-        // // SETS angle to angle of limit switch on press
-        // if (getForwardLimit()) {
-        // resetAngle(RhapsodyPivotConstants.MIN_ANGLE);
-        // } else if (getReverseLimit()) {
-        // resetAngle(RhapsodyPivotConstants.MAX_ANGLE);
-        // }
-
+        
         moveToTarget();
-
-        updateLogging();
-    }
-
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        currentAngleLog.append(getAngle());
-        targetAngleRotLog.append(targetAngle);
-        targetAngleDegLog.append(targetAngle * 360);
-
-        onTargetLog.append(onTarget());
-
-        biasLog.append(bias);
-
-        forwardLimitLog.append(getForwardLimit());
-        reverseLimitLog.append(getReverseLimit());
-
-        powerLog.append(angleMotor.get());
     }
 
     /**
@@ -143,90 +85,55 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
                 / 360);
     }
 
-    /*
-     * Moves pivot motor toward target angle
-     */
-    private void moveToTarget() {
-        angleMotor.setControl(anglePID.withPosition(targetAngle));
-    }
-
-    public void setPower(double power) {
+    public void setPower(double power){
         angleMotor.set(power);
     }
 
-    /**
-     * @return The current angle of the pivot in rotations
-     */
-    public double getAngle() {
+    public void moveToTarget(){
+        angleMotor.setControl(anglePID.withPosition(targetAngle));
+    }
+
+    public double getTargetAngle(){
+        return targetAngle;
+    }
+
+    public double getAngle(){
         return angleMotor.getPosition().getValue();
     }
 
-    /**
-     * @return Whether or not the pivot is on target, within Angle tolerance
-     */
-    public boolean onTarget() {
-        return Math.abs(getAngle() - targetAngle) < RhapsodyPivotConstants.ANGLE_TOLERANCE;
+    public boolean onTarget(){
+        return Math.abs(targetAngle - angleMotor.getPosition().getValue()) < RhapsodyPivotConstants.ANGLE_TOLERANCE;
     }
 
-    /**
-     * Gets forward limit switch
-     *
-     * @return true if pressed
-     */
-    public boolean getForwardLimit() {
-        return false; // angleMotor.getForwardLimit().refresh().getValue() ==
-                      // ForwardLimitValue.ClosedToGround;
-    }
-
-    /**
-     * Gets reverse limit switch
-     *
-     * @return true if pressed
-     */
-    public boolean getReverseLimit() {
-        return false; // angleMotor.getReverseLimit().refresh().getValue() ==
-                      // ReverseLimitValue.ClosedToGround;
-    }
-
-    /**
-     * @return The bias to add to the target angle of the pivot
-     */
-    public double getBias() {
-        return bias;
-    }
-
-    /**
-     * Increases the bias of the pivot by set amount
-     */
-    public void increaseBias() {
+    public void increaseBias(){
         bias += RhapsodyPivotConstants.BIAS_INCREMENT;
     }
 
-    /**
-     * Decreases the bias of the pivot by set amount
-     */
-    public void decreaseBias() {
+    public void decreaseBias(){
         bias -= RhapsodyPivotConstants.BIAS_INCREMENT;
     }
 
-    /**
-     * Resets the bias of the pivot
-     */
-    public void resetBias() {
+    public double getBias(){
+        return bias;
+    }
+
+    public void resetBias(){
         bias = 0;
     }
 
-    /**
-     * @return current stow angle
-     */
-    public double getStowAngle() {
+    public double getStowAngle(){
         return RhapsodyPivotConstants.STOW_ANGLE;
     }
 
-    /**
-     * @return max Index Angle
-     */
     public double getMaxIndexAngle() {
         return RhapsodyPivotConstants.MAX_INDEX_ANGLE;
+    }
+
+    public boolean getForwardLimit(){
+        return false;
+    }
+
+    public boolean getReverseLimit(){
+        return false;
     }
 }

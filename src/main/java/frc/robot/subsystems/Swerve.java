@@ -373,12 +373,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param driverC the driver controller
      * @param copilotC the copilot controller
      */
-    public void swap(XboxControllerFilter driverC, XboxControllerFilter copilotC) {
-        XboxControllerFilter temp = driverC;
-        RobotContainer.driver = copilotC;
-        RobotContainer.coPilot = temp;
-    }
-
+    
     /**
      * Returns if the robot Pose is in Wing
      *

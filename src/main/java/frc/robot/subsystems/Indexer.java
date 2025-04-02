@@ -1,246 +1,59 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.util.datalog.StringLogEntry;
-import edu.wpi.first.util.datalog.BooleanLogEntry;
-import frc.robot.Constants;
-import frc.robot.Constants.IndexerConstants;
-import frc.robot.Constants.IndexerConstants.PieceState;
 import frc.robot.Constants.RobotMap.CAN;
-import frc.robot.Constants.RobotMap.DIO;
+import frc.robot.Constants.RobotMap;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
 
 public class Indexer extends SubsystemBase {
-
-    private Collector collector;
-
     private ThunderBird motor;
-    private DigitalInput indexerSensorEntry = new DigitalInput(DIO.INDEXER_ENTER_BEAMBREAK);
-    private DigitalInput indexerSensorExit = new DigitalInput(DIO.INDEXER_EXIT_BEAMBREAK);
 
-    private DutyCycleOut dutyCycleControl = new DutyCycleOut(0).withEnableFOC(true);
+    private DigitalInput entryBeam;
+    private DigitalInput exitBeam;
 
-    private double timeLastTriggered = 0d;
+    private Debouncer debouncer = new Debouncer(0.01, DebounceType.kBoth);
 
-    private double targetPower = 0;
+    public Indexer() {
+        motor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD, true, 0, false);
 
-    private PieceState currentState = PieceState.NONE;
-    private boolean didShoot = false;
-
-    private Debouncer entryDebouncer = new Debouncer(IndexerConstants.INDEXER_DEBOUNCE_TIME);
-    private Debouncer exitDebouncer = new Debouncer(0.1);
-
-    private DoubleLogEntry indexerPowerLog;
-    private DoubleLogEntry indexerTargetPowerLog;
-    private BooleanLogEntry entryBeamBreakLog;
-    private BooleanLogEntry exitBeamBreakLog;
-    private StringLogEntry pieceStateLog;
-    private BooleanLogEntry hasShotLog;
-    private BooleanLogEntry isExitingLog;
-    private BooleanLogEntry hasPieceLog;
-
-    public Indexer(Collector collector) {
-        this.collector = collector;
-
-        motor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD,
-                IndexerConstants.MOTOR_INVERT, IndexerConstants.MOTOR_STATOR_CURRENT_LIMIT,
-                IndexerConstants.INDEXER_MOTOR_BRAKE_MODE);
-                
-        initLogging();
-    }
-
-    /**
-     * initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
-
-        indexerPowerLog = new DoubleLogEntry(log, "/Indexer/Power");
-        indexerTargetPowerLog = new DoubleLogEntry(log, "/Indexer/TargetPower");
-        entryBeamBreakLog = new BooleanLogEntry(log, "/Indexer/EntryBeamBreak");
-        exitBeamBreakLog = new BooleanLogEntry(log, "/Indexer/ExitBeamBreak");
-        pieceStateLog = new StringLogEntry(log, "/Indexer/PieceState");
-        hasShotLog = new BooleanLogEntry(log, "/Indexer/HasShot");
-        isExitingLog = new BooleanLogEntry(log, "/Indexer/IsExiting");
-        hasPieceLog = new BooleanLogEntry(log, "/Indexer/HasPiece");
-
-		if (!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setDoubleSupplier("Indexer", "Power", () -> motor.get());
-
-            LightningShuffleboard.setBoolSupplier("Indexer", "EntryBeamBreak", () -> getEntryBeamBreakState());
-            LightningShuffleboard.setBoolSupplier("Indexer", "ExitBeamBreak", () -> getExitBeamBreakState());
-
-            LightningShuffleboard.setStringSupplier("Indexer", "PieceState", () -> getPieceState().toString());
-
-            LightningShuffleboard.setBoolSupplier("Indexer", "HasShot", () -> hasShot());
-            LightningShuffleboard.setBoolSupplier("Indexer", "IsExiting", () -> isExiting());
-            LightningShuffleboard.setBoolSupplier("Indexer", "HasPiece", () -> hasNote());
-        }
-    }
-
-    /**
-     * Get current state of piece
-     *
-     * @return current state of piece
-     */
-    public PieceState getPieceState() {
-        return currentState;
-    }
-
-    /**
-     * Set the current state of the piece
-     *
-     * @param state new state of piece
-     */
-    public void setPieceState(PieceState state) {
-        currentState = state;
-    }
-
-    /**
-     * Set raw power to the indexer motor
-     *
-     * @param power
-     */
-    public void setPower(double power) {
-        targetPower = power;
-        motor.setControl(dutyCycleControl.withOutput(power));
-    }
-
-    /**
-     * Get the current power of the indexer motor
-     *
-     * @return current power of the indexer motor
-     */
-    public double getPower() {
-        return motor.get();
-    }
-
-    /**
-     * Index up
-     */
-    public void indexUp() {
-        setPower(IndexerConstants.INDEXER_DEFAULT_POWER);
-    }
-
-    /**
-     * Index down
-     */
-    public void indexDown() {
-        setPower(-IndexerConstants.INDEXER_DEFAULT_POWER);
-    }
-
-    /**
-     * Stop the indexer
-     */
-    public void stop() {
-        setPower(0d);
-    }
-
-    /**
-     * Gets the current beam brake state
-     *
-     * @return entry beambreak state
-     */
-    public boolean getEntryBeamBreakState() {
-        if (Constants.IS_MERCURY) {
-            return entryDebouncer.calculate(!indexerSensorEntry.get());
-        }
-        return entryDebouncer.calculate(indexerSensorEntry.get());
-    }
-
-    /**
-     * Gets the current beam brake state
-     *
-     * @return exit beambreak state
-     */
-    public boolean getExitBeamBreakState() {
-        return exitDebouncer.calculate(!indexerSensorExit.get());
-    }
-
-    /**
-     * @return true if piece is exiting the indexer
-     */
-    public boolean isExiting() {
-        return getExitBeamBreakState() && getPieceState() == PieceState.IN_INDEXER;
-    }
-
-    /**
-     * Will return true after shooting (or really anytime we no longer have a note,
-     * after previously having one)
-     *
-     * @return boolean
-     */
-    public boolean hasShot() {
-        return didShoot;
-    }
-
-    /**
-     * Has shot flag stays on until
-     * cleared, will be false on
-     * robot init
-     */
-    public void clearHasShot() {
-        didShoot = false;
-    }
-
-    /**
-     * Get the current power of the indexer motor
-     *
-     * @return current power of the indexer motor
-     */
-    public double getIndexerPower() {
-        return motor.get();
+        entryBeam = new DigitalInput(RobotMap.DIO.INDEXER_ENTER_BEAMBREAK);
+        exitBeam = new DigitalInput(RobotMap.DIO.INDEXER_EXIT_BEAMBREAK);
     }
 
     @Override
     public void periodic() {
-        // Update piece state based on beambreaks
-        if (getExitBeamBreakState()) {
-            setPieceState(PieceState.IN_INDEXER);
-        } else if (getEntryBeamBreakState()) {
-            setPieceState(PieceState.IN_PIVOT);
-        } else if (collector.getEntryBeamBreakState()) {
-            timeLastTriggered = Timer.getFPGATimestamp();
-            setPieceState(PieceState.IN_COLLECT);
-        } else if (Timer.getFPGATimestamp() - timeLastTriggered <= 1) {
-            setPieceState(PieceState.IN_COLLECT);
-        } else {
-            didShoot = didShoot || hasNote();
-            setPieceState(PieceState.NONE);
-        }
+        LightningShuffleboard.setDouble("Indexer", "speed", motor.getVelocity().getValueAsDouble());
 
-        updateLogging();
+        LightningShuffleboard.setBool("Indexer", "entryBeam", getEntryBeam());
+        LightningShuffleboard.setBool("Indexer", "exitBeam", getExitBeam());
+
+        LightningShuffleboard.setBool("Indexer", "noteIndexed", isNoteIndexed());
     }
 
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        indexerPowerLog.append(motor.get());
-        indexerTargetPowerLog.append(targetPower);
-        entryBeamBreakLog.append(getEntryBeamBreakState());
-        exitBeamBreakLog.append(getExitBeamBreakState());
-        pieceStateLog.append(getPieceState().toString());
-        hasShotLog.append(hasShot());
-        isExitingLog.append(isExiting());
-        hasPieceLog.append(hasNote());
+    public void setSpeed(double speed){
+        motor.setControl(new DutyCycleOut(speed));
     }
 
-    /**
-     * If collector or indexer has note
-     * @return true if Piece state is not NONE
-     */
-    public boolean hasNote() {
-        return getPieceState() != PieceState.NONE;
+    public boolean getEntryBeam(){
+        return debouncer.calculate(entryBeam.get());
     }
+
+    public boolean getExitBeam(){
+        return exitBeam.get();
+    }
+
+    public boolean isNoteIndexed(){
+        return getEntryBeam() && getExitBeam();
+    }
+
 }

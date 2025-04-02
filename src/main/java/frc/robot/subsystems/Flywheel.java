@@ -1,279 +1,95 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.util.datalog.BooleanLogEntry;
-import frc.robot.Constants.RobotMap.CAN;
-import frc.robot.Constants;
-import frc.robot.Constants.FlywheelConstants;
 import frc.thunder.hardware.ThunderBird;
 import frc.thunder.shuffleboard.LightningShuffleboard;
+import frc.robot.Constants.FlywheelConstants;
+import frc.robot.Constants.RobotMap.CAN;
+import frc.robot.Constants.RobotMap.DIO;
+import frc.robot.Constants.ShooterConstants.SHOOTER_SPEEDS;
 
 public class Flywheel extends SubsystemBase {
-    private ThunderBird topMotor;
-    private ThunderBird bottomMotor;
+	private ThunderBird topMotor;
+	private ThunderBird bottomMotor;
 
-    private final VelocityVoltage topRPMPID = new VelocityVoltage(0);
-    private final VelocityVoltage bottomRPMPID = new VelocityVoltage(0);
+	private VelocityVoltage topPID = new VelocityVoltage(0);
+	private VelocityVoltage bottomPID = new VelocityVoltage(0);
 
-    private double topTargetRPS = 0;
-    private double bottomTargetRPS = 0;
-    private double bias = 0;
-    private boolean coast = false;
-    private boolean kamaDone = false;
+	private SHOOTER_SPEEDS mode = SHOOTER_SPEEDS.MODERATE;
 
-    private DoubleLogEntry topRPMLog;
-    private DoubleLogEntry bottomRPMLog;
-    private DoubleLogEntry topTargetRPMLog;
-    private DoubleLogEntry bottomTargetRPMLog;
-    private BooleanLogEntry topOnTargetLog;
-    private BooleanLogEntry bottomOnTargetLog;
-    private DoubleLogEntry topPowerLog;
-    private DoubleLogEntry bottomPowerLog;
-    private DoubleLogEntry biasLog;
+	private double targetSpeed = 0;
 
-    public Flywheel() {
-        boolean topMotorInvert = FlywheelConstants.MOTOR_TOP_INVERT_Rhapsody;
+	public Flywheel() {
+		topMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD, false, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT, false);
+		bottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD, false, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT, false);
 
-        if(Constants.IS_MERCURY) {
-            topMotorInvert = FlywheelConstants.MOTOR_TOP_INVERT_Mercury;
-        }
+		topMotor.configPIDF(0, FlywheelConstants.TOP_0_MOTOR_KP, FlywheelConstants.TOP_0_MOTOR_KI, FlywheelConstants.TOP_0_MOTOR_KD);
+		bottomMotor.configPIDF(0, FlywheelConstants.BOTTOM_0_MOTOR_KP, FlywheelConstants.BOTTOM_0_MOTOR_KI, FlywheelConstants.BOTTOM_0_MOTOR_KD);
 
-        /* TEST after kettering basic stuff for now */
-        topMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_TOP, CAN.CANBUS_FD,
-            topMotorInvert, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
-            FlywheelConstants.MOTOR_BRAKE_MODE);
-        bottomMotor = new ThunderBird(CAN.FLYWHEEL_MOTOR_BOTTOM, CAN.CANBUS_FD,
-            FlywheelConstants.MOTOR_BOTTOM_INVERT, FlywheelConstants.MOTOR_STATOR_CURRENT_LIMIT,
-            FlywheelConstants.MOTOR_BRAKE_MODE);
-        topMotor.configPIDF(0, FlywheelConstants.TOP_0_MOTOR_KP, FlywheelConstants.TOP_0_MOTOR_KI,
-            FlywheelConstants.TOP_0_MOTOR_KD, FlywheelConstants.TOP_0_MOTOR_KS, FlywheelConstants.TOP_0_MOTOR_KV);
-        bottomMotor.configPIDF(0, FlywheelConstants.BOTTOM_0_MOTOR_KP, FlywheelConstants.BOTTOM_0_MOTOR_KI,
-            FlywheelConstants.BOTTOM_0_MOTOR_KD, FlywheelConstants.BOTTOM_0_MOTOR_KS, FlywheelConstants.BOTTOM_0_MOTOR_KV);
+		topMotor.applyConfig();
+		bottomMotor.applyConfig();
+	}
 
-            topMotor.configPIDF(1, FlywheelConstants.TOP_1_MOTOR_KP, FlywheelConstants.TOP_1_MOTOR_KI,
-            FlywheelConstants.TOP_1_MOTOR_KD, FlywheelConstants.TOP_1_MOTOR_KS, FlywheelConstants.TOP_1_MOTOR_KV);
-        bottomMotor.configPIDF(1, FlywheelConstants.BOTTOM_1_MOTOR_KP, FlywheelConstants.BOTTOM_1_MOTOR_KI,
-            FlywheelConstants.BOTTOM_1_MOTOR_KD, FlywheelConstants.BOTTOM_1_MOTOR_KS, FlywheelConstants.BOTTOM_1_MOTOR_KV);
+	@Override
+	public void periodic() {
+		LightningShuffleboard.setDouble("Flywheel", "top motor speed", topMotor.getVelocity().getValueAsDouble());
+		LightningShuffleboard.setDouble("Flywheel", "bottom motor speed", bottomMotor.getVelocity().getValueAsDouble());
+		LightningShuffleboard.setDouble("Flywheel", "target speed", targetSpeed);
 
-        topMotor.applyConfig();
-        bottomMotor.applyConfig();
+		setTopMotorSpeed(targetSpeed);
+		setBottomMotorSpeed(targetSpeed);
+	}
 
-        initLogging();
-    }
+	public void setTargetSpeed(double speed){
+		targetSpeed = speed;
+	}
 
-    /**
-     * initialize logging
-     */
-    private void initLogging() {
-        DataLog log = DataLogManager.getLog();
+	public void setTopMotorSpeed(double speed){
+		topMotor.setControl(topPID.withVelocity(speed).withEnableFOC(false).withSlot(0));
+	}
 
-        topRPMLog = new DoubleLogEntry(log, "/Flywheel/TopRPM");
-        bottomRPMLog = new DoubleLogEntry(log, "/Flywheel/BottomRPM");
-        topTargetRPMLog = new DoubleLogEntry(log, "/Flywheel/TopTargetRPM");
-        bottomTargetRPMLog = new DoubleLogEntry(log, "/Flywheel/BottomTargetRPM");
-        topOnTargetLog = new BooleanLogEntry(log, "/Flywheel/TopOnTarget");
-        bottomOnTargetLog = new BooleanLogEntry(log, "/Flywheel/BottomOnTarget");
-        topPowerLog = new DoubleLogEntry(log, "/Flywheel/TopPower");
-        bottomPowerLog = new DoubleLogEntry(log, "/Flywheel/BottomPower");
-        biasLog = new DoubleLogEntry(log, "/Flywheel/Bias");
+	public void setBottomMotorSpeed(double speed){
+		bottomMotor.setControl(bottomPID.withVelocity(speed).withEnableFOC(false).withSlot(0));
+	}
 
-		if (!DriverStation.isFMSAttached()) {
-            LightningShuffleboard.setDoubleSupplier("Flywheel", "Top RPM", () -> getTopMotorRPM());
-            LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom RPM", () -> getBottomMotorRPM());
+	public double getTopMotorSpeed(){
+		return topMotor.getVelocity().getValueAsDouble();
+	}
 
-            LightningShuffleboard.setDoubleSupplier("Flywheel", "Top Target RPM", () -> topMotorTargetRPM());
-            LightningShuffleboard.setDoubleSupplier("Flywheel", "Bottom Target RPM", () -> bottomMotorTargetRPM());
+	public double getBottomMotorSpeed(){
+		return bottomMotor.getVelocity().getValueAsDouble();
+	}
 
-            LightningShuffleboard.setBoolSupplier("Flywheel", "Top on Target", () -> topMotorRPMOnTarget());
-            LightningShuffleboard.setBoolSupplier("Flywheel", "Bottom on Target", () -> bottomMotorRPMOnTarget());
+	public SHOOTER_SPEEDS getCurrentMode(){
+		return mode;
+	}
 
-            LightningShuffleboard.setDoubleSupplier("Flywheel", "Bias", () -> getBias());
-        }
-    }
+	public double getTargetSpeed(){
+		return targetSpeed;
+	}
 
-    @Override
-    public void periodic() {
-        if (coast) {
-            applyPowerTop(-8.33d);
-            applyPowerBottom(-8.33d);
-        } else {
-            applyPowerTop(topTargetRPS + bias);
-            applyPowerBottom(bottomTargetRPS + bias);
-        }
+	public void cycleShooterSpeed(){
+		switch (mode) {
+			case SLOW:
+				mode = SHOOTER_SPEEDS.MODERATE;
+				break;
+			
+			case MODERATE:
+				mode = SHOOTER_SPEEDS.FAST;
+				break;
 
-        updateLogging();
-    }
+			case FAST:
+				mode = SHOOTER_SPEEDS.SLOW;
+				break;
 
-    /**
-     * update logging
-     */
-    public void updateLogging() {
-        topRPMLog.append(getTopMotorRPM());
-        bottomRPMLog.append(getBottomMotorRPM());
-        topTargetRPMLog.append(topMotorTargetRPM());
-        bottomTargetRPMLog.append(bottomMotorTargetRPM());
-        topOnTargetLog.append(topMotorRPMOnTarget());
-        bottomOnTargetLog.append(bottomMotorRPMOnTarget());
-        topPowerLog.append(topMotor.get());
-        bottomPowerLog.append(bottomMotor.get());
-        biasLog.append(getBias());
-    }
-
-    /**
-     * Sets the RPM of all flywheel motors
-     * @param rpm RPM of the flywheel
-     */
-    public void setAllMotorsRPM(double rpm) {
-        coast(false);
-        topTargetRPS = rpm / 60d;
-        bottomTargetRPS = rpm / 60d;
-    }
-
-    /**
-     * Sets the RPM of top flywheel
-     * @param rpm RPM of the flywheel
-     */
-    public void setTopMotorRPM(double rpm) {
-        coast(false);
-        topTargetRPS = rpm / 60d;
-    }
-
-    /**
-     * Sets the RPM of bottom flywheel
-     * @param rpm RPM of the flywheel
-     */
-    public void setBottomMotorRPM(double rpm) {
-        coast(false);
-        bottomTargetRPS = rpm / 60d;
-    }
-
-    /**
-     * @return The current RPM of flywheel top
-     */
-    public double getTopMotorRPM() {
-        return (topMotor.getVelocity().getValue() * 60d);
-    }
-
-    /**
-     * @return The current RPM of flywheel bottom
-     */
-    public double getBottomMotorRPM() {
-        return (bottomMotor.getVelocity().getValue() * 60d);
-    }
-
-    /**
-     * @return Whether or not top flywheel is on target, within FlywheelConstants.RPM_TOLERANCE
-     */
-    public boolean topMotorRPMOnTarget() {
-        return Math.abs(getTopMotorRPM() - (topTargetRPS * 60d)) < FlywheelConstants.RPM_TOLERANCE;
-    }
-
-    /**
-     * @return Whether or not bottom flywheel is on target, within FlywheelConstants.RPM_TOLERANCE
-     */
-    public boolean bottomMotorRPMOnTarget() {
-        return Math.abs(getBottomMotorRPM() - (bottomTargetRPS * 60d)) < FlywheelConstants.RPM_TOLERANCE;
-    }
-
-    /**
-     * @return Whether or not all flywheel motors are on target, within RPM tolerance
-     */
-    public boolean allMotorsOnTarget() {
-        return (topMotorRPMOnTarget() && bottomMotorRPMOnTarget());
-    }
-
-    /**
-     * @return the top motor's target RPM
-     */
-    public double topMotorTargetRPM() {
-        return topTargetRPS * 60d;
-    }
-
-    /**
-     * @return the bottom motor's target RPM
-     */
-    public double bottomMotorTargetRPM() {
-        return bottomTargetRPS * 60d;
-    }
-
-    /**
-     * Sets the voltage to a small amount so the flywheel coasts to a stop
-     * @param coast Whether or not to coast the flywheel
-     */
-    public void coast(boolean coast) {
-        this.coast = coast;
-    }
-
-    public void stop() {
-        setAllMotorsRPM(0);
-    }
-
-    /**
-     * @return The bias to add to the target RPS of the flywheel
-     */
-    public double getBias() {
-        return bias;
-    }
-
-    /**
-     * Increases the bias of the Flywheel by set amount
-     */
-    public void increaseBias() {
-        bias += FlywheelConstants.BIAS_INCREMENT;
-    }
-
-    /**
-     * Decreases the bias of the Flywheel by set amount
-     */
-    public void decreaseBias() {
-        bias -= FlywheelConstants.BIAS_INCREMENT;
-    }
-
-    /**
-     * Resets the bias of the Flywheel
-     */
-    public void resetBias() {
-        bias = 0;
-    }
-    
-    public void startKama() {
-        kamaDone = false;
-    }
-
-    public void endKama() {
-        kamaDone = true;
-    }
-
-    public boolean getKama() {
-        return kamaDone;
-    }
-
-    /**
-     * Sets target RPS to the bottom motor, using the proper slots and FOC
-     * @param targetRPS
-     */
-    private void applyPowerTop(double targetRPS) {
-        if(targetRPS > 100) {
-            topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(false).withSlot(0));
-        } else {
-            topMotor.setControl(topRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(0));
-        }
-    }
-
-    /**
-     * Sets target RPS to the bottom motor, using the proper slots and FOC
-     * @param targetRPS
-     */
-    private void applyPowerBottom(double targetRPS) {
-        if(targetRPS > 100) {
-            bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(false).withSlot(0));
-        } else {
-            bottomMotor.setControl(bottomRPMPID.withVelocity(targetRPS).withEnableFOC(true).withSlot(0));
-        }
-    }
+			default:
+				break;
+		}
+	}
 }
