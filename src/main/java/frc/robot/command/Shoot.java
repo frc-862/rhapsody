@@ -22,36 +22,19 @@ public class Shoot extends Command {
 
     @Override
     public void initialize() {
-        switch (flywheel.getCurrentMode()) {
-            case SLOW:
-                flywheel.setTargetSpeed(25);
-                break;
-        
-            case MODERATE:
-                flywheel.setTargetSpeed(35);
-                break;
-
-            case FAST:
-                flywheel.setTargetSpeed(50);
-                break;
-
-            default:
-                break;
-        }
+        flywheel.setTargetRPM(60);
     }
 
     @Override
     public void execute() {
-        if (flywheel.getTopMotorSpeed() > flywheel.getTargetSpeed()-5 && flywheel.getBottomMotorSpeed() > flywheel.getTargetSpeed()-5){
+        if (flywheel.onTarget()){
             indexer.setSpeed(0.7);
         }
-
-        LightningShuffleboard.setBool("Shoot", "End Condition", !indexer.getEntryBeam() && !indexer.getExitBeam());
     }
 
     @Override
     public void end(boolean interrupted) {
-        flywheel.setTargetSpeed(0);
+        flywheel.stop();
         indexer.setSpeed(0);
     }
 

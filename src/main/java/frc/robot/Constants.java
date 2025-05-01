@@ -152,6 +152,12 @@ public class Constants {
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2.0, 1, 1.0, 0.5);
 
         public static final Pose2d AMP_LOCATION_RED = new Pose2d(new Translation2d(14.4, 7.62), new Rotation2d(90));
+
+        public static final double TAGALIGN_RP = 0.15;
+        public static final double TAGALIGN_RI = 0.0;
+        public static final double TAGALIGN_RD = 0.005;
+
+        public static final double RTOLERANCE = 1;
     }
 
     public static class ChaseConstants {
@@ -400,41 +406,41 @@ public class Constants {
         public static final boolean MOTOR_BRAKE_MODE = false;
 
         // SLOT 0 TOP, 0 - 49 RPS
-        public static final double TOP_0_MOTOR_KP = 0.2;
-        public static final double TOP_0_MOTOR_KI = 0.07;
+        public static final double TOP_0_MOTOR_KP = 0.1;
+        public static final double TOP_0_MOTOR_KI = 0;
         public static final double TOP_0_MOTOR_KD = 0;
-        public static final double TOP_0_MOTOR_KS = 0.26;
+        public static final double TOP_0_MOTOR_KS = 0;
         public static final double TOP_0_MOTOR_KV = 0.11;
-        public static final double TOP_0_MOTOR_KA = 2.9;
+        public static final double TOP_0_MOTOR_KA = 0;
 
         // SLOT 1 TOP, 50 - 107 RPS
-        public static final double TOP_1_MOTOR_KP = 0.163;
+        public static final double TOP_1_MOTOR_KP = 0;
         public static final double TOP_1_MOTOR_KI = 0;
         public static final double TOP_1_MOTOR_KD = 0;
-        public static final double TOP_1_MOTOR_KS = 0.3;
-        public static final double TOP_1_MOTOR_KV = 0.114;
+        public static final double TOP_1_MOTOR_KS = 0;
+        public static final double TOP_1_MOTOR_KV = 0.11;
         public static final double TOP_1_MOTOR_KA = 0;
 
         // SLOT 0 BOTTOM, 0 - 49 RPS
-        public static final double BOTTOM_0_MOTOR_KP = 0.2;
-        public static final double BOTTOM_0_MOTOR_KI = 0.07;
+        public static final double BOTTOM_0_MOTOR_KP = 0;
+        public static final double BOTTOM_0_MOTOR_KI = 0;
         public static final double BOTTOM_0_MOTOR_KD = 0;
-        public static final double BOTTOM_0_MOTOR_KS = 0.26;
+        public static final double BOTTOM_0_MOTOR_KS = 0;
         public static final double BOTTOM_0_MOTOR_KV = 0.11;
-        public static final double BOTTOM_0_MOTOR_KA = 2.9;
+        public static final double BOTTOM_0_MOTOR_KA = 0;
 
         // SLOT 1 BOTTOM, 50 - 107 RPS
-        public static final double BOTTOM_1_MOTOR_KP = 0.15;
+        public static final double BOTTOM_1_MOTOR_KP = 0;
         public static final double BOTTOM_1_MOTOR_KI = 0;
         public static final double BOTTOM_1_MOTOR_KD = 0;
-        public static final double BOTTOM_1_MOTOR_KS = 0.35;
-        public static final double BOTTOM_1_MOTOR_KV = 0.114;
+        public static final double BOTTOM_1_MOTOR_KS = 0;
+        public static final double BOTTOM_1_MOTOR_KV = 0.11;
         public static final double BOTTOM_1_MOTOR_KA = 0;
 
-        public static final double RPM_TOLERANCE = 100d;
+        public static final double RPM_TOLERANCE = 15d;
 
         public static final double BIAS_INCREMENT = 1.25; // RPS to bias by per button press
-        public static final double COAST_VOLTAGE = 0.1;
+        public static final double COAST_RPM = 60;
 
         public static final double FLYWHEEL_SYSTEST_RPM = 1000;
     }

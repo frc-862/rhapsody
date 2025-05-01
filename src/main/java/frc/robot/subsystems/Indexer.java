@@ -21,7 +21,7 @@ public class Indexer extends SubsystemBase {
     private DigitalInput entryBeam;
     private DigitalInput exitBeam;
 
-    private Debouncer debouncer = new Debouncer(0.01, DebounceType.kBoth);
+    private Debouncer debouncer = new Debouncer(0.15, DebounceType.kBoth);
 
     public Indexer() {
         motor = new ThunderBird(CAN.INDEXER_MOTOR, CAN.CANBUS_FD, true, 0, false);

@@ -71,7 +71,6 @@ public class PivotRhapsody extends SubsystemBase implements Pivot {
 
     @Override
     public void periodic() {
-        
         moveToTarget();
     }
 
