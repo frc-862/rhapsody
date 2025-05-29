@@ -1,5 +1,6 @@
 package frc.robot.command.shoot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
 import frc.robot.RobotContainer;
@@ -36,7 +37,9 @@ public class PointBlankShot extends Command {
 
 	@Override
 	public void execute() {
-		powerMult = LightningShuffleboard.getDouble("Demo", "Point Blank Shot Mult", 0.4);
+		powerMult = LightningShuffleboard.getDouble("Demo", "Point Blank Shot Mult", 0.4d);
+
+		powerMult = MathUtil.clamp(powerMult, 0d, 1d);
 
 		flywheel.setAllMotorsRPM((CandConstants.POINT_BLANK_RPM + flywheel.getBias()) * powerMult);
 		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());

@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -53,9 +54,9 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     private boolean disableVision = false;
     private boolean robotCentricControl = false;
     private double maxSpeed = DrivetrainConstants.MaxSpeed;
-    private double speedMult = 1;
+    private double speedMult = 0.4;
     private double maxAngularRate = DrivetrainConstants.MaxAngularRate * DrivetrainConstants.ROT_MULT;
-    private double angularMult = 1;
+    private double angularMult = 0.4;
     private LinearFilter xFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter yFilter = LinearFilter.singlePoleIIR(2, 0.01);
     private LinearFilter rotFilter = LinearFilter.singlePoleIIR(2, 0.01);
@@ -288,13 +289,17 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public double getSpeedMult() {
-        speedMult = LightningShuffleboard.getDouble("Demo", "Speed Mult", 0.4);
+        speedMult = LightningShuffleboard.getDouble("Demo", "Speed Mult", 0.4d);
+
+        speedMult = MathUtil.clamp(speedMult, 0d, 1d);
 
         return speedMult;
     }
 
     public double getRotMult() {
-        angularMult = LightningShuffleboard.getDouble("Demo", "Rot Mult", 0.4);
+        angularMult = LightningShuffleboard.getDouble("Demo", "Rot Mult", 0.4d);
+
+        angularMult = MathUtil.clamp(angularMult, 0d, 1d);
 
         return angularMult;
     }
