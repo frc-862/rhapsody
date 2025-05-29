@@ -36,7 +36,7 @@ public class PointBlankShot extends Command {
 
 	@Override
 	public void execute() {
-		powerMult = LightningShuffleboard.getDouble("Demo", "Point Blank Shot Mult", 1d);
+		powerMult = LightningShuffleboard.getDouble("Demo", "Point Blank Shot Mult", 0.4);
 
 		flywheel.setAllMotorsRPM((CandConstants.POINT_BLANK_RPM + flywheel.getBias()) * powerMult);
 		pivot.setTargetAngle(CandConstants.POINT_BLANK_ANGLE + pivot.getBias());

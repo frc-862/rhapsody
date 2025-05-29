@@ -288,13 +288,13 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public double getSpeedMult() {
-        speedMult = LightningShuffleboard.getDouble("Demo", "Speed Mult", 1d);
+        speedMult = LightningShuffleboard.getDouble("Demo", "Speed Mult", 0.4);
 
         return speedMult;
     }
 
     public double getRotMult() {
-        angularMult = LightningShuffleboard.getDouble("Demo", "Rot Mult", 1d);
+        angularMult = LightningShuffleboard.getDouble("Demo", "Rot Mult", 0.4);
 
         return angularMult;
     }
