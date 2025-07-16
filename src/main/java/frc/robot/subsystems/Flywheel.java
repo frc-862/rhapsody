@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.datalog.DataLog;
@@ -23,7 +24,9 @@ public class Flywheel extends SubsystemBase {
     private double topTargetRPS = 0;
     private double bottomTargetRPS = 0;
     private double bias = 0;
-    private boolean coast = false;
+    private boolean coast = true;
+    private double dutyCycle = 0.4;
+    private boolean shooting = false;
     private boolean kamaDone = false;
 
     private DoubleLogEntry topRPMLog;
@@ -66,7 +69,10 @@ public class Flywheel extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (coast) {
+        if (shooting) {
+            applyPowerTop(dutyCycle);
+            applyPowerBottom(dutyCycle);
+        } else if (coast) {
             applyPowerTop(-8.33d);
             applyPowerBottom(-8.33d);
         } else {
@@ -83,6 +89,11 @@ public class Flywheel extends SubsystemBase {
         coast(false);
         topTargetRPS = rpm / 60d;
         bottomTargetRPS = rpm / 60d;
+    }
+
+    public void setAllMotorsDutyCycle(double power) {
+        shooting = true;
+        dutyCycle = power;
     }
 
     /**
@@ -158,6 +169,9 @@ public class Flywheel extends SubsystemBase {
      */
     public void coast(boolean coast) {
         this.coast = coast;
+        if (coast) {
+            shooting = false;
+        }
     }
 
     public void stop() {
