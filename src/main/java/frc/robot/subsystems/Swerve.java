@@ -279,6 +279,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
      * @param slow boolean if we are in slow mode
      */
     public void setSlowMode(boolean slow) {
+        // tee hee with the way we use shuffleboard, this is COMPLETELY useless
         if (slow) {
             speedMult = DrivetrainConstants.SLOW_SPEED_MULT;
             angularMult = DrivetrainConstants.SLOW_ROT_MULT;
@@ -289,7 +290,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public double getSpeedMult() {
-        speedMult = LightningShuffleboard.getDouble("Demo", "Speed Mult", 0.4d);
+        speedMult = LightningShuffleboard.getDouble("Demo", "Speed Mult", 0.2);
 
         speedMult = MathUtil.clamp(speedMult, 0d, 1d);
 
@@ -297,7 +298,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public double getRotMult() {
-        angularMult = LightningShuffleboard.getDouble("Demo", "Rot Mult", 0.4d);
+        angularMult = LightningShuffleboard.getDouble("Demo", "Rot Mult", 0.3);
 
         angularMult = MathUtil.clamp(angularMult, 0d, 1d);
 

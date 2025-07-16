@@ -31,13 +31,13 @@ public class PointBlankShot extends Command {
 
 	@Override
 	public void initialize() {
-		flywheel.setAllMotorsDutyCycle(LightningShuffleboard.getDouble("Demo", "Pointblank Power", 0.4));
+		flywheel.setAllMotorsDutyCycle(LightningShuffleboard.getDouble("Demo", "Pointblank Power", 25));
 		pivot.setTargetAngle(LightningShuffleboard.getDouble("Demo", "Pointblank Angle", CandConstants.POINT_BLANK_ANGLE) + pivot.getBias());
 	}
 
 	@Override
 	public void execute() {
-		flywheel.setAllMotorsDutyCycle(LightningShuffleboard.getDouble("Demo", "Pointblank Power", 0.4));
+		flywheel.setAllMotorsDutyCycle(LightningShuffleboard.getDouble("Demo", "Pointblank Power", 25));
 		pivot.setTargetAngle(LightningShuffleboard.getDouble("Demo", "Pointblank Angle", CandConstants.POINT_BLANK_ANGLE) + pivot.getBias());
 		if(flywheel.allMotorsOnTarget() && pivot.onTarget()) {
 			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();

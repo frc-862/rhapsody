@@ -208,13 +208,13 @@ public class RobotContainer extends LightningContainer {
 		/* driver */
 		// field centric for the robot
 		new Trigger(() -> driver.getLeftTriggerAxis() > 0.25d)
-				.whileTrue(drivetrain.applyPercentRequestRobot(() -> -driver.getLeftY(),
-						() -> -driver.getLeftX(), () -> -driver.getRightX()));
+				.whileTrue(drivetrain.applyPercentRequestRobot(() -> -(driver.getLeftY() * drivetrain.getSpeedMult()),
+						() -> -(driver.getLeftX() * drivetrain.getSpeedMult()), () -> -(driver.getRightX() * drivetrain.getRotMult())));
 
 		// enables slow mode for driving
-		// new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
-		// 		.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
-		// 		.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
+		new Trigger(() -> driver.getRightTriggerAxis() > 0.25d)
+				.onTrue(new InstantCommand(() -> drivetrain.setSlowMode(true)))
+				.onFalse(new InstantCommand(() -> drivetrain.setSlowMode(false)));
 
 		// sets field relative forward to the direction the robot is facing
 		new Trigger(() -> driver.getStartButton() && driver.getBackButton()).onTrue(drivetrain
