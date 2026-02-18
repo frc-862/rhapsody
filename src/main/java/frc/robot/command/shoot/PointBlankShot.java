@@ -1,6 +1,7 @@
 package frc.robot.command.shoot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CandConstants;
 import frc.robot.RobotContainer;
@@ -30,15 +31,12 @@ public class PointBlankShot extends Command {
 	}
 
 	@Override
-	public void initialize() {
-		flywheel.setAllMotorsDutyCycle(LightningShuffleboard.getDouble("Demo", "Pointblank Power", 25));
-		pivot.setTargetAngle(LightningShuffleboard.getDouble("Demo", "Pointblank Angle", CandConstants.POINT_BLANK_ANGLE) + pivot.getBias());
-	}
+	public void initialize() {}
 
 	@Override
 	public void execute() {
-		flywheel.setAllMotorsDutyCycle(LightningShuffleboard.getDouble("Demo", "Pointblank Power", 25));
-		pivot.setTargetAngle(LightningShuffleboard.getDouble("Demo", "Pointblank Angle", CandConstants.POINT_BLANK_ANGLE) + pivot.getBias());
+		flywheel.setAllMotorsRPM(LightningShuffleboard.getDouble("Demo", "Pointblank Power (0-2940)", CandConstants.POINT_BLANK_RPM));
+		pivot.setTargetAngle(LightningShuffleboard.getDouble("Demo", "Pointblank Angle (0-90)", CandConstants.POINT_BLANK_ANGLE) + pivot.getBias());
 		if(flywheel.allMotorsOnTarget() && pivot.onTarget()) {
 			new TimedCommand(RobotContainer.hapticCopilotCommand(), 1d).schedule();
 		}

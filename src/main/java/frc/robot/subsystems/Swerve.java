@@ -290,7 +290,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public double getSpeedMult() {
-        speedMult = LightningShuffleboard.getDouble("Demo", "Speed Mult", 0.2);
+        speedMult = LightningShuffleboard.getDouble("Demo", "Speed Mult (0-1)", 0.2);
 
         speedMult = MathUtil.clamp(speedMult, 0d, 1d);
 
@@ -298,7 +298,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     public double getRotMult() {
-        angularMult = LightningShuffleboard.getDouble("Demo", "Rot Mult", 0.3);
+        angularMult = LightningShuffleboard.getDouble("Demo", "Rot Mult (0-1)", 0.3);
 
         angularMult = MathUtil.clamp(angularMult, 0d, 1d);
 
