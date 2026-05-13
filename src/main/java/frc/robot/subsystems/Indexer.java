@@ -187,6 +187,8 @@ public class Indexer extends SubsystemBase {
             didShoot = didShoot || hasNote();
             setPieceState(PieceState.NONE);
         }
+
+        LightningShuffleboard.setBool("Collector", "Beambreak", getEntryBeamBreakState());
     }
 
     /**

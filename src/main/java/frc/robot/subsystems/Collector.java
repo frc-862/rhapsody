@@ -87,6 +87,7 @@ public class Collector extends SubsystemBase {
     public void periodic() {
         // tells robot if we have a piece in collector
         hasPiece = getEntryBeamBreakState();
+        LightningShuffleboard.setBool("beamBreak", "beamBreak", hasPiece);
     }
 
     /**
